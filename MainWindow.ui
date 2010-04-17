@@ -58,7 +58,6 @@
      <string>Data</string>
     </property>
     <addaction name="actionManage_Waves"/>
-    <addaction name="actionManage_Tables"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
     <property name="title">

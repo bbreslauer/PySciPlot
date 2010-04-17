@@ -56,7 +56,6 @@ class Ui_ManageWavesDialog(object):
         self.horizontalLayout.addLayout(self.verticalLayout_3)
 
         self.retranslateUi(ManageWavesDialog)
-        QtCore.QMetaObject.connectSlotsByName(ManageWavesDialog)
 
     def retranslateUi(self, ManageWavesDialog):
         ManageWavesDialog.setWindowTitle(QtGui.QApplication.translate("ManageWavesDialog", "Manage Waves", None, QtGui.QApplication.UnicodeUTF8))

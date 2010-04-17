@@ -1,25 +1,24 @@
 import sys,  string,  signal
 from PyQt4 import QtGui, QtCore
 
-import matplotlib
+#import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from matplotlib.figure import Figure
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+#from matplotlib.figure import Figure
 
 
 from MainWindow import Ui_MainWindow
 from DataTableView import DataTableView
 from DataTableModel import DataTableModel
 from ManageWavesDialog import Ui_ManageWavesDialog
-from ManageTablesDialog import Ui_ManageTablesDialog
 from DialogSubWindow import DialogSubWindow
 from WavesListModel import WavesListModel
 from CreatePlotDialog import Ui_CreatePlotDialog
 
 from Waves import Waves
 from Wave import Wave
+
 from Plot import Plot
-from SubPlot import SubPlot
 
 # copy/paste of data
 
@@ -36,7 +35,6 @@ class pysciplot(QtGui.QMainWindow):
         
         # views and dialogs
         self.manageWavesDialogWidgetSubWindow = None
-        self.manageTablesDialogWidgetSubWindow = None
         
         # Let the workspace resize when the main window is resized
         self.setCentralWidget(self.ui.workspace)
@@ -45,7 +43,6 @@ class pysciplot(QtGui.QMainWindow):
         self.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         self.connect(self.ui.actionNew_Table, QtCore.SIGNAL("triggered()"), self.createDefaultTable)
         self.connect(self.ui.actionManage_Waves, QtCore.SIGNAL("triggered()"), self.showManageWavesDialog)
-        self.connect(self.ui.actionManage_Tables, QtCore.SIGNAL("triggered()"), self.showManageTablesDialog)
         self.connect(self.ui.actionCreate_Plot, QtCore.SIGNAL("triggered()"), self.showCreatePlotDialog)
         self.connect(self.ui.actionShow_Waves,  QtCore.SIGNAL("triggered()"),  self.showAllWaves)
         
@@ -139,8 +136,6 @@ class pysciplot(QtGui.QMainWindow):
         createPlotDialogUi = Ui_CreatePlotDialog()
         createPlotDialogUi.setupUi(createPlotDialogWidget)
         
-        
-        
         # QT Designer puts a widget around the layout object.  This gets around it
         # so that the entire window resizes correctly.
         createPlotDialogWidget.setLayout(createPlotDialogUi.gridLayout)
@@ -162,100 +157,39 @@ class pysciplot(QtGui.QMainWindow):
             xAxisIndexList = createPlotDialogUi.xAxisListView.selectedIndexes()
             yAxisIndexList = createPlotDialogUi.yAxisListView.selectedIndexes()
             
-#            x = self.waves[xAxisIndexList[0].row()]
-#            y = self.waves[yAxisIndexList[0].row()]
-#            y = Waves()
-#            for i in xAxisIndexList:
-#                y.append(self.waves[i.row()])
-            x = self.waves[0]
-            y = self.waves[1]
+            x = self.waves[xAxisIndexList[0].row()]
+            y = self.waves[yAxisIndexList[0].row()]
+            y = Waves()
+            for i in yAxisIndexList:
+                y.append(self.waves[i.row()])
+#            x = self.waves[0]
+#            y = self.waves[1]
+            
+            plot = Plot()
+            
+            
             
             plotSubWindow = QtGui.QMdiSubWindow(self.ui.workspace)
             plotSubWindow.resize(450, 450)
             
-            plot = Plot(self, plotSubWindow)
-            
-            # prepare plot
-            plot1 = SubPlot(self)
-            plot1.setXWave(x)
-            plot1.setYWave(y)
-            
-            plot.addSubPlot(plot1)
-            
-            plot.buildScene()
-            
-            plotSubWindow.setWidget(plot.getPlotView())
+            canvas = plot.getCanvas()
+            canvas.setParent(plotSubWindow)
+            plotSubWindow.setWidget(canvas)
             self.ui.workspace.addSubWindow(plotSubWindow)
             plotSubWindow.show()
+
+            plot.makePlot(0, 0, x, y)
+            
             
             createPlotDialogSubWindow.close()
         
         def cancelPlot():
             createPlotDialogSubWindow.close()
-            
-        def makePlot2():
-            plotSubWindow = QtGui.QMdiSubWindow(self.ui.workspace)
-            plotSubWindow.resize(450, 450)
-            
-            fig = Figure((5.0, 4.0), dpi=100)
-            canvas = FigureCanvas(fig)
-            canvas.setParent(plotSubWindow)
-            
-            x = self.waves[0].convertToFloatList()
-            y = self.waves[1].convertToFloatList()
-            
-            axes1 = fig.add_subplot(221)
-            axes2 = fig.add_subplot(222)
-            axes3 = fig.add_subplot(223)
-            
-            axes1.clear()
-            axes1.scatter(x, y)
-            
-            axes2.clear()
-            axes2.scatter(x, y)
-            
-            axes3.clear()
-            axes3.scatter(x, y)
-            
-            canvas.draw()
 
-            plotSubWindow.setWidget(canvas)
-            self.ui.workspace.addSubWindow(plotSubWindow)
-            plotSubWindow.show()
-            
-            
-
-            
-            
-        #makePlot()
         
         # connect actions
         self.connect(createPlotDialogUi.buttonBox, QtCore.SIGNAL("accepted()"), makePlot)
         self.connect(createPlotDialogUi.buttonBox, QtCore.SIGNAL("rejected()"), cancelPlot)
-    
-    def showManageTablesDialog(self):
-        if self.manageTablesDialogWidgetSubWindow != None:
-            self.ui.workspace.setActiveSubWindow(self.manageTablesDialogWidgetSubWindow)
-            self.manageTablesDialogWidgetSubWindow.show()
-            return
-        
-        # create enclosing widget and UI
-        manageTablesDialogWidget = QtGui.QWidget()
-        manageTablesDialogUi = Ui_ManageTablesDialog()
-        manageTablesDialogUi.setupUi(manageTablesDialogWidget)
-        
-        # QT Designer puts a widget around the layout object.  This gets around it
-        # so that the entire window resizes correctly.
-        manageTablesDialogWidget.setLayout(manageTablesDialogUi.gridLayout)
-        
-#        wavesListModel = WavesListModel(self.waves)
-#        manageTablesDialogUi.wavesListView.setModel(wavesListModel)
-        
-        # show window
-        self.manageTablesDialogWidgetSubWindow = DialogSubWindow(self.ui.workspace)
-        self.manageTablesDialogWidgetSubWindow.setWidget(manageTablesDialogWidget)
-        self.ui.workspace.addSubWindow(self.manageTablesDialogWidgetSubWindow)
-        self.manageTablesDialogWidgetSubWindow.setVisible(True)
         
     def setTestData(self):
         self.waves.append(Wave("Wave1", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
@@ -275,7 +209,5 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     window = pysciplot()
     window.show()
-#    for each in app.topLevelWidgets():
-#        print each.objectName()
     sys.exit(app.exec_())
     

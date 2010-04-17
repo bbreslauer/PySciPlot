@@ -41,7 +41,6 @@ class Ui_CreatePlotDialog(object):
         self.gridLayout.addWidget(self.yAxisListView, 1, 1, 1, 1)
 
         self.retranslateUi(CreatePlotDialog)
-        QtCore.QMetaObject.connectSlotsByName(CreatePlotDialog)
 
     def retranslateUi(self, CreatePlotDialog):
         CreatePlotDialog.setWindowTitle(QtGui.QApplication.translate("CreatePlotDialog", "Create Plot", None, QtGui.QApplication.UnicodeUTF8))

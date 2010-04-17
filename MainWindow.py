@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'MainWindow.ui'
+# Form implementation generated from reading ui file '/home/ben/programming/pysciplot-mpl/MainWindow.ui'
 #
-# Created: Sun Apr  4 21:20:39 2010
-#      by: PyQt4 UI code generator snapshot-4.7.3-22b0acdb1b62
+# Created: Fri Apr 16 22:40:58 2010
+#      by: PyQt4 UI code generator 4.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -53,7 +53,6 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.menuFile.addAction(self.actionShow_Waves)
         self.menuData.addAction(self.actionManage_Waves)
-        self.menuData.addAction(self.actionManage_Tables)
         self.menuPlot.addAction(self.actionCreate_Plot)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
@@ -61,7 +60,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuPlot.menuAction())
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PySciPlot", None, QtGui.QApplication.UnicodeUTF8))
@@ -79,4 +77,14 @@ class Ui_MainWindow(object):
         self.actionManage_Tables.setText(QtGui.QApplication.translate("MainWindow", "Manage Tables", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_Waves.setText(QtGui.QApplication.translate("MainWindow", "Show Waves", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCreate_Plot.setText(QtGui.QApplication.translate("MainWindow", "Create Plot", None, QtGui.QApplication.UnicodeUTF8))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    MainWindow = QtGui.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
 

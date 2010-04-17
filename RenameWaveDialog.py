@@ -45,7 +45,6 @@ class Ui_RenameWaveDialog(object):
         self.retranslateUi(RenameWaveDialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), RenameWaveDialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), RenameWaveDialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(RenameWaveDialog)
 
     def retranslateUi(self, RenameWaveDialog):
         RenameWaveDialog.setWindowTitle(QtGui.QApplication.translate("RenameWaveDialog", "Rename Wave", None, QtGui.QApplication.UnicodeUTF8))

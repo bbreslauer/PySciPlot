@@ -13,12 +13,14 @@ from DataTableModel import DataTableModel
 from ManageWavesDialog import Ui_ManageWavesDialog
 from DialogSubWindow import DialogSubWindow
 from WavesListModel import WavesListModel
-from CreatePlotDialog import Ui_CreatePlotDialog
+from CreateFigureDialog import Ui_CreateFigureDialog
+from PlotListModel import PlotListModel
+from PlotListEntry import PlotListEntry
 
 from Waves import Waves
 from Wave import Wave
 
-from Plot import Plot
+from Figure import Figure
 
 # copy/paste of data
 
@@ -43,14 +45,16 @@ class pysciplot(QtGui.QMainWindow):
         self.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         self.connect(self.ui.actionNew_Table, QtCore.SIGNAL("triggered()"), self.createDefaultTable)
         self.connect(self.ui.actionManage_Waves, QtCore.SIGNAL("triggered()"), self.showManageWavesDialog)
-        self.connect(self.ui.actionCreate_Plot, QtCore.SIGNAL("triggered()"), self.showCreatePlotDialog)
+        self.connect(self.ui.actionCreate_Figure, QtCore.SIGNAL("triggered()"), self.showCreateFigureDialog)
         self.connect(self.ui.actionShow_Waves,  QtCore.SIGNAL("triggered()"),  self.showAllWaves)
+        
+        
         
         self.waves = Waves([], self)
         self.setTestData()
         print self.waves
         
-        self.showCreatePlotDialog()
+        self.showCreateFigureDialog()
         self.createDefaultTable()
         
     def showAllWaves(self):
@@ -130,72 +134,83 @@ class pysciplot(QtGui.QMainWindow):
         self.connect(self, QtCore.SIGNAL("waveRemoved"), wavesListModel.reset)
         self.connect(self, QtCore.SIGNAL("waveRenamed"), wavesListModel.reset)
     
-    def showCreatePlotDialog(self):
+    def showCreateFigureDialog(self):
         # create enclosing widget and UI
-        createPlotDialogWidget = QtGui.QDialog()
-        createPlotDialogUi = Ui_CreatePlotDialog()
-        createPlotDialogUi.setupUi(createPlotDialogWidget)
+        createFigureDialogWidget = QtGui.QDialog()
+        createFigureDialogUi = Ui_CreateFigureDialog()
+        createFigureDialogUi.setupUi(createFigureDialogWidget)
         
         # QT Designer puts a widget around the layout object.  This gets around it
         # so that the entire window resizes correctly.
-        createPlotDialogWidget.setLayout(createPlotDialogUi.gridLayout)
+        createFigureDialogWidget.setLayout(createFigureDialogUi.gridLayout)
         
         # populate x and y axis lists
         xListModel = WavesListModel(self.waves)
         yListModel = WavesListModel(self.waves)
-        createPlotDialogUi.xAxisListView.setModel(xListModel)
-        createPlotDialogUi.yAxisListView.setModel(yListModel)
+        createFigureDialogUi.xAxisListView.setModel(xListModel)
+        createFigureDialogUi.yAxisListView.setModel(yListModel)
+        
+        # prepare plot list
+        plotListModel = PlotListModel()
+        createFigureDialogUi.plotListView.setModel(plotListModel)
         
         # show window
-        createPlotDialogSubWindow = DialogSubWindow(self.ui.workspace)
-        createPlotDialogSubWindow.setWidget(createPlotDialogWidget)
-        self.ui.workspace.addSubWindow(createPlotDialogSubWindow)
-        createPlotDialogSubWindow.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        createPlotDialogSubWindow.show()
+        createFigureDialogSubWindow = DialogSubWindow(self.ui.workspace)
+        createFigureDialogSubWindow.setWidget(createFigureDialogWidget)
+        self.ui.workspace.addSubWindow(createFigureDialogSubWindow)
+        createFigureDialogSubWindow.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        createFigureDialogSubWindow.show()
         
-        def makePlot():
-            xAxisIndexList = createPlotDialogUi.xAxisListView.selectedIndexes()
-            yAxisIndexList = createPlotDialogUi.yAxisListView.selectedIndexes()
+        def addPlotToList():
+            xAxisIndexList = createFigureDialogUi.xAxisListView.selectedIndexes()
+            yAxisIndexList = createFigureDialogUi.yAxisListView.selectedIndexes()
+            plotNum = createFigureDialogUi.plotNumLineEdit.text().toInt()[0]
             
-            x = self.waves[xAxisIndexList[0].row()]
-            y = self.waves[yAxisIndexList[0].row()]
-            y = Waves()
             for i in yAxisIndexList:
-                y.append(self.waves[i.row()])
-#            x = self.waves[0]
-#            y = self.waves[1]
-            
-            plot = Plot()
-            
-            
-            
-            plotSubWindow = QtGui.QMdiSubWindow(self.ui.workspace)
-            plotSubWindow.resize(450, 450)
-            
-            canvas = plot.getCanvas()
-            canvas.setParent(plotSubWindow)
-            plotSubWindow.setWidget(canvas)
-            self.ui.workspace.addSubWindow(plotSubWindow)
-            plotSubWindow.show()
-
-            plot.makePlot(0, 0, x, y)
-            
-            
-            createPlotDialogSubWindow.close()
+                ple = PlotListEntry(self.waves[xAxisIndexList[0].row()], self.waves[i.row()], plotNum)
+                plotListModel.addPlotListEntry(ple)
         
-        def cancelPlot():
-            createPlotDialogSubWindow.close()
+        def makeFigure():
+            nRows = createFigureDialogUi.numRowsLineEdit.text().toInt()[0]
+            nCols = createFigureDialogUi.numColsLineEdit.text().toInt()[0]
+            
+            figure = Figure(nRows, nCols)
+            
+            figureSubWindow = QtGui.QMdiSubWindow(self.ui.workspace)
+            figureSubWindow.resize(450, 450)
+            
+            canvas = figure.getCanvas()
+            canvas.setParent(figureSubWindow)
+            figureSubWindow.setWidget(canvas)
+            self.ui.workspace.addSubWindow(figureSubWindow)
+            figureSubWindow.show()
 
+            for ple in plotListModel.getAllPlotListEntries():
+                figure.addPlotData(ple.getPlotNum(), ple.getX(), ple.getY())
+            
+            figure.makePlots()
+
+            def updatePlots():
+                figure.makePlots()
+
+            # link wave updates to plot changes
+            self.connect(self, QtCore.SIGNAL("waveUpdated"), updatePlots)
+        
+            createFigureDialogSubWindow.close()
+        
+        def cancelFigure():
+            createFigureDialogSubWindow.close()
         
         # connect actions
-        self.connect(createPlotDialogUi.buttonBox, QtCore.SIGNAL("accepted()"), makePlot)
-        self.connect(createPlotDialogUi.buttonBox, QtCore.SIGNAL("rejected()"), cancelPlot)
+        self.connect(createFigureDialogUi.addPlotButton, QtCore.SIGNAL("clicked()"), addPlotToList)
+        self.connect(createFigureDialogUi.buttonBox, QtCore.SIGNAL("accepted()"), makeFigure)
+        self.connect(createFigureDialogUi.buttonBox, QtCore.SIGNAL("rejected()"), cancelFigure)
         
     def setTestData(self):
         self.waves.append(Wave("Wave1", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
         self.waves.append(Wave("Wave2", [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
-        self.waves.append(Wave("Wave3", [0, 1, 8, 27]))
-        self.waves.append(Wave("Wave4", [0, -1,  -4,  -9]))
+        self.waves.append(Wave("Wave3", [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
+        self.waves.append(Wave("Wave4", [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
 
 if __name__ == "__main__":
     # check to make sure we are using at least Qt 4.6.1, as there is a bugfix in that version that causes

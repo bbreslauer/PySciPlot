@@ -1,4 +1,6 @@
 from PyQt4.QtCore import SIGNAL
+from pylab import nan
+
 
 class Wave(list):
     def __init__(self, waveName, dataIn=[]):
@@ -33,9 +35,9 @@ class Wave(list):
     def convertToFloatList(self):
         floats = []
         for row in self:
-            if isinstance(row, int):
+            if type(row) in [int, float, long, complex]:
                 floats.append(row)
             else:
-                floats.append(0)
+                floats.append(nan)
         
         return floats

@@ -63,7 +63,7 @@
     <property name="title">
      <string>Plot</string>
     </property>
-    <addaction name="actionCreate_Plot"/>
+    <addaction name="actionCreate_Figure"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -105,9 +105,9 @@
     <string>Show Waves</string>
    </property>
   </action>
-  <action name="actionCreate_Plot">
+  <action name="actionCreate_Figure">
    <property name="text">
-    <string>Create Plot</string>
+    <string>Create Figure</string>
    </property>
   </action>
  </widget>

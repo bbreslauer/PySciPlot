@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/ben/programming/pysciplot-mpl/MainWindow.ui'
+# Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Fri Apr 16 22:40:58 2010
-#      by: PyQt4 UI code generator 4.6
+# Created: Sat Apr 17 12:06:52 2010
+#      by: PyQt4 UI code generator snapshot-4.7.3-22b0acdb1b62
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -46,14 +46,14 @@ class Ui_MainWindow(object):
         self.actionManage_Tables.setObjectName("actionManage_Tables")
         self.actionShow_Waves = QtGui.QAction(MainWindow)
         self.actionShow_Waves.setObjectName("actionShow_Waves")
-        self.actionCreate_Plot = QtGui.QAction(MainWindow)
-        self.actionCreate_Plot.setObjectName("actionCreate_Plot")
+        self.actionCreate_Figure = QtGui.QAction(MainWindow)
+        self.actionCreate_Figure.setObjectName("actionCreate_Figure")
         self.menuNew.addAction(self.actionNew_Table)
         self.menuFile.addAction(self.menuNew.menuAction())
         self.menuFile.addAction(self.actionQuit)
         self.menuFile.addAction(self.actionShow_Waves)
         self.menuData.addAction(self.actionManage_Waves)
-        self.menuPlot.addAction(self.actionCreate_Plot)
+        self.menuPlot.addAction(self.actionCreate_Figure)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuData.menuAction())
@@ -76,15 +76,5 @@ class Ui_MainWindow(object):
         self.actionManage_Waves.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+A", None, QtGui.QApplication.UnicodeUTF8))
         self.actionManage_Tables.setText(QtGui.QApplication.translate("MainWindow", "Manage Tables", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShow_Waves.setText(QtGui.QApplication.translate("MainWindow", "Show Waves", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionCreate_Plot.setText(QtGui.QApplication.translate("MainWindow", "Create Plot", None, QtGui.QApplication.UnicodeUTF8))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.actionCreate_Figure.setText(QtGui.QApplication.translate("MainWindow", "Create Figure", None, QtGui.QApplication.UnicodeUTF8))
 

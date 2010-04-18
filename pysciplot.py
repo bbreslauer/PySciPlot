@@ -7,13 +7,13 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 #from matplotlib.figure import Figure
 
 
-from MainWindow import Ui_MainWindow
+from ui.MainWindow import Ui_MainWindow
 from DataTableView import DataTableView
 from DataTableModel import DataTableModel
-from ManageWavesDialog import Ui_ManageWavesDialog
+from ui.ManageWavesDialog import Ui_ManageWavesDialog
 from DialogSubWindow import DialogSubWindow
 from WavesListModel import WavesListModel
-from CreateFigureDialog import Ui_CreateFigureDialog
+from ui.CreateFigureDialog import Ui_CreateFigureDialog
 from PlotListModel import PlotListModel
 from PlotListEntry import PlotListEntry
 

@@ -1,6 +1,6 @@
 from PyQt4.QtCore import Qt, SIGNAL
 from PyQt4 import QtGui
-from RenameWaveDialog import Ui_RenameWaveDialog
+from ui.RenameWaveDialog import Ui_RenameWaveDialog
 from Wave import Wave
 from AddWaveAction import AddWaveAction
 from DataTableViewHeader import DataTableViewHeader

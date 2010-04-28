@@ -14,7 +14,10 @@ class PlotData():
     
     def buildPlot(self, plot):
         for pair in self.data:
-            plot.plot(pair.getX().convertToFloatList(), pair.getY().convertToFloatList(), 'o-')
+            xData = Wave.convertToFloatList(pair.getX())
+            yData = Wave.convertToFloatList(pair.getY())
+
+            plot.plot(xData, yData, 'o-')
         return True
         
     def getData(self):

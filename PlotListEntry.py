@@ -26,9 +26,9 @@ class PlotListEntry():
         if col == 0:
             return self.plotNum
         elif col == 1:
-            return QString(self.x.getName())
+            return QString(self.x.name())
         elif col == 2:
-            return QString(self.y.getName())
+            return QString(self.y.name())
         return
 
     def getPlotNum(self):
@@ -39,4 +39,6 @@ class PlotListEntry():
     
     def getY(self):
         return self.y
-        
+
+
+

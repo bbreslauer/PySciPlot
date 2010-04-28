@@ -1,16 +1,25 @@
-class DataPair():
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+from PyQt4.QtCore import QObject, pyqtSignal
+
+class DataPair(QObject):
+    """An x-y pair of data."""
+
+    # Signals
+    xChanged = pyqtSignal()
+    yChanged = pyqtSignal()
+
+    def __init__(self, x=0, y=0):
+        self._x = x
+        self._y = y
     
     def setX(self, x):
-        self.x = x
+        self._x = x
         
     def setY(self, y):
-        self.y = y
+        self._y = y
         
     def getX(self):
-        return self.x
+        return self._x
         
     def getY(self):
-        return self.y
+        return self._y
+

@@ -1,106 +1,129 @@
-from PyQt4.QtCore import Qt, SIGNAL
-from PyQt4 import QtGui
-from ui.RenameWaveDialog import Ui_RenameWaveDialog
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, QAction, QAbstractItemView, QItemSelectionModel
+
 from Wave import Wave
 from AddWaveAction import AddWaveAction
-from DataTableViewHeader import DataTableViewHeader
 from DataTableModel import DataTableModel
+from ui.RenameWaveDialog import Ui_RenameWaveDialog
 
-class DataTableView(QtGui.QTableView):
-    def __init__(self, model, parent, nameIn, *args):
-        QtGui.QTableView.__init__(self, parent, *args)
+class DataTableView(QTableView):
+    """
+    This is the actual view for the DataTableModel.
+
+    Signals that are emitted from this class are:
+        test
+    """
+
+    # Signals
+
+
+    def __init__(self, model, parent, nameIn, mainWindow, *args):
+        """
+        Initialize a view.  Setup the window, title text, row and column headers.
+
+        model is the DataTableModel to use.
+        parent is the window parent.
+        nameIn is the window title.
+        mainWindow is the pysciplot object
+        """
+
+        QTableView.__init__(self, parent, *args)
         self.setParent(parent)
+        self._mainWindow = mainWindow
         self.setModel(model)
         self.setMinimumSize(600, 300)
-        self.name = nameIn
         self.setWindowTitle(nameIn)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setSelectionMode(QtGui.QTableView.ExtendedSelection)
-        self.setEditTriggers(QtGui.QAbstractItemView.AnyKeyPressed)
-        self.mainWindow = parent
+        self.setSelectionMode(QTableView.ExtendedSelection)
+        self.setEditTriggers(QAbstractItemView.AnyKeyPressed | QAbstractItemView.DoubleClicked)
         self.setupColumnHeaderMenu()
         self.horizontalHeader().setMovable(True)
-        self.connect(self.horizontalHeader(), SIGNAL("sectionClicked(int)"),  self.printAllHeaders)
-        self.connect(self.horizontalHeader(), SIGNAL("sectionMoved(int, int, int)"), self.doRealColumnMove)
-        self.connect(self.model(), SIGNAL("dataChanged(PyQt_PyObject, PyQt_PyObject)"), self.dataChanged)
+        self.horizontalHeader().sectionMoved.connect(self.doRealColumnMove)
+
+        # Connect signals
+        self.model().waves().waveAdded.connect(self.fullReset)
+        self.model().waves().waveRemoved.connect(self.fullReset)
     
-    def getName(self):
-        return self.name
+    def name(self):
+        """Return the name of the table."""
+        return self.windowTitle()
     
     @staticmethod
-    def getNameStatic(tableView):
-        return tableView.name
+    def getName(tableView):
+        """Return the name of the given table.  This is a static method."""
+        return tableView.windowTitle()
     
-    # returns True if insert succeeded, False otherwise
-    def insertColumnLeft(self, currentVisualIndex, wave=0):
-        if (wave == 0):
-            name = self.mainWindow.waves.findGoodWaveName()
-            wave = Wave(name)
-            if self.mainWindow.waves.append(wave):
-                return self.model().insertColumn(currentVisualIndex,  wave)
-        else:
-            return self.model().insertColumn(currentVisualIndex,  wave)
-        return False
+    def insertColumn(self, position, wave=0):
+        """
+        Insert wave into column position, shifting columns with index >= position to the right.  If wave evaluates to False, then a new wave is created.  Returns True if insert succeeded, False otherwise.
+        """
         
-    def insertColumnRight(self, currentVisualIndex, wave=0):
-        if (wave == 0):
-            name = self.mainWindow.waves.findGoodWaveName()
-            wave = Wave(name)
-            if self.mainWindow.waves.append(wave):
-                return self.model().insertColumn(currentVisualIndex + 1,  wave)
-        else:
-            return self.model().insertColumn(currentVisualIndex + 1,  wave)
-        return False
+        if not wave:
+            wave = self._mainWindow.waves().insertNewWave(len(self._mainWindow.waves().waves()))
+        return self.model().insertColumn(position, wave)
+
+    def insertColumnLeft(self, position, wave=0):
+        """Call insertColumn."""
+        return self.insertColumn(position, wave)
     
+    def insertColumnRight(self, position, wave=0):
+        """Call insertColumn with position + 1."""
+        return self.insertColumn(position + 1, wave)
+
     def renameWave(self, currentIndex):
-        for i in range(0, 5):
-            print self.model().headerData(i, Qt.Horizontal, Qt.DisplayRole).toString()
-        currentWave = self.model().waves[currentIndex]
-        renameWaveDialog = QtGui.QDialog()
+        """
+        Create a dialog box to rename a wave.  When the dialog box is filled out and submitted, try to rename the wave.
+        """
+
+        currentWave = self.model().waves().waves()[currentIndex]
         
-        renameWaveSubWindow = QtGui.QMdiSubWindow()
+        # Setup dialog box
+        renameWaveDialog = QDialog()
+        renameWaveSubWindow = QMdiSubWindow()
         renameWaveSubWindow.setWidget(renameWaveDialog)
         renameWaveSubWindow.setAttribute(Qt.WA_DeleteOnClose)
-        
         renameWaveUi = Ui_RenameWaveDialog()
         renameWaveUi.setupUi(renameWaveDialog)
-        renameWaveUi.oldWaveName.setText(currentWave.getName())
-        self.mainWindow.ui.workspace.addSubWindow(renameWaveSubWindow)
+        renameWaveUi.oldWaveName.setText(currentWave.name())
+        self._mainWindow.ui.workspace.addSubWindow(renameWaveSubWindow)
         renameWaveDialog.setVisible(True)
         
         def saveRename():
-            newName = str(renameWaveUi.newWaveNameLineEdit.text())
-            if currentWave.rename(newName, self.mainWindow):
+            """Save button pressed.  Do work to save new name."""
+            newName = currentWave.validateWaveName(str(renameWaveUi.newWaveNameLineEdit.text()))
+            if self._mainWindow.waves().goodWaveName(newName) and currentWave.setName(newName):
                 renameWaveSubWindow.close()
-                self.mainWindow.emit(SIGNAL("waveRenamed"))
             else:
-                failedMessage = QtGui.QMessageBox()
+                failedMessage = QMessageBox()
                 failedMessage.setText("Unable to rename wave.")
                 failedMessage.exec_()
                 renameWaveDialog.setVisible(True)
         
         def cancelRename():
+            """Cancel button pressed."""
             renameWaveSubWindow.close()
         
         # connect actions
-        self.connect(renameWaveUi.buttonBox, SIGNAL("accepted()"), saveRename)
-        self.connect(renameWaveUi.buttonBox, SIGNAL("rejected()"), cancelRename)
+        renameWaveUi.buttonBox.accepted.connect(saveRename)
+        renameWaveUi.buttonBox.rejected.connect(cancelRename)
     
-    def removeWaveFromTable(self, point):
-        column = self.horizontalHeader().visualIndex(self.indexAt(point).column())
-        self.model().removeColumn(self.model().waves[column])
-        self.fullReset()
-        
-    def addWaveToTable(self, name, visualIndex):
-        wave = self.mainWindow.waves.getWaveByName(name)
-        if wave and not self.model().waves.getWaveByName(name):
-            self.insertColumnRight(visualIndex, wave)
+    def removeWaveFromTable(self, position):
+        """Remove wave from model.  point is the pixel that is clicked on."""
+        self.model().removeColumn(self.model().waves().waves()[position])
+       
+    def addWaveToTable(self, wave, position):
+        """Add wave to model at position."""
+        if wave:
+            # insertColumn will check if waves must be unique, and will fail (and return False)
+            # if waves must be unique and this is a duplicate wave
+            return self.insertColumn(position, wave)
+        return False
     
     def showColumnHeaderMenu(self, point):
+        """Display the menu that occurs when right clicking on a column header."""
+
         logicalIndex = self.horizontalHeader().logicalIndexAt(point)
         visualIndex = self.horizontalHeader().visualIndex(logicalIndex)
-        print "lI: " + str(logicalIndex)
-        print "vI: " + str(visualIndex)
         
         self.selectColumn(visualIndex)
         
@@ -109,60 +132,61 @@ class DataTableView(QtGui.QTableView):
         def insertColumnRightHelper():
             self.insertColumnRight(visualIndex)
         def renameWaveHelper():
-            self.renameWave(logicalIndex)
+            self.renameWave(visualIndex)
         def removeWaveFromTableHelper():
-            self.removeWaveFromTable(point)
+            self.removeWaveFromTable(visualIndex)
         def removeWaveFromProjectHelper():
             self.removeWaveFromProject(logicalIndex)
-        def addWaveToTableHelper(name):
-            self.addWaveToTable(name, visualIndex)
+        def addWaveToTableHelper(wave):
+            self.addWaveToTable(wave, visualIndex)
             
-        # get current list of waves for "add wave to table" menu
+        # Get current list of waves for "add wave to table" menu
         self.addWaveMenu.clear()
-        for wave in self.mainWindow.waves:
-            self.addWaveMenu.addAction(AddWaveAction(wave.getName(), self.addWaveMenu))
+        for wave in self._mainWindow.waves().waves():
+            self.addWaveMenu.addAction(AddWaveAction(wave, self.addWaveMenu))
         
-        # connect actions
-        self.connect(self.insertColumnLeftAction, SIGNAL("triggered()"), insertColumnLeftHelper)
-        self.connect(self.insertColumnRightAction, SIGNAL("triggered()"), insertColumnRightHelper)
-        self.connect(self.renameWaveAction, SIGNAL("triggered()"), renameWaveHelper)
-        self.connect(self.removeWaveFromTableAction, SIGNAL("triggered()"), removeWaveFromTableHelper)
-        self.connect(self.removeWaveFromProjectAction, SIGNAL("triggered()"), removeWaveFromProjectHelper)
+        # Connect actions
+        self.insertColumnLeftAction.triggered.connect(insertColumnLeftHelper)
+        self.insertColumnRightAction.triggered.connect(insertColumnRightHelper)
+        self.renameWaveAction.triggered.connect(renameWaveHelper)
+        self.removeWaveFromTableAction.triggered.connect(removeWaveFromTableHelper)
+        self.removeWaveFromProjectAction.triggered.connect(removeWaveFromProjectHelper)
         for waveAction in self.addWaveMenu.actions():
-            self.connect(waveAction, SIGNAL("addWaveClicked"), addWaveToTableHelper)
+            waveAction.addWaveClicked.connect(addWaveToTableHelper)
         
         self.columnHeaderMenu.exec_(self.mapToGlobal(point))
         
-        # disconnect actions.  we need to do this or else there will be multiple connections
+        # Disconnect actions.  We need to do this or else there will be multiple connections
         # when we open the menu again, and the old connections will have strange visualIndex values
-        self.disconnect(self.insertColumnLeftAction, SIGNAL("triggered()"), insertColumnLeftHelper)
-        self.disconnect(self.insertColumnRightAction, SIGNAL("triggered()"), insertColumnRightHelper)
-        self.disconnect(self.renameWaveAction, SIGNAL("triggered()"), renameWaveHelper)
-        self.disconnect(self.removeWaveFromTableAction, SIGNAL("triggered()"), removeWaveFromTableHelper)
-        self.disconnect(self.removeWaveFromProjectAction, SIGNAL("triggered()"), removeWaveFromProjectHelper)
+        self.insertColumnLeftAction.triggered.disconnect(insertColumnLeftHelper)
+        self.insertColumnRightAction.triggered.disconnect(insertColumnRightHelper)
+        self.renameWaveAction.triggered.disconnect(renameWaveHelper)
+        self.removeWaveFromTableAction.triggered.disconnect(removeWaveFromTableHelper)
+        self.removeWaveFromProjectAction.triggered.disconnect(removeWaveFromProjectHelper)
         for waveAction in self.addWaveMenu.actions():
-            self.disconnect(waveAction, SIGNAL("addWaveClicked"), addWaveToTableHelper)
-        
+            waveAction.addWaveClicked.disconnect(addWaveToTableHelper)
 
     def setupColumnHeaderMenu(self):
+        """Prepare the menu that is displayed when right clicking on a column header."""
+
+        # Set menu as right-click menu
         header = self.horizontalHeader()
         header.setContextMenuPolicy(Qt.CustomContextMenu)
+        header.customContextMenuRequested.connect(self.showColumnHeaderMenu)
         
-        self.connect(header, SIGNAL("customContextMenuRequested(QPoint)"), self.showColumnHeaderMenu)
+        self.columnHeaderMenu = QMenu(self)
         
-        self.columnHeaderMenu = QtGui.QMenu(self)
+        # Create actions
+        self.renameWaveAction = QAction("Rename Wave", self.columnHeaderMenu)
+        self.insertColumnLeftAction = QAction("Insert Column to Left", self.columnHeaderMenu)
+        self.insertColumnRightAction = QAction("Insert Column to Right", self.columnHeaderMenu)
+        self.removeWaveFromTableAction = QAction("Remove Wave from Table", self.columnHeaderMenu)
+        self.removeWaveFromProjectAction = QAction("Remove Wave from Project", self.columnHeaderMenu)
         
-        # create actions
-        self.renameWaveAction = QtGui.QAction("Rename Wave", self.columnHeaderMenu)
-        self.insertColumnLeftAction = QtGui.QAction("Insert Column to Left", self.columnHeaderMenu)
-        self.insertColumnRightAction = QtGui.QAction("Insert Column to Right", self.columnHeaderMenu)
-        self.removeWaveFromTableAction = QtGui.QAction("Remove Wave from Table", self.columnHeaderMenu)
-        self.removeWaveFromProjectAction = QtGui.QAction("Remove Wave from Project", self.columnHeaderMenu)
+        # Create "add wave to table" menu
+        self.addWaveMenu = QMenu("Add Wave to Table", self.columnHeaderMenu)
         
-        # create "add wave to table" menu
-        self.addWaveMenu = QtGui.QMenu("Add Wave to Table", self.columnHeaderMenu)
-        
-        # add actions to menu
+        # Add actions to menu
         self.columnHeaderMenu.addAction(self.addWaveMenu.menuAction())
         self.columnHeaderMenu.addAction(self.insertColumnLeftAction)
         self.columnHeaderMenu.addAction(self.insertColumnRightAction)
@@ -174,31 +198,38 @@ class DataTableView(QtGui.QTableView):
     # to do this, we need to move the columns in the model then wipe the model from the view and add it back in
     # because view.reset() doesn't reset the logical indices of the view
     def doRealColumnMove(self,  logicalIndex,  oldVisualIndex,  newVisualIndex):
+        """
+        Move column oldVisualIndex to newVisualIndex in the model.
+
+        This method exists because when a column is moved around (for instance, via drag-and-drop), we need the columns to actually move around in the model, not the view.  This is because view.reset() doesn't reset the logical indices of the view.  I expect this to be resolved in a future QT version, but I don't know when.
+        """
         self.model().moveColumn(oldVisualIndex, newVisualIndex)
-        self.fullReset()
 
     def fullReset(self):
-        print "fullReset"
+        """Wipe the model from the view and then add it back to the view.  This makes the view update all the logical indices."""
         tmpModel = self.model()
         self.setModel(DataTableModel())
         self.setModel(tmpModel)
         self.reset()
         return True
     
-    # move to next row in column and continue editing
-    def dataChanged(self,  topLeft,  bottomRight):
-        ind = self.model().createIndex(topLeft.row() + 1, topLeft.column())
-        self.setCurrentIndex(ind)
-        self.edit(ind)
+    def keyPressEvent(self, event):
+        """Capture certain types of keypress events and handle them different ways."""
+        # When data has been edited, move to the next row in the column and continue editing.
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            currentIndex = self.currentIndex()
+            newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
+            self.setCurrentIndex(newIndex)
+            self.edit(newIndex)
+            self.setCurrentIndex(newIndex)
         
-#    # catch specific key press events
-#    def keyPressEvent(self, event):
-#        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-#            print "asdf"
-#        else:
-#            QtGui.QTableView.keyPressEvent(self, event)
-        
-        
+        # Do something else
+        elif event.key() == Qt.Key_Return:
+            pass
+        else:
+            QTableView.keyPressEvent(self, event)
+
+    # Helper function for debugging 
     def printAllHeaders(self,  logicalIndex):
         for i in range(len(self.model().waves)):
             print "vis: " + str(i) + ", log: " + str(self.horizontalHeader().logicalIndex(i)) + ", name: " + self.model().waves[self.horizontalHeader().logicalIndex(i)].getName()

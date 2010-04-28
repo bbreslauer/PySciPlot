@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -63,7 +63,7 @@
     <property name="title">
      <string>Plot</string>
     </property>
-    <addaction name="actionCreate_Figure"/>
+    <addaction name="actionEdit_Figure"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -105,9 +105,9 @@
     <string>Show Waves</string>
    </property>
   </action>
-  <action name="actionCreate_Figure">
+  <action name="actionEdit_Figure">
    <property name="text">
-    <string>Create Figure</string>
+    <string>Edit Figure</string>
    </property>
   </action>
  </widget>

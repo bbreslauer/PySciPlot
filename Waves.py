@@ -25,7 +25,7 @@ class Waves(QObject):
         keepWavesUnique determines whether the Wave objects in this Waves should have unique names.  Default is true.
         """
 
-        QObject.__init__(self);
+        QObject.__init__(self)
 
         self._waves = []
         

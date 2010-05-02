@@ -4,7 +4,7 @@ from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, 
 from Wave import Wave
 from AddWaveAction import AddWaveAction
 from DataTableModel import DataTableModel
-from ui.RenameWaveDialog import Ui_RenameWaveDialog
+from ui.Ui_RenameWaveDialog import Ui_RenameWaveDialog
 
 class DataTableView(QTableView):
     """
@@ -135,8 +135,6 @@ class DataTableView(QTableView):
             self.renameWave(visualIndex)
         def removeWaveFromTableHelper():
             self.removeWaveFromTable(visualIndex)
-        def removeWaveFromProjectHelper():
-            self.removeWaveFromProject(logicalIndex)
         def addWaveToTableHelper(wave):
             self.addWaveToTable(wave, visualIndex)
             
@@ -150,7 +148,6 @@ class DataTableView(QTableView):
         self.insertColumnRightAction.triggered.connect(insertColumnRightHelper)
         self.renameWaveAction.triggered.connect(renameWaveHelper)
         self.removeWaveFromTableAction.triggered.connect(removeWaveFromTableHelper)
-        self.removeWaveFromProjectAction.triggered.connect(removeWaveFromProjectHelper)
         for waveAction in self.addWaveMenu.actions():
             waveAction.addWaveClicked.connect(addWaveToTableHelper)
         
@@ -162,7 +159,6 @@ class DataTableView(QTableView):
         self.insertColumnRightAction.triggered.disconnect(insertColumnRightHelper)
         self.renameWaveAction.triggered.disconnect(renameWaveHelper)
         self.removeWaveFromTableAction.triggered.disconnect(removeWaveFromTableHelper)
-        self.removeWaveFromProjectAction.triggered.disconnect(removeWaveFromProjectHelper)
         for waveAction in self.addWaveMenu.actions():
             waveAction.addWaveClicked.disconnect(addWaveToTableHelper)
 
@@ -181,7 +177,6 @@ class DataTableView(QTableView):
         self.insertColumnLeftAction = QAction("Insert Column to Left", self.columnHeaderMenu)
         self.insertColumnRightAction = QAction("Insert Column to Right", self.columnHeaderMenu)
         self.removeWaveFromTableAction = QAction("Remove Wave from Table", self.columnHeaderMenu)
-        self.removeWaveFromProjectAction = QAction("Remove Wave from Project", self.columnHeaderMenu)
         
         # Create "add wave to table" menu
         self.addWaveMenu = QMenu("Add Wave to Table", self.columnHeaderMenu)
@@ -192,7 +187,6 @@ class DataTableView(QTableView):
         self.columnHeaderMenu.addAction(self.insertColumnRightAction)
         self.columnHeaderMenu.addAction(self.renameWaveAction)
         self.columnHeaderMenu.addAction(self.removeWaveFromTableAction)
-        self.columnHeaderMenu.addAction(self.removeWaveFromProjectAction)
         
     # we want to actually move the columns around in the model, not the view
     # to do this, we need to move the columns in the model then wipe the model from the view and add it back in

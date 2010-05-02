@@ -11,4 +11,7 @@ class DialogSubWindow(QMdiSubWindow):
         self.setVisible(True)
         self.widget().setVisible(True)
     
-    
+    def hide(self):
+        self.setVisible(False)
+
+

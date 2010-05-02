@@ -156,7 +156,6 @@ class DataTableModel(QAbstractTableModel):
 
         Emits the Wave.dataModified signal if the data is changed.
         """
-        print "value: " + str(value.toString())
 
         if index.isValid() and role == Qt.EditRole:
             # Check if value can be converted to double

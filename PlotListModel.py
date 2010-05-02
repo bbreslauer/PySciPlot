@@ -19,7 +19,7 @@ class PlotListModel(QAbstractTableModel):
         QAbstractTableModel.__init__(self, parent, *args)
         self.parent = parent
         self.data = []
-        
+       
         # Connect signals
         self.plotAdded.connect(self.doReset)
         self.plotRemoved.connect(self.doReset)

@@ -1,6 +1,6 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 
-class DataPair(QObject):
+class Trace(QObject):
     """An x-y pair of data."""
 
     # Signals
@@ -8,6 +8,7 @@ class DataPair(QObject):
     yChanged = pyqtSignal()
 
     def __init__(self, x=0, y=0):
+        QObject.__init__(self)
         self.setX(x)
         self.setY(y)
     

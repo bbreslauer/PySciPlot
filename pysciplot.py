@@ -11,7 +11,6 @@ from Figures import Figures
 from ModuleHandler import ModuleHandler
 from FigureListModel import FigureListModel
 from WavesListModel import WavesListModel
-from PlotListModel import PlotListModel
 from PlotListEntry import PlotListEntry
 from DataTableView import DataTableView
 from DataTableModel import DataTableModel

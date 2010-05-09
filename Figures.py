@@ -37,6 +37,9 @@ class Figures(QObject):
             string += str(figure) + "\n"
         return string
 
+    def figures(self):
+        return self._figures
+
     def addFigure(self, figure):
         """Add a figure to the object."""
         self._figures.append(figure)

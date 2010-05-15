@@ -13,26 +13,24 @@ class PlotListModel(QAbstractTableModel):
     traceRemoved = pyqtSignal()
 
 
-    def __init__(self, figure, parent=None, *args):
+    def __init__(self, parent=None, *args):
         QAbstractTableModel.__init__(self, parent, *args)
         self._parent = parent
-        self._figure = figure
-        self._columnNames = ['Row', 'Column', 'X', 'Y']
+        self._data = []
+        self._columnNames = ['Plot #', 'X', 'Y']
        
         # Connect signals
         self.traceAdded.connect(self.doReset)
         self.traceRemoved.connect(self.doReset)
+        self.dataChanged.connect(self.doReset)
 
     def rowCount(self, parent=QModelIndex()):
         """Return the number of traces in all the plots in the figure."""
-        numTraces = 0
-        for i in range(self._figure.numPlots()):
-            numTraces += self._figure.getPlot(i).numTraces()
-        return numTraces
+        return len(self._data)
 
     def columnCount(self, parent=QModelIndex()):
-        """Return the number of plots in the figure."""
-        return self._figure.numPlots()
+        """Return the number of columns."""
+        return len(self._columnNames)
 
     def headerData(self, section, orientation, role):
         """Return the header for the given section and orientation."""
@@ -47,9 +45,7 @@ class PlotListModel(QAbstractTableModel):
         """Return the data for the given index."""
 
         if index.isValid() and role == Qt.DisplayRole:
-
-            pass
-            return QVariant(self.data[index.row()].columnValue(index.column()))
+            return QVariant(self._data[index.row()].columnValue(index.column()))
         else:
             return QVariant()
             
@@ -63,4 +59,9 @@ class PlotListModel(QAbstractTableModel):
     def doReset(self, *args):
         "doing"
         self.reset()
+
+    def addEntry(self, entry):
+        self._data.append(entry)
+        self.dataChanged.emit(self.index(len(self._data)-1, 0), self.index(len(self._data)-1, 2))
+        return True
 

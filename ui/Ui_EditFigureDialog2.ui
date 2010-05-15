@@ -87,54 +87,53 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="spacing">
-         <number>0</number>
+       <widget class="QPushButton" name="addFigureButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <item>
-         <widget class="QPushButton" name="addFigureButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Add Figure</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="showFigureButton">
-          <property name="text">
-           <string>Show Figure</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="deleteFigureButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Delete Figure</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Add Figure</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="showFigureButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Show Figure</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deleteFigureButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Delete Figure</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -200,7 +199,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>381</width>
+          <width>351</width>
           <height>381</height>
          </rect>
         </property>
@@ -240,26 +239,12 @@
            <item>
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>Row</string>
+              <string>Plot Number</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="plotRow">
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Column</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="plotColumn">
+            <widget class="QSpinBox" name="plotNum">
              <property name="minimum">
               <number>1</number>
              </property>
@@ -275,7 +260,14 @@
           </widget>
          </item>
          <item row="4" column="0" colspan="2">
-          <widget class="QTableView" name="plotListView"/>
+          <widget class="QTableView" name="plotListView">
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>50</number>
+           </attribute>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>50</number>
+           </attribute>
+          </widget>
          </item>
         </layout>
        </widget>

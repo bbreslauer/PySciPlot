@@ -4,6 +4,8 @@ from Module import Module
 from Figure import Figure
 from FigureListModel import FigureListModel
 from WavesListModel import WavesListModel
+from PlotListModel import PlotListModel
+from PlotListEntry import PlotListEntry
 from ui.Ui_EditFigureDialog2 import Ui_EditFigureDialog
 
 class EditFigureDialog(Module):
@@ -47,6 +49,10 @@ class EditFigureDialog(Module):
         self._ui.yAxisListView.setModel(yListModel)
         self._app.waves().waveAdded.connect(yListModel.doReset)
         self._app.waves().waveRemoved.connect(yListModel.doReset)
+
+        # Setup plot list
+        plotListModel = PlotListModel()
+        self._ui.plotListView.setModel(plotListModel)
 
         
 
@@ -107,7 +113,7 @@ class EditFigureDialog(Module):
         return self._widget
 
     def setupFigureListLabel(self, figureName):
-        self._ui.figureListLabel.setText("Currently working on:\n" + figureName)
+        self._ui.figureListLabel.setText("Currently working on figure:\n" + figureName)
 
 
     def setupFigureTab(self, figure):
@@ -131,33 +137,42 @@ class EditFigureDialog(Module):
         # Setup Plot tab
 
         # setMaximum is not a C++ slot, so a helper function is needed
+        def setPlotNumMaximum(value):
+            self._ui.plotNum.setMaximum(self._ui.figureRows.value() * self._ui.figureColumns.value())
         def setPlotRowMaximum(value):
             self._ui.plotRow.setMaximum(value)
         def setPlotColumnMaximum(value):
             self._ui.plotColumn.setMaximum(value)
 
         # Setup signals
-        self._ui.figureRows.valueChanged.connect(setPlotRowMaximum)
-        self._ui.figureColumns.valueChanged.connect(setPlotColumnMaximum)
+        self._ui.figureRows.valueChanged.connect(setPlotNumMaximum)
+        self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
         
-        self._ui.plotRow.setMaximum(figure.rows())
-        self._ui.plotColumn.setMaximum(figure.columns())
+        setPlotNumMaximum(0)
+        self._ui.plotNum.setValue(1)
 
-        self._ui.plotRow.setValue(1)
-        self._ui.plotColumn.setValue(1)
+#        self._ui.plotRow.setMaximum(figure.rows())
+#        self._ui.plotColumn.setMaximum(figure.columns())
+#
+#        self._ui.plotRow.setValue(1)
+#        self._ui.plotColumn.setValue(1)
 
         # Add a trace to a plot on a figure
         def addTracesToPlot():
-            row = self._ui.plotRow.value()
-            col = self._ui.plotColumn.value()
-            plot = figure.getPlot(row, col)
+            plotNum = self._ui.plotNum.value()
+#            row = self._ui.plotRow.value()
+#            col = self._ui.plotColumn.value()
+            plot = figure.getPlot(plotNum)
 
             xAxisList = self._ui.xAxisListView.selectedIndexes()
             yAxisList = self._ui.yAxisListView.selectedIndexes()
 
             for x in xAxisList:
                 for y in yAxisList:
-                    plot.addTrace(self._app.waves().waves()[x.row()], self._app.waves().waves()[y.row()])
+                    xWave = self._app.waves().waves()[x.row()]
+                    yWave = self._app.waves().waves()[y.row()]
+                    plot.addTrace(xWave, yWave)
+                    self._ui.plotListView.model().addEntry(PlotListEntry(xWave.name(), yWave.name(), plotNum))
             
         self._ui.addPlotButton.clicked.connect(addTracesToPlot)
 

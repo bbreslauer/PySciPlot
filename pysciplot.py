@@ -55,6 +55,8 @@ class pysciplot(QMainWindow):
 
         self.importModule("ManageWavesDialog")
         self.importModule("EditFigureDialog")
+        self.importModule("CreateFigureDialog")
+        self.importModule("EditPlotDialog")
 
         
     def waves(self):

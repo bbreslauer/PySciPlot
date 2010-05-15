@@ -4,8 +4,8 @@ from Wave import Wave
 class PlotListEntry():
     def __init__(self, x, y, plotNum):
         self.columns = 3
-        self.x = x
-        self.y = y
+        self.xName = x
+        self.yName = y
         if not type(plotNum) is int or plotNum < 1:
             plotNum = 1
         self.plotNum = plotNum
@@ -26,19 +26,8 @@ class PlotListEntry():
         if col == 0:
             return self.plotNum
         elif col == 1:
-            return QString(self.x.name())
+            return QString(self.xName)
         elif col == 2:
-            return QString(self.y.name())
+            return QString(self.yName)
         return
-
-    def getPlotNum(self):
-        return self.plotNum
-    
-    def getX(self):
-        return self.x
-    
-    def getY(self):
-        return self.y
-
-
 

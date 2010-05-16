@@ -140,7 +140,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="figureOptionsTab">
        <attribute name="title">
@@ -199,19 +199,12 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>351</width>
+          <width>301</width>
           <height>381</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout">
+        <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0,2" rowminimumheight="0,0,0,0">
          <item row="1" column="1">
-          <widget class="QLabel" name="yAxisLabel">
-           <property name="text">
-            <string>Y Axis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
           <widget class="QListView" name="yAxisListView">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
@@ -224,17 +217,10 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="1" column="0">
           <widget class="QListView" name="xAxisListView"/>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="xAxisLabel">
-           <property name="text">
-            <string>X Axis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
+         <item row="2" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QLabel" name="label_3">
@@ -252,14 +238,14 @@
            </item>
           </layout>
          </item>
-         <item row="3" column="1">
+         <item row="2" column="1">
           <widget class="QPushButton" name="addPlotButton">
            <property name="text">
             <string>Add Plot</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="0" colspan="2">
+         <item row="3" column="0" colspan="2">
           <widget class="QTableView" name="plotListView">
            <property name="selectionMode">
             <enum>QAbstractItemView::SingleSelection</enum>
@@ -267,12 +253,35 @@
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
            <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>50</number>
+            <number>75</number>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
            </attribute>
            <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>50</number>
+            <number>75</number>
            </attribute>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="xAxisLabel">
+           <property name="text">
+            <string>X Axis</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="yAxisLabel">
+           <property name="text">
+            <string>Y Axis</string>
+           </property>
           </widget>
          </item>
         </layout>

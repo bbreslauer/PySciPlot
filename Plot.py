@@ -20,6 +20,9 @@ class Plot(QObject):
 
         self.traceAdded.connect(self.refresh)
     
+    def getPlotNum(self):
+        return self._plotNum
+
     def addTrace(self, x, y):
         self._traces.append(Trace(x, y))
         self.traceAdded.emit()
@@ -38,9 +41,11 @@ class Plot(QObject):
         # Make sure waves are the same length, or else matplotlib will complain and not plot them
         diffLength = len(xData) - len(yData)
         if diffLength < 0:
-            xData.extend([nan] * diffLength)
+            xData.extend([nan] * (- diffLength))
         elif diffLength > 0:
             yData.extend([nan] * diffLength)
+
+        print diffLength
 
         return Trace(xData, yData)
 

@@ -94,14 +94,15 @@ class Figure(QObject):
     def getPlot(self, plotNum):
         return self._plots[plotNum - 1]
     
+    def plots(self):
+        return self._plots
+
     def extendPlots(self, plotNum):
         for i in range(len(self._plots), plotNum):
             self._plots.append(Plot(self, i + 1))
 
     def refreshPlot(self, plotNum):
-        print "refreshing #: " + str(plotNum)
-        plot = self.getPlot(plotNum)
-        plot.refresh()
+        self.getPlot(plotNum).refresh()
 
     def refresh(self, *args):
         """
@@ -114,8 +115,8 @@ class Figure(QObject):
 
         self.mplFigure().clf()
 
-        for plotNum in range(displayedPlots):
-            self.refreshPlot(plotNum + 1)
+        for plotNum in range(1, displayedPlots + 1):
+            self.refreshPlot(plotNum)
 
     def showFigure(self):
         self._figureSubWindow.show()

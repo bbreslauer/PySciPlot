@@ -37,8 +37,8 @@ class PlotListModel(QAbstractTableModel):
 
         if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
             return QVariant(QString(self._columnNames[section]))
-        elif orientation == Qt.Vertical and role == Qt.DisplayRole:
-            return QVariant(section)
+#        elif orientation == Qt.Vertical and role == Qt.DisplayRole:
+#            return QVariant(section)
         return QVariant()
     
     def data(self, index, role):
@@ -49,6 +49,10 @@ class PlotListModel(QAbstractTableModel):
         else:
             return QVariant()
             
+    def clearData(self):
+        """Reset data array to a blank list."""
+        self._data = []
+
     def flags(self, index):
         """Return the flags for the given index."""
 

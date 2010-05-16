@@ -2,7 +2,7 @@ from PyQt4.QtCore import QString
 from Wave import Wave
 
 class PlotListEntry():
-    def __init__(self, x, y, plotNum):
+    def __init__(self, plotNum, x, y):
         self.columns = 3
         self.xName = x
         self.yName = y

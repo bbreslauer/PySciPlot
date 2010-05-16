@@ -6,7 +6,7 @@ from FigureListModel import FigureListModel
 from WavesListModel import WavesListModel
 from PlotListModel import PlotListModel
 from PlotListEntry import PlotListEntry
-from ui.Ui_EditFigureDialog2 import Ui_EditFigureDialog
+from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 class EditFigureDialog(Module):
     """Module to display the Edit Figure dialog window."""
@@ -91,19 +91,20 @@ class EditFigureDialog(Module):
             figure = self._app.figures().getFigure(index.row())
             
             self.setupFigureListLabel(figure.name())
+            self.resetSignalsOnFigureChange(figure)
             self.setupFigureTab(figure)
             self.setupPlotTab(figure)
             
-            # If the current figure is renamed, make sure the label is updated to reflect that.
-            # But remove all other connections from the label.  The only way the figure can
-            # be updated is if it is the current figure, but that could change in the future.
-            for figure in self._app.figures().figures():
-                try:
-                    figure.figureRenamed.disconnect(self.setupFigureListLabel)
-                except:
-                    pass
-
-            self._app.figures().getFigure(self._ui.figureListView.selectionModel().currentIndex().row()).figureRenamed.connect(self.setupFigureListLabel)
+#            # If the current figure is renamed, make sure the label is updated to reflect that.
+#            # But remove all other connections from the label.  The only way the figure can
+#            # be updated is if it is the current figure, but that could change in the future.
+#            for figure in self._app.figures().figures():
+#                try:
+#                    figure.figureRenamed.disconnect(self.setupFigureListLabel)
+#                except:
+#                    pass
+#
+#            self._app.figures().getFigure(self._ui.figureListView.selectionModel().currentIndex().row()).figureRenamed.connect(self.setupFigureListLabel)
 
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
@@ -115,53 +116,46 @@ class EditFigureDialog(Module):
     def setupFigureListLabel(self, figureName):
         self._ui.figureListLabel.setText("Currently working on figure:\n" + figureName)
 
+    def resetSignalsOnFigureChange(self, figure):
+        """Disconnect and reconnect all signals whenever the active figure is changed."""
+        # Disconnect signals, only if they exist.  A TypeError exception is raised 
+        # whenever the signal does not exist.  We must handle these so that execution
+        # continues, and we must use a separate try for each signal so that we make 
+        # sure to disconnect every signal (since if an exception is raised, nothing 
+        # in the try statement after that exception is executed).
 
-    def setupFigureTab(self, figure):
-        # Setup signals
+        # Signal disconnections
+        for f in self._app.figures().figures():
+            try:
+                f.figureRenamed.disconnect(self.setupFigureListLabel)
+            except TypeError:
+                pass
+
         try:
             self._ui.figureRows.valueChanged.disconnect()
+        except TypeError:
+            pass
+        try:
             self._ui.figureColumns.valueChanged.disconnect()
         except TypeError:
             pass
-        self._ui.figureRows.valueChanged.connect(figure.setNumberOfRows)
-        self._ui.figureColumns.valueChanged.connect(figure.setNumberOfColumns)
+        try:
+            self._ui.addPlotButton.clicked.disconnect()
+        except TypeError:
+            pass
+#        try:
+#        except TypeError:
+#            pass
 
-        # Set row and column numbers.  This needs to be after setting up the related
-        # signals because if we change the value with the old signals connected,
-        # the old figure will have its values set to the new figure's values.
-        self._ui.figureRows.setValue(figure.rows())
-        self._ui.figureColumns.setValue(figure.columns())
-
-
-    def setupPlotTab(self, figure):
-        # Setup Plot tab
+        # Helper functions
 
         # setMaximum is not a C++ slot, so a helper function is needed
         def setPlotNumMaximum(value):
-            self._ui.plotNum.setMaximum(self._ui.figureRows.value() * self._ui.figureColumns.value())
-        def setPlotRowMaximum(value):
-            self._ui.plotRow.setMaximum(value)
-        def setPlotColumnMaximum(value):
-            self._ui.plotColumn.setMaximum(value)
-
-        # Setup signals
-        self._ui.figureRows.valueChanged.connect(setPlotNumMaximum)
-        self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
+            self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
         
-        setPlotNumMaximum(0)
-        self._ui.plotNum.setValue(1)
-
-#        self._ui.plotRow.setMaximum(figure.rows())
-#        self._ui.plotColumn.setMaximum(figure.columns())
-#
-#        self._ui.plotRow.setValue(1)
-#        self._ui.plotColumn.setValue(1)
-
         # Add a trace to a plot on a figure
         def addTracesToPlot():
             plotNum = self._ui.plotNum.value()
-#            row = self._ui.plotRow.value()
-#            col = self._ui.plotColumn.value()
             plot = figure.getPlot(plotNum)
 
             xAxisList = self._ui.xAxisListView.selectedIndexes()
@@ -172,12 +166,62 @@ class EditFigureDialog(Module):
                     xWave = self._app.waves().waves()[x.row()]
                     yWave = self._app.waves().waves()[y.row()]
                     plot.addTrace(xWave, yWave)
-                    self._ui.plotListView.model().addEntry(PlotListEntry(xWave.name(), yWave.name(), plotNum))
             
+            self.refreshPlotList(figure)
+
+        def refreshPlotListHelper(value):
+            self.refreshPlotList(figure)
+
+        # Signal connections
+        figure.figureRenamed.connect(self.setupFigureListLabel)
+
+        self._ui.figureRows.valueChanged.connect(figure.setNumberOfRows)
+        self._ui.figureRows.valueChanged.connect(setPlotNumMaximum)
+        self._ui.figureRows.valueChanged.connect(refreshPlotListHelper)
+        
+        self._ui.figureColumns.valueChanged.connect(figure.setNumberOfColumns)
+        self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
+        self._ui.figureColumns.valueChanged.connect(refreshPlotListHelper)
+
         self._ui.addPlotButton.clicked.connect(addTracesToPlot)
 
+    def setupFigureTab(self, figure):
+        # Set row and column numbers.  Block some signals
+        # because the number of rows or columns isn't really changing,
+        # it's only changing in the UI because we're switching plots.
+        self._ui.figureRows.blockSignals(True)
+        self._ui.figureColumns.blockSignals(True)
+
+        self._ui.figureRows.setValue(figure.rows())
+        self._ui.figureColumns.setValue(figure.columns())
+
+        # Unblock signals
+        self._ui.figureRows.blockSignals(False)
+        self._ui.figureColumns.blockSignals(False)
 
 
+    def setupPlotTab(self, figure):
+        # Setup Plot tab
+        self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
+        self._ui.plotNum.setValue(1)
+        self.refreshPlotList(figure)
+
+    def refreshPlotList(self, figure):
+        """Get all traces in all visible plots and put them into the plot list model."""
+        
+        # Clear plot list model
+        plotListModel = self._ui.plotListView.model()
+        plotListModel.clearData()
+
+        # Loop through plots and add all traces to model
+        for plotNum in range(1, figure.numPlots() + 1):
+            plot = figure.getPlot(plotNum)
+            for trace in plot.getTraces():
+                plotListModel.addEntry(PlotListEntry(plotNum, trace.getXName(), trace.getYName()))
+
+        plotListModel.doReset()
+        
+        return True
 
     def getMenuNameToAddTo(self):
         return "menuPlot"

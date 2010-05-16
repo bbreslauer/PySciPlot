@@ -26,3 +26,9 @@ class Trace(QObject):
     def getY(self):
         return self._y
 
+    def getXName(self):
+        return self._x.name()
+
+    def getYName(self):
+        return self._y.name()
+

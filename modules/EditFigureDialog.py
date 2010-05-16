@@ -1,5 +1,7 @@
-from PyQt4.QtGui import QWidget
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import QWidget, QMenu, QAction
 
+from Trace import Trace
 from Module import Module
 from Figure import Figure
 from FigureListModel import FigureListModel
@@ -14,6 +16,7 @@ class EditFigureDialog(Module):
     def __init__(self, app):
         self._widget = QWidget()
         self._app = app
+        self._currentFigure = None
         self.buildWidget()
 
     def buildWidget(self):
@@ -22,8 +25,6 @@ class EditFigureDialog(Module):
         # If no figures have been created yet, create the first one.
         # This way, everything works from the start and you don't have
         # to add a figure in order to start.
-#        if self._app.figures().length() == 0:
-#            self._app.figures().addFigure(Figure("NewFigure"))
 
         # Create enclosing widget and UI
         self._ui = Ui_EditFigureDialog()
@@ -53,7 +54,7 @@ class EditFigureDialog(Module):
         # Setup plot list
         plotListModel = PlotListModel()
         self._ui.plotListView.setModel(plotListModel)
-
+        self.setupPlotListMenu()
         
 
         def createFigure():
@@ -90,22 +91,12 @@ class EditFigureDialog(Module):
 
             figure = self._app.figures().getFigure(index.row())
             
-            self.setupFigureListLabel(figure.name())
-            self.resetSignalsOnFigureChange(figure)
-            self.setupFigureTab(figure)
-            self.setupPlotTab(figure)
+            self.setCurrentFigure(figure)
+            self.setupFigureListLabel()
+            self.resetSignalsOnFigureChange()
+            self.setupFigureTab()
+            self.setupPlotTab()
             
-#            # If the current figure is renamed, make sure the label is updated to reflect that.
-#            # But remove all other connections from the label.  The only way the figure can
-#            # be updated is if it is the current figure, but that could change in the future.
-#            for figure in self._app.figures().figures():
-#                try:
-#                    figure.figureRenamed.disconnect(self.setupFigureListLabel)
-#                except:
-#                    pass
-#
-#            self._app.figures().getFigure(self._ui.figureListView.selectionModel().currentIndex().row()).figureRenamed.connect(self.setupFigureListLabel)
-
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
         self._ui.deleteFigureButton.clicked.connect(deleteFigure)
@@ -113,16 +104,21 @@ class EditFigureDialog(Module):
         
         return self._widget
 
-    def setupFigureListLabel(self, figureName):
-        self._ui.figureListLabel.setText("Currently working on figure:\n" + figureName)
+    def setupFigureListLabel(self):
+        self._ui.figureListLabel.setText("Currently working on figure:\n" + self._currentFigure.name())
 
-    def resetSignalsOnFigureChange(self, figure):
+    def setCurrentFigure(self, figure):
+        self._currentFigure = figure
+
+    def resetSignalsOnFigureChange(self):
         """Disconnect and reconnect all signals whenever the active figure is changed."""
         # Disconnect signals, only if they exist.  A TypeError exception is raised 
         # whenever the signal does not exist.  We must handle these so that execution
         # continues, and we must use a separate try for each signal so that we make 
         # sure to disconnect every signal (since if an exception is raised, nothing 
         # in the try statement after that exception is executed).
+
+        figure = self._currentFigure
 
         # Signal disconnections
         for f in self._app.figures().figures():
@@ -140,7 +136,7 @@ class EditFigureDialog(Module):
         except TypeError:
             pass
         try:
-            self._ui.addPlotButton.clicked.disconnect()
+            self._ui.addTraceButton.clicked.disconnect()
         except TypeError:
             pass
 #        try:
@@ -160,17 +156,19 @@ class EditFigureDialog(Module):
 
             xAxisList = self._ui.xAxisListView.selectedIndexes()
             yAxisList = self._ui.yAxisListView.selectedIndexes()
+            traceColor = str(self._ui.traceColor.currentText())
 
             for x in xAxisList:
                 for y in yAxisList:
                     xWave = self._app.waves().waves()[x.row()]
                     yWave = self._app.waves().waves()[y.row()]
-                    plot.addTrace(xWave, yWave)
+                    trace = Trace(xWave, yWave, traceColor)
+                    plot.addTrace(trace)
             
-            self.refreshPlotList(figure)
+            self.refreshPlotList()
 
         def refreshPlotListHelper(value):
-            self.refreshPlotList(figure)
+            self.refreshPlotList()
 
         # Signal connections
         figure.figureRenamed.connect(self.setupFigureListLabel)
@@ -183,12 +181,14 @@ class EditFigureDialog(Module):
         self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
         self._ui.figureColumns.valueChanged.connect(refreshPlotListHelper)
 
-        self._ui.addPlotButton.clicked.connect(addTracesToPlot)
+        self._ui.addTraceButton.clicked.connect(addTracesToPlot)
 
-    def setupFigureTab(self, figure):
+    def setupFigureTab(self):
         # Set row and column numbers.  Block some signals
         # because the number of rows or columns isn't really changing,
         # it's only changing in the UI because we're switching plots.
+        figure = self._currentFigure
+
         self._ui.figureRows.blockSignals(True)
         self._ui.figureColumns.blockSignals(True)
 
@@ -200,15 +200,19 @@ class EditFigureDialog(Module):
         self._ui.figureColumns.blockSignals(False)
 
 
-    def setupPlotTab(self, figure):
+    def setupPlotTab(self):
         # Setup Plot tab
+        figure = self._currentFigure
+
         self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
         self._ui.plotNum.setValue(1)
-        self.refreshPlotList(figure)
+        self.refreshPlotList()
 
-    def refreshPlotList(self, figure):
+    def refreshPlotList(self):
         """Get all traces in all visible plots and put them into the plot list model."""
         
+        figure = self._currentFigure
+
         # Clear plot list model
         plotListModel = self._ui.plotListView.model()
         plotListModel.clearData()
@@ -217,11 +221,56 @@ class EditFigureDialog(Module):
         for plotNum in range(1, figure.numPlots() + 1):
             plot = figure.getPlot(plotNum)
             for trace in plot.getTraces():
-                plotListModel.addEntry(PlotListEntry(plotNum, trace.getXName(), trace.getYName()))
+                plotListModel.addEntry(PlotListEntry(plotNum, trace))
 
         plotListModel.doReset()
         
         return True
+
+    def setupPlotListMenu(self):
+        """Prepare the menu for right clicking on a plot list entry."""
+
+        # Setup plot list right-click menu
+        self._ui.plotListView.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._ui.plotListView.customContextMenuRequested.connect(self.showPlotListMenu)
+        
+        self.plotListMenu = QMenu(self._ui.plotListView)
+
+        self.deleteTraceFromPlotListAction = QAction("Delete Trace", self.plotListMenu)
+        self.plotListMenu.addAction(self.deleteTraceFromPlotListAction)
+
+    def deleteTraceFromPlot(self, row):
+        plotListEntry = self._ui.plotListView.model().getPlotListEntryByRow(row)
+        plotNum = plotListEntry.getPlotNum()
+        trace   = plotListEntry.getTrace()
+
+        plot = self._currentFigure.getPlot(plotNum)
+        plot.removeTrace(trace)
+
+        self.refreshPlotList()
+
+
+    def showPlotListMenu(self, point):
+        """Display the menu that occurs when right clicking on a plot list entry."""
+
+        index = self._ui.plotListView.indexAt(point)
+        
+        if index.row() < 0:
+            return False
+
+        def deleteTraceHelper():
+            self.deleteTraceFromPlot(index.row())
+
+        # Connect actions
+        self.deleteTraceFromPlotListAction.triggered.connect(deleteTraceHelper)
+
+        self.plotListMenu.exec_(self._ui.plotListView.mapToGlobal(point))
+        
+        # Disconnect actions, so that we don't have multiple connections when
+        # the menu is opened again.
+        self.deleteTraceFromPlotListAction.triggered.disconnect(deleteTraceHelper)
+
+
 
     def getMenuNameToAddTo(self):
         return "menuPlot"

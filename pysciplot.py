@@ -1,3 +1,5 @@
+#!/home/ben/usr/local/bin/python
+
 import sys, string, signal
 
 from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction

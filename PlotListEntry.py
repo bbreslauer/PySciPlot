@@ -2,16 +2,15 @@ from PyQt4.QtCore import QString
 from Wave import Wave
 
 class PlotListEntry():
-    def __init__(self, plotNum, x, y):
-        self.columns = 3
-        self.xName = x
-        self.yName = y
+    def __init__(self, plotNum, trace):
+        self._columns = 3
+        self._trace = trace
         if not type(plotNum) is int or plotNum < 1:
             plotNum = 1
-        self.plotNum = plotNum
+        self._plotNum = plotNum
     
     def numColumns(self):
-        return self.columns
+        return self._columns
     
     def columnName(self, col):
         if col == 0:
@@ -24,10 +23,16 @@ class PlotListEntry():
         
     def columnValue(self, col):
         if col == 0:
-            return self.plotNum
+            return self._plotNum
         elif col == 1:
-            return QString(self.xName)
+            return QString(self._trace.getXName())
         elif col == 2:
-            return QString(self.yName)
+            return QString(self._trace.getYName())
         return
+
+    def getTrace(self):
+        return self._trace
+
+    def getPlotNum(self):
+        return self._plotNum
 

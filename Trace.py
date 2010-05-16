@@ -6,11 +6,13 @@ class Trace(QObject):
     # Signals
     xChanged = pyqtSignal()
     yChanged = pyqtSignal()
+    colorChanged = pyqtSignal()
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x=0, y=0, traceColor='Black'):
         QObject.__init__(self)
         self.setX(x)
         self.setY(y)
+        self.setColor(traceColor)
     
     def setX(self, x):
         self._x = x
@@ -19,6 +21,10 @@ class Trace(QObject):
     def setY(self, y):
         self._y = y
         self.yChanged.emit()
+
+    def setColor(self, color):
+        self._color = color
+        self.colorChanged.emit()
         
     def getX(self):
         return self._x
@@ -31,4 +37,9 @@ class Trace(QObject):
 
     def getYName(self):
         return self._y.name()
+
+    def getFormat(self):
+        return dict(color=self._color, linestyle='solid')
+
+
 

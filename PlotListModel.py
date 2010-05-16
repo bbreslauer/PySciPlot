@@ -69,3 +69,6 @@ class PlotListModel(QAbstractTableModel):
         self.dataChanged.emit(self.index(len(self._data)-1, 0), self.index(len(self._data)-1, 2))
         return True
 
+    def getPlotListEntryByRow(self, row):
+        return self._data[row]
+

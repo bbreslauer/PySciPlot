@@ -11,6 +11,7 @@ class Plot(QObject):
 
     # Signals
     traceAdded = pyqtSignal()
+    traceRemoved = pyqtSignal()
 
     def __init__(self, figure, plotNum):
         QObject.__init__(self)
@@ -19,12 +20,13 @@ class Plot(QObject):
         self._traces = []
 
         self.traceAdded.connect(self.refresh)
+        self.traceRemoved.connect(self.refresh)
     
     def getPlotNum(self):
         return self._plotNum
 
-    def addTrace(self, x, y):
-        self._traces.append(Trace(x, y))
+    def addTrace(self, trace):
+        self._traces.append(trace)
         self.traceAdded.emit()
         return True
     
@@ -34,9 +36,9 @@ class Plot(QObject):
     def numTraces(self):
         return len(self._traces)
 
-    def getTraceAsFloat(self, traceNum):
-        xData = Wave.convertToFloatList(self._traces[traceNum].getX())
-        yData = Wave.convertToFloatList(self._traces[traceNum].getY())
+    def getTraceAsFloat(self, trace):
+        xData = Wave.convertToFloatList(trace.getX())
+        yData = Wave.convertToFloatList(trace.getY())
 
         # Make sure waves are the same length, or else matplotlib will complain and not plot them
         diffLength = len(xData) - len(yData)
@@ -45,26 +47,43 @@ class Plot(QObject):
         elif diffLength > 0:
             yData.extend([nan] * diffLength)
 
-        print diffLength
-
         return Trace(xData, yData)
 
     def getTracesAsFloat(self):
         tmpTraces = []
-        for i in range(self.numTraces()):
-            tmpTraces.append(self.getTraceAsFloat(i))
+        for trace in self._traces:
+            tmpTraces.append(self.getTraceAsFloat(trace))
 
         return tmpTraces
+
+    def convertTraceDataToFloat(self, trace):
+        xData = Wave.convertToFloatList(trace.getX())
+        yData = Wave.convertToFloatList(trace.getY())
+
+        # Make sure waves are the same length, or else matplotlib will complain and not plot them
+        diffLength = len(xData) - len(yData)
+        if diffLength < 0:
+            xData.extend([nan] * (- diffLength))
+        elif diffLength > 0:
+            yData.extend([nan] * diffLength)
+
+        return [xData, yData]
+
 
     def refresh(self):
         print "building r: " + str(self._figure.rows()) + ", c: " + str(self._figure.columns()) + ", n: " + str(self._plotNum)
         self._axes = self._figure.mplFigure().add_subplot(self._figure.rows(), self._figure.columns(), self._plotNum)
         self._axes.clear()
 
-        for trace in self.getTracesAsFloat():
-            self._axes.plot(trace.getX(), trace.getY())
+        for trace in self._traces:
+            [x, y] = self.convertTraceDataToFloat(trace)
+            self._axes.plot(x, y, **(trace.getFormat()))
 
         self._figure._canvas.draw()
 
         return True
+
+    def removeTrace(self, trace):
+        self._traces.remove(trace)
+        self.traceRemoved.emit()
 

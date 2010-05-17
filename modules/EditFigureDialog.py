@@ -4,9 +4,9 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox
 from Trace import Trace
 from Module import Module
 from Figure import Figure
-from FigureListModel import FigureListModel
-from WavesListModel import WavesListModel
-from TraceListModel import TraceListModel
+from models.FigureListModel import FigureListModel
+from models.WavesListModel import WavesListModel
+from models.TraceListModel import TraceListModel
 from TraceListEntry import TraceListEntry
 from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 

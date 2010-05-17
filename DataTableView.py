@@ -3,7 +3,7 @@ from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, 
 
 from Wave import Wave
 from AddWaveAction import AddWaveAction
-from DataTableModel import DataTableModel
+from models.DataTableModel import DataTableModel
 from ui.Ui_RenameWaveDialog import Ui_RenameWaveDialog
 
 class DataTableView(QTableView):

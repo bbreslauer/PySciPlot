@@ -11,15 +11,15 @@ from Waves import Waves
 from Figure import Figure
 from Figures import Figures
 from ModuleHandler import ModuleHandler
-from FigureListModel import FigureListModel
-from WavesListModel import WavesListModel
+from models.FigureListModel import FigureListModel
+from models.WavesListModel import WavesListModel
 from TraceListEntry import TraceListEntry
 from DataTableView import DataTableView
-from DataTableModel import DataTableModel
+from models.DataTableModel import DataTableModel
 from DialogSubWindow import DialogSubWindow
 from ui.Ui_MainWindow import Ui_MainWindow
 from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
-from ui.Ui_EditFigureDialog2 import Ui_EditFigureDialog
+from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 
 class pysciplot(QMainWindow):
@@ -57,8 +57,6 @@ class pysciplot(QMainWindow):
 
         self.importModule("ManageWavesDialog")
         self.importModule("EditFigureDialog")
-        self.importModule("CreateFigureDialog")
-        self.importModule("EditPlotDialog")
 
         
     def waves(self):

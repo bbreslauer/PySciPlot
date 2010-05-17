@@ -8,9 +8,7 @@ from matplotlib.figure import Figure as MPLFigure
 from Waves import Waves
 from Wave import Wave
 from Plot import Plot
-from PlotData import PlotData
 from DialogSubWindow import DialogSubWindow
-from modules.EditPlotDialog import EditPlotDialog
 
 class Figure(QObject):
     """

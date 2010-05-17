@@ -1,7 +1,7 @@
 from PyQt4.QtGui import QWidget
 
 from Wave import Wave
-from WavesListModel import WavesListModel
+from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
 

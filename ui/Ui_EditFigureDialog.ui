@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>500</height>
+    <width>934</width>
+    <height>786</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>620</width>
-    <height>420</height>
+    <width>800</width>
+    <height>500</height>
    </size>
   </property>
   <property name="baseSize">
@@ -30,8 +30,8 @@
     <rect>
      <x>40</x>
      <y>20</y>
-     <width>701</width>
-     <height>411</height>
+     <width>791</width>
+     <height>461</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -197,8 +197,8 @@
        <widget class="QWidget" name="gridLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>160</x>
+          <y>10</y>
           <width>301</width>
           <height>381</height>
          </rect>
@@ -218,7 +218,14 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QListView" name="xAxisListView"/>
+          <widget class="QListView" name="xAxisListView">
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="textElideMode">
+            <enum>Qt::ElideRight</enum>
+           </property>
+          </widget>
          </item>
          <item row="2" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -246,7 +253,7 @@
           </widget>
          </item>
          <item row="3" column="0" colspan="2">
-          <widget class="QTableView" name="plotListView">
+          <widget class="QTableView" name="traceTableView">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -258,6 +265,9 @@
            </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="textElideMode">
+            <enum>Qt::ElideRight</enum>
            </property>
            <property name="sortingEnabled">
             <bool>true</bool>
@@ -295,8 +305,8 @@
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>330</x>
-          <y>40</y>
+          <x>480</x>
+          <y>70</y>
           <width>52</width>
           <height>13</height>
          </rect>
@@ -308,8 +318,8 @@
        <widget class="QComboBox" name="traceColor">
         <property name="geometry">
          <rect>
-          <x>380</x>
-          <y>40</y>
+          <x>480</x>
+          <y>90</y>
           <width>161</width>
           <height>22</height>
          </rect>
@@ -384,6 +394,29 @@
           <string>Aqua</string>
          </property>
         </item>
+       </widget>
+       <widget class="QListView" name="plotListView">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>91</width>
+          <height>411</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>4</y>
+          <width>52</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Plot</string>
+        </property>
        </widget>
       </widget>
      </widget>

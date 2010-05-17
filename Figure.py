@@ -121,6 +121,9 @@ class Figure(QObject):
     def showFigure(self):
         self._figureSubWindow.show()
 
+    def hideFigure(self):
+        self._figureSubWindow.hide()
+
     def createRightClickActions(self):
 
         def createEditPlotDialog():

@@ -14,6 +14,7 @@ class WavesListModel(QStringListModel):
 
         # Connect signals
         self._waves.waveAdded.connect(self.doReset)
+        self._waves.waveRenamed.connect(self.doReset)
         self._waves.waveRemoved.connect(self.doReset)
 
     def rowCount(self, parent=QModelIndex()):

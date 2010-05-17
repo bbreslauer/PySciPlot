@@ -1,6 +1,6 @@
 from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt, QVariant, QString, pyqtSignal
 
-class PlotListModel(QAbstractTableModel):
+class TraceListModel(QAbstractTableModel):
     """
     All the data that corresponds to traces in a figure are displayed based on this model.
     
@@ -37,8 +37,6 @@ class PlotListModel(QAbstractTableModel):
 
         if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
             return QVariant(QString(self._columnNames[section]))
-#        elif orientation == Qt.Vertical and role == Qt.DisplayRole:
-#            return QVariant(section)
         return QVariant()
     
     def data(self, index, role):
@@ -69,6 +67,6 @@ class PlotListModel(QAbstractTableModel):
         self.dataChanged.emit(self.index(len(self._data)-1, 0), self.index(len(self._data)-1, 2))
         return True
 
-    def getPlotListEntryByRow(self, row):
+    def getTraceListEntryByRow(self, row):
         return self._data[row]
 

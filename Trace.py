@@ -38,8 +38,11 @@ class Trace(QObject):
     def getYName(self):
         return self._y.name()
 
+    def getColor(self):
+        return self._color
+
     def getFormat(self):
-        return dict(color=self._color, linestyle='solid')
+        return dict(color=self.getColor(), linestyle='solid')
 
 
 

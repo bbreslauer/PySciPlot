@@ -13,7 +13,7 @@ from Figures import Figures
 from ModuleHandler import ModuleHandler
 from FigureListModel import FigureListModel
 from WavesListModel import WavesListModel
-from PlotListEntry import PlotListEntry
+from TraceListEntry import TraceListEntry
 from DataTableView import DataTableView
 from DataTableModel import DataTableModel
 from DialogSubWindow import DialogSubWindow

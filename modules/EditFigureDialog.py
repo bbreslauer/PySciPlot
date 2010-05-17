@@ -1,13 +1,13 @@
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QWidget, QMenu, QAction
+from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox
 
 from Trace import Trace
 from Module import Module
 from Figure import Figure
 from FigureListModel import FigureListModel
 from WavesListModel import WavesListModel
-from PlotListModel import PlotListModel
-from PlotListEntry import PlotListEntry
+from TraceListModel import TraceListModel
+from TraceListEntry import TraceListEntry
 from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 class EditFigureDialog(Module):
@@ -51,10 +51,10 @@ class EditFigureDialog(Module):
         self._app.waves().waveAdded.connect(yListModel.doReset)
         self._app.waves().waveRemoved.connect(yListModel.doReset)
 
-        # Setup plot list
-        plotListModel = PlotListModel()
-        self._ui.plotListView.setModel(plotListModel)
-        self.setupPlotListMenu()
+        # Setup trace list
+        traceListModel = TraceListModel()
+        self._ui.traceTableView.setModel(traceListModel)
+        self.setupTraceListMenu()
         
 
         def createFigure():
@@ -84,6 +84,7 @@ class EditFigureDialog(Module):
             answer = questionMessage.exec_()
 
             if answer == QMessageBox.Yes:
+                self._app.figures().getFigure(index.row()).hideFigure()
                 self._app.figures().removeFigure(index.row())
 
         def changeFigure(index):
@@ -101,6 +102,7 @@ class EditFigureDialog(Module):
         self._ui.showFigureButton.clicked.connect(showFigure)
         self._ui.deleteFigureButton.clicked.connect(deleteFigure)
         self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
+        self._ui.traceTableView.selectionModel().currentChanged.connect(self.setupTraceOptions)
         
         return self._widget
 
@@ -165,21 +167,21 @@ class EditFigureDialog(Module):
                     trace = Trace(xWave, yWave, traceColor)
                     plot.addTrace(trace)
             
-            self.refreshPlotList()
+            self.refreshTraceList()
 
-        def refreshPlotListHelper(value):
-            self.refreshPlotList()
+        def refreshTraceListHelper(value):
+            self.refreshTraceList()
 
         # Signal connections
         figure.figureRenamed.connect(self.setupFigureListLabel)
 
         self._ui.figureRows.valueChanged.connect(figure.setNumberOfRows)
         self._ui.figureRows.valueChanged.connect(setPlotNumMaximum)
-        self._ui.figureRows.valueChanged.connect(refreshPlotListHelper)
+        self._ui.figureRows.valueChanged.connect(refreshTraceListHelper)
         
         self._ui.figureColumns.valueChanged.connect(figure.setNumberOfColumns)
         self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
-        self._ui.figureColumns.valueChanged.connect(refreshPlotListHelper)
+        self._ui.figureColumns.valueChanged.connect(refreshTraceListHelper)
 
         self._ui.addTraceButton.clicked.connect(addTracesToPlot)
 
@@ -206,69 +208,80 @@ class EditFigureDialog(Module):
 
         self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
         self._ui.plotNum.setValue(1)
-        self.refreshPlotList()
+        self.refreshTraceList()
 
-    def refreshPlotList(self):
+    def setupTraceOptions(self, index):
+        """Update all trace options for the trace that was just clicked, as identified by index."""
+        
+        trace = self._ui.traceTableView.model().getTraceListEntryByRow(index.row()).getTrace()
+
+        # Setup color drop-down box
+        self._ui.traceColor.setCurrentIndex(self._ui.traceColor.findText(trace.getColor()))
+
+
+
+
+    def refreshTraceList(self):
         """Get all traces in all visible plots and put them into the plot list model."""
         
         figure = self._currentFigure
 
         # Clear plot list model
-        plotListModel = self._ui.plotListView.model()
-        plotListModel.clearData()
+        traceListModel = self._ui.traceTableView.model()
+        traceListModel.clearData()
 
         # Loop through plots and add all traces to model
         for plotNum in range(1, figure.numPlots() + 1):
             plot = figure.getPlot(plotNum)
             for trace in plot.getTraces():
-                plotListModel.addEntry(PlotListEntry(plotNum, trace))
+                traceListModel.addEntry(TraceListEntry(plotNum, trace))
 
-        plotListModel.doReset()
+        traceListModel.doReset()
         
         return True
 
-    def setupPlotListMenu(self):
+    def setupTraceListMenu(self):
         """Prepare the menu for right clicking on a plot list entry."""
 
         # Setup plot list right-click menu
-        self._ui.plotListView.setContextMenuPolicy(Qt.CustomContextMenu)
-        self._ui.plotListView.customContextMenuRequested.connect(self.showPlotListMenu)
+        self._ui.traceTableView.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._ui.traceTableView.customContextMenuRequested.connect(self.showTraceListMenu)
         
-        self.plotListMenu = QMenu(self._ui.plotListView)
+        self.traceListMenu = QMenu(self._ui.traceTableView)
 
-        self.deleteTraceFromPlotListAction = QAction("Delete Trace", self.plotListMenu)
-        self.plotListMenu.addAction(self.deleteTraceFromPlotListAction)
+        self.deleteTraceFromTraceListAction = QAction("Delete Trace", self.traceListMenu)
+        self.traceListMenu.addAction(self.deleteTraceFromTraceListAction)
 
     def deleteTraceFromPlot(self, row):
-        plotListEntry = self._ui.plotListView.model().getPlotListEntryByRow(row)
-        plotNum = plotListEntry.getPlotNum()
-        trace   = plotListEntry.getTrace()
+        traceListEntry = self._ui.traceTableView.model().getTraceListEntryByRow(row)
+        plotNum = traceListEntry.getPlotNum()
+        trace   = traceListEntry.getTrace()
 
         plot = self._currentFigure.getPlot(plotNum)
         plot.removeTrace(trace)
 
-        self.refreshPlotList()
+        self.refreshTraceList()
 
-
-    def showPlotListMenu(self, point):
+    def showTraceListMenu(self, point):
         """Display the menu that occurs when right clicking on a plot list entry."""
 
-        index = self._ui.plotListView.indexAt(point)
+        index = self._ui.traceTableView.indexAt(point)
         
         if index.row() < 0:
+            self._ui.traceTableView.setCurrentIndex(self._ui.traceTableView.model().index(-1,0))
             return False
 
         def deleteTraceHelper():
             self.deleteTraceFromPlot(index.row())
 
         # Connect actions
-        self.deleteTraceFromPlotListAction.triggered.connect(deleteTraceHelper)
+        self.deleteTraceFromTraceListAction.triggered.connect(deleteTraceHelper)
 
-        self.plotListMenu.exec_(self._ui.plotListView.mapToGlobal(point))
+        self.traceListMenu.exec_(self._ui.traceTableView.mapToGlobal(point))
         
         # Disconnect actions, so that we don't have multiple connections when
         # the menu is opened again.
-        self.deleteTraceFromPlotListAction.triggered.disconnect(deleteTraceHelper)
+        self.deleteTraceFromTraceListAction.triggered.disconnect(deleteTraceHelper)
 
 
 

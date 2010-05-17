@@ -1,7 +1,7 @@
 from PyQt4.QtCore import QString
 from Wave import Wave
 
-class PlotListEntry():
+class TraceListEntry():
     def __init__(self, plotNum, trace):
         self._columns = 3
         self._trace = trace

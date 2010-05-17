@@ -16,6 +16,7 @@ class Waves(QObject):
     # Signals
     waveAdded   = pyqtSignal(Wave)
     waveRemoved = pyqtSignal(Wave)
+    waveRenamed = pyqtSignal()
 
     def __init__(self, wavesIn=[], keepWavesUnique=True):
         """
@@ -92,6 +93,10 @@ class Waves(QObject):
         """Return True if wave's name is neither an empty string nor an existing Wave name in this object.  Return False otherwise."""
         return self.uniqueWaveName(wave.name())
 
+    def emitWaveRenamed(self):
+        """Emit the wave renamed signal."""
+        self.waveRenamed.emit()
+
     # Modifying methods
     def addWave(self, wave):
         """
@@ -111,6 +116,7 @@ class Waves(QObject):
         if self._keepWavesUnique and not self.uniqueWave(wave):
             return False
         self._waves.insert(position, wave)
+        wave.nameChanged.connect(self.emitWaveRenamed)
         self.waveAdded.emit(wave)
         return wave
 
@@ -132,6 +138,7 @@ class Waves(QObject):
         for index in range(len(self._waves)):
             if self._waves[index].name() == name:
                 wave = self._waves.pop(index)
+                wave.nameChanged.disconnect(self.emitWaveRenamed)
                 self.waveRemoved.emit(wave)
                 return wave
         return False

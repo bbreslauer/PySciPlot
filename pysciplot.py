@@ -18,8 +18,6 @@ from DataTableView import DataTableView
 from models.DataTableModel import DataTableModel
 from DialogSubWindow import DialogSubWindow
 from ui.Ui_MainWindow import Ui_MainWindow
-from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
-from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 
 class pysciplot(QMainWindow):

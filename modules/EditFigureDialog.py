@@ -1,5 +1,5 @@
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox
+from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette
 
 from Trace import Trace
 from Module import Module
@@ -7,6 +7,7 @@ from Figure import Figure
 from models.FigureListModel import FigureListModel
 from models.WavesListModel import WavesListModel
 from models.TraceListModel import TraceListModel
+from models.PlotListModel import PlotListModel
 from TraceListEntry import TraceListEntry
 from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
@@ -17,6 +18,7 @@ class EditFigureDialog(Module):
         self._widget = QWidget()
         self._app = app
         self._currentFigure = None
+        self._currentPlot = None
         self.buildWidget()
 
     def buildWidget(self):
@@ -34,11 +36,22 @@ class EditFigureDialog(Module):
         # so that the entire window resizes correctly.
         self._widget.setLayout(self._ui.horizontalLayout)
 
+        self._ui.plotTab.setLayout(self._ui.plotTabLayout)
+        self._ui.tracesGroupBox.setLayout(self._ui.tracesGridLayout)
+        self._ui.traceOptionsGroupBox.setLayout(self._ui.traceOptionsFormLayout)
+
         # Setup figure list
         figureListModel = FigureListModel(self._app.figures())
         self._ui.figureListView.setModel(figureListModel)
         self._app.figures().figureAdded.connect(figureListModel.doReset)
         self._app.figures().figureRemoved.connect(figureListModel.doReset)
+
+        # Setup plot combo box
+        plotListModel = PlotListModel()
+        self._ui.plotComboBox.setModel(plotListModel)
+
+        # Setup plot options group
+        self._ui.plotNameLineEdit.editingFinished.connect(self.setPlotName)
 
         # Setup X and Y lists
         xListModel = WavesListModel(self._app.waves())
@@ -64,7 +77,8 @@ class EditFigureDialog(Module):
             """Display the figure, in case it got hidden."""
 
             index = self._ui.figureListView.selectedIndexes()[0]
-            self._app.figures().getFigure(index.row()).showFigure()
+            if self._app.figures().getFigure(index.row()):
+                self._app.figures().getFigure(index.row()).showFigure()
 
         def deleteFigure():
             """
@@ -73,6 +87,10 @@ class EditFigureDialog(Module):
             """
             
             index = self._ui.figureListView.selectedIndexes()[0]
+            
+            # Make sure we are on a valid figure
+            if not self._app.figures().getFigure(index.row()):
+                return False
             
             # Ask user if they really want to delete the figure
             questionMessage = QMessageBox()
@@ -91,18 +109,30 @@ class EditFigureDialog(Module):
             """Change the tabs to use data from the selected figure."""
 
             figure = self._app.figures().getFigure(index.row())
-            
-            self.setCurrentFigure(figure)
-            self.setupFigureListLabel()
-            self.resetSignalsOnFigureChange()
-            self.setupFigureTab()
-            self.setupPlotTab()
+
+            if figure:
+                self.disconnectSignalsOnFigureChange()
+                self.setCurrentFigure(figure)
+                self.setupFigureListLabel()
+                self.connectSignalsOnFigureChange()
+                self.setupFigureTab()
+                self.setupPlotTab()
+
+        def changePlot(row):
+            """Change the content on the plot tab."""
+
+            self._currentPlot = self._currentFigure.getPlot(row + 1)
+            self._ui.plotNameLineEdit.setText(self._currentPlot.getName())
+            self._ui.plotTitleLineEdit.setText("")
+
+
             
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
         self._ui.deleteFigureButton.clicked.connect(deleteFigure)
         self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
         self._ui.traceTableView.selectionModel().currentChanged.connect(self.setupTraceOptions)
+        self._ui.plotComboBox.currentIndexChanged.connect(changePlot)
         
         return self._widget
 
@@ -111,9 +141,10 @@ class EditFigureDialog(Module):
 
     def setCurrentFigure(self, figure):
         self._currentFigure = figure
+        self._ui.figureListView.setBackgroundRole(QPalette.Highlight)
 
-    def resetSignalsOnFigureChange(self):
-        """Disconnect and reconnect all signals whenever the active figure is changed."""
+    def disconnectSignalsOnFigureChange(self):
+        """Disconnect all signals whenever the active figure is changed."""
         # Disconnect signals, only if they exist.  A TypeError exception is raised 
         # whenever the signal does not exist.  We must handle these so that execution
         # continues, and we must use a separate try for each signal so that we make 
@@ -128,6 +159,7 @@ class EditFigureDialog(Module):
                 f.figureRenamed.disconnect(self.setupFigureListLabel)
             except TypeError:
                 pass
+
 
         try:
             self._ui.figureRows.valueChanged.disconnect()
@@ -145,15 +177,16 @@ class EditFigureDialog(Module):
 #        except TypeError:
 #            pass
 
+    def connectSignalsOnFigureChange(self):
+        """Connect all signals whenever the active figure is changed."""
+        
+        figure = self._currentFigure
+
         # Helper functions
 
-        # setMaximum is not a C++ slot, so a helper function is needed
-        def setPlotNumMaximum(value):
-            self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
-        
         # Add a trace to a plot on a figure
         def addTracesToPlot():
-            plotNum = self._ui.plotNum.value()
+            plotNum = self._ui.plotComboBox.currentIndex() + 1
             plot = figure.getPlot(plotNum)
 
             xAxisList = self._ui.xAxisListView.selectedIndexes()
@@ -172,18 +205,28 @@ class EditFigureDialog(Module):
         def refreshTraceListHelper(value):
             self.refreshTraceList()
 
+        def refreshPlotComboBoxHelper(value):
+            self._ui.plotComboBox.model().doReset()
+            self._ui.plotComboBox.setCurrentIndex(0)
+
+        def setFigureName(newName):
+            figure.rename(newName)
+
         # Signal connections
         figure.figureRenamed.connect(self.setupFigureListLabel)
 
         self._ui.figureRows.valueChanged.connect(figure.setNumberOfRows)
-        self._ui.figureRows.valueChanged.connect(setPlotNumMaximum)
         self._ui.figureRows.valueChanged.connect(refreshTraceListHelper)
+        self._ui.figureRows.valueChanged.connect(refreshPlotComboBoxHelper)
         
         self._ui.figureColumns.valueChanged.connect(figure.setNumberOfColumns)
-        self._ui.figureColumns.valueChanged.connect(setPlotNumMaximum)
         self._ui.figureColumns.valueChanged.connect(refreshTraceListHelper)
+        self._ui.figureColumns.valueChanged.connect(refreshPlotComboBoxHelper)
 
         self._ui.addTraceButton.clicked.connect(addTracesToPlot)
+
+
+
 
     def setupFigureTab(self):
         # Set row and column numbers.  Block some signals
@@ -206,9 +249,12 @@ class EditFigureDialog(Module):
         # Setup Plot tab
         figure = self._currentFigure
 
-        self._ui.plotNum.setMaximum(figure.rows() * figure.columns())
-        self._ui.plotNum.setValue(1)
+        self._ui.plotComboBox.model().setFigure(figure)
+        self._ui.plotComboBox.setCurrentIndex(0)
         self.refreshTraceList()
+        
+    def setPlotName(self):
+        self._currentPlot.setName(self._ui.plotNameLineEdit.text())
 
     def setupTraceOptions(self, index):
         """Update all trace options for the trace that was just clicked, as identified by index."""

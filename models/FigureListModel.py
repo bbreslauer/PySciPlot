@@ -18,7 +18,8 @@ class FigureListModel(QAbstractListModel):
         """Return the name of the figure entry at the given index."""
 
         if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
-            return self._figures.getFigure(index.row()).name()
+            if self._figures.getFigure(index.row()):
+                return self._figures.getFigure(index.row()).name()
         return QVariant()
 
     def headerData(self, section, orientation, role):
@@ -39,7 +40,7 @@ class FigureListModel(QAbstractListModel):
 
     def setData(self, index, value, role):
         "Change the name for the figure at index."""
-        if index.isValid() and role == Qt.EditRole:
+        if index.isValid() and role == Qt.EditRole and self._figures.getFigure(index.row()):
             # Do not allow for blank figure names
             if value == "":
                 return False

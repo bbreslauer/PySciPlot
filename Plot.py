@@ -10,18 +10,27 @@ class Plot(QObject):
     """This class contains all the information about a plot inside a figure."""
 
     # Signals
+    plotRenamed = pyqtSignal(str)
     traceAdded = pyqtSignal()
     traceRemoved = pyqtSignal()
 
-    def __init__(self, figure, plotNum):
+    def __init__(self, figure, plotNum, name=""):
         QObject.__init__(self)
         self._figure = figure
         self._plotNum = plotNum
+        self._name = ""
+        self.setName(name)
         self._traces = []
 
         self.traceAdded.connect(self.refresh)
         self.traceRemoved.connect(self.refresh)
     
+    def __str__(self):
+        return "Num: %s, Name: %s" % (self._plotNum, self._name)
+
+    def getName(self):
+        return self._name
+
     def getPlotNum(self):
         return self._plotNum
 
@@ -86,4 +95,13 @@ class Plot(QObject):
     def removeTrace(self, trace):
         self._traces.remove(trace)
         self.traceRemoved.emit()
+
+    def setName(self, name):
+        if name != "":
+            self._name = name
+            self.plotRenamed.emit(name)
+            return True
+        return False
+
+
 

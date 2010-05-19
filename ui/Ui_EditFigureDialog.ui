@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>934</width>
-    <height>786</height>
+    <height>584</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -28,9 +34,9 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>20</y>
-     <width>791</width>
+     <x>0</x>
+     <y>10</y>
+     <width>931</width>
      <height>461</height>
     </rect>
    </property>
@@ -90,6 +96,9 @@
           <width>100</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="selectionRectVisible">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -164,6 +173,9 @@
            <property name="text">
             <string>Rows</string>
            </property>
+           <property name="buddy">
+            <cstring>figureRows</cstring>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -177,6 +189,9 @@
           <widget class="QLabel" name="label_2">
            <property name="text">
             <string>Columns</string>
+           </property>
+           <property name="buddy">
+            <cstring>figureColumns</cstring>
            </property>
           </widget>
          </item>
@@ -194,229 +209,267 @@
        <attribute name="title">
         <string>Plots</string>
        </attribute>
-       <widget class="QWidget" name="gridLayoutWidget">
+       <widget class="QWidget" name="horizontalLayoutWidget_2">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>10</y>
-          <width>301</width>
-          <height>381</height>
+          <x>0</x>
+          <y>0</y>
+          <width>781</width>
+          <height>361</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0,2" rowminimumheight="0,0,0,0">
-         <item row="1" column="1">
-          <widget class="QListView" name="yAxisListView">
-           <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::ExtendedSelection</enum>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectItems</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QListView" name="xAxisListView">
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="textElideMode">
-            <enum>Qt::ElideRight</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="plotTabLayout" stretch="10,9,10">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Plot Number</string>
+            <widget class="QComboBox" name="plotComboBox">
+             <property name="duplicatesEnabled">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="plotNum">
-             <property name="minimum">
-              <number>1</number>
+            <widget class="QGroupBox" name="plotOptionsGroupBox">
+             <property name="title">
+              <string>Plot Options</string>
              </property>
+             <widget class="QWidget" name="formLayoutWidget_3">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>20</y>
+                <width>251</width>
+                <height>241</height>
+               </rect>
+              </property>
+              <layout class="QFormLayout" name="formLayout_2">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Plot Name</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>Plot Title</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="plotNameLineEdit"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="plotTitleLineEdit"/>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
          </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="addTraceButton">
-           <property name="text">
-            <string>Add Trace</string>
+         <item>
+          <widget class="QGroupBox" name="tracesGroupBox">
+           <property name="title">
+            <string>Add/Select Traces</string>
            </property>
+           <widget class="QWidget" name="gridLayoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>20</y>
+              <width>211</width>
+              <height>301</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="tracesGridLayout" rowstretch="0,0,0,0">
+             <item row="0" column="0">
+              <widget class="QLabel" name="xAxisLabel">
+               <property name="text">
+                <string>X Axis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="yAxisLabel">
+               <property name="text">
+                <string>Y Axis</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QListView" name="xAxisListView">
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="textElideMode">
+                <enum>Qt::ElideRight</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QListView" name="yAxisListView">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectItems</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QPushButton" name="addTraceButton">
+               <property name="text">
+                <string>Add Trace</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <widget class="QTableView" name="traceTableView">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="alternatingRowColors">
+                <bool>false</bool>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <property name="textElideMode">
+                <enum>Qt::ElideRight</enum>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>75</number>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>75</number>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QTableView" name="traceTableView">
-           <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+         <item>
+          <widget class="QGroupBox" name="traceOptionsGroupBox">
+           <property name="title">
+            <string>Trace Options</string>
            </property>
-           <property name="alternatingRowColors">
-            <bool>false</bool>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::SingleSelection</enum>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-           <property name="textElideMode">
-            <enum>Qt::ElideRight</enum>
-           </property>
-           <property name="sortingEnabled">
-            <bool>true</bool>
-           </property>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>75</number>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>75</number>
-           </attribute>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="xAxisLabel">
-           <property name="text">
-            <string>X Axis</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="yAxisLabel">
-           <property name="text">
-            <string>Y Axis</string>
-           </property>
+           <widget class="QWidget" name="formLayoutWidget_2">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>20</y>
+              <width>211</width>
+              <height>201</height>
+             </rect>
+            </property>
+            <layout class="QFormLayout" name="traceOptionsFormLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Color</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="traceColor">
+               <item>
+                <property name="text">
+                 <string>Black</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Blue</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Brown</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Cyan</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gold</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Red</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Tan</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Teal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yellow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Violet</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>White</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Indigo</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Green</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Aqua</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
         </layout>
-       </widget>
-       <widget class="QLabel" name="label_4">
-        <property name="geometry">
-         <rect>
-          <x>480</x>
-          <y>70</y>
-          <width>52</width>
-          <height>13</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Color</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="traceColor">
-        <property name="geometry">
-         <rect>
-          <x>480</x>
-          <y>90</y>
-          <width>161</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>Black</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Blue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Brown</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cyan</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gold</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Red</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Tan</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Teal</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Yellow</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Violet</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>White</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Indigo</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Green</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Aqua</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QListView" name="plotListView">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>20</y>
-          <width>91</width>
-          <height>411</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_5">
-        <property name="geometry">
-         <rect>
-          <x>5</x>
-          <y>4</y>
-          <width>52</width>
-          <height>13</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Plot</string>
-        </property>
        </widget>
       </widget>
      </widget>

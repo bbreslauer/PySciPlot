@@ -20,6 +20,7 @@ class Figure(QObject):
 
     # Signals
     figureRenamed  = pyqtSignal(str)
+    plotRenamed    = pyqtSignal(int, str)
     rowsChanged    = pyqtSignal(int)
     columnsChanged = pyqtSignal(int)
     axesPaddingChanged = pyqtSignal(float)
@@ -69,6 +70,9 @@ class Figure(QObject):
         return self._figure
 
     def rename(self, newName):
+        if newName == "":
+            return False
+
         self._name = newName
         self._figureSubWindow.setWindowTitle(newName)
         self.figureRenamed.emit(self._name)
@@ -97,7 +101,23 @@ class Figure(QObject):
 
     def extendPlots(self, plotNum):
         for i in range(len(self._plots), plotNum):
-            self._plots.append(Plot(self, i + 1))
+            plot = Plot(self, i + 1)
+            self.appendPlot(plot)
+
+    def appendPlot(self, plot):
+        """Append a single plot onto the figure."""
+
+        # This must be done in a separate function, as opposed to included in extendPlots
+        # because the emitPlotRenamed method would be redefined in the for loop in 
+        # extendPlots and only the last version would be connected, even if you connect
+        # it within the for loop.  Strange, but true.  So the way to work around that
+        # is to have a separate method be called.
+        self._plots.append(plot)
+        
+        def emitPlotRenamed(name):
+            self.plotRenamed.emit(plot.getPlotNum(), name)
+        
+        plot.plotRenamed.connect(emitPlotRenamed)
 
     def refreshPlot(self, plotNum):
         self.getPlot(plotNum).refresh()

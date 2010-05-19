@@ -35,6 +35,9 @@ class Figures(QObject):
         string = "Figures:\n"
         for figure in self._figures:
             string += str(figure) + "\n"
+            for plot in figure.plots():
+                string += "  Plot: " + str(plot) + "\n"
+            string += "\n"
         return string
 
     def figures(self):
@@ -48,7 +51,9 @@ class Figures(QObject):
     
     def getFigure(self, index):
         """Get the figure at list index 'index'."""
-        return self._figures[index]
+        if index >= 0 and index < len(self._figures):
+            return self._figures[index]
+        return False
 
     def removeFigure(self, position):
         """Remove a figure from the object, based on the position in the _figures list."""

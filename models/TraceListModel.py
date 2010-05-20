@@ -17,7 +17,7 @@ class TraceListModel(QAbstractTableModel):
         QAbstractTableModel.__init__(self, parent, *args)
         self._parent = parent
         self._data = []
-        self._columnNames = ['Plot #', 'X', 'Y']
+        self._columnNames = ['X', 'Y']
        
         # Connect signals
         self.traceAdded.connect(self.doReset)

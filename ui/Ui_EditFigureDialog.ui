@@ -465,8 +465,72 @@
                </item>
               </widget>
              </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>Line Style</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="lineStyle">
+               <item>
+                <property name="text">
+                 <string>solid</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>dashed</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>dash_dot</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>dotted</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>Marker</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="pointMarker">
+               <item>
+                <property name="text">
+                 <string>point</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>pixel</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>circle</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>triangle_down</string>
+                </property>
+               </item>
+              </widget>
+             </item>
             </layout>
            </widget>
+           <zorder>formLayoutWidget_2</zorder>
+           <zorder>label_7</zorder>
           </widget>
          </item>
         </layout>

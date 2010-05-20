@@ -55,11 +55,11 @@ class Figures(QObject):
             return self._figures[index]
         return False
 
-    def removeFigure(self, position):
-        """Remove a figure from the object, based on the position in the _figures list."""
-        removedFigure = ""
+    def removeFigure(self, figure):
+        """Remove a figure from the object."""
+        removedFigure = None
         try:
-            removedFigure = self._figures.pop(position)
+            removedFigure = self._figures.remove(figure)
         except IndexError:
             return False
         self.figureRemoved.emit()

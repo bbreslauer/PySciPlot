@@ -37,6 +37,7 @@ class Plot(QObject):
     def addTrace(self, trace):
         self._traces.append(trace)
         self.traceAdded.emit()
+        trace.propertyChanged.connect(self.refresh)
         return True
     
     def getTraces(self):

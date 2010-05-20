@@ -68,17 +68,22 @@ class EditFigureDialog(Module):
         traceListModel = TraceListModel()
         self._ui.traceTableView.setModel(traceListModel)
         self.setupTraceListMenu()
+
+        # Setup trace options group
+        self._ui.traceColor.activated.connect(self.setTraceColor)
+        self._ui.lineStyle.activated.connect(self.setLineStyle)
+        self._ui.pointMarker.activated.connect(self.setPointMarker)
         
+
 
         def createFigure():
             self._app.figures().addFigure(Figure(self._app, "NewFigure"))
 
         def showFigure():
             """Display the figure, in case it got hidden."""
-
-            index = self._ui.figureListView.selectedIndexes()[0]
-            if self._app.figures().getFigure(index.row()):
-                self._app.figures().getFigure(index.row()).showFigure()
+            
+            if self._currentFigure:
+                self._currentFigure.showFigure()
 
         def deleteFigure():
             """
@@ -86,10 +91,10 @@ class EditFigureDialog(Module):
             to delete the figure.
             """
             
-            index = self._ui.figureListView.selectedIndexes()[0]
+            figure = self._currentFigure
             
             # Make sure we are on a valid figure
-            if not self._app.figures().getFigure(index.row()):
+            if not figure:
                 return False
             
             # Ask user if they really want to delete the figure
@@ -102,8 +107,8 @@ class EditFigureDialog(Module):
             answer = questionMessage.exec_()
 
             if answer == QMessageBox.Yes:
-                self._app.figures().getFigure(index.row()).hideFigure()
-                self._app.figures().removeFigure(index.row())
+                figure.hideFigure()
+                self._app.figures().removeFigure(figure)
 
         def changeFigure(index):
             """Change the tabs to use data from the selected figure."""
@@ -192,12 +197,17 @@ class EditFigureDialog(Module):
             xAxisList = self._ui.xAxisListView.selectedIndexes()
             yAxisList = self._ui.yAxisListView.selectedIndexes()
             traceColor = str(self._ui.traceColor.currentText())
+            lineStyle = str(self._ui.lineStyle.currentText())
+            pointMarker = str(self._ui.pointMarker.currentText())
 
             for x in xAxisList:
                 for y in yAxisList:
                     xWave = self._app.waves().waves()[x.row()]
                     yWave = self._app.waves().waves()[y.row()]
-                    trace = Trace(xWave, yWave, traceColor)
+                    trace = Trace(xWave, yWave, traceColor=traceColor,
+                                                lineStyle=lineStyle,
+                                                pointMarker=pointMarker
+                                 )
                     plot.addTrace(trace)
             
             self.refreshTraceList()
@@ -253,9 +263,6 @@ class EditFigureDialog(Module):
         self._ui.plotComboBox.setCurrentIndex(0)
         self.refreshTraceList()
         
-    def setPlotName(self):
-        self._currentPlot.setName(self._ui.plotNameLineEdit.text())
-
     def setupTraceOptions(self, index):
         """Update all trace options for the trace that was just clicked, as identified by index."""
         
@@ -263,6 +270,8 @@ class EditFigureDialog(Module):
 
         # Setup color drop-down box
         self._ui.traceColor.setCurrentIndex(self._ui.traceColor.findText(trace.getColor()))
+        self._ui.lineStyle.setCurrentIndex(self._ui.lineStyle.findText(trace.getLinestyle()))
+        self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(trace.getPointMarker()))
 
 
 
@@ -280,9 +289,11 @@ class EditFigureDialog(Module):
         for plotNum in range(1, figure.numPlots() + 1):
             plot = figure.getPlot(plotNum)
             for trace in plot.getTraces():
-                traceListModel.addEntry(TraceListEntry(plotNum, trace))
+                traceListModel.addEntry(TraceListEntry(trace))
 
         traceListModel.doReset()
+
+        self._ui.traceTableView.selectRow(traceListModel.rowCount() - 1)
         
         return True
 
@@ -300,11 +311,9 @@ class EditFigureDialog(Module):
 
     def deleteTraceFromPlot(self, row):
         traceListEntry = self._ui.traceTableView.model().getTraceListEntryByRow(row)
-        plotNum = traceListEntry.getPlotNum()
         trace   = traceListEntry.getTrace()
 
-        plot = self._currentFigure.getPlot(plotNum)
-        plot.removeTrace(trace)
+        self._currentPlot.removeTrace(trace)
 
         self.refreshTraceList()
 
@@ -331,6 +340,31 @@ class EditFigureDialog(Module):
 
 
 
+
+
+    """Slots for UI-updated fields."""
+    def setPlotName(self):
+        self._currentPlot.setName(self._ui.plotNameLineEdit.text())
+
+    def setTraceColor(self, comboBoxRow):
+        trace = self._ui.traceTableView.model().getTraceListEntryByRow(self._ui.traceTableView.selectedIndexes()[0].row()).getTrace()
+        trace.setColor(str(self._ui.traceColor.itemText(comboBoxRow)))
+
+    def setLineStyle(self, comboBoxRow):
+        trace = self._ui.traceTableView.model().getTraceListEntryByRow(self._ui.traceTableView.selectedIndexes()[0].row()).getTrace()
+        trace.setLinestyle(str(self._ui.lineStyle.itemText(comboBoxRow)))
+
+    def setPointMarker(self, comboBoxRow):
+        trace = self._ui.traceTableView.model().getTraceListEntryByRow(self._ui.traceTableView.selectedIndexes()[0].row()).getTrace()
+        trace.setPointMarker(str(self._ui.pointMarker.itemText(comboBoxRow)))
+
+
+
+
+
+
+
+    """Module-required methods"""
     def getMenuNameToAddTo(self):
         return "menuPlot"
 

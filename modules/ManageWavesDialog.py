@@ -20,10 +20,6 @@ class ManageWavesDialog(Module):
         self._ui = Ui_ManageWavesDialog()
         self._ui.setupUi(self._widget)
         
-        # QT Designer puts a widget around the layout object.  This gets around it
-        # so that the entire window resizes correctly.
-        self._widget.setLayout(self._ui.horizontalLayout)
-
         # Set up model and view
         wavesListModel = WavesListModel(self._app.waves())
         self._ui.wavesListView.setModel(wavesListModel)

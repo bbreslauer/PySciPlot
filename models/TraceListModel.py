@@ -38,6 +38,11 @@ class TraceListModel(QAbstractTableModel):
         if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
             return QVariant(QString(self._columnNames[section]))
         return QVariant()
+
+    def index(self, row, column, parent=QModelIndex()):
+        if row > len(self._data):
+            return self.createIndex(row, column, parent)
+        return self.createIndex(row, column, self._data[row])
     
     def data(self, index, role):
         """Return the data for the given index."""

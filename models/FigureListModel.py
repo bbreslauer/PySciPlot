@@ -14,6 +14,11 @@ class FigureListModel(QAbstractListModel):
         """Return the number of rows in this model."""
         return self._figures.length()
 
+    def index(self, row, column, parent=QModelIndex()):
+        if row > self._figures.length():
+            return self.createIndex(row, column, parent)
+        return self.createIndex(row, column, self._figures.getFigure(row))
+
     def data(self, index, role):
         """Return the name of the figure entry at the given index."""
 

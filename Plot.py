@@ -24,6 +24,7 @@ class Plot(QObject):
 
         self.traceAdded.connect(self.refresh)
         self.traceRemoved.connect(self.refresh)
+        self.plotRenamed.connect(self.refresh)
     
     def __str__(self):
         return "Num: %s, Name: %s" % (self._plotNum, self._name)
@@ -36,7 +37,10 @@ class Plot(QObject):
 
     def addTrace(self, trace):
         self._traces.append(trace)
+        #trace.addPlot(self)
         self.traceAdded.emit()
+        trace.getX().dataModified.connect(self.refresh)
+        trace.getY().dataModified.connect(self.refresh)
         trace.propertyChanged.connect(self.refresh)
         return True
     
@@ -84,6 +88,8 @@ class Plot(QObject):
         print "building r: " + str(self._figure.rows()) + ", c: " + str(self._figure.columns()) + ", n: " + str(self._plotNum)
         self._axes = self._figure.mplFigure().add_subplot(self._figure.rows(), self._figure.columns(), self._plotNum)
         self._axes.clear()
+
+        self._axes.set_title(self.getName())
 
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)

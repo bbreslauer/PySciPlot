@@ -23,6 +23,12 @@
       <height>555</height>
      </rect>
     </property>
+    <property name="viewMode">
+     <enum>QMdiArea::SubWindowView</enum>
+    </property>
+    <property name="documentMode">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

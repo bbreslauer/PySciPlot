@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>846</width>
+    <width>856</width>
     <height>490</height>
    </rect>
   </property>
@@ -140,7 +140,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="figureOptionsTab">
       <attribute name="title">
@@ -254,34 +254,14 @@
             <string>Plot Options</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Plot Name</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="plotNameLineEdit"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Plot Title</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="plotTitleLineEdit"/>
-            </item>
-            <item row="2" column="0" colspan="2">
+            <item row="1" column="0" colspan="2">
              <widget class="QDialogButtonBox" name="plotOptionsButtons">
               <property name="standardButtons">
                <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
               </property>
              </widget>
             </item>
-            <item row="3" column="0" colspan="2">
+            <item row="2" column="0" colspan="2">
              <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -293,6 +273,16 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="plotNameLineEdit"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Plot Name</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -397,7 +387,7 @@
              <bool>false</bool>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::SingleSelection</enum>
+             <enum>QAbstractItemView::ExtendedSelection</enum>
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
@@ -527,24 +517,32 @@
           </item>
           <item row="1" column="1">
            <widget class="QComboBox" name="lineStyle">
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
             <item>
              <property name="text">
-              <string>solid</string>
+              <string>None</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>dashed</string>
+              <string>Solid</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>dash_dot</string>
+              <string>Dashed</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>dotted</string>
+              <string>Dash Dot</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Dotted</string>
              </property>
             </item>
            </widget>
@@ -558,24 +556,122 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="pointMarker">
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
             <item>
              <property name="text">
-              <string>point</string>
+              <string>None</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>pixel</string>
+              <string>Point</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>circle</string>
+              <string>Pixel</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>triangle_down</string>
+              <string>Circle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Triangle - Down</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Triangle - Up</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Triangle - Left</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Triangle - Right</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Y - Down</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Y - Up</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Y - Left</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Y - Right</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Square</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pentagon</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Star</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hexagon 1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hexagon 2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Plus</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>X</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Diamond</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Thin Diamond</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Vertical Line</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Horizontal Line</string>
              </property>
             </item>
            </widget>

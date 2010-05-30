@@ -39,9 +39,7 @@ class EditFigureDialog(Module):
         # Setup plot combo box
         plotListModel = PlotListModel()
         self._ui.plotComboBox.setModel(plotListModel)
-
-        # Setup plot options group
-#        self._ui.plotNameLineEdit.editingFinished.connect(self.setPlotName)
+        self._ui.plotComboBox.currentIndexChanged.connect(self.refreshTraceList)
 
         # Setup X and Y lists
         xListModel = WavesListModel(self._app.waves())
@@ -70,12 +68,6 @@ class EditFigureDialog(Module):
         self._ui.traceOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetTraceOptions)
 
         self._ui.addTraceButton.clicked.connect(self.addTracesToPlot)
-
-        # Setup trace options group
-#        self._ui.traceColor.activated.connect(self.setTraceColor)
-#        self._ui.lineStyle.activated.connect(self.setLineStyle)
-#        self._ui.pointMarker.activated.connect(self.setPointMarker)
-        
 
 
         def createFigure():
@@ -115,12 +107,10 @@ class EditFigureDialog(Module):
         def changeFigure(index):
             """Change the tabs to use data from the selected figure."""
 
-            figure = self._app.figures().getFigure(index.row())
+            figure = self.currentFigure()
 
             if figure:
-#                self.disconnectSignalsOnFigureChange()
                 self.setupFigureListLabel()
-#                self.connectSignalsOnFigureChange()
                 self.setupFigureTab()
                 self.setupPlotTab()
 
@@ -128,8 +118,6 @@ class EditFigureDialog(Module):
             """Change the content on the plot tab."""
 
             self._ui.plotNameLineEdit.setText(self.currentPlot().getName())
-            self._ui.plotTitleLineEdit.setText("")
-
 
             
         self._ui.addFigureButton.clicked.connect(createFigure)
@@ -180,9 +168,13 @@ class EditFigureDialog(Module):
         for traceIndex in self._ui.traceTableView.selectedIndexes():
             trace = traceIndex.internalPointer().getTrace()
             
+            trace.blockSignals(True)
             self.setTraceColor(trace)
             self.setLineStyle(trace)
             self.setPointMarker(trace)
+            trace.blockSignals(False)
+
+        self.currentPlot().refresh()
 
     def resetTraceOptions(self):
         pass
@@ -200,111 +192,21 @@ class EditFigureDialog(Module):
         lineStyle = str(self._ui.lineStyle.currentText())
         pointMarker = str(self._ui.pointMarker.currentText())
 
+        plot.blockSignals(True)
         for x in xAxisList:
             for y in yAxisList:
                 xWave = self._app.waves().waves()[x.row()]
                 yWave = self._app.waves().waves()[y.row()]
                 trace = Trace(xWave, yWave, traceColor=traceColor,
-                                            lineStyle=lineStyle,
-                                            pointMarker=pointMarker
+                                                  lineStyle=lineStyle,
+                                                  pointMarker=pointMarker
                              )
                 plot.addTrace(trace)
+
+        plot.blockSignals(False)
+        plot.refresh()
         
         self.refreshTraceList()
-
-
-
-
-
-
-#    def disconnectSignalsOnFigureChange(self):
-#        """Disconnect all signals whenever the active figure is changed."""
-#        # Disconnect signals, only if they exist.  A TypeError exception is raised 
-#        # whenever the signal does not exist.  We must handle these so that execution
-#        # continues, and we must use a separate try for each signal so that we make 
-#        # sure to disconnect every signal (since if an exception is raised, nothing 
-#        # in the try statement after that exception is executed).
-#
-#        figure = self.currentFigure()
-#
-#        # Signal disconnections
-#        for f in self._app.figures().figures():
-#            try:
-#                f.figureRenamed.disconnect(self.setupFigureListLabel)
-#            except TypeError:
-#                pass
-#
-#
-#        try:
-#            self._ui.figureRows.valueChanged.disconnect()
-#        except TypeError:
-#            pass
-#        try:
-#            self._ui.figureColumns.valueChanged.disconnect()
-#        except TypeError:
-#            pass
-#        try:
-#            self._ui.addTraceButton.clicked.disconnect()
-#        except TypeError:
-#            pass
-##        try:
-##        except TypeError:
-##            pass
-#
-#    def connectSignalsOnFigureChange(self):
-#        """Connect all signals whenever the active figure is changed."""
-#        
-#        figure = self.currentFigure()
-#
-#        # Helper functions
-#
-#        # Add a trace to a plot on a figure
-#        def addTracesToPlot():
-#            plotNum = self._ui.plotComboBox.currentIndex() + 1
-#            plot = figure.getPlot(plotNum)
-#
-#            xAxisList = self._ui.xAxisListView.selectedIndexes()
-#            yAxisList = self._ui.yAxisListView.selectedIndexes()
-#            traceColor = str(self._ui.traceColor.currentText())
-#            lineStyle = str(self._ui.lineStyle.currentText())
-#            pointMarker = str(self._ui.pointMarker.currentText())
-#
-#            for x in xAxisList:
-#                for y in yAxisList:
-#                    xWave = self._app.waves().waves()[x.row()]
-#                    yWave = self._app.waves().waves()[y.row()]
-#                    trace = Trace(xWave, yWave, traceColor=traceColor,
-#                                                lineStyle=lineStyle,
-#                                                pointMarker=pointMarker
-#                                 )
-#                    plot.addTrace(trace)
-#            
-#            self.refreshTraceList()
-#
-#        def refreshTraceListHelper(value):
-#            self.refreshTraceList()
-#
-#        def refreshPlotComboBoxHelper(value):
-#            self._ui.plotComboBox.model().doReset()
-#            self._ui.plotComboBox.setCurrentIndex(0)
-#
-#        def setFigureName(newName):
-#            figure.rename(newName)
-#
-#        # Signal connections
-#        figure.figureRenamed.connect(self.setupFigureListLabel)
-#
-#        self._ui.figureRows.valueChanged.connect(figure.setNumberOfRows)
-#        self._ui.figureRows.valueChanged.connect(refreshTraceListHelper)
-#        self._ui.figureRows.valueChanged.connect(refreshPlotComboBoxHelper)
-#        
-#        self._ui.figureColumns.valueChanged.connect(figure.setNumberOfColumns)
-#        self._ui.figureColumns.valueChanged.connect(refreshTraceListHelper)
-#        self._ui.figureColumns.valueChanged.connect(refreshPlotComboBoxHelper)
-#
-#        self._ui.addTraceButton.clicked.connect(addTracesToPlot)
-#
-
 
 
     def setupFigureTab(self):
@@ -343,22 +245,24 @@ class EditFigureDialog(Module):
         self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(trace.getPointMarker()))
 
 
-
-
     def refreshTraceList(self):
         """Get all traces in all visible plots and put them into the plot list model."""
         
         figure = self.currentFigure()
+        plot = self.currentPlot()
 
         # Clear plot list model
         traceListModel = self._ui.traceTableView.model()
         traceListModel.clearData()
+            
+        for trace in plot.getTraces():
+            traceListModel.addEntry(TraceListEntry(trace))
 
-        # Loop through plots and add all traces to model
-        for plotNum in range(1, figure.numPlots() + 1):
-            plot = figure.getPlot(plotNum)
-            for trace in plot.getTraces():
-                traceListModel.addEntry(TraceListEntry(trace))
+        ## Loop through plots and add all traces to model
+        #for plotNum in range(1, figure.numPlots() + 1):
+        #    plot = figure.getPlot(plotNum)
+        #    for trace in plot.getTraces():
+        #        traceListModel.addEntry(TraceListEntry(trace))
 
         traceListModel.doReset()
 

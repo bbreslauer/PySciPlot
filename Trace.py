@@ -1,4 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt4.QtGui import QColor
 
 class Trace(QObject):
     """An x-y pair of data."""
@@ -47,11 +48,19 @@ class Trace(QObject):
     def __init__(self, x=0, y=0, traceColor='Black', lineStyle='Solid', pointMarker='None'):
         QObject.__init__(self)
         self._plot = None
+        self.initializeVariables()
         self.setX(x)
         self.setY(y)
         self.setColor(traceColor)
         self.setLinestyle(lineStyle)
         self.setPointMarker(pointMarker)
+
+    def initializeVariables(self):
+        self._x = None
+        self._y = None
+        self._color = None
+        self._linestyle = None
+        self._pointMarker = None
 
     def setPlot(self, plot):
         self._plot = plot
@@ -65,19 +74,28 @@ class Trace(QObject):
         self.yChanged.emit()
 
     def setColor(self, color):
-        self._color = color
-        self.colorChanged.emit()
-        self.propertyChanged.emit()
+        if self._color != color:
+            self._color = color
+            self.colorChanged.emit()
+            self.propertyChanged.emit()
+            return True
+        return False
         
     def setLinestyle(self, style):
-        self._linestyle = style
-        self.linestyleChanged.emit()
-        self.propertyChanged.emit()
+        if self._linestyle != style:
+            self._linestyle = style
+            self.linestyleChanged.emit()
+            self.propertyChanged.emit()
+            return True
+        return False
 
     def setPointMarker(self, marker):
-        self._pointMarker = marker
-        self.pointMarkerChanged.emit()
-        self.propertyChanged.emit()
+        if self._pointMarker != marker:
+            self._pointMarker = marker
+            self.pointMarkerChanged.emit()
+            self.propertyChanged.emit()
+            return True
+        return False
 
     def getX(self):
         return self._x

@@ -1,5 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal, Qt
-from PyQt4.QtGui import QAction
+from PyQt4.QtGui import QAction, QColor
 
 import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -24,6 +24,7 @@ class Figure(QObject):
     rowsChanged    = pyqtSignal(int)
     columnsChanged = pyqtSignal(int)
     axesPaddingChanged = pyqtSignal(float)
+    backgroundColorChanged = pyqtSignal()
 
     def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
         QObject.__init__(self)
@@ -32,6 +33,7 @@ class Figure(QObject):
         self.setNumberOfRows(nrows)
         self.setNumberOfColumns(ncols)
         self.setAxesPadding(padding)
+        self.setBackgroundColor(QColor("White"))
 
         self._figure = MPLFigure()
         self._canvas = FigureCanvas(self._figure)
@@ -53,6 +55,7 @@ class Figure(QObject):
         # Connect signals
         self.rowsChanged.connect(self.refresh)
         self.columnsChanged.connect(self.refresh)
+        self.backgroundColorChanged.connect(self.refresh)
 
     def __str__(self):
         return "name: %s, rows: %s, columns: %s" % (self._name, self._rows, self._columns)
@@ -65,6 +68,9 @@ class Figure(QObject):
 
     def columns(self):
         return self._columns
+
+    def backgroundColor(self):
+        return self._color
 
     def mplFigure(self):
         return self._figure
@@ -89,6 +95,10 @@ class Figure(QObject):
     def setAxesPadding(self, padding):
         self._axesPadding = padding
         self.axesPaddingChanged.emit(self._axesPadding)
+
+    def setBackgroundColor(self, color):
+        self._color = color
+        self.backgroundColorChanged.emit()
 
     def numPlots(self):
         return self._rows * self._columns
@@ -132,6 +142,8 @@ class Figure(QObject):
         self.extendPlots(displayedPlots)
 
         self.mplFigure().clf()
+        
+        self.mplFigure().set_facecolor(str(self.backgroundColor().name()))
 
         for plotNum in range(1, displayedPlots + 1):
             self.refreshPlot(plotNum)

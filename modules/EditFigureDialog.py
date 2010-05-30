@@ -1,5 +1,5 @@
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox
+from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox, QColor, QColorDialog
 
 from Trace import Trace
 from Module import Module
@@ -119,6 +119,14 @@ class EditFigureDialog(Module):
 
             self._ui.plotNameLineEdit.setText(self.currentPlot().getName())
 
+        def figureBackgroundColorHelper():
+            """Open a color dialog box to select a color."""
+            self.createColorDialog(self.currentFigure().backgroundColor(), self.figureBackgroundColorCallback)
+
+        def traceLineColorHelper():
+            """Open a color dialog box to select a color."""
+            self.createColorDialog(QColor("Black"), self.traceLineColorCallback)
+
             
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
@@ -126,33 +134,21 @@ class EditFigureDialog(Module):
         self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
         self._ui.traceTableView.selectionModel().currentChanged.connect(self.setupTraceOptions)
         self._ui.plotComboBox.currentIndexChanged.connect(changePlot)
+        self._ui.figureBackgroundColorButton.clicked.connect(figureBackgroundColorHelper)
+        self._ui.traceLineColorButton.clicked.connect(traceLineColorHelper)
         
         return self._widget
 
+    #
+    # Get current items
+    #
     def currentFigure(self):
         return self._ui.figureListView.selectionModel().currentIndex().internalPointer()
 
     def currentPlot(self):
         return self._ui.plotComboBox.model().getPlot(self._ui.plotComboBox.currentIndex())
 
-    def setupFigureListLabel(self):
-        self._ui.figureListLabel.setText("Currently working on figure:\n" + self.currentFigure().name())
 
-    def updateFigureOptions(self):
-        figure = self.currentFigure()
-        
-        figure.setNumberOfRows(self._ui.figureRows.value())
-        figure.setNumberOfColumns(self._ui.figureColumns.value())
-        
-        self.refreshTraceList()
-        self._ui.plotComboBox.model().doReset()
-        self._ui.plotComboBox.setCurrentIndex(0)
-
-    def resetFigureOptions(self):
-        figure = self.currentFigure()
-
-        self._ui.figureRows.setValue(figure.rows())
-        self._ui.figureColumns.setValue(figure.columns())
 
     def updatePlotOptions(self):
         plot = self.currentPlot()
@@ -165,30 +161,98 @@ class EditFigureDialog(Module):
         self._ui.plotNameLineEdit.setText(plot.getName())
 
     def updateTraceOptions(self):
+        updateBool = False
         for traceIndex in self._ui.traceTableView.selectedIndexes():
             trace = traceIndex.internalPointer().getTrace()
             
             trace.blockSignals(True)
-            self.setTraceColor(trace)
-            self.setLineStyle(trace)
-            self.setPointMarker(trace)
+            updateBool |= self.setTraceColor(trace)
+            updateBool |= self.setLineStyle(trace)
+            updateBool |= self.setPointMarker(trace)
             trace.blockSignals(False)
 
-        self.currentPlot().refresh()
+        if updateBool:
+            self.currentPlot().refresh()
 
     def resetTraceOptions(self):
         pass
 
+    def createColorDialog(self, currentColor, callBack):
+        newColor = QColorDialog.getColor(currentColor)
+        callBack(newColor)
+
+
+    #
+    # Figure tab
+    #
+    def setupFigureListLabel(self):
+        self._ui.figureListLabel.setText("Currently working on figure:\n" + self.currentFigure().name())
+
+    def updateFigureOptions(self):
+        figure = self.currentFigure()
+        
+        figure.setNumberOfRows(self._ui.figureRows.value())
+        figure.setNumberOfColumns(self._ui.figureColumns.value())
+        figure.setBackgroundColor(QColor(self._ui.figureBackgroundColorButton.text()))
+        
+        self.refreshTraceList()
+        self._ui.plotComboBox.model().doReset()
+        self._ui.plotComboBox.setCurrentIndex(0)
+
+    def resetFigureOptions(self):
+        figure = self.currentFigure()
+
+        self._ui.figureRows.setValue(figure.rows())
+        self._ui.figureColumns.setValue(figure.columns())
+    def setupFigureTab(self):
+        """
+        Set figure tab to values for the current figure object.
+        """
+        figure = self.currentFigure()
+        self.figureUi_setRows(figure.rows())
+        self.figureUi_setColumns(figure.columns())
+        self.figureUi_setBackgroundColor(figure.backgroundColor().name())
+    
+    def figureUi_setRows(self, rows):
+        self._ui.figureRows.setValue(rows)
+
+    def figureUi_setColumns(self, columns):
+        self._ui.figureColumns.setValue(columns)
+
+    def figureUi_setBackgroundColor(self, colorName):
+        self._ui.figureBackgroundColorButton.setStyleSheet("background-color: " + colorName)
+        self._ui.figureBackgroundColorButton.setText(colorName)
+
+
+    def figureBackgroundColorCallback(self, newColor):
+        self.figureUi_setBackgroundColor(newColor.name())
 
 
 
+
+    #
+    # Plot tab
+    #
+    
+    def plotUi_setTraceLineColor(self, colorName):
+        self._ui.traceLineColorButton.setStyleSheet("background-color: " + colorName + "; color: #ffffff")
+        self._ui.traceLineColorButton.setText(colorName)
+
+    def plotUi_setLinestyle(self, linestyle):
+        self._ui.lineStyle.setCurrentIndex(self._ui.lineStyle.findText(linestyle))
+
+    def plotUi_setPointMarker(self, pointMarker):
+        self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(pointMarker))
+
+    def traceLineColorCallback(self, newColor):
+        self.plotUi_setTraceLineColor(newColor.name())
 
     def addTracesToPlot(self):
         plot = self.currentPlot()
 
         xAxisList = self._ui.xAxisListView.selectedIndexes()
         yAxisList = self._ui.yAxisListView.selectedIndexes()
-        traceColor = str(self._ui.traceColor.currentText())
+        traceColor = str(self._ui.traceLineColorButton.text())
         lineStyle = str(self._ui.lineStyle.currentText())
         pointMarker = str(self._ui.pointMarker.currentText())
 
@@ -209,23 +273,6 @@ class EditFigureDialog(Module):
         self.refreshTraceList()
 
 
-    def setupFigureTab(self):
-        # Set row and column numbers.  Block some signals
-        # because the number of rows or columns isn't really changing,
-        # it's only changing in the UI because we're switching plots.
-        figure = self.currentFigure()
-
-        self._ui.figureRows.blockSignals(True)
-        self._ui.figureColumns.blockSignals(True)
-
-        self._ui.figureRows.setValue(figure.rows())
-        self._ui.figureColumns.setValue(figure.columns())
-
-        # Unblock signals
-        self._ui.figureRows.blockSignals(False)
-        self._ui.figureColumns.blockSignals(False)
-
-
     def setupPlotTab(self):
         # Setup Plot tab
         figure = self.currentFigure()
@@ -240,9 +287,9 @@ class EditFigureDialog(Module):
         trace = self._ui.traceTableView.model().getTraceListEntryByRow(index.row()).getTrace()
 
         # Setup color drop-down box
-        self._ui.traceColor.setCurrentIndex(self._ui.traceColor.findText(trace.getColor()))
-        self._ui.lineStyle.setCurrentIndex(self._ui.lineStyle.findText(trace.getLinestyle()))
-        self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(trace.getPointMarker()))
+        self.plotUi_setTraceLineColor(trace.getColor())
+        self.plotUi_setLinestyle(trace.getLinestyle())
+        self.plotUi_setPointMarker(trace.getPointMarker())
 
 
     def refreshTraceList(self):
@@ -320,14 +367,13 @@ class EditFigureDialog(Module):
         self.currentPlot().setName(self._ui.plotNameLineEdit.text())
 
     def setTraceColor(self, trace):
-        trace.setColor(str(self._ui.traceColor.currentText()))
+        return trace.setColor(str(self._ui.traceLineColorButton.text()))
 
     def setLineStyle(self, trace):
-        trace.setLinestyle(str(self._ui.lineStyle.currentText()))
+        return trace.setLinestyle(str(self._ui.lineStyle.currentText()))
 
     def setPointMarker(self, trace):
-        trace.setPointMarker(str(self._ui.pointMarker.currentText()))
-
+        return trace.setPointMarker(str(self._ui.pointMarker.currentText()))
 
 
 

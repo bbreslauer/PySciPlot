@@ -22,10 +22,6 @@ class EditFigureDialog(Module):
     def buildWidget(self):
         """Create the widget and populate it."""
 
-        # If no figures have been created yet, create the first one.
-        # This way, everything works from the start and you don't have
-        # to add a figure in order to start.
-
         # Create enclosing widget and UI
         self._ui = Ui_EditFigureDialog()
         self._ui.setupUi(self._widget)
@@ -39,7 +35,7 @@ class EditFigureDialog(Module):
         # Setup plot combo box
         plotListModel = PlotListModel()
         self._ui.plotComboBox.setModel(plotListModel)
-        self._ui.plotComboBox.currentIndexChanged.connect(self.refreshTraceList)
+        self._ui.plotComboBox.currentIndexChanged.connect(self.plotUi_refreshTraceList)
 
         # Setup X and Y lists
         xListModel = WavesListModel(self._app.waves())
@@ -58,14 +54,14 @@ class EditFigureDialog(Module):
         self.setupTraceListMenu()
 
         # Setup buttons
-        self._ui.figureOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.updateFigureOptions)
-        self._ui.figureOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetFigureOptions)
+        self._ui.figureOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.figureObject_setAttributes)
+        self._ui.figureOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.figureUi_resetFields)
         
-        self._ui.plotOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.updatePlotOptions)
-        self._ui.plotOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetPlotOptions)
+        self._ui.plotOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.plotObject_setAttributes)
+        self._ui.plotOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.plotUi_resetPlotOptions)
 
-        self._ui.traceOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.updateTraceOptions)
-        self._ui.traceOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetTraceOptions)
+        self._ui.traceOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.traceObject_updateAttributes)
+        self._ui.traceOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.plotUi_resetTraceOptions)
 
         self._ui.addTraceButton.clicked.connect(self.addTracesToPlot)
 
@@ -110,32 +106,42 @@ class EditFigureDialog(Module):
             figure = self.currentFigure()
 
             if figure:
-                self.setupFigureListLabel()
-                self.setupFigureTab()
-                self.setupPlotTab()
+                self._ui.figureListLabel.setText("Currently working on figure:\n" + figure.name())
+                self.figureUi_resetFields()
+                self._ui.plotComboBox.model().setFigure(figure)
+                self._ui.plotComboBox.setCurrentIndex(0)
+                self.plotUi_setupTab()
 
         def changePlot(row):
             """Change the content on the plot tab."""
 
-            self._ui.plotNameLineEdit.setText(self.currentPlot().getName())
+            plot = self.currentPlot()
+
+            if plot:
+                self.plotUi_setupTab()
 
         def figureBackgroundColorHelper():
             """Open a color dialog box to select a color."""
-            self.createColorDialog(self.currentFigure().backgroundColor(), self.figureBackgroundColorCallback)
+            self.createColorDialog(QColor(str(self._ui.figureBackgroundColorButton.text())), self.figureBackgroundColorCallback)
 
         def traceLineColorHelper():
             """Open a color dialog box to select a color."""
-            self.createColorDialog(QColor("Black"), self.traceLineColorCallback)
+            self.createColorDialog(QColor(str(self._ui.traceLineColorButton.text())), self.traceLineColorCallback)
+
+        def plotBackgroundColorHelper():
+            """Open a color dialog box to select a color."""
+            self.createColorDialog(QColor(str(self._ui.plotBackgroundColorButton.text())), self.plotBackgroundColorCallback)
 
             
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
         self._ui.deleteFigureButton.clicked.connect(deleteFigure)
         self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
-        self._ui.traceTableView.selectionModel().currentChanged.connect(self.setupTraceOptions)
+        self._ui.traceTableView.selectionModel().currentChanged.connect(self.plotUi_resetTraceOptions)
         self._ui.plotComboBox.currentIndexChanged.connect(changePlot)
         self._ui.figureBackgroundColorButton.clicked.connect(figureBackgroundColorHelper)
         self._ui.traceLineColorButton.clicked.connect(traceLineColorHelper)
+        self._ui.plotBackgroundColorButton.clicked.connect(plotBackgroundColorHelper)
         
         return self._widget
 
@@ -149,66 +155,29 @@ class EditFigureDialog(Module):
         return self._ui.plotComboBox.model().getPlot(self._ui.plotComboBox.currentIndex())
 
 
-
-    def updatePlotOptions(self):
-        plot = self.currentPlot()
-
-        plot.setName(self._ui.plotNameLineEdit.text())
-
-    def resetPlotOptions(self):
-        plot = self.currentPlot()
-
-        self._ui.plotNameLineEdit.setText(plot.getName())
-
-    def updateTraceOptions(self):
-        updateBool = False
-        for traceIndex in self._ui.traceTableView.selectedIndexes():
-            trace = traceIndex.internalPointer().getTrace()
-            
-            trace.blockSignals(True)
-            updateBool |= self.setTraceColor(trace)
-            updateBool |= self.setLineStyle(trace)
-            updateBool |= self.setPointMarker(trace)
-            trace.blockSignals(False)
-
-        if updateBool:
-            self.currentPlot().refresh()
-
-    def resetTraceOptions(self):
-        pass
-
-    def createColorDialog(self, currentColor, callBack):
-        newColor = QColorDialog.getColor(currentColor)
-        callBack(newColor)
-
-
     #
     # Figure tab
     #
-    def setupFigureListLabel(self):
-        self._ui.figureListLabel.setText("Currently working on figure:\n" + self.currentFigure().name())
+    def figureObject_setAttributes(self):
+        """Set the attributes for the current figure to what the UI says."""
 
-    def updateFigureOptions(self):
         figure = self.currentFigure()
         
         figure.setNumberOfRows(self._ui.figureRows.value())
         figure.setNumberOfColumns(self._ui.figureColumns.value())
         figure.setBackgroundColor(QColor(self._ui.figureBackgroundColorButton.text()))
         
-        self.refreshTraceList()
-        self._ui.plotComboBox.model().doReset()
-        self._ui.plotComboBox.setCurrentIndex(0)
+        #self.refreshTraceList()
+        #self._ui.plotComboBox.model().doReset()
+        #self._ui.plotComboBox.setCurrentIndex(0)
 
-    def resetFigureOptions(self):
-        figure = self.currentFigure()
-
-        self._ui.figureRows.setValue(figure.rows())
-        self._ui.figureColumns.setValue(figure.columns())
-    def setupFigureTab(self):
+    def figureUi_resetFields(self):
         """
         Set figure tab to values for the current figure object.
         """
         figure = self.currentFigure()
+        
+        
         self.figureUi_setRows(figure.rows())
         self.figureUi_setColumns(figure.columns())
         self.figureUi_setBackgroundColor(figure.backgroundColor().name())
@@ -220,12 +189,12 @@ class EditFigureDialog(Module):
         self._ui.figureColumns.setValue(columns)
 
     def figureUi_setBackgroundColor(self, colorName):
-        self._ui.figureBackgroundColorButton.setStyleSheet("background-color: " + colorName)
+        self._ui.figureBackgroundColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
         self._ui.figureBackgroundColorButton.setText(colorName)
 
-
     def figureBackgroundColorCallback(self, newColor):
-        self.figureUi_setBackgroundColor(newColor.name())
+        if newColor.isValid():
+            self.figureUi_setBackgroundColor(newColor.name())
 
 
 
@@ -233,9 +202,16 @@ class EditFigureDialog(Module):
     #
     # Plot tab
     #
+
+    def plotUi_setPlotName(self, name):
+        self._ui.plotName.setText(name)
+
+    def plotUi_setBackgroundColor(self, colorName):
+        self._ui.plotBackgroundColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
+        self._ui.plotBackgroundColorButton.setText(colorName)
     
     def plotUi_setTraceLineColor(self, colorName):
-        self._ui.traceLineColorButton.setStyleSheet("background-color: " + colorName + "; color: #ffffff")
+        self._ui.traceLineColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
         self._ui.traceLineColorButton.setText(colorName)
 
     def plotUi_setLinestyle(self, linestyle):
@@ -244,8 +220,13 @@ class EditFigureDialog(Module):
     def plotUi_setPointMarker(self, pointMarker):
         self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(pointMarker))
 
+    def plotBackgroundColorCallback(self, newColor):
+        if newColor.isValid():
+            self.plotUi_setBackgroundColor(newColor.name())
+
     def traceLineColorCallback(self, newColor):
-        self.plotUi_setTraceLineColor(newColor.name())
+        if newColor.isValid():
+            self.plotUi_setTraceLineColor(newColor.name())
 
     def addTracesToPlot(self):
         plot = self.currentPlot()
@@ -270,20 +251,41 @@ class EditFigureDialog(Module):
         plot.blockSignals(False)
         plot.refresh()
         
-        self.refreshTraceList()
+        self.plotUi_refreshTraceList()
 
 
-    def setupPlotTab(self):
-        # Setup Plot tab
-        figure = self.currentFigure()
+    def plotObject_setAttributes(self):
+        """Update the Plot attributes with everything in the current UI."""
 
-        self._ui.plotComboBox.model().setFigure(figure)
-        self._ui.plotComboBox.setCurrentIndex(0)
-        self.refreshTraceList()
+        plot = self.currentPlot()
+
+        plot.setName(self._ui.plotName.text())
+        plot.setBackgroundColor(QColor(self._ui.plotBackgroundColorButton.text()))
+
+    def plotUi_setupTab(self):
+        """Setup Plot tab."""
+
+        self.plotUi_resetPlotOptions()
+        self.plotUi_refreshTraceList()
+        self.plotUi_resetTraceOptions()
+
+
+    def plotUi_resetPlotOptions(self):
+        """
+        Set plot options group to values for the current plot object.
+        """
+
+        plot = self.currentPlot()
         
-    def setupTraceOptions(self, index):
+        self.plotUi_setPlotName(plot.getName())
+        self.plotUi_setBackgroundColor(plot.backgroundColor().name())
+
+    def plotUi_resetTraceOptions(self, index=None):
         """Update all trace options for the trace that was just clicked, as identified by index."""
         
+        if not index:
+            return
+
         trace = self._ui.traceTableView.model().getTraceListEntryByRow(index.row()).getTrace()
 
         # Setup color drop-down box
@@ -291,11 +293,28 @@ class EditFigureDialog(Module):
         self.plotUi_setLinestyle(trace.getLinestyle())
         self.plotUi_setPointMarker(trace.getPointMarker())
 
+    def traceObject_updateAttributes(self):
+        updateBool = False
+        for traceIndex in self._ui.traceTableView.selectedIndexes():
+            trace = traceIndex.internalPointer().getTrace()
+            
+            trace.blockSignals(True)
+            updateBool |= trace.setColor(str(self._ui.traceLineColorButton.text()))
+            updateBool |= trace.setLinestyle(str(self._ui.lineStyle.currentText()))
+            updateBool |= trace.setPointMarker(str(self._ui.pointMarker.currentText()))
+            trace.blockSignals(False)
 
-    def refreshTraceList(self):
-        """Get all traces in all visible plots and put them into the plot list model."""
+        if updateBool:
+            self.currentPlot().refresh()
+
+
+
+
+
+    def plotUi_refreshTraceList(self):
+        """Get all traces in current plot and put them into the plot list model."""
         
-        figure = self.currentFigure()
+        #figure = self.currentFigure()
         plot = self.currentPlot()
 
         # Clear plot list model
@@ -317,6 +336,8 @@ class EditFigureDialog(Module):
         
         return True
 
+
+
     def setupTraceListMenu(self):
         """Prepare the menu for right clicking on a plot list entry."""
 
@@ -335,7 +356,7 @@ class EditFigureDialog(Module):
 
         self.currentPlot().removeTrace(trace)
 
-        self.refreshTraceList()
+        self.plotUi_refreshTraceList()
 
     def showTraceListMenu(self, point):
         """Display the menu that occurs when right clicking on a plot list entry."""
@@ -361,21 +382,17 @@ class EditFigureDialog(Module):
 
 
 
+    # Random stuff for now
+    def createColorDialog(self, currentColor, callBack):
+        newColor = QColorDialog.getColor(currentColor)
+        callBack(newColor)
 
-    """Slots for UI-updated fields."""
-    def setPlotName(self):
-        self.currentPlot().setName(self._ui.plotNameLineEdit.text())
-
-    def setTraceColor(self, trace):
-        return trace.setColor(str(self._ui.traceLineColorButton.text()))
-
-    def setLineStyle(self, trace):
-        return trace.setLinestyle(str(self._ui.lineStyle.currentText()))
-
-    def setPointMarker(self, trace):
-        return trace.setPointMarker(str(self._ui.pointMarker.currentText()))
-
-
+    def goodTextColor(self, backgroundColor):
+        """Determines whether complementary color should be white or black."""
+        lightness = QColor(backgroundColor).lightnessF()
+        if lightness > 0.5:
+            return "#000000"
+        return "#ffffff"
 
 
 

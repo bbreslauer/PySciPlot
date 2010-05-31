@@ -1,4 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt4.QtGui import QColor
 
 from pylab import nan
 
@@ -13,18 +14,21 @@ class Plot(QObject):
     plotRenamed = pyqtSignal(str)
     traceAdded = pyqtSignal()
     traceRemoved = pyqtSignal()
+    propertyChanged = pyqtSignal()
 
     def __init__(self, figure, plotNum, name=""):
         QObject.__init__(self)
         self._figure = figure
         self._plotNum = plotNum
         self._name = ""
+        self.setBackgroundColor(QColor("White"))
         self.setName(name)
         self._traces = []
 
         self.traceAdded.connect(self.refresh)
         self.traceRemoved.connect(self.refresh)
         self.plotRenamed.connect(self.refresh)
+        self.propertyChanged.connect(self.refresh)
     
     def __str__(self):
         return "Num: %s, Name: %s" % (self._plotNum, self._name)
@@ -34,6 +38,9 @@ class Plot(QObject):
 
     def getPlotNum(self):
         return self._plotNum
+
+    def backgroundColor(self):
+        return self._backgroundColor
 
     def addTrace(self, trace):
         self._traces.append(trace)
@@ -90,6 +97,7 @@ class Plot(QObject):
         self._axes.clear()
 
         self._axes.set_title(self.getName())
+        self._axes.set_axis_bgcolor(str(self.backgroundColor().name()))
 
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)
@@ -110,5 +118,8 @@ class Plot(QObject):
             return True
         return False
 
+    def setBackgroundColor(self, color):
+        self._backgroundColor = color
+        self.propertyChanged.emit()
 
 

@@ -41,26 +41,38 @@ class Trace(QObject):
     xChanged = pyqtSignal()
     yChanged = pyqtSignal()
     propertyChanged = pyqtSignal()
-    colorChanged = pyqtSignal()
-    pointMarkerChanged = pyqtSignal()
-    linestyleChanged = pyqtSignal()
 
-    def __init__(self, x=0, y=0, traceColor='Black', lineStyle='Solid', pointMarker='None'):
+    def __init__(self, x=0, y=0, traceColor='Black',
+                                 lineStyle='Solid',
+                                 pointMarker='None',
+                                 pointMarkerFaceColor='Black',
+                                 pointMarkerEdgeColor='Black',
+                                 pointMarkerEdgeWidth=1.0
+                ):
         QObject.__init__(self)
         self._plot = None
         self.initializeVariables()
         self.setX(x)
         self.setY(y)
-        self.setColor(traceColor)
+        self.setLineColor(traceColor)
         self.setLinestyle(lineStyle)
         self.setPointMarker(pointMarker)
+        self.setPointMarkerFaceColor(pointMarkerFaceColor)
+        self.setPointMarkerEdgeColor(pointMarkerEdgeColor)
+        self.setPointMarkerEdgeWidth(pointMarkerEdgeWidth)
 
     def initializeVariables(self):
         self._x = None
         self._y = None
-        self._color = None
+        self._lineColor = None
         self._linestyle = None
         self._pointMarker = None
+        self._pointMarkerFaceColor = None
+        self._pointMarkerEdgeColor = None
+        self._pointMarkerEdgeWidth = None
+        
+        
+
 
     def setPlot(self, plot):
         self._plot = plot
@@ -73,10 +85,9 @@ class Trace(QObject):
         self._y = y
         self.yChanged.emit()
 
-    def setColor(self, color):
-        if self._color != color:
-            self._color = color
-            self.colorChanged.emit()
+    def setLineColor(self, color):
+        if self._lineColor != color:
+            self._lineColor = color
             self.propertyChanged.emit()
             return True
         return False
@@ -84,7 +95,6 @@ class Trace(QObject):
     def setLinestyle(self, style):
         if self._linestyle != style:
             self._linestyle = style
-            self.linestyleChanged.emit()
             self.propertyChanged.emit()
             return True
         return False
@@ -92,11 +102,33 @@ class Trace(QObject):
     def setPointMarker(self, marker):
         if self._pointMarker != marker:
             self._pointMarker = marker
-            self.pointMarkerChanged.emit()
             self.propertyChanged.emit()
             return True
         return False
 
+    def setPointMarkerFaceColor(self, color):
+        if self._pointMarkerFaceColor != color:
+            self._pointMarkerFaceColor = color
+            self.propertyChanged.emit()
+            return True
+        return False
+
+    def setPointMarkerEdgeColor(self, color):
+        if self._pointMarkerEdgeColor != color:
+            self._pointMarkerEdgeColor = color
+            self.propertyChanged.emit()
+            return True
+        return False
+
+    def setPointMarkerEdgeWidth(self, width):
+        if self._pointMarkerEdgeWidth != width:
+            self._pointMarkerEdgeWidth = width
+            self.propertyChanged.emit()
+            return True
+        return False
+
+    
+    
     def getX(self):
         return self._x
         
@@ -109,8 +141,8 @@ class Trace(QObject):
     def getYName(self):
         return self._y.name()
 
-    def getColor(self):
-        return self._color
+    def getLineColor(self):
+        return self._lineColor
 
     def getLinestyle(self):
         return self._linestyle
@@ -124,8 +156,23 @@ class Trace(QObject):
     def getPointMarkerSymbol(self):
         return self.pointMarkerSymbols[self.getPointMarker()]
 
+    def getPointMarkerFaceColor(self):
+        return self._pointMarkerFaceColor
+
+    def getPointMarkerEdgeColor(self):
+        return self._pointMarkerEdgeColor
+
+    def getPointMarkerEdgeWidth(self):
+        return self._pointMarkerEdgeWidth
+
     def getFormat(self):
-        return dict(color=self.getColor(), linestyle=self.getLinestyleSymbol(), marker=self.getPointMarkerSymbol())
+        return dict(color=self.getLineColor(),
+                    linestyle=self.getLinestyleSymbol(),
+                    marker=self.getPointMarkerSymbol(),
+                    markerfacecolor=self.getPointMarkerFaceColor(),
+                    markeredgecolor=self.getPointMarkerEdgeColor(),
+                    markeredgewidth=self.getPointMarkerEdgeWidth()
+               )
 
 
 

@@ -132,6 +132,12 @@ class EditFigureDialog(Module):
             """Open a color dialog box to select a color."""
             self.createColorDialog(QColor(str(self._ui.plotBackgroundColorButton.text())), self.plotBackgroundColorCallback)
 
+        def pointMarkerFaceColorHelper():
+            self.createColorDialog(QColor(str(self._ui.pointMarkerFaceColorButton.text())), self.pointMarkerFaceColorCallback)
+
+        def pointMarkerEdgeColorHelper():
+            self.createColorDialog(QColor(str(self._ui.pointMarkerEdgeColorButton.text())), self.pointMarkerEdgeColorCallback)
+
             
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
@@ -142,6 +148,8 @@ class EditFigureDialog(Module):
         self._ui.figureBackgroundColorButton.clicked.connect(figureBackgroundColorHelper)
         self._ui.traceLineColorButton.clicked.connect(traceLineColorHelper)
         self._ui.plotBackgroundColorButton.clicked.connect(plotBackgroundColorHelper)
+        self._ui.pointMarkerFaceColorButton.clicked.connect(pointMarkerFaceColorHelper)
+        self._ui.pointMarkerEdgeColorButton.clicked.connect(pointMarkerEdgeColorHelper)
         
         return self._widget
 
@@ -214,6 +222,16 @@ class EditFigureDialog(Module):
         self._ui.traceLineColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
         self._ui.traceLineColorButton.setText(colorName)
 
+    def plotUi_setPointMarkerFaceColor(self, colorName):
+        self._ui.pointMarkerFaceColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
+        self._ui.pointMarkerFaceColorButton.setText(colorName)
+
+    def plotUi_setPointMarkerEdgeColor(self, colorName):
+        self._ui.pointMarkerEdgeColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
+        self._ui.pointMarkerEdgeColorButton.setText(colorName)
+
+
+
     def plotUi_setLinestyle(self, linestyle):
         self._ui.lineStyle.setCurrentIndex(self._ui.lineStyle.findText(linestyle))
 
@@ -228,6 +246,14 @@ class EditFigureDialog(Module):
         if newColor.isValid():
             self.plotUi_setTraceLineColor(newColor.name())
 
+    def pointMarkerFaceColorCallback(self, newColor):
+        if newColor.isValid():
+            self.plotUi_setPointMarkerFaceColor(newColor.name())
+
+    def pointMarkerEdgeColorCallback(self, newColor):
+        if newColor.isValid():
+            self.plotUi_setPointMarkerEdgeColor(newColor.name())
+
     def addTracesToPlot(self):
         plot = self.currentPlot()
 
@@ -236,6 +262,8 @@ class EditFigureDialog(Module):
         traceColor = str(self._ui.traceLineColorButton.text())
         lineStyle = str(self._ui.lineStyle.currentText())
         pointMarker = str(self._ui.pointMarker.currentText())
+        pointMarkerFaceColor = str(self._ui.pointMarkerFaceColorButton.text())
+        pointMarkerEdgeColor = str(self._ui.pointMarkerEdgeColorButton.text())
 
         plot.blockSignals(True)
         for x in xAxisList:
@@ -243,8 +271,10 @@ class EditFigureDialog(Module):
                 xWave = self._app.waves().waves()[x.row()]
                 yWave = self._app.waves().waves()[y.row()]
                 trace = Trace(xWave, yWave, traceColor=traceColor,
-                                                  lineStyle=lineStyle,
-                                                  pointMarker=pointMarker
+                                            lineStyle=lineStyle,
+                                            pointMarker=pointMarker,
+                                            pointMarkerFaceColor=pointMarkerFaceColor,
+                                            pointMarkerEdgeColor=pointMarkerEdgeColor
                              )
                 plot.addTrace(trace)
 
@@ -289,9 +319,11 @@ class EditFigureDialog(Module):
         trace = self._ui.traceTableView.model().getTraceListEntryByRow(index.row()).getTrace()
 
         # Setup color drop-down box
-        self.plotUi_setTraceLineColor(trace.getColor())
+        self.plotUi_setTraceLineColor(trace.getLineColor())
         self.plotUi_setLinestyle(trace.getLinestyle())
         self.plotUi_setPointMarker(trace.getPointMarker())
+        self.plotUi_setPointMarkerFaceColor(trace.getPointMarkerFaceColor())
+        self.plotUi_setPointMarkerEdgeColor(trace.getPointMarkerEdgeColor())
 
     def traceObject_updateAttributes(self):
         updateBool = False
@@ -299,9 +331,11 @@ class EditFigureDialog(Module):
             trace = traceIndex.internalPointer().getTrace()
             
             trace.blockSignals(True)
-            updateBool |= trace.setColor(str(self._ui.traceLineColorButton.text()))
+            updateBool |= trace.setLineColor(str(self._ui.traceLineColorButton.text()))
             updateBool |= trace.setLinestyle(str(self._ui.lineStyle.currentText()))
             updateBool |= trace.setPointMarker(str(self._ui.pointMarker.currentText()))
+            updateBool |= trace.setPointMarkerFaceColor(str(self._ui.pointMarkerFaceColorButton.text()))
+            updateBool |= trace.setPointMarkerEdgeColor(str(self._ui.pointMarkerEdgeColorButton.text()))
             trace.blockSignals(False)
 
         if updateBool:
@@ -390,7 +424,7 @@ class EditFigureDialog(Module):
     def goodTextColor(self, backgroundColor):
         """Determines whether complementary color should be white or black."""
         lightness = QColor(backgroundColor).lightnessF()
-        if lightness > 0.5:
+        if lightness > 0.4:
             return "#000000"
         return "#ffffff"
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>864</width>
+    <width>1028</width>
     <height>490</height>
    </rect>
   </property>
@@ -222,7 +222,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QPushButton" name="figureBackgroundColorButton">
+        <widget class="QPushButton" name="figureBackgroundColor">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
@@ -309,7 +309,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QPushButton" name="plotBackgroundColorButton">
+             <widget class="QPushButton" name="plotBackgroundColor">
               <property name="styleSheet">
                <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);</string>
@@ -470,7 +470,7 @@ background-color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="lineStyle">
+           <widget class="QComboBox" name="traceLineStyle">
             <property name="currentIndex">
              <number>1</number>
             </property>
@@ -509,7 +509,7 @@ background-color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="pointMarker">
+           <widget class="QComboBox" name="tracePointMarker">
             <property name="currentIndex">
              <number>1</number>
             </property>
@@ -673,7 +673,7 @@ background-color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="traceLineColorButton">
+           <widget class="QPushButton" name="traceLineColor">
             <property name="styleSheet">
              <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>
@@ -684,7 +684,7 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QPushButton" name="pointMarkerFaceColorButton">
+           <widget class="QPushButton" name="tracePointMarkerFaceColor">
             <property name="styleSheet">
              <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>
@@ -695,7 +695,7 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QPushButton" name="pointMarkerEdgeColorButton">
+           <widget class="QPushButton" name="tracePointMarkerEdgeColor">
             <property name="styleSheet">
              <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>
@@ -706,7 +706,11 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QDoubleSpinBox" name="pointMarkerEdgeWidth"/>
+           <widget class="QDoubleSpinBox" name="tracePointMarkerEdgeWidth">
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="5" column="0" colspan="4">
            <spacer name="verticalSpacer_2">
@@ -720,6 +724,13 @@ color: rgb(255, 255, 255);</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="1" column="2">
+           <widget class="QDoubleSpinBox" name="traceLineWidth">
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

@@ -1,40 +1,55 @@
 from PyQt4.QtCore import QObject, pyqtSignal
-from PyQt4.QtGui import QColor
 
 class Trace(QObject):
     """An x-y pair of data."""
+    
+    # Properties
+    # Each property has three values, the first is the gui name, the second is the matplotlib name, and the third is whether to use a symbol lookup table
+    properties = {
+                    'traceLineColor':            ['color',              False],
+                    'traceLineStyle':            ['linestyle',          True],
+                    'traceLineWidth':            ['linewidth',          False],
+                    'tracePointMarker':          ['marker',             True],
+                    'tracePointMarkerEdgeColor': ['markeredgecolor',    False],
+                    'tracePointMarkerEdgeWidth': ['markeredgewidth',    False],
+                    'tracePointMarkerFaceColor': ['markerfacecolor',    False],
+                 }
+
 
     # Dictionaries for matplotlib symbol lookups
-    pointMarkerSymbols = {  'None': '',
-                            'Point': '.',
-                            'Pixel': ',',
-                            'Circle': 'o',
-                            'Triangle - Down': 'v',
-                            'Triangle - Up': '^',
-                            'Triangle - Left': '<',
-                            'Triangle - Right': '>',
-                            'Y - Down': '1',
-                            'Y - Up': '2',
-                            'Y - Left': '3',
-                            'Y - Right': '4',
-                            'Square': 's',
-                            'Pentagon': 'p',
-                            'Star': '*',
-                            'Hexagon 1': 'h',
-                            'Hexagon 2': 'H',
-                            'Plus': '+',
-                            'X': 'x',
-                            'Diamond': 'D',
-                            'Thin Diamond': 'd',
-                            'Vertical Line': '|',
-                            'Horizontal Line': '_',
-                         }
-    lineStyleSymbols =   {  'None': '',
-                            'Solid': '-',
-                            'Dashed': '--',
-                            'Dash Dot': '-.',
-                            'Dotted': ':'
-                         }
+    symbols = { 'tracePointMarker': 
+                                    {  'None': '',
+                                       'Point': '.',
+                                       'Pixel': ',',
+                                       'Circle': 'o',
+                                       'Triangle - Down': 'v',
+                                       'Triangle - Up': '^',
+                                       'Triangle - Left': '<',
+                                       'Triangle - Right': '>',
+                                       'Y - Down': '1',
+                                       'Y - Up': '2',
+                                       'Y - Left': '3',
+                                       'Y - Right': '4',
+                                       'Square': 's',
+                                       'Pentagon': 'p',
+                                       'Star': '*',
+                                       'Hexagon 1': 'h',
+                                       'Hexagon 2': 'H',
+                                       'Plus': '+',
+                                       'X': 'x',
+                                       'Diamond': 'D',
+                                       'Thin Diamond': 'd',
+                                       'Vertical Line': '|',
+                                       'Horizontal Line': '_',
+                                    },
+                'traceLineStyle':  
+                                    {  'None': '',
+                                       'Solid': '-',
+                                       'Dashed': '--',
+                                       'Dash Dot': '-.',
+                                       'Dotted': ':'
+                                    }
+            }
                             
 
     # Signals
@@ -42,36 +57,44 @@ class Trace(QObject):
     yChanged = pyqtSignal()
     propertyChanged = pyqtSignal()
 
-    def __init__(self, x=0, y=0, traceColor='Black',
-                                 lineStyle='Solid',
-                                 pointMarker='None',
-                                 pointMarkerFaceColor='Black',
-                                 pointMarkerEdgeColor='Black',
-                                 pointMarkerEdgeWidth=1.0
-                ):
+    def __init__(self, x=0, y=0):
         QObject.__init__(self)
         self._plot = None
         self.initializeVariables()
+        self.initializeProperties()
         self.setX(x)
         self.setY(y)
-        self.setLineColor(traceColor)
-        self.setLinestyle(lineStyle)
-        self.setPointMarker(pointMarker)
-        self.setPointMarkerFaceColor(pointMarkerFaceColor)
-        self.setPointMarkerEdgeColor(pointMarkerEdgeColor)
-        self.setPointMarkerEdgeWidth(pointMarkerEdgeWidth)
+
+        self.set_('traceLineColor', 'Black')
+        self.set_('traceLineStyle', 'Solid')
+        self.set_('traceLineWidth', 1.0)
+        self.set_('tracePointMarker', 'None')
+        self.set_('tracePointMarkerFaceColor', 'Black')
+        self.set_('tracePointMarkerEdgeColor', 'Black')
+        self.set_('tracePointMarkerEdgeWidth', 1.0)
 
     def initializeVariables(self):
         self._x = None
         self._y = None
-        self._lineColor = None
-        self._linestyle = None
-        self._pointMarker = None
-        self._pointMarkerFaceColor = None
-        self._pointMarkerEdgeColor = None
-        self._pointMarkerEdgeWidth = None
         
-        
+    def initializeProperties(self):
+        for prop in self.properties.keys():
+            vars(self)["_" + prop] = None
+
+    def get(self, variable, lookupSymbol=False):
+        if lookupSymbol and self.properties[variable][1]:
+            return self.symbols[variable][vars(self)["_" + variable]]
+        return vars(self)["_" + variable]
+
+    def set_(self, variable, value):
+        # Only plotName can be blank
+        if value != "" and value != vars(self)["_" + variable]:
+            vars(self)["_" + variable] = value
+
+            self.propertyChanged.emit()
+
+            return True
+        return False
 
 
     def setPlot(self, plot):
@@ -84,48 +107,6 @@ class Trace(QObject):
     def setY(self, y):
         self._y = y
         self.yChanged.emit()
-
-    def setLineColor(self, color):
-        if self._lineColor != color:
-            self._lineColor = color
-            self.propertyChanged.emit()
-            return True
-        return False
-        
-    def setLinestyle(self, style):
-        if self._linestyle != style:
-            self._linestyle = style
-            self.propertyChanged.emit()
-            return True
-        return False
-
-    def setPointMarker(self, marker):
-        if self._pointMarker != marker:
-            self._pointMarker = marker
-            self.propertyChanged.emit()
-            return True
-        return False
-
-    def setPointMarkerFaceColor(self, color):
-        if self._pointMarkerFaceColor != color:
-            self._pointMarkerFaceColor = color
-            self.propertyChanged.emit()
-            return True
-        return False
-
-    def setPointMarkerEdgeColor(self, color):
-        if self._pointMarkerEdgeColor != color:
-            self._pointMarkerEdgeColor = color
-            self.propertyChanged.emit()
-            return True
-        return False
-
-    def setPointMarkerEdgeWidth(self, width):
-        if self._pointMarkerEdgeWidth != width:
-            self._pointMarkerEdgeWidth = width
-            self.propertyChanged.emit()
-            return True
-        return False
 
     
     
@@ -141,38 +122,17 @@ class Trace(QObject):
     def getYName(self):
         return self._y.name()
 
-    def getLineColor(self):
-        return self._lineColor
-
-    def getLinestyle(self):
-        return self._linestyle
-
     def getLinestyleSymbol(self):
         return self.lineStyleSymbols[self.getLinestyle()]
-
-    def getPointMarker(self):
-        return self._pointMarker
 
     def getPointMarkerSymbol(self):
         return self.pointMarkerSymbols[self.getPointMarker()]
 
-    def getPointMarkerFaceColor(self):
-        return self._pointMarkerFaceColor
-
-    def getPointMarkerEdgeColor(self):
-        return self._pointMarkerEdgeColor
-
-    def getPointMarkerEdgeWidth(self):
-        return self._pointMarkerEdgeWidth
-
     def getFormat(self):
-        return dict(color=self.getLineColor(),
-                    linestyle=self.getLinestyleSymbol(),
-                    marker=self.getPointMarkerSymbol(),
-                    markerfacecolor=self.getPointMarkerFaceColor(),
-                    markeredgecolor=self.getPointMarkerEdgeColor(),
-                    markeredgewidth=self.getPointMarkerEdgeWidth()
-               )
+        formatDict = dict()
 
+        for prop in self.properties.keys():
+            formatDict[self.properties[prop][0]] = str(self.get(prop, True))
 
+        return formatDict
 

@@ -14,6 +14,33 @@ from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 class EditFigureDialog(Module):
     """Module to display the Edit Figure dialog window."""
 
+    # Widgets that control the plot
+    # The key is the name of the widget
+    # the value is a dict with the following parameters
+    #   - 'object' = figure, plot, trace
+    #       which object this widget applies to
+    #   - 'type' = 'lineedit', 'spinbox', 'doublespinbox', 'color', 'dropdown'
+    #       the type of object that this is
+    widgets = { 'plotName':                     { 'object': 'plot',     'type': 'lineedit' },
+                'plotBackgroundColor':          { 'object': 'plot',     'type': 'color' },
+                'figureRows':                   { 'object': 'figure',   'type': 'spinbox' },
+                'figureColumns':                { 'object': 'figure',   'type': 'spinbox' },
+                'figureBackgroundColor':        { 'object': 'figure',   'type': 'color' },
+                'traceLineStyle':               { 'object': 'trace',    'type': 'dropdown' },
+                'tracePointMarker':             { 'object': 'trace',    'type': 'dropdown' },
+                'traceLineColor':               { 'object': 'trace',    'type': 'color' },
+                'traceLineWidth':               { 'object': 'trace',    'type': 'doublespinbox' },
+                'tracePointMarkerEdgeColor':    { 'object': 'trace',    'type': 'color' },
+                'tracePointMarkerFaceColor':    { 'object': 'trace',    'type': 'color' },
+                'tracePointMarkerEdgeWidth':    { 'object': 'trace',    'type': 'doublespinbox' },
+
+              }
+
+
+    # To create a new type, update setUiValue and setObjectValueFromUi methods
+    # To create a new widget, update the widgets dict and also the properties variable for the object that it deals with
+    
+    
     def __init__(self, app):
         self._widget = QWidget()
         self._app = app
@@ -67,7 +94,9 @@ class EditFigureDialog(Module):
 
 
         def createFigure():
-            self._app.figures().addFigure(Figure(self._app, "NewFigure"))
+            figure = Figure(self._app, "NewFigure")
+            self._app.figures().addFigure(figure)
+            figure.figureRenamed.connect(self.setFigureListLabel)
 
         def showFigure():
             """Display the figure, in case it got hidden."""
@@ -106,7 +135,7 @@ class EditFigureDialog(Module):
             figure = self.currentFigure()
 
             if figure:
-                self._ui.figureListLabel.setText("Currently working on figure:\n" + figure.name())
+                self.setFigureListLabel()
                 self.figureUi_resetFields()
                 self._ui.plotComboBox.model().setFigure(figure)
                 self._ui.plotComboBox.setCurrentIndex(0)
@@ -120,24 +149,6 @@ class EditFigureDialog(Module):
             if plot:
                 self.plotUi_setupTab()
 
-        def figureBackgroundColorHelper():
-            """Open a color dialog box to select a color."""
-            self.createColorDialog(QColor(str(self._ui.figureBackgroundColorButton.text())), self.figureBackgroundColorCallback)
-
-        def traceLineColorHelper():
-            """Open a color dialog box to select a color."""
-            self.createColorDialog(QColor(str(self._ui.traceLineColorButton.text())), self.traceLineColorCallback)
-
-        def plotBackgroundColorHelper():
-            """Open a color dialog box to select a color."""
-            self.createColorDialog(QColor(str(self._ui.plotBackgroundColorButton.text())), self.plotBackgroundColorCallback)
-
-        def pointMarkerFaceColorHelper():
-            self.createColorDialog(QColor(str(self._ui.pointMarkerFaceColorButton.text())), self.pointMarkerFaceColorCallback)
-
-        def pointMarkerEdgeColorHelper():
-            self.createColorDialog(QColor(str(self._ui.pointMarkerEdgeColorButton.text())), self.pointMarkerEdgeColorCallback)
-
             
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
@@ -145,11 +156,9 @@ class EditFigureDialog(Module):
         self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
         self._ui.traceTableView.selectionModel().currentChanged.connect(self.plotUi_resetTraceOptions)
         self._ui.plotComboBox.currentIndexChanged.connect(changePlot)
-        self._ui.figureBackgroundColorButton.clicked.connect(figureBackgroundColorHelper)
-        self._ui.traceLineColorButton.clicked.connect(traceLineColorHelper)
-        self._ui.plotBackgroundColorButton.clicked.connect(plotBackgroundColorHelper)
-        self._ui.pointMarkerFaceColorButton.clicked.connect(pointMarkerFaceColorHelper)
-        self._ui.pointMarkerEdgeColorButton.clicked.connect(pointMarkerEdgeColorHelper)
+
+        self.registerColorCallbackFunctions()
+        self.registerColorHelperFunctions()
         
         return self._widget
 
@@ -163,6 +172,118 @@ class EditFigureDialog(Module):
         return self._ui.plotComboBox.model().getPlot(self._ui.plotComboBox.currentIndex())
 
 
+
+
+
+    def setFigureListLabel(self):
+        self._ui.figureListLabel.setText("Currently working on figure:\n" + self.currentFigure().get('figureName'))
+
+
+
+
+
+    #
+    # Generic methods for plot properties that user can edit
+    #
+    
+    def getObjectForWidget(self, widgetName):
+        if self.widgets[widgetName]['object'] == 'figure':
+            return self.currentFigure()
+        elif self.widgets[widgetName]['object'] == 'plot':
+            return self.currentPlot()
+        elif self.widgets[widgetName]['object'] == 'trace':
+            modelRow = self._ui.traceTableView.currentIndex().row()
+            if modelRow >= 0:
+                traceListEntry = self._ui.traceTableView.model().getTraceListEntryByRow(modelRow)
+                if traceListEntry:
+                    trace = traceListEntry.getTrace()
+                    return trace
+            return None
+
+    # Create an anonymous function that creates a callback function
+    # This must be done in a separate method so that widgetName does not take the last entry in the for loop in the method below
+    def makeColorCallbackFunction(self, widgetName):
+        return lambda color: self.setUiValue(widgetName, color.name())
+
+
+    # Register and create helper function (for color buttons)
+    def registerColorCallbackFunctions(self):
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['type'] == 'color':
+                vars(self)[widgetName + 'Callback'] = self.makeColorCallbackFunction(widgetName)
+
+    # Create an anonymous function that creates a color dialog box
+    # This must be done in a separate method so that widgetName does not take the last entry in the for loop in the method below
+    def makeColorHelperFunction(self, widgetName):
+        return lambda: self.createColorDialog(QColor(str(vars(self._ui)[widgetName].text())), vars(self)[widgetName + 'Callback'])
+
+    def registerColorHelperFunctions(self):
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['type'] == 'color':
+                vars(self)[widgetName + 'Helper'] = self.makeColorHelperFunction(widgetName)
+                vars(self._ui)[widgetName].clicked.connect(vars(self)[widgetName + 'Helper'])
+               
+
+    # Set UI value
+    def setUiValue(self, widgetName, value):
+        widget = vars(self._ui)[widgetName]
+        widgetType = self.widgets[widgetName]['type']
+
+        if widgetType == 'lineedit':
+            widget.setText(value)
+        elif widgetType == 'doublespinbox':
+            widget.setValue(value)
+        elif widgetType == 'spinbox':
+            widget.setValue(value)
+        elif widgetType == 'color':
+            widget.setStyleSheet("background-color: " + value + "; color: " + self.goodTextColor(value))
+            widget.setText(value)
+        elif widgetType == 'dropdown':
+            widget.setCurrentIndex(widget.findText(value))
+
+
+
+    # Reset UI to object value
+    def setUiValueFromObject(self, widgetName):
+        theObject = self.getObjectForWidget(widgetName)
+        if theObject:
+            value = theObject.get(widgetName)
+            self.setUiValue(widgetName, value)
+            return True
+        return False
+
+
+    # set object value to UI
+    def setObjectValueFromUi(self, widgetName, theObject=None):
+        value = ""
+
+        widget = vars(self._ui)[widgetName]
+        widgetType = self.widgets[widgetName]['type']
+        
+        if widgetType == 'lineedit':
+            value = widget.text()
+        elif widgetType == 'doublespinbox':
+            value = widget.value()
+        elif widgetType == 'spinbox':
+            value = widget.value()
+        elif widgetType == 'color':
+            value = widget.text()
+        elif widgetType == 'dropdown':
+            value = str(widget.currentText())
+        
+        if not theObject:
+            theObject = self.getObjectForWidget(widgetName)
+
+        if theObject:
+            return theObject.set_(widgetName, value)
+        
+        return False
+
+
+
+
+
+
     #
     # Figure tab
     #
@@ -170,127 +291,37 @@ class EditFigureDialog(Module):
         """Set the attributes for the current figure to what the UI says."""
 
         figure = self.currentFigure()
-        
-        figure.setNumberOfRows(self._ui.figureRows.value())
-        figure.setNumberOfColumns(self._ui.figureColumns.value())
-        figure.setBackgroundColor(QColor(self._ui.figureBackgroundColorButton.text()))
-        
-        #self.refreshTraceList()
-        #self._ui.plotComboBox.model().doReset()
-        #self._ui.plotComboBox.setCurrentIndex(0)
 
+        updateBool = False
+        figure.blockSignals(True)
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['object'] == 'figure':
+                updateBool |= self.setObjectValueFromUi(widgetName)
+
+        figure.blockSignals(False)
+
+        if updateBool:
+            figure.refresh()
+            
+            # Rows/columns may have changed, so we'll reset the plot combo box
+            self._ui.plotComboBox.model().setFigure(figure)
+            self._ui.plotComboBox.setCurrentIndex(0)
+            
+        
     def figureUi_resetFields(self):
         """
         Set figure tab to values for the current figure object.
         """
-        figure = self.currentFigure()
+        
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['object'] == 'figure':
+                self.setUiValueFromObject(widgetName)
         
         
-        self.figureUi_setRows(figure.rows())
-        self.figureUi_setColumns(figure.columns())
-        self.figureUi_setBackgroundColor(figure.backgroundColor().name())
-    
-    def figureUi_setRows(self, rows):
-        self._ui.figureRows.setValue(rows)
-
-    def figureUi_setColumns(self, columns):
-        self._ui.figureColumns.setValue(columns)
-
-    def figureUi_setBackgroundColor(self, colorName):
-        self._ui.figureBackgroundColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
-        self._ui.figureBackgroundColorButton.setText(colorName)
-
-    def figureBackgroundColorCallback(self, newColor):
-        if newColor.isValid():
-            self.figureUi_setBackgroundColor(newColor.name())
-
-
-
 
     #
     # Plot tab
     #
-
-    def plotUi_setPlotName(self, name):
-        self._ui.plotName.setText(name)
-
-    def plotUi_setBackgroundColor(self, colorName):
-        self._ui.plotBackgroundColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
-        self._ui.plotBackgroundColorButton.setText(colorName)
-    
-    def plotUi_setTraceLineColor(self, colorName):
-        self._ui.traceLineColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
-        self._ui.traceLineColorButton.setText(colorName)
-
-    def plotUi_setPointMarkerFaceColor(self, colorName):
-        self._ui.pointMarkerFaceColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
-        self._ui.pointMarkerFaceColorButton.setText(colorName)
-
-    def plotUi_setPointMarkerEdgeColor(self, colorName):
-        self._ui.pointMarkerEdgeColorButton.setStyleSheet("background-color: " + colorName + "; color: " + self.goodTextColor(colorName))
-        self._ui.pointMarkerEdgeColorButton.setText(colorName)
-
-
-
-    def plotUi_setLinestyle(self, linestyle):
-        self._ui.lineStyle.setCurrentIndex(self._ui.lineStyle.findText(linestyle))
-
-    def plotUi_setPointMarker(self, pointMarker):
-        self._ui.pointMarker.setCurrentIndex(self._ui.pointMarker.findText(pointMarker))
-
-    def plotBackgroundColorCallback(self, newColor):
-        if newColor.isValid():
-            self.plotUi_setBackgroundColor(newColor.name())
-
-    def traceLineColorCallback(self, newColor):
-        if newColor.isValid():
-            self.plotUi_setTraceLineColor(newColor.name())
-
-    def pointMarkerFaceColorCallback(self, newColor):
-        if newColor.isValid():
-            self.plotUi_setPointMarkerFaceColor(newColor.name())
-
-    def pointMarkerEdgeColorCallback(self, newColor):
-        if newColor.isValid():
-            self.plotUi_setPointMarkerEdgeColor(newColor.name())
-
-    def addTracesToPlot(self):
-        plot = self.currentPlot()
-
-        xAxisList = self._ui.xAxisListView.selectedIndexes()
-        yAxisList = self._ui.yAxisListView.selectedIndexes()
-        traceColor = str(self._ui.traceLineColorButton.text())
-        lineStyle = str(self._ui.lineStyle.currentText())
-        pointMarker = str(self._ui.pointMarker.currentText())
-        pointMarkerFaceColor = str(self._ui.pointMarkerFaceColorButton.text())
-        pointMarkerEdgeColor = str(self._ui.pointMarkerEdgeColorButton.text())
-
-        plot.blockSignals(True)
-        for x in xAxisList:
-            for y in yAxisList:
-                xWave = self._app.waves().waves()[x.row()]
-                yWave = self._app.waves().waves()[y.row()]
-                trace = Trace(xWave, yWave, traceColor=traceColor,
-                                            lineStyle=lineStyle,
-                                            pointMarker=pointMarker,
-                                            pointMarkerFaceColor=pointMarkerFaceColor,
-                                            pointMarkerEdgeColor=pointMarkerEdgeColor
-                             )
-                plot.addTrace(trace)
-
-        plot.blockSignals(False)
-        plot.refresh()
-        
-        self.plotUi_refreshTraceList()
-
-
-    def plotObject_setAttributes(self):
-        """Update the Plot attributes with everything in the current UI."""
-
-        plot = self.currentPlot()
-
-        plot.setName(self._ui.plotName.text())
-        plot.setBackgroundColor(QColor(self._ui.plotBackgroundColorButton.text()))
 
     def plotUi_setupTab(self):
         """Setup Plot tab."""
@@ -299,47 +330,78 @@ class EditFigureDialog(Module):
         self.plotUi_refreshTraceList()
         self.plotUi_resetTraceOptions()
 
+    def plotObject_setAttributes(self):
+        """Update the Plot attributes with everything in the current UI."""
+
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['object'] == 'plot':
+                self.setObjectValueFromUi(widgetName)
 
     def plotUi_resetPlotOptions(self):
         """
         Set plot options group to values for the current plot object.
         """
-
-        plot = self.currentPlot()
         
-        self.plotUi_setPlotName(plot.getName())
-        self.plotUi_setBackgroundColor(plot.backgroundColor().name())
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['object'] == 'plot':
+                self.setUiValueFromObject(widgetName)
 
-    def plotUi_resetTraceOptions(self, index=None):
-        """Update all trace options for the trace that was just clicked, as identified by index."""
-        
-        if not index:
-            return
 
-        trace = self._ui.traceTableView.model().getTraceListEntryByRow(index.row()).getTrace()
+    def plotUi_resetTraceOptions(self, *args):
+        """Update all trace options for the trace that was just clicked."""
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['object'] == 'trace':
+                self.setUiValueFromObject(widgetName)
 
-        # Setup color drop-down box
-        self.plotUi_setTraceLineColor(trace.getLineColor())
-        self.plotUi_setLinestyle(trace.getLinestyle())
-        self.plotUi_setPointMarker(trace.getPointMarker())
-        self.plotUi_setPointMarkerFaceColor(trace.getPointMarkerFaceColor())
-        self.plotUi_setPointMarkerEdgeColor(trace.getPointMarkerEdgeColor())
-
-    def traceObject_updateAttributes(self):
+    def traceObject_updateAttributes(self, traces=None):
         updateBool = False
-        for traceIndex in self._ui.traceTableView.selectedIndexes():
-            trace = traceIndex.internalPointer().getTrace()
+
+        if not traces:
+            traces = set()
+            for traceIndex in self._ui.traceTableView.selectedIndexes():
+                traces.add(traceIndex.internalPointer().getTrace())
+        elif type(traces).__name__ != 'set':
+            traces = set([traces])
             
+        for trace in traces:
             trace.blockSignals(True)
-            updateBool |= trace.setLineColor(str(self._ui.traceLineColorButton.text()))
-            updateBool |= trace.setLinestyle(str(self._ui.lineStyle.currentText()))
-            updateBool |= trace.setPointMarker(str(self._ui.pointMarker.currentText()))
-            updateBool |= trace.setPointMarkerFaceColor(str(self._ui.pointMarkerFaceColorButton.text()))
-            updateBool |= trace.setPointMarkerEdgeColor(str(self._ui.pointMarkerEdgeColorButton.text()))
+            
+            for widgetName in self.widgets.keys():
+                if self.widgets[widgetName]['object'] == 'trace':
+                    updateBool |= self.setObjectValueFromUi(widgetName, trace)
+
             trace.blockSignals(False)
 
         if updateBool:
             self.currentPlot().refresh()
+
+
+
+
+
+
+
+
+    def addTracesToPlot(self):
+        plot = self.currentPlot()
+
+        xAxisList = self._ui.xAxisListView.selectedIndexes()
+        yAxisList = self._ui.yAxisListView.selectedIndexes()
+
+        plot.blockSignals(True)
+        for x in xAxisList:
+            for y in yAxisList:
+                xWave = self._app.waves().waves()[x.row()]
+                yWave = self._app.waves().waves()[y.row()]
+                trace = Trace(xWave, yWave)
+                self.traceObject_updateAttributes(trace)
+                plot.addTrace(trace)
+
+        plot.blockSignals(False)
+        plot.refresh()
+        
+        self.plotUi_refreshTraceList()
+
 
 
 
@@ -386,7 +448,7 @@ class EditFigureDialog(Module):
 
     def deleteTraceFromPlot(self, row):
         traceListEntry = self._ui.traceTableView.model().getTraceListEntryByRow(row)
-        trace   = traceListEntry.getTrace()
+        trace = traceListEntry.getTrace()
 
         self.currentPlot().removeTrace(trace)
 
@@ -419,7 +481,8 @@ class EditFigureDialog(Module):
     # Random stuff for now
     def createColorDialog(self, currentColor, callBack):
         newColor = QColorDialog.getColor(currentColor)
-        callBack(newColor)
+        if newColor.isValid():
+            callBack(newColor)
 
     def goodTextColor(self, backgroundColor):
         """Determines whether complementary color should be white or black."""

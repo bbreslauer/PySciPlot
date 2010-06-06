@@ -1,5 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal, Qt
-from PyQt4.QtGui import QAction, QColor
+from PyQt4.QtGui import QAction
 
 import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -21,20 +21,30 @@ class Figure(QObject):
     # Signals
     figureRenamed  = pyqtSignal(str)
     plotRenamed    = pyqtSignal(int, str)
-    rowsChanged    = pyqtSignal(int)
-    columnsChanged = pyqtSignal(int)
-    axesPaddingChanged = pyqtSignal(float)
-    backgroundColorChanged = pyqtSignal()
+    propertyChanged = pyqtSignal()
+
+    # Properties
+    properties = [  
+                    'figureName',
+                    'figureRows',
+                    'figureColumns',
+                    'figureAxesPadding',
+                    'figureBackgroundColor',
+                 ]
 
     def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
         QObject.__init__(self)
         
-        self._app = app
-        self.setNumberOfRows(nrows)
-        self.setNumberOfColumns(ncols)
-        self.setAxesPadding(padding)
-        self.setBackgroundColor(QColor("White"))
+        self.initializeProperties()
 
+        self._app = app
+
+        self.set_('figureRows', nrows)
+        self.set_('figureColumns', ncols)
+        self.set_('figureAxesPadding', padding)
+        self.set_('figureBackgroundColor', '#ffffff')
+
+        # Graphical stuff
         self._figure = MPLFigure()
         self._canvas = FigureCanvas(self._figure)
         self._figureSubWindow = DialogSubWindow(self._app.ui.workspace)
@@ -42,8 +52,8 @@ class Figure(QObject):
         self._app.ui.workspace.addSubWindow(self._figureSubWindow)
         self._canvas.setParent(self._figureSubWindow)
         self.showFigure()
-
-        self.rename(name)
+        
+        self.set_('figureName', name)
 
         self._plots = []
         self.extendPlots(1)
@@ -53,58 +63,42 @@ class Figure(QObject):
         self.refresh()
 
         # Connect signals
-        self.rowsChanged.connect(self.refresh)
-        self.columnsChanged.connect(self.refresh)
-        self.backgroundColorChanged.connect(self.refresh)
+        self.propertyChanged.connect(self.refresh)
 
     def __str__(self):
-        return "name: %s, rows: %s, columns: %s" % (self._name, self._rows, self._columns)
+        return "name: %s, rows: %s, columns: %s" % (self.get('figureName'), self.get('figureRows'), self.get('figureColumns'))
 
-    def name(self):
-        return self._name
+    def initializeProperties(self):
+        for prop in self.properties:
+            vars(self)["_" + prop] = None
 
-    def rows(self):
-        return self._rows
+    def get(self, variable):
+        return vars(self)["_" + variable]
 
-    def columns(self):
-        return self._columns
+    def set_(self, variable, value):
+        if value != "":
+            vars(self)["_" + variable] = value
 
-    def backgroundColor(self):
-        return self._color
+            # See if we should emit any signals
+            if variable == 'figureName':
+                self._figureSubWindow.setWindowTitle(value)
+                self.figureRenamed.emit(value)
+            else:
+                self.propertyChanged.emit()
+
+            return True
+        return False
 
     def mplFigure(self):
         return self._figure
 
-    def rename(self, newName):
-        if newName == "":
-            return False
-
-        self._name = newName
-        self._figureSubWindow.setWindowTitle(newName)
-        self.figureRenamed.emit(self._name)
-        return True
-
-    def setNumberOfRows(self, nrows):
-        self._rows = nrows
-        self.rowsChanged.emit(self._rows)
-
-    def setNumberOfColumns(self, ncols):
-        self._columns = ncols
-        self.columnsChanged.emit(self._columns)
-
-    def setAxesPadding(self, padding):
-        self._axesPadding = padding
-        self.axesPaddingChanged.emit(self._axesPadding)
-
-    def setBackgroundColor(self, color):
-        self._color = color
-        self.backgroundColorChanged.emit()
-
     def numPlots(self):
-        return self._rows * self._columns
+        return self.get('figureRows') * self.get('figureColumns')
 
     def getPlot(self, plotNum):
-        return self._plots[plotNum - 1]
+        if plotNum <= self.numPlots():
+            return self._plots[plotNum - 1]
+        return None
     
     def plots(self):
         return self._plots
@@ -125,28 +119,30 @@ class Figure(QObject):
         self._plots.append(plot)
         
         def emitPlotRenamed(name):
-            self.plotRenamed.emit(plot.getPlotNum(), name)
+            self.plotRenamed.emit(plot.get('plotNum'), name)
         
         plot.plotRenamed.connect(emitPlotRenamed)
 
-    def refreshPlot(self, plotNum):
-        self.getPlot(plotNum).refresh()
+    def refreshPlot(self, plotNum, drawBool=True):
+        self.getPlot(plotNum).refresh(drawBool)
 
     def refresh(self, *args):
         """
         Refresh everything related to the figure display, including plots and text.
         """
         
-        displayedPlots = self.rows() * self.columns()
+        displayedPlots = self.numPlots()
 
         self.extendPlots(displayedPlots)
 
         self.mplFigure().clf()
         
-        self.mplFigure().set_facecolor(str(self.backgroundColor().name()))
+        self.mplFigure().set_facecolor(str(self.get('figureBackgroundColor')))
 
         for plotNum in range(1, displayedPlots + 1):
-            self.refreshPlot(plotNum)
+            self.refreshPlot(plotNum, False)
+
+        self._canvas.draw()
 
     def showFigure(self):
         self._figureSubWindow.show()

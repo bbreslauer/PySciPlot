@@ -1,5 +1,4 @@
 from PyQt4.QtCore import QObject, pyqtSignal
-from PyQt4.QtGui import QColor
 
 from pylab import nan
 
@@ -16,13 +15,23 @@ class Plot(QObject):
     traceRemoved = pyqtSignal()
     propertyChanged = pyqtSignal()
 
-    def __init__(self, figure, plotNum, name=""):
+    # Properties
+    properties = [
+                    'plotNum',
+                    'plotName',
+                    'plotBackgroundColor',
+                 ]
+
+    def __init__(self, figure, plotNum, plotName=""):
         QObject.__init__(self)
-        self._figure = figure
-        self._plotNum = plotNum
-        self._name = ""
-        self.setBackgroundColor(QColor("White"))
-        self.setName(name)
+
+        self.initializeProperties()
+
+        self.set_('figure', figure)
+        self.set_('plotNum', plotNum)
+        self.set_('plotName', plotName)
+        self.set_('plotBackgroundColor', '#ffffff')
+        
         self._traces = []
 
         self.traceAdded.connect(self.refresh)
@@ -31,17 +40,29 @@ class Plot(QObject):
         self.propertyChanged.connect(self.refresh)
     
     def __str__(self):
-        return "Num: %s, Name: %s" % (self._plotNum, self._name)
+        return "Num: %s, Name: %s" % (self.get('plotNum'), self.get('plotName'))
 
-    def getName(self):
-        return self._name
+    def initializeProperties(self):
+        for prop in self.properties:
+            vars(self)["_" + prop] = None
 
-    def getPlotNum(self):
-        return self._plotNum
+    def get(self, variable):
+        return vars(self)["_" + variable]
 
-    def backgroundColor(self):
-        return self._backgroundColor
+    def set_(self, variable, value):
+        # Only plotName can be blank
+        if value != "" or variable == 'plotName':
+            vars(self)["_" + variable] = value
 
+            # See if we should emit any signals
+            if variable == 'plotName':
+                self.plotRenamed.emit(value)
+            else:
+                self.propertyChanged.emit()
+
+            return True
+        return False
+    
     def addTrace(self, trace):
         self._traces.append(trace)
         #trace.addPlot(self)
@@ -91,19 +112,20 @@ class Plot(QObject):
         return [xData, yData]
 
 
-    def refresh(self):
-        print "building r: " + str(self._figure.rows()) + ", c: " + str(self._figure.columns()) + ", n: " + str(self._plotNum)
-        self._axes = self._figure.mplFigure().add_subplot(self._figure.rows(), self._figure.columns(), self._plotNum)
+    def refresh(self, drawBool=True):
+        print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
+        self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))
         self._axes.clear()
 
-        self._axes.set_title(self.getName())
-        self._axes.set_axis_bgcolor(str(self.backgroundColor().name()))
+        self._axes.set_title(self.get('plotName'))
+        self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
 
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)
             self._axes.plot(x, y, **(trace.getFormat()))
 
-        self._figure._canvas.draw()
+        if drawBool:
+            self._figure._canvas.draw()
 
         return True
 
@@ -111,15 +133,5 @@ class Plot(QObject):
         self._traces.remove(trace)
         self.traceRemoved.emit()
 
-    def setName(self, name):
-        if name != "":
-            self._name = name
-            self.plotRenamed.emit(name)
-            return True
-        return False
-
-    def setBackgroundColor(self, color):
-        self._backgroundColor = color
-        self.propertyChanged.emit()
 
 

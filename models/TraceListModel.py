@@ -73,5 +73,7 @@ class TraceListModel(QAbstractTableModel):
         return True
 
     def getTraceListEntryByRow(self, row):
-        return self._data[row]
+        if row >= 0 and row < self.rowCount():
+            return self._data[row]
+        return None
 

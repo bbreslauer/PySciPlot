@@ -6,13 +6,14 @@ class Trace(QObject):
     # Properties
     # Each property has three values, the first is the gui name, the second is the matplotlib name, and the third is whether to use a symbol lookup table
     properties = {
-                    'traceLineColor':            ['color',              False],
-                    'traceLineStyle':            ['linestyle',          True],
-                    'traceLineWidth':            ['linewidth',          False],
-                    'tracePointMarker':          ['marker',             True],
-                    'tracePointMarkerEdgeColor': ['markeredgecolor',    False],
-                    'tracePointMarkerEdgeWidth': ['markeredgewidth',    False],
-                    'tracePointMarkerFaceColor': ['markerfacecolor',    False],
+            'traceLineColor':               { 'default': '#000000', 'mplname': 'color',           'symlookup': False },
+            'traceLineStyle':               { 'default': 'Solid',   'mplname': 'linestyle',       'symlookup': True  },
+            'traceLineWidth':               { 'default': 1.0,       'mplname': 'linewidth',       'symlookup': False },
+            'tracePointMarker':             { 'default': 'Point',   'mplname': 'marker',          'symlookup': True  },
+            'tracePointMarkerEdgeColor':    { 'default': '#000000', 'mplname': 'markeredgecolor', 'symlookup': False },
+            'tracePointMarkerEdgeWidth':    { 'default': 1.0,       'mplname': 'markeredgewidth', 'symlookup': False },
+            'tracePointMarkerFaceColor':    { 'default': '#000000', 'mplname': 'markerfacecolor', 'symlookup': False },
+            'tracePointMarkerSize':         { 'default': 1.0,       'mplname': 'markersize',      'symlookup': False },
                  }
 
 
@@ -65,30 +66,25 @@ class Trace(QObject):
         self.setX(x)
         self.setY(y)
 
-        self.set_('traceLineColor', 'Black')
-        self.set_('traceLineStyle', 'Solid')
-        self.set_('traceLineWidth', 1.0)
-        self.set_('tracePointMarker', 'None')
-        self.set_('tracePointMarkerFaceColor', 'Black')
-        self.set_('tracePointMarkerEdgeColor', 'Black')
-        self.set_('tracePointMarkerEdgeWidth', 1.0)
-
     def initializeVariables(self):
         self._x = None
         self._y = None
         
     def initializeProperties(self):
         for prop in self.properties.keys():
-            vars(self)["_" + prop] = None
+            vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable, lookupSymbol=False):
-        if lookupSymbol and self.properties[variable][1]:
+        if lookupSymbol and self.properties[variable]['symlookup']:
             return self.symbols[variable][vars(self)["_" + variable]]
         return vars(self)["_" + variable]
 
     def set_(self, variable, value):
         # Only plotName can be blank
         if value != "" and value != vars(self)["_" + variable]:
+            if type(value).__name__ == 'QString':
+                value = str(value)
+
             vars(self)["_" + variable] = value
 
             self.propertyChanged.emit()
@@ -132,7 +128,7 @@ class Trace(QObject):
         formatDict = dict()
 
         for prop in self.properties.keys():
-            formatDict[self.properties[prop][0]] = str(self.get(prop, True))
+            formatDict[self.properties[prop]['mplname']] = self.get(prop, True)
 
         return formatDict
 

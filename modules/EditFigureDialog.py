@@ -23,6 +23,7 @@ class EditFigureDialog(Module):
     #       the type of object that this is
     widgets = { 'plotName':                     { 'object': 'plot',     'type': 'lineedit' },
                 'plotBackgroundColor':          { 'object': 'plot',     'type': 'color' },
+                'figureTitle':                  { 'object': 'figure',   'type': 'lineedit' },
                 'figureRows':                   { 'object': 'figure',   'type': 'spinbox' },
                 'figureColumns':                { 'object': 'figure',   'type': 'spinbox' },
                 'figureBackgroundColor':        { 'object': 'figure',   'type': 'color' },
@@ -33,12 +34,13 @@ class EditFigureDialog(Module):
                 'tracePointMarkerEdgeColor':    { 'object': 'trace',    'type': 'color' },
                 'tracePointMarkerFaceColor':    { 'object': 'trace',    'type': 'color' },
                 'tracePointMarkerEdgeWidth':    { 'object': 'trace',    'type': 'doublespinbox' },
+                'tracePointMarkerSize':         { 'object': 'trace',    'type': 'doublespinbox' },
 
               }
 
 
     # To create a new type, update setUiValue and setObjectValueFromUi methods
-    # To create a new widget, update the widgets dict and also the properties variable for the object that it deals with
+    # To create a new widget, update the widgets dict above and also the properties variable in the object that it deals with
     
     
     def __init__(self, app):

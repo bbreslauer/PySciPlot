@@ -6,37 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1072</width>
-    <height>727</height>
+    <width>828</width>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>PySciPlot</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QMdiArea" name="workspace">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>800</width>
-      <height>555</height>
-     </rect>
-    </property>
-    <property name="viewMode">
-     <enum>QMdiArea::SubWindowView</enum>
-    </property>
-    <property name="documentMode">
-     <bool>false</bool>
-    </property>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QMdiArea" name="workspace">
+      <property name="viewMode">
+       <enum>QMdiArea::SubWindowView</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1072</width>
+     <width>828</width>
      <height>23</height>
     </rect>
    </property>

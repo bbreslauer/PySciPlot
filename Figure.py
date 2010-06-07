@@ -24,13 +24,14 @@ class Figure(QObject):
     propertyChanged = pyqtSignal()
 
     # Properties
-    properties = [  
-                    'figureName',
-                    'figureRows',
-                    'figureColumns',
-                    'figureAxesPadding',
-                    'figureBackgroundColor',
-                 ]
+    properties = {  
+                    'figureName':               { 'default': '' },
+                    'figureTitle':              { 'default': '' },
+                    'figureRows':               { 'default': 1 },
+                    'figureColumns':            { 'default': 1 },
+                    'figureAxesPadding':        { 'default': 0.1 },
+                    'figureBackgroundColor':    { 'default': '#ffffff' },
+                 }
 
     def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
         QObject.__init__(self)
@@ -69,14 +70,14 @@ class Figure(QObject):
         return "name: %s, rows: %s, columns: %s" % (self.get('figureName'), self.get('figureRows'), self.get('figureColumns'))
 
     def initializeProperties(self):
-        for prop in self.properties:
-            vars(self)["_" + prop] = None
+        for prop in self.properties.keys():
+            vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable):
         return vars(self)["_" + variable]
 
     def set_(self, variable, value):
-        if value != "":
+        if value != "" and value != vars(self)["_" + variable]:
             vars(self)["_" + variable] = value
 
             # See if we should emit any signals
@@ -136,6 +137,8 @@ class Figure(QObject):
         self.extendPlots(displayedPlots)
 
         self.mplFigure().clf()
+
+        self.mplFigure().suptitle(str(self.get('figureTitle')))
         
         self.mplFigure().set_facecolor(str(self.get('figureBackgroundColor')))
 

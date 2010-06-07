@@ -16,23 +16,24 @@ class Plot(QObject):
     propertyChanged = pyqtSignal()
 
     # Properties
-    properties = [
-                    'plotNum',
-                    'plotName',
-                    'plotBackgroundColor',
-                 ]
+    properties = {
+                    'plotNum':              { 'default': 1 },
+                    'plotName':             { 'default': '' },
+                    'plotBackgroundColor':  { 'default': '#ffffff' },
+                 }
 
     def __init__(self, figure, plotNum, plotName=""):
         QObject.__init__(self)
 
         self.initializeProperties()
 
+        self._figure = None
+        self._traces = []
+
         self.set_('figure', figure)
         self.set_('plotNum', plotNum)
         self.set_('plotName', plotName)
-        self.set_('plotBackgroundColor', '#ffffff')
         
-        self._traces = []
 
         self.traceAdded.connect(self.refresh)
         self.traceRemoved.connect(self.refresh)
@@ -43,15 +44,15 @@ class Plot(QObject):
         return "Num: %s, Name: %s" % (self.get('plotNum'), self.get('plotName'))
 
     def initializeProperties(self):
-        for prop in self.properties:
-            vars(self)["_" + prop] = None
+        for prop in self.properties.keys():
+            vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable):
         return vars(self)["_" + variable]
 
     def set_(self, variable, value):
         # Only plotName can be blank
-        if value != "" or variable == 'plotName':
+        if (value != "" or variable == 'plotName') and value != vars(self)["_" + variable]:
             vars(self)["_" + variable] = value
 
             # See if we should emit any signals

@@ -1,6 +1,8 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 
 from pylab import nan
+#from mpl_toolkits.axes_grid.axislines import Axes as AxisLine
+from matplotlib.axes import Axes
 
 from Waves import Waves
 from Wave import Wave
@@ -17,9 +19,19 @@ class Plot(QObject):
 
     # Properties
     properties = {
-                    'plotNum':              { 'default': 1 },
-                    'plotName':             { 'default': '' },
-                    'plotBackgroundColor':  { 'default': '#ffffff' },
+                    'plotNum':                  { 'default': 1 },
+                    'plotName':                 { 'default': '' },
+                    'plotBackgroundColor':      { 'default': '#ffffff' },
+                    'plotXAxisAutoscale':       { 'default': True },
+                    'plotXAxisMinimum':         { 'default': -10 },
+                    'plotXAxisMaximum':         { 'default': 10 },
+                    'plotYAxisAutoscale':       { 'default': True },
+                    'plotYAxisMinimum':         { 'default': -10 },
+                    'plotYAxisMaximum':         { 'default': 10 },
+                    'plotTopAxisVisible':       { 'default': True },
+                    'plotLeftAxisVisible':      { 'default': True },
+                    'plotBottomAxisVisible':    { 'default': True },
+                    'plotRightAxisVisible':     { 'default': True },
                  }
 
     def __init__(self, figure, plotNum, plotName=""):
@@ -28,6 +40,7 @@ class Plot(QObject):
         self.initializeProperties()
 
         self._figure = None
+        self._axes = None
         self._traces = []
 
         self.set_('figure', figure)
@@ -115,8 +128,11 @@ class Plot(QObject):
 
     def refresh(self, drawBool=True):
         print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
-        self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))
+        if self._axes is None:
+            self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))
         self._axes.clear()
+
+#        self._axes.set_frame_on(False)
 
         self._axes.set_title(self.get('plotName'))
         self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
@@ -124,6 +140,22 @@ class Plot(QObject):
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)
             self._axes.plot(x, y, **(trace.getFormat()))
+        
+        # Show/hide axes lines
+#        if self.get('plotLeftAxisVisible'):
+#            self._axes.axvline(self.get('plotXAxisMinimum'), self.get('plotYAxisMinimum'), self.get('plotYAxisMaximum'))
+
+
+#        self._axes.axis['left'].set_visible(self.get('plotLeftAxisVisible'))
+#        self._axes.axis['top'].set_visible(self.get('plotTopAxisVisible'))
+#        self._axes.axis['right'].set_visible(self.get('plotRightAxisVisible'))
+#        self._axes.axis['bottom'].set_visible(self.get('plotBottomAxisVisible'))
+
+        # Set minimum and maximum for axes
+        if not self.get('plotXAxisAutoscale'):
+            self._axes.set_xlim(self.get('plotXAxisMinimum'), self.get('plotXAxisMaximum'))
+        if not self.get('plotYAxisAutoscale'):
+            self._axes.set_ylim(self.get('plotYAxisMinimum'), self.get('plotYAxisMaximum'))
 
         if drawBool:
             self._figure._canvas.draw()

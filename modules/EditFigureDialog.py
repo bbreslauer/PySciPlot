@@ -19,10 +19,20 @@ class EditFigureDialog(Module):
     # the value is a dict with the following parameters
     #   - 'object' = figure, plot, trace
     #       which object this widget applies to
-    #   - 'type' = 'lineedit', 'spinbox', 'doublespinbox', 'color', 'dropdown'
+    #   - 'type' = 'lineedit', 'spinbox', 'doublespinbox', 'color', 'dropdown', 'checkbox'
     #       the type of object that this is
     widgets = { 'plotName':                     { 'object': 'plot',     'type': 'lineedit' },
                 'plotBackgroundColor':          { 'object': 'plot',     'type': 'color' },
+                'plotXAxisAutoscale':           { 'object': 'plot',     'type': 'checkbox' },
+                'plotXAxisMinimum':             { 'object': 'plot',     'type': 'doublespinbox' },
+                'plotXAxisMaximum':             { 'object': 'plot',     'type': 'doublespinbox' },
+                'plotYAxisAutoscale':           { 'object': 'plot',     'type': 'checkbox' },
+                'plotYAxisMinimum':             { 'object': 'plot',     'type': 'doublespinbox' },
+                'plotYAxisMaximum':             { 'object': 'plot',     'type': 'doublespinbox' },
+                'plotTopAxisVisible':           { 'object': 'plot',     'type': 'checkbox' },
+                'plotLeftAxisVisible':          { 'object': 'plot',     'type': 'checkbox' },
+                'plotBottomAxisVisible':        { 'object': 'plot',     'type': 'checkbox' },
+                'plotRightAxisVisible':         { 'object': 'plot',     'type': 'checkbox' },
                 'figureTitle':                  { 'object': 'figure',   'type': 'lineedit' },
                 'figureRows':                   { 'object': 'figure',   'type': 'spinbox' },
                 'figureColumns':                { 'object': 'figure',   'type': 'spinbox' },
@@ -40,7 +50,7 @@ class EditFigureDialog(Module):
 
 
     # To create a new type, update setUiValue and setObjectValueFromUi methods
-    # To create a new widget, update the widgets dict above and also the properties variable in the object that it deals with
+    # To create a new widget, update the widgets dict above and also the properties variable in the object that it deals with, and implement code to use that widget
     
     
     def __init__(self, app):
@@ -81,6 +91,16 @@ class EditFigureDialog(Module):
         traceListModel = TraceListModel()
         self._ui.traceTableView.setModel(traceListModel)
         self.setupTraceListMenu()
+
+        # Setup max/min values for spin boxes
+        self._ui.plotXAxisMinimum.setMinimum(-1.7E308)
+        self._ui.plotXAxisMinimum.setMaximum(1.7E308)
+        self._ui.plotXAxisMaximum.setMinimum(-1.7E308)
+        self._ui.plotXAxisMaximum.setMaximum(1.7E308)
+        self._ui.plotYAxisMinimum.setMinimum(-1.7E308)
+        self._ui.plotYAxisMinimum.setMaximum(1.7E308)
+        self._ui.plotYAxisMaximum.setMinimum(-1.7E308)
+        self._ui.plotYAxisMaximum.setMaximum(1.7E308)
 
         # Setup buttons
         self._ui.figureOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.figureObject_setAttributes)
@@ -242,6 +262,11 @@ class EditFigureDialog(Module):
             widget.setText(value)
         elif widgetType == 'dropdown':
             widget.setCurrentIndex(widget.findText(value))
+        elif widgetType == 'checkbox':
+            state = Qt.Unchecked
+            if value:
+                state = Qt.Checked
+            widget.setCheckState(state)
 
 
 
@@ -272,6 +297,8 @@ class EditFigureDialog(Module):
             value = widget.text()
         elif widgetType == 'dropdown':
             value = str(widget.currentText())
+        elif widgetType == 'checkbox':
+            value = widget.isChecked()
         
         if not theObject:
             theObject = self.getObjectForWidget(widgetName)

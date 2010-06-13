@@ -4,6 +4,7 @@ from PyQt4.QtGui import QAction
 import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
+from mpl_toolkits.axes_grid.axislines import Axes
 
 from Waves import Waves
 from Wave import Wave

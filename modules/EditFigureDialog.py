@@ -33,6 +33,7 @@ class EditFigureDialog(Module):
                 'plotLeftAxisVisible':          { 'object': 'plot',     'type': 'checkbox' },
                 'plotBottomAxisVisible':        { 'object': 'plot',     'type': 'checkbox' },
                 'plotRightAxisVisible':         { 'object': 'plot',     'type': 'checkbox' },
+                'figureName':                   { 'object': 'figure',   'type': 'lineedit' },
                 'figureTitle':                  { 'object': 'figure',   'type': 'lineedit' },
                 'figureRows':                   { 'object': 'figure',   'type': 'spinbox' },
                 'figureColumns':                { 'object': 'figure',   'type': 'spinbox' },
@@ -67,15 +68,15 @@ class EditFigureDialog(Module):
         
         # Setup figure list
         figureListModel = FigureListModel(self._app.figures())
-        self._ui.figureListView.setModel(figureListModel)
+        self._ui.figureSelector.setModel(figureListModel)
         self._app.figures().figureAdded.connect(figureListModel.doReset)
         self._app.figures().figureRemoved.connect(figureListModel.doReset)
 
         # Setup plot combo box
         plotListModel = PlotListModel()
-        self._ui.plotComboBox.setModel(plotListModel)
-        self._ui.plotComboBox.currentIndexChanged.connect(self.plotUi_refreshTraceList)
-
+        self._ui.plotSelector.setModel(plotListModel)
+        self._ui.plotSelector.currentIndexChanged.connect(self.plotUi_refreshTraceList)
+        
         # Setup X and Y lists
         xListModel = WavesListModel(self._app.waves())
         self._ui.xAxisListView.setModel(xListModel)
@@ -118,7 +119,9 @@ class EditFigureDialog(Module):
         def createFigure():
             figure = Figure(self._app, "NewFigure")
             self._app.figures().addFigure(figure)
-            figure.figureRenamed.connect(self.setFigureListLabel)
+
+            # Select figure
+            self._ui.figureSelector.setCurrentIndex(self._ui.figureSelector.model().rowCount() - 1)
 
         def showFigure():
             """Display the figure, in case it got hidden."""
@@ -157,10 +160,9 @@ class EditFigureDialog(Module):
             figure = self.currentFigure()
 
             if figure:
-                self.setFigureListLabel()
                 self.figureUi_resetFields()
-                self._ui.plotComboBox.model().setFigure(figure)
-                self._ui.plotComboBox.setCurrentIndex(0)
+                self._ui.plotSelector.model().setFigure(figure)
+                self._ui.plotSelector.setCurrentIndex(0)
                 self.plotUi_setupTab()
 
         def changePlot(row):
@@ -175,10 +177,10 @@ class EditFigureDialog(Module):
         self._ui.addFigureButton.clicked.connect(createFigure)
         self._ui.showFigureButton.clicked.connect(showFigure)
         self._ui.deleteFigureButton.clicked.connect(deleteFigure)
-        self._ui.figureListView.selectionModel().currentChanged.connect(changeFigure)
+        self._ui.figureSelector.currentIndexChanged.connect(changeFigure)
         self._ui.traceTableView.selectionModel().currentChanged.connect(self.plotUi_resetTraceOptions)
-        self._ui.plotComboBox.currentIndexChanged.connect(changePlot)
-
+        self._ui.plotSelector.currentIndexChanged.connect(changePlot)
+        
         self.registerColorCallbackFunctions()
         self.registerColorHelperFunctions()
         
@@ -188,17 +190,15 @@ class EditFigureDialog(Module):
     # Get current items
     #
     def currentFigure(self):
-        return self._ui.figureListView.selectionModel().currentIndex().internalPointer()
+        return self._ui.figureSelector.model().index(self._ui.figureSelector.currentIndex(), 0).internalPointer()
 
     def currentPlot(self):
-        return self._ui.plotComboBox.model().getPlot(self._ui.plotComboBox.currentIndex())
+        return self._ui.plotSelector.model().getPlot(self._ui.plotSelector.currentIndex())
 
 
 
 
 
-    def setFigureListLabel(self):
-        self._ui.figureListLabel.setText("Currently working on figure:\n" + self.currentFigure().get('figureName'))
 
 
 
@@ -332,9 +332,24 @@ class EditFigureDialog(Module):
         if updateBool:
             figure.refresh()
             
+            # Figure name may have changed, so we'll reset the figure combo box
+            # But keep the same figure selected
+            currentFigureIndex = self._ui.figureSelector.currentIndex()
+            currentPlotIndex = self._ui.plotSelector.currentIndex()
+            self._ui.figureSelector.model().doReset()
+            self._ui.figureSelector.setCurrentIndex(currentFigureIndex)
+
             # Rows/columns may have changed, so we'll reset the plot combo box
-            self._ui.plotComboBox.model().setFigure(figure)
-            self._ui.plotComboBox.setCurrentIndex(0)
+            self._ui.plotSelector.model().setFigure(figure)
+            self._ui.plotSelector.model().doReset()
+           
+            if currentPlotIndex >= (figure.numPlots() - 1):
+                print "a"
+                self._ui.plotSelector.setCurrentIndex(0)
+            else:
+                print "b" + str(currentPlotIndex)
+                self._ui.plotSelector.setCurrentIndex(currentPlotIndex)
+
             
         
     def figureUi_resetFields(self):

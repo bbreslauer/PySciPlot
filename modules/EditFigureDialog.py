@@ -4,6 +4,7 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogB
 from Trace import Trace
 from Module import Module
 from Figure import Figure
+from DialogSubWindow import DialogSubWindow
 from models.FigureListModel import FigureListModel
 from models.WavesListModel import WavesListModel
 from models.TraceListModel import TraceListModel
@@ -55,14 +56,13 @@ class EditFigureDialog(Module):
     
     
     def __init__(self, app):
-        self._widget = QWidget()
-        self._app = app
-        self.buildWidget()
+        Module.__init__(self, app)
 
     def buildWidget(self):
         """Create the widget and populate it."""
 
         # Create enclosing widget and UI
+        self._widget = QWidget()
         self._ui = Ui_EditFigureDialog()
         self._ui.setupUi(self._widget)
         
@@ -381,6 +381,12 @@ class EditFigureDialog(Module):
             if self.widgets[widgetName]['object'] == 'plot':
                 self.setObjectValueFromUi(widgetName)
 
+        # Plot names may have changed, so reset the plot combo box.  But it will necessarily
+        # have the same number of entries, unlike when changing the figure values
+        currentPlotIndex = self._ui.plotSelector.currentIndex()
+        self._ui.plotSelector.model().doReset()
+        self._ui.plotSelector.setCurrentIndex(currentPlotIndex)
+
     def plotUi_resetPlotOptions(self):
         """
         Set plot options group to values for the current plot object.
@@ -547,6 +553,29 @@ class EditFigureDialog(Module):
         menu.setShortcut("Ctrl+E")
         menu.setText("Edit Figures")
         return menu
+
+    def load(self):
+        self.window = DialogSubWindow(self._app.ui.workspace)
+        self._app.ui.workspace.addSubWindow(self.window)
+
+        self.menuEntry = QAction(self._app)
+        self.menuEntry.setObjectName("actionEditFiguresDialog")
+        self.menuEntry.setShortcut("Ctrl+E")
+        self.menuEntry.setText("Edit Figures")
+        self.menuEntry.triggered.connect(self.window.show)
+        menu = getattr(self._app.ui, "menuPlot")
+        menu.addAction(self.menuEntry)
+
+        self.buildWidget()
+        self.window.setWidget(self._widget)
+        self._widget.setParent(self.window)
+
+        self.window.hide()
+
+    def unload(self):
+        self._widget.destroy()
+        self.window.destroy()
+
 
 
 

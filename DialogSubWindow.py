@@ -6,10 +6,13 @@ class DialogSubWindow(QMdiSubWindow):
     def __init__(self, parent=0):
         QMdiSubWindow.__init__(self, parent)
         self.setParent(parent)
+        self._parent = parent
     
     def show(self):
         self.setVisible(True)
         self.widget().setVisible(True)
+        self.raise_()
+        self._parent.setActiveSubWindow(self)
     
     def hide(self):
         self.setVisible(False)

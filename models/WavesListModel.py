@@ -1,6 +1,7 @@
 from PyQt4.QtCore import QModelIndex, Qt, QVariant, QString
 from PyQt4.QtGui import QStringListModel
 
+from Wave import Wave
 from Waves import Waves
 
 class WavesListModel(QStringListModel):
@@ -25,6 +26,18 @@ class WavesListModel(QStringListModel):
             return QVariant(QString(self._waves.waves()[index.row()].name()))
         else:
             return QVariant()
+
+    def setData(self, index, value, role):
+        """Change the name for the wave at index."""
+        newName = str(value.toString())
+        if index.isValid() and role == Qt.EditRole and self._waves.waves()[index.row()]:
+            # Do not allow for blank wave names
+            if Wave.validateWaveName(newName) == "":
+                return False
+            self._waves.waves()[index.row()].setName(newName)
+            return True
+        return False
+
             
     def doReset(self, *args):
         self.reset()

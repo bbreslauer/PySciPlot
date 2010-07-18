@@ -1,29 +1,44 @@
-
-
 class Module():
     """
     Base class for all modules.  All modules should inherit this class and
     override the following methods:
 
-    getMenuNameToAddTo - determine what menu (objectName) will be the parent of the menu item
-    prepareMenuItem - do any customization of the menu item (like name it, set the text, etc)
+    load - Do everything necessary to load the module
+    unload - Do everything necessary to unload the module
     """
 
     def __init__(self, app):
-        """Initialize the module.  You should probably create the widget here."""
-        self._widget = QWidget()
+        """Initialize the module."""
         self._app = app
 
-    def getWidget(self):
-        """Return the widget."""
-        return self._widget
+    def load(self):
+        """
+        Perform all actions required in order to load the module.
+        This will normally include creating the necessary window(s) and adding
+        menu entries.
 
-    def getMenuNameToAddTo(self):
-        """The widget will be activated via a menu.  What menu (specifically, the
-        object name of the menu) should it go under?"""
+        Add a window with the following:
+
+        self.windowName = DialogSubWindow(self._app.ui.workspace)
+        self._app.ui.workspace.addSubWindow(self.windowName)
+
+        Create a menu action and add to a menu with name (not text) "menuName" with the following:
+
+        self.menuEntry = QAction(self._app)
+        self.menuEntry.setObjectName("menuActionName")
+        self.menuEntry.setShortcut("Ctrl+X")
+        self.menuEntry.setText("Menu Entry Text")
+        self.menuEntry.triggered.connect(self.windowName.show)
+        menu = getattr(self._app.ui, menuName)
+        menu.addAction(self.menuEntry)
+        """
         raise NotImplementedError
 
-    def prepareMenuItem(self, menu):
-        """Prepare the menu item that will be added to the application menus."""
+    def unload(self):
+        """
+        Perform all actions required in order to unload the module.
+        This will normally include deleting the necessary window(s) and removing
+        menu entries.
+        """
         raise NotImplementedError
 

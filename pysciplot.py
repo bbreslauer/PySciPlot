@@ -2,7 +2,7 @@
 
 import sys, string, signal
 
-from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction
+from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt
 
@@ -33,6 +33,7 @@ class pysciplot(QMainWindow):
         self._waves = Waves()
         self._figures = Figures()
         self._windows = {}
+        self._loadedModules = {}
 
         # Create the module handler, so that we can import modules
         self.moduleHandler = ModuleHandler()
@@ -48,14 +49,14 @@ class pysciplot(QMainWindow):
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
+        self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
 
         # create default waves
         self.setTestData()
         self.createDefaultTable()
 
-        self.importModule("ManageWavesDialog")
-        self.importModule("EditFigureDialog")
-
+        self.loadModule("ManageWavesDialog")
+        self.loadModule("EditFigureDialog")
         
     def waves(self):
         return self._waves
@@ -63,26 +64,34 @@ class pysciplot(QMainWindow):
     def figures(self):
         return self._figures
 
-    def importModule(self, moduleName):
+    def loadModule(self, moduleName):
         """
-        Import the module named moduleName.  It first initializes the module, then
-        adds it to the MdiArea, and then adds any necessary menu entries.
+        Import the module named moduleName.
         """
-
+        
         # Import module
         moduleImport = __import__("modules." + moduleName)
         module = eval("moduleImport." + str(moduleName) + "." + str(moduleName) + "(self)")
-        
-        # Create the window
-        self._windows[moduleName] = DialogSubWindow(self.ui.workspace)
-        self.ui.workspace.addSubWindow(self._windows[moduleName])
 
-        # Add the module and menus
-        self.moduleHandler.addWidgetToWindow(module.getWidget(), self._windows[moduleName])
-        self.moduleHandler.addWidgetToMenu(module.getMenuNameToAddTo(), module.prepareMenuItem(QAction(self)), self.ui, self._windows[moduleName].show)
+        # Initialize the module
+        # No parameters are required because the module can access everything
+        # through the 'self' parameter in the __init__.
+        module.load()
 
-        # Don't display the window when the module is initially loaded
-        self._windows[moduleName].hide()
+        # Add to loaded modules list
+        self._loadedModules[moduleName] = module
+
+
+    def unloadModule(self, moduleName):
+        """
+        Unload a module.
+        """
+
+        # Unload the module
+        self._loadedModules[moduleName].unload()
+
+        # Remove it from the loaded modules list
+        self._loadedModules.pop(moduleName)
 
     def createDataTableView(self, tableModel):
         """
@@ -98,7 +107,23 @@ class pysciplot(QMainWindow):
         tableViewSubWindow.setVisible(True)
         return tableView
 
-    
+    def saveProjectAs(self):
+        """
+        Save the current project to a file which will be selected by the user.
+        """
+
+        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", "/")
+
+    def saveProject(self):
+        """
+        Save the current project to a file.  If project has previously been saved, use
+        that location.
+        """
+        pass
+
+    def loadProject(self):
+        pass
+
     ######################
     # temporary methods, for testing
     ######################

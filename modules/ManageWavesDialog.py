@@ -1,6 +1,7 @@
-from PyQt4.QtGui import QWidget
+from PyQt4.QtGui import QWidget, QAction, QMessageBox
 
 from Wave import Wave
+from DialogSubWindow import DialogSubWindow
 from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
@@ -9,14 +10,13 @@ class ManageWavesDialog(Module):
     """Module to display the Manage Waves dialog window."""
 
     def __init__(self, app):
-        self._widget = QWidget()
-        self._app = app
-        self.buildWidget()
+        Module.__init__(self, app)
 
     def buildWidget(self):
         """Create the widget and populate it."""
 
         # Create enclosing widget and UI
+        self._widget = QWidget()
         self._ui = Ui_ManageWavesDialog()
         self._ui.setupUi(self._widget)
         
@@ -33,11 +33,16 @@ class ManageWavesDialog(Module):
             """Add a wave to the list of all waves in the main window."""
 
             name = str(self._ui.waveNameLineEdit.text())
-            newWave = Wave(name)
-            if not self._app.waves().addWave(newWave):
-                failedMessage = QtGui.QMessageBox()
-                failedMessage.setText("Name already exists: " + name)
+            if Wave.validateWaveName(name) == "":
+                failedMessage = QMessageBox()
+                failedMessage.setText("Name cannot be blank")
                 failedMessage.exec_()
+            else:
+                newWave = Wave(name)
+                if not self._app.waves().addWave(newWave):
+                    failedMessage = QMessageBox()
+                    failedMessage.setText("Name already exists: " + name)
+                    failedMessage.exec_()
             self._ui.waveNameLineEdit.setText("")
         def removeWaves():
             """Remove waves from the list of all waves in the main window."""
@@ -60,13 +65,28 @@ class ManageWavesDialog(Module):
 
         return self._widget
 
-    def getMenuNameToAddTo(self):
-        return "menuData"
+    def load(self):
+        self.window = DialogSubWindow(self._app.ui.workspace)
+        self._app.ui.workspace.addSubWindow(self.window)
 
-    def prepareMenuItem(self, menu):
-        menu.setObjectName("actionManageWavesDialog")
-        menu.setShortcut("Ctrl+V")
-        menu.setText("Manage Waves")
-        return menu
+        self.menuEntry = QAction(self._app)
+        self.menuEntry.setObjectName("actionManageWavesDialog")
+        self.menuEntry.setShortcut("Ctrl+V")
+        self.menuEntry.setText("Manage Waves")
+        self.menuEntry.triggered.connect(self.window.show)
+        menu = getattr(self._app.ui, "menuData")
+        menu.addAction(self.menuEntry)
+
+        self.buildWidget()
+        self.window.setWidget(self._widget)
+        self._widget.setParent(self.window)
+
+        self.window.hide()
+
+    def unload(self):
+        self._widget.destroy()
+        self.window.destroy()
+
+
 
 

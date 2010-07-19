@@ -67,26 +67,26 @@ class EditFigureDialog(Module):
         self._ui.setupUi(self._widget)
         
         # Setup figure list
-        figureListModel = FigureListModel(self._app.figures())
-        self._ui.figureSelector.setModel(figureListModel)
-        self._app.figures().figureAdded.connect(figureListModel.doReset)
-        self._app.figures().figureRemoved.connect(figureListModel.doReset)
+        self._figureListModel = FigureListModel(self._app.figures())
+        self._ui.figureSelector.setModel(self._figureListModel)
+        self._app.figures().figureAdded.connect(self._figureListModel.doReset)
+        self._app.figures().figureRemoved.connect(self._figureListModel.doReset)
 
         # Setup plot combo box
-        plotListModel = PlotListModel()
-        self._ui.plotSelector.setModel(plotListModel)
+        self._plotListModel = PlotListModel()
+        self._ui.plotSelector.setModel(self._plotListModel)
         self._ui.plotSelector.currentIndexChanged.connect(self.plotUi_refreshTraceList)
         
         # Setup X and Y lists
-        xListModel = WavesListModel(self._app.waves())
-        self._ui.xAxisListView.setModel(xListModel)
-        self._app.waves().waveAdded.connect(xListModel.doReset)
-        self._app.waves().waveRemoved.connect(xListModel.doReset)
+        self._xListModel = WavesListModel(self._app.waves())
+        self._ui.xAxisListView.setModel(self._xListModel)
+        self._app.waves().waveAdded.connect(self._xListModel.doReset)
+        self._app.waves().waveRemoved.connect(self._xListModel.doReset)
         
-        yListModel = WavesListModel(self._app.waves())
-        self._ui.yAxisListView.setModel(yListModel)
-        self._app.waves().waveAdded.connect(yListModel.doReset)
-        self._app.waves().waveRemoved.connect(yListModel.doReset)
+        self._yListModel = WavesListModel(self._app.waves())
+        self._ui.yAxisListView.setModel(self._yListModel)
+        self._app.waves().waveAdded.connect(self._yListModel.doReset)
+        self._app.waves().waveRemoved.connect(self._yListModel.doReset)
 
         # Setup trace list
         traceListModel = TraceListModel()
@@ -556,15 +556,14 @@ class EditFigureDialog(Module):
 
     def load(self):
         self.window = DialogSubWindow(self._app.ui.workspace)
-        self._app.ui.workspace.addSubWindow(self.window)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionEditFiguresDialog")
         self.menuEntry.setShortcut("Ctrl+E")
         self.menuEntry.setText("Edit Figures")
         self.menuEntry.triggered.connect(self.window.show)
-        menu = getattr(self._app.ui, "menuPlot")
-        menu.addAction(self.menuEntry)
+        self.menu = getattr(self._app.ui, "menuPlot")
+        self.menu.addAction(self.menuEntry)
 
         self.buildWidget()
         self.window.setWidget(self._widget)
@@ -573,8 +572,19 @@ class EditFigureDialog(Module):
         self.window.hide()
 
     def unload(self):
-        self._widget.destroy()
-        self.window.destroy()
+        # Disconnect some slots
+        self._app.figures().figureAdded.disconnect(self._figureListModel.doReset)
+        self._app.figures().figureRemoved.disconnect(self._figureListModel.doReset)
+        self._ui.plotSelector.currentIndexChanged.disconnect(self.plotUi_refreshTraceList)
+        self._app.waves().waveAdded.disconnect(self._xListModel.doReset)
+        self._app.waves().waveRemoved.disconnect(self._xListModel.doReset)
+        self._app.waves().waveAdded.disconnect(self._yListModel.doReset)
+        self._app.waves().waveRemoved.disconnect(self._yListModel.doReset)
+        self.menuEntry.triggered.disconnect()
+
+        self._widget.deleteLater()
+        self.window.deleteLater()
+        self.menu.removeAction(self.menuEntry)
 
 
 

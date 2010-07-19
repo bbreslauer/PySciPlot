@@ -157,7 +157,8 @@ class Figure(QObject):
     def createRightClickActions(self):
 
         def createEditPlotDialog():
-            self._app._windows["EditPlotDialog"].show()
+            #self._app._windows["EditPlotDialog"].show()
+            pass
 
         editPlotAction = QAction("Edit Plot", self._figureSubWindow)
         editPlotAction.triggered.connect(createEditPlotDialog)

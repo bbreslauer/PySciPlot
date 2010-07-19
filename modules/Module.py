@@ -20,7 +20,8 @@ class Module():
         Add a window with the following:
 
         self.windowName = DialogSubWindow(self._app.ui.workspace)
-        self._app.ui.workspace.addSubWindow(self.windowName)
+        self.windowName.setWidget(self._widget)
+        self._widget.setParent(self.windowName)
 
         Create a menu action and add to a menu with name (not text) "menuName" with the following:
 

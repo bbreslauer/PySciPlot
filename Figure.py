@@ -60,8 +60,6 @@ class Figure(QObject):
         self._plots = []
         self.extendPlots(1)
 
-        self.createRightClickActions()
-
         self.refresh()
 
         # Connect signals
@@ -154,16 +152,16 @@ class Figure(QObject):
     def hideFigure(self):
         self._figureSubWindow.hide()
 
-    def createRightClickActions(self):
-
-        def createEditPlotDialog():
-            #self._app._windows["EditPlotDialog"].show()
-            pass
-
-        editPlotAction = QAction("Edit Plot", self._figureSubWindow)
-        editPlotAction.triggered.connect(createEditPlotDialog)
-        self._figureSubWindow.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self._figureSubWindow.insertAction(QAction(self._figureSubWindow), editPlotAction)
+#    def createRightClickActions(self):
+#
+#        def createEditPlotDialog():
+#            self._app._windows["EditPlotDialog"].show()
+#            pass
+#
+#        editPlotAction = QAction("Edit Plot", self._figureSubWindow)
+#        editPlotAction.triggered.connect(createEditPlotDialog)
+#        self._figureSubWindow.setContextMenuPolicy(Qt.ActionsContextMenu)
+#        self._figureSubWindow.insertAction(QAction(self._figureSubWindow), editPlotAction)
 
 
 

@@ -13,6 +13,7 @@ from Figures import Figures
 from TraceListEntry import TraceListEntry
 from DataTableView import DataTableView
 from DialogSubWindow import DialogSubWindow
+from Preferences import Preferences
 from models.FigureListModel import FigureListModel
 from models.WavesListModel import WavesListModel
 from models.DataTableModel import DataTableModel
@@ -32,7 +33,6 @@ class pysciplot(QMainWindow):
     
         self._waves = Waves()
         self._figures = Figures()
-        #self._windows = {}
         self._loadedModules = {}
 
         # Let the workspace resize when the main window is resized
@@ -40,11 +40,15 @@ class pysciplot(QMainWindow):
 
         # Create modules loading/unloading window
         self.createModulesLoadingDialog()
+
+#        # Load Preferences
+#        self._preferences = Preferences(self, "~/.pysciplotrc")
         
         # Make signal/slot connections
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
+        self.ui.actionPreferences.triggered.connect(self._preferences.showDialog)
         
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)

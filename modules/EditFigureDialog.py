@@ -1,5 +1,7 @@
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox, QColor, QColorDialog
+from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox, QColor, QColorDialog, QFileDialog
+
+import ConfigParser, os
 
 from Trace import Trace
 from Module import Module
@@ -114,6 +116,9 @@ class EditFigureDialog(Module):
         self._ui.traceOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.plotUi_resetTraceOptions)
 
         self._ui.addTraceButton.clicked.connect(self.addTracesToPlot)
+
+        self._ui.figureSettingsSave.clicked.connect(self.saveFigureSettings)
+        self._ui.figureSettingsLoad.clicked.connect(self.loadFigureSettings)
 
 
         def createFigure():
@@ -251,17 +256,35 @@ class EditFigureDialog(Module):
         widget = vars(self._ui)[widgetName]
         widgetType = self.widgets[widgetName]['type']
 
+#        if widgetType == 'lineedit':
+#            widget.setText(value)
+#        elif widgetType == 'doublespinbox':
+#            widget.setValue(value)
+#        elif widgetType == 'spinbox':
+#            widget.setValue(value)
+#        elif widgetType == 'color':
+#            widget.setStyleSheet("background-color: " + value + "; color: " + self.goodTextColor(value))
+#            widget.setText(value)
+#        elif widgetType == 'dropdown':
+#            widget.setCurrentIndex(widget.findText(value))
+#        elif widgetType == 'checkbox':
+#            state = Qt.Unchecked
+#            if value:
+#                state = Qt.Checked
+#            widget.setCheckState(state)
+
+
         if widgetType == 'lineedit':
-            widget.setText(value)
+            widget.setText(str(value))
         elif widgetType == 'doublespinbox':
-            widget.setValue(value)
+            widget.setValue(float(value))
         elif widgetType == 'spinbox':
-            widget.setValue(value)
+            widget.setValue(int(value))
         elif widgetType == 'color':
-            widget.setStyleSheet("background-color: " + value + "; color: " + self.goodTextColor(value))
-            widget.setText(value)
+            widget.setStyleSheet("background-color: " + str(value) + "; color: " + self.goodTextColor(str(value)))
+            widget.setText(str(value))
         elif widgetType == 'dropdown':
-            widget.setCurrentIndex(widget.findText(value))
+            widget.setCurrentIndex(widget.findText(str(value)))
         elif widgetType == 'checkbox':
             state = Qt.Unchecked
             if value:
@@ -282,11 +305,41 @@ class EditFigureDialog(Module):
 
     # set object value to UI
     def setObjectValueFromUi(self, widgetName, theObject=None):
-        value = ""
+#        value = ""
+#
+#        widget = vars(self._ui)[widgetName]
+#        widgetType = self.widgets[widgetName]['type']
+#        
+#        if widgetType == 'lineedit':
+#            value = widget.text()
+#        elif widgetType == 'doublespinbox':
+#            value = widget.value()
+#        elif widgetType == 'spinbox':
+#            value = widget.value()
+#        elif widgetType == 'color':
+#            value = widget.text()
+#        elif widgetType == 'dropdown':
+#            value = str(widget.currentText())
+#        elif widgetType == 'checkbox':
+#            value = widget.isChecked()
+        
+        value = self.getUiWidgetValue(widgetName)
 
+        if not theObject:
+            theObject = self.getObjectForWidget(widgetName)
+
+        if theObject:
+            return theObject.set_(widgetName, value)
+        
+        return False
+
+
+    # get the value from a widget
+    def getUiWidgetValue(self, widgetName):
         widget = vars(self._ui)[widgetName]
         widgetType = self.widgets[widgetName]['type']
         
+        value = ""
         if widgetType == 'lineedit':
             value = widget.text()
         elif widgetType == 'doublespinbox':
@@ -299,16 +352,9 @@ class EditFigureDialog(Module):
             value = str(widget.currentText())
         elif widgetType == 'checkbox':
             value = widget.isChecked()
+
+        return value
         
-        if not theObject:
-            theObject = self.getObjectForWidget(widgetName)
-
-        if theObject:
-            return theObject.set_(widgetName, value)
-        
-        return False
-
-
 
 
 
@@ -527,6 +573,24 @@ class EditFigureDialog(Module):
 
 
 
+    # Saving options to files
+    def saveFigureSettings(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings", "/home/ben", "PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
+        fileDialog.setDefaultSuffix("pspf")
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+
+        if fileName != "":
+            FigureSettings.saveSettings(fileName, self)
+
+    def loadFigureSettings(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings", "/home/ben", "PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+
+        if fileName != "":
+            FigureSettings.loadSettings(fileName, self)
+
 
     # Random stuff for now
     def createColorDialog(self, currentColor, callBack):
@@ -587,6 +651,42 @@ class EditFigureDialog(Module):
         self.menu.removeAction(self.menuEntry)
 
 
+
+
+
+class FigureSettings():
+    """
+    Save/Load figure settings to/from a file.
+    """
+
+    @staticmethod
+    def saveSettings(fileName, figureDialog):
+        # Verify that the file is actually a file or does not exist
+        if os.path.isfile(fileName) or not os.path.exists(fileName):
+            config = ConfigParser.SafeConfigParser()
+            config.optionxform = str
+            config.add_section('Figure')
+            config.set('Figure', 'pysciplot_version', '1')
+    
+            for widgetName in figureDialog.widgets.keys():
+                if figureDialog.widgets[widgetName]['object'] == 'figure':
+                    config.set('Figure', str(widgetName), str(figureDialog.getUiWidgetValue(widgetName)))
+    
+            with open(fileName, 'wb') as configFile:
+                config.write(configFile)
+
+    
+    @staticmethod
+    def loadSettings(fileName, figureDialog):
+        if os.path.isfile(fileName):
+            config = ConfigParser.SafeConfigParser()
+            config.optionxform = str
+            config.read(fileName)
+            version = config.get('Figure', 'pysciplot_version')
+
+            for widgetName in figureDialog.widgets.keys():
+                if figureDialog.widgets[widgetName]['object'] == 'figure':
+                    figureDialog.setUiValue(widgetName, config.get('Figure', str(widgetName)))
 
 
 

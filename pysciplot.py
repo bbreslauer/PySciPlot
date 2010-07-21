@@ -41,8 +41,8 @@ class pysciplot(QMainWindow):
         # Create modules loading/unloading window
         self.createModulesLoadingDialog()
 
-#        # Load Preferences
-#        self._preferences = Preferences(self, "~/.pysciplotrc")
+        # Load Preferences
+        self._preferences = Preferences(self, "~/.pysciplotrc")
         
         # Make signal/slot connections
         self.ui.actionQuit.triggered.connect(self.close)

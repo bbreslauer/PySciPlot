@@ -136,7 +136,7 @@
   </action>
   <action name="actionSave_Project_As">
    <property name="text">
-    <string>Save Project As</string>
+    <string>Save Project As...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -144,12 +144,12 @@
   </action>
   <action name="actionPreferences">
    <property name="text">
-    <string>Preferences</string>
+    <string>Preferences...</string>
    </property>
   </action>
   <action name="actionModules">
    <property name="text">
-    <string>Modules</string>
+    <string>Modules...</string>
    </property>
   </action>
  </widget>

@@ -31,14 +31,24 @@ def getWidgetValue(widget):
 
     # This dictionary simulates enough of a switch statement
     dictionary = {
-                    'QLineEdit': str(widget.text()),
+                    'QLineEdit': 'str(widget.text())',
+                    'QCheckBox': 'widget.isChecked()',
                  }
 
     if widgetType in dictionary.keys():
-        return dictionary[widgetType]
+        return eval(dictionary[widgetType])
     else:
         raise UnknownWidgetTypeError(widgetType)
 
 
+def fileDialogDirectory(app):
+    """
+    Set the initial directory for a QFileDialog to either the cwd or
+    the default directory.
+    """
+    if app.cwd != "":
+        return app.cwd
+    else:
+        return app.preferences.get("defaultDirectory")
 
 

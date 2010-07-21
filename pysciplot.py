@@ -53,6 +53,7 @@ class pysciplot(QMainWindow):
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
         
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
+        self.ui.actionShow_CWD.triggered.connect(self.printCWD)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
 
         # create default waves
@@ -61,6 +62,7 @@ class pysciplot(QMainWindow):
 
         self.loadModule("ManageWavesDialog")
         self.loadModule("EditFigureDialog")
+        self.loadModule("ImportCSV")
         
     def waves(self):
         return self._waves
@@ -221,6 +223,9 @@ class pysciplot(QMainWindow):
 
     def printAllFigures(self):
         print self._figures
+
+    def printCWD(self):
+        print self.cwd
 
     def setTestData(self):
         self._waves.addWave(Wave("Wave1", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], int))

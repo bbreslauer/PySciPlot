@@ -46,15 +46,23 @@
      </property>
      <addaction name="actionNew_Table"/>
     </widget>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="menuNew"/>
+    <addaction name="menuImport"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
     <addaction name="separator"/>
-    <addaction name="actionShow_Waves"/>
-    <addaction name="actionShow_Figures"/>
-    <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
     <addaction name="actionModules"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Figures"/>
+    <addaction name="actionShow_CWD"/>
+    <addaction name="actionShow_Waves"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -150,6 +158,11 @@
   <action name="actionModules">
    <property name="text">
     <string>Modules...</string>
+   </property>
+  </action>
+  <action name="actionShow_CWD">
+   <property name="text">
+    <string>Show CWD</string>
    </property>
   </action>
  </widget>

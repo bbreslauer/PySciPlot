@@ -68,6 +68,24 @@ class Waves(QObject):
             else:
                 counter += 1
 
+    def findGoodWaveNames(self, numWaves, baseName="Wave"):
+        """
+        Find numWaves unused wave names in this Waves object and return that name.  If baseName is provided, then it will be used as the beginning of the name.
+        """
+        allWaveNames = map(Wave.getName, self._waves)
+        goodWaveNames = []
+        counter = 1
+        while numWaves > 0:
+            testName = str(baseName) + str(counter)
+            if testName not in allWaveNames:
+                goodWaveNames.append(testName)
+                allWaveNames.append(testName)
+                counter += 1
+                numWaves -= 1
+            else:
+                counter += 1
+        return goodWaveNames
+
     def goodWaveName(self, name):
         """
         Determine if name is a good Wave name for this Waves object.  Returns False if name is an empty string.  If wave names can be duplicates, then return True.  If wave names must be unique and this name is, then return True.  Otherwise return False.

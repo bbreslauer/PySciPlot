@@ -3,6 +3,7 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogB
 
 import ConfigParser, os
 
+import Util
 from Trace import Trace
 from Module import Module
 from Figure import Figure
@@ -578,15 +579,12 @@ class EditFigureDialog(Module):
         fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings")
         fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
         fileDialog.setDefaultSuffix("pspf")
-        if self._app.cwd != "":
-            fileDialog.setDirectory(self._app.cwd)
-        else:
-            fileDialog.setDirectory(self._app.preferences.get("defaultDirectory"))
+        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
         # Save current working directory
-        self._app.cwd = fileDialog.directory()
+        self._app.cwd = str(fileDialog.directory().absolutePath())
 
         if fileName != "":
             FigureSettings.saveSettings(fileName, self)
@@ -594,15 +592,12 @@ class EditFigureDialog(Module):
     def loadFigureSettings(self):
         fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings")
         fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
-        if self._app.cwd != "":
-            fileDialog.setDirectory(self._app.cwd)
-        else:
-            fileDialog.setDirectory(self._app.preferences.get("defaultDirectory"))
+        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
         
         # Save current working directory
-        self._app.cwd = fileDialog.directory()
+        self._app.cwd = str(fileDialog.directory().absolutePath())
 
         if fileName != "":
             FigureSettings.loadSettings(fileName, self)
@@ -642,7 +637,7 @@ class EditFigureDialog(Module):
         self.menuEntry.setShortcut("Ctrl+E")
         self.menuEntry.setText("Edit Figures")
         self.menuEntry.triggered.connect(self.window.show)
-        self.menu = getattr(self._app.ui, "menuPlot")
+        self.menu = vars(self._app.ui)["menuPlot"]
         self.menu.addAction(self.menuEntry)
 
         self.buildWidget()

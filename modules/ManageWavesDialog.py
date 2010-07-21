@@ -74,7 +74,7 @@ class ManageWavesDialog(Module):
         self.menuEntry.setShortcut("Ctrl+V")
         self.menuEntry.setText("Manage Waves")
         self.menuEntry.triggered.connect(self.window.show)
-        self.menu = getattr(self._app.ui, "menuData")
+        self.menu = vars(self._app.ui)["menuData"]
         self.menu.addAction(self.menuEntry)
 
         self.buildWidget()

@@ -9,13 +9,17 @@ def setWidgetValue(widget, value):
 
     widgetType = type(widget).__name__
     
-    if widgetType == 'QLineEdit':
-        widget.setText(str(value))
+    # This dictionary simulates enough of a switch statement
+    dictionary = {
+                    'QLineEdit': widget.setText(str(value)),
+                 }
+
+    if widgetType in dictionary.keys():
+        return dictionary[widgetType]
     else:
-        raise UnknownWidgetTypeError
+        raise UnknownWidgetTypeError(widgetType)
 
     return True
-
 
 
 def getWidgetValue(widget):
@@ -24,11 +28,16 @@ def getWidgetValue(widget):
     """
 
     widgetType = type(widget).__name__
-    
-    if widgetType == 'QLineEdit':
-        return str(widget.text())
+
+    # This dictionary simulates enough of a switch statement
+    dictionary = {
+                    'QLineEdit': str(widget.text()),
+                 }
+
+    if widgetType in dictionary.keys():
+        return dictionary[widgetType]
     else:
-        raise UnknownWidgetTypeError
+        raise UnknownWidgetTypeError(widgetType)
 
 
 

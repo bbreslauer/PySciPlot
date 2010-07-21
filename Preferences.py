@@ -115,8 +115,10 @@ class Preferences():
 
     # Methods for specific preferences
     def defaultDirectorySelector(self):
-        directory = QFileDialog.getExistingDirectory(self._app.ui.workspace, "Select Default Directory", "/")
-        return Util.setWidgetValue(self._ui.defaultDirectory, directory)
+        directory = QFileDialog.getExistingDirectory(self._app.ui.workspace, "Select Default Directory", Util.getWidgetValue(self._ui.defaultDirectory))
+        if directory != "":
+            return Util.setWidgetValue(self._ui.defaultDirectory, directory)
+        return False
 
 
 

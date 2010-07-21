@@ -31,9 +31,11 @@ class pysciplot(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
     
+        # Variables
         self._waves = Waves()
         self._figures = Figures()
         self._loadedModules = {}
+        self.cwd = "" # current working directory
 
         # Let the workspace resize when the main window is resized
         self.setCentralWidget(self.ui.workspace)
@@ -42,13 +44,13 @@ class pysciplot(QMainWindow):
         self.createModulesLoadingDialog()
 
         # Load Preferences
-        self._preferences = Preferences(self, "~/.pysciplotrc")
+        self.preferences = Preferences(self, "~/.pysciplotrc")
         
         # Make signal/slot connections
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
-        self.ui.actionPreferences.triggered.connect(self._preferences.showDialog)
+        self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
         
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)

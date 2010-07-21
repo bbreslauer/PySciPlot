@@ -575,18 +575,34 @@ class EditFigureDialog(Module):
 
     # Saving options to files
     def saveFigureSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings", "/home/ben", "PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
+        fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings")
+        fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
         fileDialog.setDefaultSuffix("pspf")
+        if self._app.cwd != "":
+            fileDialog.setDirectory(self._app.cwd)
+        else:
+            fileDialog.setDirectory(self._app.preferences.get("defaultDirectory"))
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
+
+        # Save current working directory
+        self._app.cwd = fileDialog.directory()
 
         if fileName != "":
             FigureSettings.saveSettings(fileName, self)
 
     def loadFigureSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings", "/home/ben", "PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
+        fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings")
+        fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
+        if self._app.cwd != "":
+            fileDialog.setDirectory(self._app.cwd)
+        else:
+            fileDialog.setDirectory(self._app.preferences.get("defaultDirectory"))
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
+        
+        # Save current working directory
+        self._app.cwd = fileDialog.directory()
 
         if fileName != "":
             FigureSettings.loadSettings(fileName, self)

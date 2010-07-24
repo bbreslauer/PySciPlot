@@ -29,7 +29,7 @@ class ManageWavesDialog(Module):
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved.connect(self._wavesListModel.doReset)
-        self._ui.wavesListView.selectionModel().selectionChanged.connect(self.updateWaveOptionsUi)
+        self._ui.wavesListView.selectionModel().currentChanged.connect(self.updateWaveOptionsUi)
         self._ui.waveOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.updateWaveOptionsUi)
         self._ui.waveOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.applyWaveOptions)
         
@@ -77,8 +77,8 @@ class ManageWavesDialog(Module):
         called whenever the selection has changed.
         """
 
-        if self._ui.wavesListView.selectedIndexes():
-            waveDataType = self._app.waves().getWaveByName(str(self._ui.wavesListView.selectedIndexes()[0].data().toString())).dataType()
+        if self._ui.wavesListView.currentIndex():
+            waveDataType = self._app.waves().getWaveByName(str(self._ui.wavesListView.currentIndex().data().toString())).dataType()
             Util.setWidgetValue(self._ui.dataType, waveDataType)
 
     def applyWaveOptions(self):
@@ -113,7 +113,7 @@ class ManageWavesDialog(Module):
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionManageWavesDialog")
-        self.menuEntry.setShortcut("Ctrl+W")
+        self.menuEntry.setShortcut("Ctrl+V")
         self.menuEntry.setText("Manage Waves")
         self.menuEntry.triggered.connect(self.window.show)
         self.menu = vars(self._app.ui)["menuData"]

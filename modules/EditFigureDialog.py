@@ -13,6 +13,7 @@ from models.WavesListModel import WavesListModel
 from models.TraceListModel import TraceListModel
 from models.PlotListModel import PlotListModel
 from TraceListEntry import TraceListEntry
+from Gui import QColorButton
 from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 class EditFigureDialog(Module):
@@ -187,9 +188,10 @@ class EditFigureDialog(Module):
         self._ui.traceTableView.selectionModel().currentChanged.connect(self.plotUi_resetTraceOptions)
         self._ui.plotSelector.currentIndexChanged.connect(changePlot)
         
-        self.registerColorCallbackFunctions()
-        self.registerColorHelperFunctions()
-        
+        for widgetName in self.widgets.keys():
+            if self.widgets[widgetName]['type'] == 'color':
+                vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].createColorDialog)
+
         return self._widget
 
     #
@@ -200,12 +202,6 @@ class EditFigureDialog(Module):
 
     def currentPlot(self):
         return self._ui.plotSelector.model().getPlot(self._ui.plotSelector.currentIndex())
-
-
-
-
-
-
 
 
 
@@ -228,71 +224,10 @@ class EditFigureDialog(Module):
                     return trace
             return None
 
-    # Create an anonymous function that creates a callback function
-    # This must be done in a separate method so that widgetName does not take the last entry in the for loop in the method below
-    def makeColorCallbackFunction(self, widgetName):
-        return lambda color: self.setUiValue(widgetName, color.name())
-
-
-    # Register and create helper function (for color buttons)
-    def registerColorCallbackFunctions(self):
-        for widgetName in self.widgets.keys():
-            if self.widgets[widgetName]['type'] == 'color':
-                vars(self)[widgetName + 'Callback'] = self.makeColorCallbackFunction(widgetName)
-
-    # Create an anonymous function that creates a color dialog box
-    # This must be done in a separate method so that widgetName does not take the last entry in the for loop in the method below
-    def makeColorHelperFunction(self, widgetName):
-        return lambda: self.createColorDialog(QColor(str(vars(self._ui)[widgetName].text())), vars(self)[widgetName + 'Callback'])
-
-    def registerColorHelperFunctions(self):
-        for widgetName in self.widgets.keys():
-            if self.widgets[widgetName]['type'] == 'color':
-                vars(self)[widgetName + 'Helper'] = self.makeColorHelperFunction(widgetName)
-                vars(self._ui)[widgetName].clicked.connect(vars(self)[widgetName + 'Helper'])
-               
-
     # Set UI value
     def setUiValue(self, widgetName, value):
         widget = vars(self._ui)[widgetName]
-        widgetType = self.widgets[widgetName]['type']
-
-#        if widgetType == 'lineedit':
-#            widget.setText(value)
-#        elif widgetType == 'doublespinbox':
-#            widget.setValue(value)
-#        elif widgetType == 'spinbox':
-#            widget.setValue(value)
-#        elif widgetType == 'color':
-#            widget.setStyleSheet("background-color: " + value + "; color: " + self.goodTextColor(value))
-#            widget.setText(value)
-#        elif widgetType == 'dropdown':
-#            widget.setCurrentIndex(widget.findText(value))
-#        elif widgetType == 'checkbox':
-#            state = Qt.Unchecked
-#            if value:
-#                state = Qt.Checked
-#            widget.setCheckState(state)
-
-
-        if widgetType == 'lineedit':
-            widget.setText(str(value))
-        elif widgetType == 'doublespinbox':
-            widget.setValue(float(value))
-        elif widgetType == 'spinbox':
-            widget.setValue(int(value))
-        elif widgetType == 'color':
-            widget.setStyleSheet("background-color: " + str(value) + "; color: " + self.goodTextColor(str(value)))
-            widget.setText(str(value))
-        elif widgetType == 'dropdown':
-            widget.setCurrentIndex(widget.findText(str(value)))
-        elif widgetType == 'checkbox':
-            state = Qt.Unchecked
-            if value:
-                state = Qt.Checked
-            widget.setCheckState(state)
-
-
+        Util.setWidgetValue(widget, value)
 
     # Reset UI to object value
     def setUiValueFromObject(self, widgetName):
@@ -303,28 +238,9 @@ class EditFigureDialog(Module):
             return True
         return False
 
-
     # set object value to UI
     def setObjectValueFromUi(self, widgetName, theObject=None):
-#        value = ""
-#
-#        widget = vars(self._ui)[widgetName]
-#        widgetType = self.widgets[widgetName]['type']
-#        
-#        if widgetType == 'lineedit':
-#            value = widget.text()
-#        elif widgetType == 'doublespinbox':
-#            value = widget.value()
-#        elif widgetType == 'spinbox':
-#            value = widget.value()
-#        elif widgetType == 'color':
-#            value = widget.text()
-#        elif widgetType == 'dropdown':
-#            value = str(widget.currentText())
-#        elif widgetType == 'checkbox':
-#            value = widget.isChecked()
-        
-        value = self.getUiWidgetValue(widgetName)
+        value = self.getUiValue(widgetName)
 
         if not theObject:
             theObject = self.getObjectForWidget(widgetName)
@@ -336,27 +252,9 @@ class EditFigureDialog(Module):
 
 
     # get the value from a widget
-    def getUiWidgetValue(self, widgetName):
+    def getUiValue(self, widgetName):
         widget = vars(self._ui)[widgetName]
-        widgetType = self.widgets[widgetName]['type']
-        
-        value = ""
-        if widgetType == 'lineedit':
-            value = widget.text()
-        elif widgetType == 'doublespinbox':
-            value = widget.value()
-        elif widgetType == 'spinbox':
-            value = widget.value()
-        elif widgetType == 'color':
-            value = widget.text()
-        elif widgetType == 'dropdown':
-            value = str(widget.currentText())
-        elif widgetType == 'checkbox':
-            value = widget.isChecked()
-
-        return value
-        
-
+        return Util.getWidgetValue(widget)
 
 
 
@@ -517,12 +415,6 @@ class EditFigureDialog(Module):
         for trace in plot.getTraces():
             traceListModel.addEntry(TraceListEntry(trace))
 
-        ## Loop through plots and add all traces to model
-        #for plotNum in range(1, figure.numPlots() + 1):
-        #    plot = figure.getPlot(plotNum)
-        #    for trace in plot.getTraces():
-        #        traceListModel.addEntry(TraceListEntry(trace))
-
         traceListModel.doReset()
 
         self._ui.traceTableView.selectRow(traceListModel.rowCount() - 1)
@@ -603,21 +495,6 @@ class EditFigureDialog(Module):
             FigureSettings.loadSettings(fileName, self)
 
 
-    # Random stuff for now
-    def createColorDialog(self, currentColor, callBack):
-        newColor = QColorDialog.getColor(currentColor)
-        if newColor.isValid():
-            callBack(newColor)
-
-    def goodTextColor(self, backgroundColor):
-        """Determines whether complementary color should be white or black."""
-        lightness = QColor(backgroundColor).lightnessF()
-        if lightness > 0.4:
-            return "#000000"
-        return "#ffffff"
-
-
-
 
     """Module-required methods"""
     def getMenuNameToAddTo(self):
@@ -681,7 +558,7 @@ class FigureSettings():
     
             for widgetName in figureDialog.widgets.keys():
                 if figureDialog.widgets[widgetName]['object'] == 'figure':
-                    config.set('Figure', str(widgetName), str(figureDialog.getUiWidgetValue(widgetName)))
+                    config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
     
             with open(fileName, 'wb') as configFile:
                 config.write(configFile)

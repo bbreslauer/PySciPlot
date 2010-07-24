@@ -265,7 +265,7 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QPushButton" name="figureBackgroundColor">
+        <widget class="QColorButton" name="figureBackgroundColor">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -458,7 +458,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="plotBackgroundColor">
+           <widget class="QColorButton" name="plotBackgroundColor">
             <property name="minimumSize">
              <size>
               <width>55</width>
@@ -1155,7 +1155,7 @@ background-color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="traceLineColor">
+           <widget class="QColorButton" name="traceLineColor">
             <property name="minimumSize">
              <size>
               <width>55</width>
@@ -1178,7 +1178,7 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QPushButton" name="tracePointMarkerFaceColor">
+           <widget class="QColorButton" name="tracePointMarkerFaceColor">
             <property name="minimumSize">
              <size>
               <width>55</width>
@@ -1201,7 +1201,7 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QPushButton" name="tracePointMarkerEdgeColor">
+           <widget class="QColorButton" name="tracePointMarkerEdgeColor">
             <property name="minimumSize">
              <size>
               <width>55</width>
@@ -1318,6 +1318,13 @@ color: rgb(255, 255, 255);</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QColorButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QColorButton</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

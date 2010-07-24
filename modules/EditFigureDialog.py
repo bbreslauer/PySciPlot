@@ -476,7 +476,7 @@ class EditFigureDialog(Module):
         self._app.cwd = str(fileDialog.directory().absolutePath())
 
         if fileName != "":
-            FigureSettings.saveSettings(fileName, self)
+            FigureSettings.writeSettings(fileName, self)
 
     def loadFigureSettings(self):
         fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings")
@@ -545,17 +545,34 @@ class FigureSettings():
     """
 
     @staticmethod
-    def saveSettings(fileName, figureDialog):
+    def collectSettings(config, figureDialog):
+        """
+        Pull all of the settings into a ConfigParser class, but do not
+        write them out yet.  This allows us to collect a whole bunch of 
+        settings and just write them out once.
+        """
+
+        for widgetName in figureDialog.widgets.keys():
+            if figureDialog.widgets[widgetName]['object'] == 'figure':
+                config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
+        return config
+
+
+
+
+    @staticmethod
+    def writeSettings(fileName, figureDialog):
         # Verify that the file is actually a file or does not exist
         if os.path.isfile(fileName) or not os.path.exists(fileName):
             config = ConfigParser.SafeConfigParser()
             config.optionxform = str
             config.add_section('Figure')
             config.set('Figure', 'pysciplot_version', '1')
-    
-            for widgetName in figureDialog.widgets.keys():
-                if figureDialog.widgets[widgetName]['object'] == 'figure':
-                    config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
+            
+            config = FigureSettings.collectSettings(config, figureDialog)
+#            for widgetName in figureDialog.widgets.keys():
+#                if figureDialog.widgets[widgetName]['object'] == 'figure':
+#                    config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
     
             with open(fileName, 'wb') as configFile:
                 config.write(configFile)

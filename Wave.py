@@ -9,9 +9,9 @@ class Wave(QObject):
     All data entries must be either a valid data type or a blank string.
 
     Data types:
-        int, long as int
-        float
-        string
+        Integer (long)
+        Decimal (float)
+        String  (str)
 
     Signals that are emitted from this class are:
         nameChanged  - emitted when the name of the wave is changed
@@ -22,7 +22,7 @@ class Wave(QObject):
     nameChanged = pyqtSignal()
     dataModified = pyqtSignal()
 
-    def __init__(self, waveName, validDataType=float, dataIn=[]):
+    def __init__(self, waveName, dataType="Decimal", dataIn=[]):
         """
         Initialize a wave. Set name to waveName and data to dataIn.
         
@@ -34,17 +34,16 @@ class Wave(QObject):
 
         self._data = []
         self._name = ""
-        self._validDataType = ""
+        self._dataType = dataType
 
         if self.setName(waveName):
-            self.setDataType(validDataType)
             if dataIn == []:
                 self._data.append(0)
             else:
                 self._data.extend(map(self.convertValueToDataType, dataIn))
 
     def __str__(self):
-        return "%s (%s): %s\n" % (self._name, self._validDataType.__name__, self._data)
+        return "%s (%s): %s\n" % (self._name, self._dataType, self._data)
 
     def data(self):
         """Return the data list."""
@@ -56,17 +55,18 @@ class Wave(QObject):
     
     def dataType(self):
         """Return the type of data that can be stored in the wave."""
-        return self._validDataType
+        return self._dataType
+        #return self._validDataType
 
     def validValue(self, value):
         """Determine whether a given value is acceptable for this wave."""
         valueType = type(value)
 
-        if self._validDataType == int:
+        if self._dataType == "Integer":
             return valueType in [int, long]
-        elif self._validDataType == float:
+        elif self._dataType == "Decimal":
             return valueType == float
-        elif self._validDataType == str:
+        elif self._dataType == "String":
             return valueType == str
         return False
 
@@ -74,11 +74,11 @@ class Wave(QObject):
         newValue = ''
 
         try:
-            if self._validDataType == int:
+            if self._dataType == "Integer":
                 newValue = long(float(value))
-            elif self._validDataType == float:
+            elif self._dataType == "Decimal":
                 newValue = float(value)
-            elif self._validDataType == str:
+            elif self._dataType == "String":
                 newValue = str(value)
         except ValueError:
             pass
@@ -196,16 +196,8 @@ class Wave(QObject):
         """
         Set the type of data that is allowed for this wave.
         """
-        if dataType == self._validDataType:
-            return True
-        elif dataType == int or dataType == long:
-            self._validDataType = int
-        elif dataType == float:
-            self._validDataType = float
-        elif dataType == str:
-            self._validDataType = str
-        else:
-            self._validDataType = float
+        
+        self._dataType = dataType
 
         # Now convert all the current data in the wave to the new type
         self.recastData()

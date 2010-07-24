@@ -11,13 +11,6 @@ from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
 class ManageWavesDialog(Module):
     """Module to display the Manage Waves dialog window."""
 
-    waveOptions = { 'dataType':
-                                {   'Integer': int,
-                                    'Decimal': float,
-                                    'String':  str,
-                                }
-            }
-
     def __init__(self, app):
         Module.__init__(self, app)
 
@@ -51,6 +44,7 @@ class ManageWavesDialog(Module):
                 failedMessage.exec_()
             else:
                 newWave = Wave(name)
+                newWave.setDataType(Util.getWidgetValue(self._ui.dataType))
                 if not self._app.waves().addWave(newWave):
                     failedMessage = QMessageBox()
                     failedMessage.setText("Name already exists: " + name)
@@ -84,9 +78,8 @@ class ManageWavesDialog(Module):
         """
 
         if self._ui.wavesListView.selectedIndexes():
-            wave = self._app.waves().getWaveByName(str(self._ui.wavesListView.selectedIndexes()[0].data().toString()))
-            waveOptionsDataType = Util.findKey(self.waveOptions['dataType'], wave.dataType())
-            Util.setWidgetValue(self._ui.dataType, waveOptionsDataType)
+            waveDataType = self._app.waves().getWaveByName(str(self._ui.wavesListView.selectedIndexes()[0].data().toString())).dataType()
+            Util.setWidgetValue(self._ui.dataType, waveDataType)
 
     def applyWaveOptions(self):
         """
@@ -109,8 +102,7 @@ class ManageWavesDialog(Module):
         if self._ui.wavesListView.selectedIndexes():
             for index in self._ui.wavesListView.selectedIndexes():
                 wave = self._app.waves().getWaveByName(str(index.data().toString()))
-                dataType = self.waveOptions['dataType'][Util.getWidgetValue(self._ui.dataType)]
-                wave.setDataType(dataType)
+                wave.setDataType(Util.getWidgetValue(self._ui.dataType))
 
         return True
 

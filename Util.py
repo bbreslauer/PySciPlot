@@ -55,9 +55,3 @@ def fileDialogDirectory(app):
     else:
         return app.preferences.get("defaultDirectory")
 
-def findKey(dictionary, value):
-    """
-    Find the key in dictionary associated with value.
-    """
-    
-    return [k for k, v in dictionary.iteritems() if v == value][0]

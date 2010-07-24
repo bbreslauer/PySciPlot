@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor
+from PyQt4.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor, QComboBox
 from PyQt4.QtCore import QStringList
 
 import os, csv
@@ -82,39 +82,51 @@ class ImportCSV(Module):
         # Potential wave names
         tempWaveNames = self._app.waves().findGoodWaveNames(dataTable.columnCount())
 
-        # Column headers can either be generated or taken from the first row in the file
+        # Add a row for setting the data type of each wave
+        dataTable.insertRow(0)
+        defaultType = Util.getWidgetValue(self._ui.defaultDataType)
+        for col in range(dataTable.columnCount()):
+            typeBox = QComboBox()
+            typeBox.addItem("Integer")
+            typeBox.addItem("Decimal")
+            typeBox.addItem("String")
+            Util.setWidgetValue(typeBox, defaultType)
+            dataTable.setCellWidget(0, col, typeBox)
+
+        # Wave names can either be generated or taken from the first row in the file
         if not Util.getWidgetValue(self._ui.firstRowWaveNames):
             # Generate headers
-            dataTable.insertRow(0)
+            dataTable.insertRow(1)
             
             # PyQt does not have QList support yet, so this is a hack to get around that
             for col,name in enumerate(tempWaveNames):
-                dataTable.setItem(0, col, QTableWidgetItem(name))
+                dataTable.setItem(1, col, QTableWidgetItem(name))
         else:
             # Use the first row of data, but check to see if there is text for each column
             # and if there is no text for a column, add in a tempWaveName entry
             for col in range(dataTable.columnCount()):
-                if not dataTable.item(0, col) or str(dataTable.item(0, col).text()).strip() == "":
-                    dataTable.setItem(0, col, QTableWidgetItem(tempWaveNames.pop(0)))
+                if not dataTable.item(1, col) or str(dataTable.item(1, col).text()).strip() == "":
+                    dataTable.setItem(1, col, QTableWidgetItem(tempWaveNames.pop(0)))
 
         # Edit the name so that it could be valid (no spaces, etc). But it might
         # still be a duplicate.
         self.validateWaveNames()
 
         # Adjust the row headers so that they number correctly with the wave names in the first row
-        labels = QStringList("Name")
+        rowLabels = QStringList("Type")
+        rowLabels.append("Name")
         for row in range(1, dataTable.rowCount()):
-            labels.append(str(row))
-        dataTable.setVerticalHeaderLabels(labels)
+            rowLabels.append(str(row))
+        dataTable.setVerticalHeaderLabels(rowLabels)
 
         # Verify that all wave names are acceptable for the app's waves object
         self.verifyGoodWaveNames()
 
-        ## Change column header background so they stand out
-        #for col in range(dataTable.columnCount()):
-        #    dataTable.item(0, col).setBackground(QBrush(QColor('lightgrey')))
-
         self._ui.data.blockSignals(False)
+
+        # Resize rows and columns
+        dataTable.resizeRowsToContents()
+        dataTable.resizeColumnsToContents()
 
     def clearTable(self):
         dataTable = self._ui.data
@@ -133,8 +145,8 @@ class ImportCSV(Module):
         dataTable = self._ui.data
 
         for col in range(dataTable.columnCount()):
-            if dataTable.item(0, col):
-                dataTable.setItem(0, col, QTableWidgetItem(Wave.validateWaveName(str(dataTable.item(0, col).text()))))
+            if dataTable.item(1, col):
+                dataTable.setItem(1, col, QTableWidgetItem(Wave.validateWaveName(str(dataTable.item(1, col).text()))))
 
     def verifyGoodWaveNames(self):
         """
@@ -148,15 +160,15 @@ class ImportCSV(Module):
         importWaveNames = []
 
         for col in range(dataTable.columnCount()):
-            if dataTable.item(0, col):
-                name = str(dataTable.item(0, col).text())
+            if dataTable.item(1, col):
+                name = str(dataTable.item(1, col).text())
                 if name in importWaveNames or not self._app.waves().goodWaveName(name):
                     # Bad name, highlight
-                    dataTable.item(0, col).setBackground(QBrush(QColor('red')))
+                    dataTable.item(1, col).setBackground(QBrush(QColor('red')))
                     allNamesAreGood = False
                 else:
                     # Good name
-                    dataTable.item(0, col).setBackground(QBrush(QColor('lightgreen')))
+                    dataTable.item(1, col).setBackground(QBrush(QColor('lightgreen')))
                 importWaveNames.append(name)
 
         # Disable the import button
@@ -174,7 +186,7 @@ class ImportCSV(Module):
         Currently, if a name cell is edited, then we re-verify the wave names.
         """
 
-        if row == 0:
+        if row == 1:
             self.verifyGoodWaveNames()
 
     def importData(self):
@@ -184,8 +196,9 @@ class ImportCSV(Module):
         
         # Loop through all waves
         for col in range(dataTable.columnCount()):
-            wave = Wave(str(dataTable.item(0, col).text()))
-            for row in range(1, dataTable.rowCount()):
+            dataType = Util.getWidgetValue(dataTable.cellWidget(0, col))
+            wave = Wave(str(dataTable.item(1, col).text()), dataType)
+            for row in range(2, dataTable.rowCount()):
                 if dataTable.item(row, col):
                     wave.push(str(dataTable.item(row, col).text()))
                 else:

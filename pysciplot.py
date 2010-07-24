@@ -211,6 +211,7 @@ class pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
+        self.printAllWaves()
         dtm = DataTableModel([self._waves.waves()[0], self._waves.waves()[1]], self)
         
         # Connect slots
@@ -228,10 +229,10 @@ class pysciplot(QMainWindow):
         print self.cwd
 
     def setTestData(self):
-        self._waves.addWave(Wave("Wave1", int, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
-        self._waves.addWave(Wave("Wave2", int, [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
-        self._waves.addWave(Wave("Wave3", int, [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
-        self._waves.addWave(Wave("Wave4", int, [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
+        self._waves.addWave(Wave("Wave1", "Integer", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
+        self._waves.addWave(Wave("Wave2", "Integer", [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
+        self._waves.addWave(Wave("Wave3", "Integer", [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
+        self._waves.addWave(Wave("Wave4", "Integer", [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
 
 
 

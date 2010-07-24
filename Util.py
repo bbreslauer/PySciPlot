@@ -35,6 +35,7 @@ def getWidgetValue(widget):
                     'QLineEdit': 'str(widget.text())',
                     'QCheckBox': 'widget.isChecked()',
                     'QComboBox': 'str(widget.currentText())',
+                    'QButtonGroup': 'str(widget.checkedButton().text())',
                  }
 
     if widgetType in dictionary.keys():

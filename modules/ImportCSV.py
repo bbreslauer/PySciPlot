@@ -54,7 +54,18 @@ class ImportCSV(Module):
         # Get data from file
         csvFile = Util.getWidgetValue(self._ui.csvFileName)
         if os.path.isfile(csvFile):
-            rows = csv.reader(open(csvFile), delimiter=Util.getWidgetValue(self._ui.delimiter))
+            
+            rows = []
+            delimiterText = Util.getWidgetValue(self._ui.delimiterButtonGroup)
+            if delimiterText == "Comma":
+                rows = csv.reader(open(csvFile), dialect="excel", delimiter=",")
+            elif delimiterText == "Tab":
+                rows = csv.reader(open(csvFile), dialect="excel-tab")
+            elif delimiterText == "Other":
+                rows = csv.reader(open(csvFile), dialect="excel", delimiter=Util.getWidgetValue(self._ui.otherDelimiter))
+            else:
+                rows = csv.reader(open(csvFile), dialect="excel", delimiter=",")
+
             for rownum, row in enumerate(rows):
                 # Make sure the cells exist to enter the data into
                 dataTable.insertRow(rownum)

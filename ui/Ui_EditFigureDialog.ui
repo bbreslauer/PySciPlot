@@ -154,7 +154,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="figureTab">
       <property name="sizePolicy">
@@ -417,14 +417,14 @@
           <string>Plot Options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="4" column="0" colspan="2">
+          <item row="3" column="0" colspan="2">
            <widget class="QDialogButtonBox" name="plotOptionsButtons">
             <property name="standardButtons">
              <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="2">
+          <item row="4" column="0" colspan="2">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -481,200 +481,440 @@ background-color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item row="2" column="0" colspan="2">
-           <layout class="QGridLayout" name="gridLayout_6">
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>X Axis</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>Y Axis</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="plotXAxisMinimum">
-              <property name="minimum">
-               <double>-99.989999999999995</double>
-              </property>
-              <property name="maximum">
-               <double>99.989999999999995</double>
-              </property>
-              <property name="value">
-               <double>-10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QDoubleSpinBox" name="plotYAxisMinimum">
-              <property name="minimum">
-               <double>-99.989999999999995</double>
-              </property>
-              <property name="value">
-               <double>-10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>Minimum</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="label_18">
-              <property name="text">
-               <string>Maximum</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QDoubleSpinBox" name="plotXAxisMaximum">
-              <property name="minimum">
-               <double>-99.989999999999995</double>
-              </property>
-              <property name="value">
-               <double>10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QDoubleSpinBox" name="plotYAxisMaximum">
-              <property name="minimum">
-               <double>-99.989999999999995</double>
-              </property>
-              <property name="value">
-               <double>10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_19">
-              <property name="text">
-               <string>Auto?</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QCheckBox" name="plotXAxisAutoscale">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="3">
-             <widget class="QCheckBox" name="plotYAxisAutoscale">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="3" column="0" colspan="2">
-           <layout class="QGridLayout" name="gridLayout_7">
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_20">
-              <property name="text">
-               <string>Left</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>Top</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_21">
-              <property name="text">
-               <string>Visible</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_22">
-              <property name="text">
-               <string>Right</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="label_23">
-              <property name="text">
-               <string>Bottom</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QCheckBox" name="plotLeftAxisVisible">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QCheckBox" name="plotBottomAxisVisible">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QCheckBox" name="plotRightAxisVisible">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QCheckBox" name="plotTopAxisVisible">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <property name="autoRepeat">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QTabWidget" name="axisTabWidget">
+            <widget class="QWidget" name="bottomAxisTab">
+             <attribute name="title">
+              <string>Bottom</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_8">
+              <item row="2" column="0">
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_10">
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="plotBottomAxisMinimum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="maximum">
+                    <double>99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>-10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="plotBottomAxisMaximum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_18">
+                   <property name="text">
+                    <string>Maximum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_17">
+                   <property name="text">
+                    <string>Minimum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_29">
+                   <property name="text">
+                    <string>Autoscale?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="plotBottomAxisAutoscale">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_11">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_19">
+                   <property name="text">
+                    <string>Visible?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="plotBottomAxisVisible">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="leftAxisTab">
+             <attribute name="title">
+              <string>Left</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_9">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_3">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_12">
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="plotLeftAxisMinimum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="maximum">
+                    <double>99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>-10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="plotLeftAxisMaximum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_25">
+                   <property name="text">
+                    <string>Maximum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_26">
+                   <property name="text">
+                    <string>Minimum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_30">
+                   <property name="text">
+                    <string>Autoscale?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="plotLeftAxisAutoscale">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_4">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_13">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_31">
+                   <property name="text">
+                    <string>Visible?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="plotLeftAxisVisible">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="topAxisTab">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <attribute name="title">
+              <string>Top</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_18">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_14">
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="plotTopAxisMinimum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="maximum">
+                    <double>99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>-10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="plotTopAxisMaximum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_32">
+                   <property name="text">
+                    <string>Maximum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_33">
+                   <property name="text">
+                    <string>Minimum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_34">
+                   <property name="text">
+                    <string>Autoscale?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="plotTopAxisAutoscale">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_6">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_15">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_35">
+                   <property name="text">
+                    <string>Visible?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="plotTopAxisVisible">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="rightAxisTab">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <attribute name="title">
+              <string>Right</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_19">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_7">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_16">
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="plotRightAxisMinimum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="maximum">
+                    <double>99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>-10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="plotRightAxisMaximum">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_36">
+                   <property name="text">
+                    <string>Maximum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_37">
+                   <property name="text">
+                    <string>Minimum</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_38">
+                   <property name="text">
+                    <string>Autoscale?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QCheckBox" name="plotRightAxisAutoscale">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_8">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_17">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_39">
+                   <property name="text">
+                    <string>Visible?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="plotRightAxisVisible">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
           </item>
          </layout>
         </widget>

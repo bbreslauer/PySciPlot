@@ -26,12 +26,12 @@ class EditFigureDialog(Module):
     #       which object this widget applies to
     widgets = { 'plotName':                     { 'object': 'plot'   },
                 'plotBackgroundColor':          { 'object': 'plot'   },
-                'plotXAxisAutoscale':           { 'object': 'plot'   },
-                'plotXAxisMinimum':             { 'object': 'plot'   },
-                'plotXAxisMaximum':             { 'object': 'plot'   },
-                'plotYAxisAutoscale':           { 'object': 'plot'   },
-                'plotYAxisMinimum':             { 'object': 'plot'   },
-                'plotYAxisMaximum':             { 'object': 'plot'   },
+                'plotBottomAxisAutoscale':      { 'object': 'plot'   },
+                'plotBottomAxisMinimum':        { 'object': 'plot'   },
+                'plotBottomAxisMaximum':        { 'object': 'plot'   },
+                'plotLeftAxisAutoscale':        { 'object': 'plot'   },
+                'plotLeftAxisMinimum':          { 'object': 'plot'   },
+                'plotLeftAxisMaximum':          { 'object': 'plot'   },
                 'plotTopAxisVisible':           { 'object': 'plot'   },
                 'plotLeftAxisVisible':          { 'object': 'plot'   },
                 'plotBottomAxisVisible':        { 'object': 'plot'   },
@@ -95,14 +95,14 @@ class EditFigureDialog(Module):
         self.setupTraceListMenu()
 
         # Setup max/min values for spin boxes
-        self._ui.plotXAxisMinimum.setMinimum(-1.7E308)
-        self._ui.plotXAxisMinimum.setMaximum(1.7E308)
-        self._ui.plotXAxisMaximum.setMinimum(-1.7E308)
-        self._ui.plotXAxisMaximum.setMaximum(1.7E308)
-        self._ui.plotYAxisMinimum.setMinimum(-1.7E308)
-        self._ui.plotYAxisMinimum.setMaximum(1.7E308)
-        self._ui.plotYAxisMaximum.setMinimum(-1.7E308)
-        self._ui.plotYAxisMaximum.setMaximum(1.7E308)
+        self._ui.plotBottomAxisMinimum.setMinimum(-1.7E308)
+        self._ui.plotBottomAxisMinimum.setMaximum(1.7E308)
+        self._ui.plotBottomAxisMaximum.setMinimum(-1.7E308)
+        self._ui.plotBottomAxisMaximum.setMaximum(1.7E308)
+        self._ui.plotLeftAxisMinimum.setMinimum(-1.7E308)
+        self._ui.plotLeftAxisMinimum.setMaximum(1.7E308)
+        self._ui.plotLeftAxisMaximum.setMinimum(-1.7E308)
+        self._ui.plotLeftAxisMaximum.setMaximum(1.7E308)
 
         # Setup buttons
         self._ui.figureOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.figureObject_setAttributes)
@@ -118,6 +118,11 @@ class EditFigureDialog(Module):
 
         self._ui.figureSettingsSave.clicked.connect(self.saveFigureSettings)
         self._ui.figureSettingsLoad.clicked.connect(self.loadFigureSettings)
+
+        self._ui.plotBottomAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
+        self._ui.plotLeftAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
+        self._ui.plotTopAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
+        self._ui.plotRightAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
 
 
         def createFigure():
@@ -345,6 +350,20 @@ class EditFigureDialog(Module):
             if self.widgets[widgetName]['object'] == 'trace':
                 self.setUiValueFromObject(widgetName)
 
+    def plotUi_axisAutoscaleToggled(self, checkState):
+        """
+        Toggle enabled/disabled status of min/max fields for plot axes.
+        """
+
+        self._ui.plotBottomAxisMinimum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
+        self._ui.plotBottomAxisMaximum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
+        self._ui.plotLeftAxisMinimum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
+        self._ui.plotLeftAxisMaximum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
+        self._ui.plotTopAxisMinimum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
+        self._ui.plotTopAxisMaximum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
+        self._ui.plotRightAxisMinimum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
+        self._ui.plotRightAxisMaximum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
+
     def traceObject_updateAttributes(self, traces=None):
         updateBool = False
 
@@ -559,6 +578,10 @@ class FigureSettings():
 
     @staticmethod
     def writeSettings(fileName, figureDialog):
+        """
+        Write all the figure settings to a file.
+        """
+
         # Verify that the file is actually a file or does not exist
         if os.path.isfile(fileName) or not os.path.exists(fileName):
             config = ConfigParser.SafeConfigParser()
@@ -575,6 +598,10 @@ class FigureSettings():
     
     @staticmethod
     def loadSettings(fileName, figureDialog):
+        """
+        Load the figure settings from a file.
+        """
+
         if os.path.isfile(fileName):
             config = ConfigParser.SafeConfigParser()
             config.optionxform = str
@@ -584,6 +611,7 @@ class FigureSettings():
             for widgetName in figureDialog.widgets.keys():
                 if figureDialog.widgets[widgetName]['object'] == 'figure':
                     figureDialog.setUiValue(widgetName, config.get('Figure', str(widgetName)))
+
 
 
 

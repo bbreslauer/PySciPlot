@@ -21,12 +21,12 @@ class Plot(QObject):
                     'plotNum':                  { 'default': 1 },
                     'plotName':                 { 'default': '' },
                     'plotBackgroundColor':      { 'default': '#ffffff' },
-                    'plotXAxisAutoscale':       { 'default': True },
-                    'plotXAxisMinimum':         { 'default': -10 },
-                    'plotXAxisMaximum':         { 'default': 10 },
-                    'plotYAxisAutoscale':       { 'default': True },
-                    'plotYAxisMinimum':         { 'default': -10 },
-                    'plotYAxisMaximum':         { 'default': 10 },
+                    'plotBottomAxisAutoscale':  { 'default': True },
+                    'plotBottomAxisMinimum':    { 'default': -10 },
+                    'plotBottomAxisMaximum':    { 'default': 10 },
+                    'plotLeftAxisAutoscale':    { 'default': True },
+                    'plotLeftAxisMinimum':      { 'default': -10 },
+                    'plotLeftAxisMaximum':      { 'default': 10 },
                     'plotTopAxisVisible':       { 'default': True },
                     'plotLeftAxisVisible':      { 'default': True },
                     'plotBottomAxisVisible':    { 'default': True },
@@ -139,10 +139,10 @@ class Plot(QObject):
             self._axes.plot(x, y, **(trace.getFormat()))
         
         # Set minimum and maximum for axes
-        if not self.get('plotXAxisAutoscale'):
-            self._axes.set_xlim(self.get('plotXAxisMinimum'), self.get('plotXAxisMaximum'))
-        if not self.get('plotYAxisAutoscale'):
-            self._axes.set_ylim(self.get('plotYAxisMinimum'), self.get('plotYAxisMaximum'))
+        if not self.get('plotBottomAxisAutoscale'):
+            self._axes.set_xlim(self.get('plotBottomAxisMinimum'), self.get('plotBottomAxisMaximum'))
+        if not self.get('plotLeftAxisAutoscale'):
+            self._axes.set_ylim(self.get('plotLeftAxisMinimum'), self.get('plotLeftAxisMaximum'))
 
         if drawBool:
             self._figure._canvas.draw()

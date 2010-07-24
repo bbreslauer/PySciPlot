@@ -154,7 +154,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="figureTab">
       <property name="sizePolicy">
@@ -1322,7 +1322,7 @@ color: rgb(255, 255, 255);</string>
   <customwidget>
    <class>QColorButton</class>
    <extends>QPushButton</extends>
-   <header>gui/QColorButton</header>
+   <header>Gui</header>
   </customwidget>
  </customwidgets>
  <resources/>

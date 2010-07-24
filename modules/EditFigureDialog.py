@@ -24,38 +24,35 @@ class EditFigureDialog(Module):
     # the value is a dict with the following parameters
     #   - 'object' = figure, plot, trace
     #       which object this widget applies to
-    #   - 'type' = 'lineedit', 'spinbox', 'doublespinbox', 'color', 'dropdown', 'checkbox'
-    #       the type of object that this is
-    widgets = { 'plotName':                     { 'object': 'plot',     'type': 'lineedit' },
-                'plotBackgroundColor':          { 'object': 'plot',     'type': 'color' },
-                'plotXAxisAutoscale':           { 'object': 'plot',     'type': 'checkbox' },
-                'plotXAxisMinimum':             { 'object': 'plot',     'type': 'doublespinbox' },
-                'plotXAxisMaximum':             { 'object': 'plot',     'type': 'doublespinbox' },
-                'plotYAxisAutoscale':           { 'object': 'plot',     'type': 'checkbox' },
-                'plotYAxisMinimum':             { 'object': 'plot',     'type': 'doublespinbox' },
-                'plotYAxisMaximum':             { 'object': 'plot',     'type': 'doublespinbox' },
-                'plotTopAxisVisible':           { 'object': 'plot',     'type': 'checkbox' },
-                'plotLeftAxisVisible':          { 'object': 'plot',     'type': 'checkbox' },
-                'plotBottomAxisVisible':        { 'object': 'plot',     'type': 'checkbox' },
-                'plotRightAxisVisible':         { 'object': 'plot',     'type': 'checkbox' },
-                'figureName':                   { 'object': 'figure',   'type': 'lineedit' },
-                'figureTitle':                  { 'object': 'figure',   'type': 'lineedit' },
-                'figureRows':                   { 'object': 'figure',   'type': 'spinbox' },
-                'figureColumns':                { 'object': 'figure',   'type': 'spinbox' },
-                'figureBackgroundColor':        { 'object': 'figure',   'type': 'color' },
-                'traceLineStyle':               { 'object': 'trace',    'type': 'dropdown' },
-                'tracePointMarker':             { 'object': 'trace',    'type': 'dropdown' },
-                'traceLineColor':               { 'object': 'trace',    'type': 'color' },
-                'traceLineWidth':               { 'object': 'trace',    'type': 'doublespinbox' },
-                'tracePointMarkerEdgeColor':    { 'object': 'trace',    'type': 'color' },
-                'tracePointMarkerFaceColor':    { 'object': 'trace',    'type': 'color' },
-                'tracePointMarkerEdgeWidth':    { 'object': 'trace',    'type': 'doublespinbox' },
-                'tracePointMarkerSize':         { 'object': 'trace',    'type': 'doublespinbox' },
-
-              }
+    widgets = { 'plotName':                     { 'object': 'plot'   },
+                'plotBackgroundColor':          { 'object': 'plot'   },
+                'plotXAxisAutoscale':           { 'object': 'plot'   },
+                'plotXAxisMinimum':             { 'object': 'plot'   },
+                'plotXAxisMaximum':             { 'object': 'plot'   },
+                'plotYAxisAutoscale':           { 'object': 'plot'   },
+                'plotYAxisMinimum':             { 'object': 'plot'   },
+                'plotYAxisMaximum':             { 'object': 'plot'   },
+                'plotTopAxisVisible':           { 'object': 'plot'   },
+                'plotLeftAxisVisible':          { 'object': 'plot'   },
+                'plotBottomAxisVisible':        { 'object': 'plot'   },
+                'plotRightAxisVisible':         { 'object': 'plot'   },
+                'figureName':                   { 'object': 'figure' },
+                'figureTitle':                  { 'object': 'figure' },
+                'figureRows':                   { 'object': 'figure' },
+                'figureColumns':                { 'object': 'figure' },
+                'figureBackgroundColor':        { 'object': 'figure' },
+                'traceLineStyle':               { 'object': 'trace'  },
+                'tracePointMarker':             { 'object': 'trace'  },
+                'traceLineColor':               { 'object': 'trace'  },
+                'traceLineWidth':               { 'object': 'trace'  },
+                'tracePointMarkerEdgeColor':    { 'object': 'trace'  },
+                'tracePointMarkerFaceColor':    { 'object': 'trace'  },
+                'tracePointMarkerEdgeWidth':    { 'object': 'trace'  },
+                'tracePointMarkerSize':         { 'object': 'trace'  },
+                }
 
 
-    # To create a new type, update setUiValue and setObjectValueFromUi methods
+    # To create a new type, update setWidgetValue and getWidgetValue methods in Util.py
     # To create a new widget, update the widgets dict above and also the properties variable in the object that it deals with, and implement code to use that widget
     
     
@@ -189,7 +186,7 @@ class EditFigureDialog(Module):
         self._ui.plotSelector.currentIndexChanged.connect(changePlot)
         
         for widgetName in self.widgets.keys():
-            if self.widgets[widgetName]['type'] == 'color':
+            if type(vars(self._ui)[widgetName]).__name__ == 'QColorButton':
                 vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].createColorDialog)
 
         return self._widget

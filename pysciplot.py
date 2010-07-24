@@ -228,10 +228,10 @@ class pysciplot(QMainWindow):
         print self.cwd
 
     def setTestData(self):
-        self._waves.addWave(Wave("Wave1", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], int))
-        self._waves.addWave(Wave("Wave2", [0, 1, 4, 9, 4, 1, 0, 1, 4, 9], int))
-        self._waves.addWave(Wave("Wave3", [0, 1, 3, 1, 3, 1, 3, 1, 3, 1], int))
-        self._waves.addWave(Wave("Wave4", [4, 3, 2, 1, 0, 1, 2, 3, 4, 5], int))
+        self._waves.addWave(Wave("Wave1", int, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
+        self._waves.addWave(Wave("Wave2", int, [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
+        self._waves.addWave(Wave("Wave3", int, [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
+        self._waves.addWave(Wave("Wave4", int, [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
 
 
 

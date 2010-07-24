@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
+    <width>618</width>
     <height>500</height>
    </rect>
   </property>
@@ -154,7 +154,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="figureTab">
       <property name="sizePolicy">
@@ -697,7 +697,7 @@ background-color: rgb(255, 255, 255);</string>
       <attribute name="title">
        <string>Traces</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3,5">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3">
        <item>
         <widget class="QGroupBox" name="tracesGroupBox">
          <property name="sizePolicy">
@@ -904,7 +904,7 @@ background-color: rgb(255, 255, 255);</string>
          <property name="title">
           <string>Trace Options</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3">
+         <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,2,1,1,0">
           <item row="1" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
@@ -914,6 +914,12 @@ background-color: rgb(255, 255, 255);</string>
           </item>
           <item row="1" column="1">
            <widget class="QComboBox" name="traceLineStyle">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -922,7 +928,7 @@ background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -965,6 +971,12 @@ background-color: rgb(255, 255, 255);</string>
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="tracePointMarker">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -973,12 +985,15 @@ background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>75</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
             <property name="currentIndex">
              <number>3</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
             </property>
             <item>
              <property name="text">
@@ -1149,7 +1164,7 @@ background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1172,7 +1187,7 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1195,7 +1210,7 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1218,7 +1233,7 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1250,7 +1265,7 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1269,7 +1284,7 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>55</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1281,21 +1296,21 @@ color: rgb(255, 255, 255);</string>
             </property>
            </widget>
           </item>
+          <item row="2" column="4">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>200</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

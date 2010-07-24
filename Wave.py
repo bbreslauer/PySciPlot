@@ -6,7 +6,12 @@ class Wave(QObject):
     """
     Store the name and all data for one wave.
 
-    All data entries must be either a valid data type or a blank string.  Valid data types are int, float, and long.
+    All data entries must be either a valid data type or a blank string.
+
+    Data types:
+        int, long as int
+        float
+        string
 
     Signals that are emitted from this class are:
         nameChanged  - emitted when the name of the wave is changed
@@ -17,7 +22,7 @@ class Wave(QObject):
     nameChanged = pyqtSignal()
     dataModified = pyqtSignal()
 
-    def __init__(self, waveName, dataIn=[], validDataType=float):
+    def __init__(self, waveName, validDataType=float, dataIn=[]):
         """
         Initialize a wave. Set name to waveName and data to dataIn.
         
@@ -36,10 +41,10 @@ class Wave(QObject):
             if dataIn == []:
                 self._data.append(0)
             else:
-                self._data.extend(dataIn)
+                self._data.extend(map(self.convertValueToDataType, dataIn))
 
     def __str__(self):
-        return "%s: %s\n" % (self._name, self._data)
+        return "%s (%s): %s\n" % (self._name, self._validDataType.__name__, self._data)
 
     def data(self):
         """Return the data list."""
@@ -53,24 +58,35 @@ class Wave(QObject):
         """Return the type of data that can be stored in the wave."""
         return self._validDataType
 
-    def goodDataType(self, dataType):
-        """Determine whether the given data type is acceptable for this wave."""
+    def validValue(self, value):
+        """Determine whether a given value is acceptable for this wave."""
+        valueType = type(value)
+
         if self._validDataType == int:
-            return dataType in [int, long]
+            return valueType in [int, long]
         elif self._validDataType == float:
-            return dataType == float
+            return valueType == float
+        elif self._validDataType == str:
+            return valueType == str
         return False
 
     def convertValueToDataType(self, value):
-        if self._validDataType == int:
-            return long(value)
-        elif self._validDataType == float:
-            return float(value)
-        return False
+        newValue = ''
+
+        try:
+            if self._validDataType == int:
+                newValue = long(float(value))
+            elif self._validDataType == float:
+                newValue = float(value)
+            elif self._validDataType == str:
+                newValue = str(value)
+        except ValueError:
+            pass
+        return newValue
 
     def goodValue(self, value):
         """Determine whether a value is a valid data type."""
-        return self.goodDataType(type(value)) or (value == '')
+        return self.validValue(value) or (value == '')
 
     # Modifying methods
     def setName(self, name):
@@ -105,6 +121,14 @@ class Wave(QObject):
                 self.dataModified.emit()
                 return True
         return False
+
+    def recastData(self):
+        """
+        Cast all data to the current type.  This is useful if the data might be in another type, for instance if the type was just changed.
+        """
+
+        for i, v in enumerate(self._data):
+            self._data[i] = self.convertValueToDataType(v)
 
     def insert(self, position, value):
         """
@@ -172,12 +196,20 @@ class Wave(QObject):
         """
         Set the type of data that is allowed for this wave.
         """
-        if dataType == int or dataType == long:
+        if dataType == self._validDataType:
+            return True
+        elif dataType == int or dataType == long:
             self._validDataType = int
         elif dataType == float:
             self._validDataType = float
+        elif dataType == str:
+            self._validDataType = str
         else:
             self._validDataType = float
+
+        # Now convert all the current data in the wave to the new type
+        self.recastData()
+
 
 
 
@@ -213,7 +245,7 @@ class Wave(QObject):
 
         numberData = []
         for entry in wave.data():
-            if wave.goodDataType(type(entry)):
+            if wave.validValue(entry):
                 numberData.append(entry)
             else:
                 numberData.append(nan)

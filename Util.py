@@ -11,11 +11,12 @@ def setWidgetValue(widget, value):
     
     # This dictionary simulates enough of a switch statement
     dictionary = {
-                    'QLineEdit': widget.setText(str(value)),
+                    'QLineEdit': 'widget.setText(str(value))',
+                    'QComboBox': 'widget.setCurrentIndex(widget.findText(str(value)))',
                  }
 
     if widgetType in dictionary.keys():
-        return dictionary[widgetType]
+        return eval(dictionary[widgetType])
     else:
         raise UnknownWidgetTypeError(widgetType)
 
@@ -33,6 +34,7 @@ def getWidgetValue(widget):
     dictionary = {
                     'QLineEdit': 'str(widget.text())',
                     'QCheckBox': 'widget.isChecked()',
+                    'QComboBox': 'str(widget.currentText())',
                  }
 
     if widgetType in dictionary.keys():
@@ -46,9 +48,15 @@ def fileDialogDirectory(app):
     Set the initial directory for a QFileDialog to either the cwd or
     the default directory.
     """
+
     if app.cwd != "":
         return app.cwd
     else:
         return app.preferences.get("defaultDirectory")
 
-
+def findKey(dictionary, value):
+    """
+    Find the key in dictionary associated with value.
+    """
+    
+    return [k for k, v in dictionary.iteritems() if v == value][0]

@@ -157,20 +157,20 @@ class DataTableModel(QAbstractTableModel):
         Emits the Wave.dataModified signal if the data is changed.
         """
 
+        result = False
+
         if index.isValid() and role == Qt.EditRole:
-            # Check if value can be converted to double
-            # toDouble() returns (value-converted-to-double, whether-the-value-was-converted)
+            wave = self._waves.waves()[index.column()]
+
             if value == "":
-                result = self._waves.waves()[index.column()].setData(index.row(), value)
-                self.dataChanged.emit(index, index)
-                self.resetBlankRows()
-                return result
-            if value.toDouble()[1]:
-                result = self._waves.waves()[index.column()].setData(index.row(), value.toDouble()[0])
-                self.dataChanged.emit(index, index)
-                self.resetBlankRows()
-                return result
-        return False
+                result = wave.setData(index.row(), value)
+            else:
+                result = wave.setData(index.row(), wave.convertValueToDataType(value.toString()))
+            
+            self.dataChanged.emit(index, index)
+            self.resetBlankRows()
+
+        return result
 
     def resetBlankRows(self):
         """

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>500</width>
     <height>400</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>500</width>
     <height>400</height>
    </size>
   </property>
@@ -31,65 +31,106 @@
   <property name="windowTitle">
    <string>Manage Waves</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout" columnstretch="2,1">
    <item row="0" column="0">
-    <widget class="QLabel" name="waveNameLabel">
-     <property name="text">
-      <string>New Wave Name</string>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Waves</string>
      </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="waveNameLabel">
+        <property name="text">
+         <string>New Wave Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="waveNameLineEdit"/>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="createWaveButton">
+        <property name="text">
+         <string>Create Wave</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QListView" name="wavesListView">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QPushButton" name="removeWaveButton">
+        <property name="text">
+         <string>Remove Wave(s)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLineEdit" name="waveNameLineEdit"/>
-   </item>
-   <item row="2" column="0">
-    <widget class="QPushButton" name="createWaveButton">
-     <property name="text">
-      <string>Create Wave</string>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Wave Options</string>
      </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Wave Data Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="dataType">
+        <item>
+         <property name="text">
+          <string>Integer</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Decimal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>String</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QDialogButtonBox" name="waveOptionsButtons">
+        <property name="standardButtons">
+         <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QListView" name="wavesListView">
-     <property name="selectionMode">
-      <enum>QAbstractItemView::ExtendedSelection</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QPushButton" name="removeWaveButton">
-     <property name="text">
-      <string>Remove Wave(s)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="1" rowspan="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="1">
+   <item row="1" column="0" colspan="2">
     <widget class="QPushButton" name="closeButton">
      <property name="text">
       <string>Close</string>

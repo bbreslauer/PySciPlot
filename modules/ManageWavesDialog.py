@@ -1,6 +1,7 @@
-from PyQt4.QtGui import QWidget, QAction, QMessageBox
+from PyQt4.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox
 from PyQt4.QtCore import Qt
 
+import Util
 from Wave import Wave
 from DialogSubWindow import DialogSubWindow
 from models.WavesListModel import WavesListModel
@@ -9,6 +10,13 @@ from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
 
 class ManageWavesDialog(Module):
     """Module to display the Manage Waves dialog window."""
+
+    waveOptions = { 'dataType':
+                                {   'Integer': int,
+                                    'Decimal': float,
+                                    'String':  str,
+                                }
+            }
 
     def __init__(self, app):
         Module.__init__(self, app)
@@ -28,6 +36,9 @@ class ManageWavesDialog(Module):
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved.connect(self._wavesListModel.doReset)
+        self._ui.wavesListView.selectionModel().selectionChanged.connect(self.updateWaveOptionsUi)
+        self._ui.waveOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.updateWaveOptionsUi)
+        self._ui.waveOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.applyWaveOptions)
         
         # Define handler functions
         def addWave():
@@ -65,6 +76,45 @@ class ManageWavesDialog(Module):
         self._ui.closeButton.clicked.connect(closeWindow)
 
         return self._widget
+
+    def updateWaveOptionsUi(self, *args):
+        """
+        Update the wave options based on the current wave.  This slot will be
+        called whenever the selection has changed.
+        """
+
+        if self._ui.wavesListView.selectedIndexes():
+            wave = self._app.waves().getWaveByName(str(self._ui.wavesListView.selectedIndexes()[0].data().toString()))
+            waveOptionsDataType = Util.findKey(self.waveOptions['dataType'], wave.dataType())
+            Util.setWidgetValue(self._ui.dataType, waveOptionsDataType)
+
+    def applyWaveOptions(self):
+        """
+        Set the selected waves to have the currently-selected options.
+        """
+
+        # Make sure user wants to actually change the data type
+        warningMessage = QMessageBox()
+        warningMessage.setWindowTitle("Warning!")
+        warningMessage.setText("If you change the data type, then you may lose data if it cannot be properly converted.")
+        warningMessage.setInformativeText("Are you sure you want to continue?")
+        warningMessage.setIcon(QMessageBox.Warning)
+        warningMessage.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        warningMessage.setDefaultButton(QMessageBox.No)
+        result = warningMessage.exec_()
+
+        if result != QMessageBox.Yes:
+            return False
+
+        if self._ui.wavesListView.selectedIndexes():
+            for index in self._ui.wavesListView.selectedIndexes():
+                wave = self._app.waves().getWaveByName(str(index.data().toString()))
+                dataType = self.waveOptions['dataType'][Util.getWidgetValue(self._ui.dataType)]
+                wave.setDataType(dataType)
+
+        return True
+
+
 
     def load(self):
         self.window = DialogSubWindow(self._app.ui.workspace)

@@ -50,7 +50,7 @@ class Waves(QObject):
         """
 
         for wave in self._waves:
-            if wave.getName() == name:
+            if Wave.getName(wave) == name:
                 return wave
         return False
 

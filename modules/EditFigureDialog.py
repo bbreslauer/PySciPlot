@@ -557,22 +557,17 @@ class FigureSettings():
                 config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
         return config
 
-
-
-
     @staticmethod
     def writeSettings(fileName, figureDialog):
         # Verify that the file is actually a file or does not exist
         if os.path.isfile(fileName) or not os.path.exists(fileName):
             config = ConfigParser.SafeConfigParser()
             config.optionxform = str
+            config.add_section('Application')
+            config.set('Application', 'pysciplot_version', '1')
             config.add_section('Figure')
-            config.set('Figure', 'pysciplot_version', '1')
             
             config = FigureSettings.collectSettings(config, figureDialog)
-#            for widgetName in figureDialog.widgets.keys():
-#                if figureDialog.widgets[widgetName]['object'] == 'figure':
-#                    config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
     
             with open(fileName, 'wb') as configFile:
                 config.write(configFile)
@@ -584,7 +579,7 @@ class FigureSettings():
             config = ConfigParser.SafeConfigParser()
             config.optionxform = str
             config.read(fileName)
-            version = config.get('Figure', 'pysciplot_version')
+            version = config.get('Application', 'pysciplot_version')
 
             for widgetName in figureDialog.widgets.keys():
                 if figureDialog.widgets[widgetName]['object'] == 'figure':

@@ -211,7 +211,6 @@ class pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
-        self.printAllWaves()
         dtm = DataTableModel([self._waves.waves()[0], self._waves.waves()[1]], self)
         
         # Connect slots

@@ -634,7 +634,7 @@ class EditFigureDialog(Module):
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionEditFiguresDialog")
-        self.menuEntry.setShortcut("Ctrl+E")
+        self.menuEntry.setShortcut("Ctrl+F")
         self.menuEntry.setText("Edit Figures")
         self.menuEntry.triggered.connect(self.window.show)
         self.menu = vars(self._app.ui)["menuPlot"]

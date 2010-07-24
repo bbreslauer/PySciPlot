@@ -118,7 +118,7 @@
   </action>
   <action name="actionShow_Waves">
    <property name="text">
-    <string>Show Waves</string>
+    <string>Print Waves</string>
    </property>
   </action>
   <action name="actionEdit_Figure">
@@ -128,10 +128,7 @@
   </action>
   <action name="actionShow_Figures">
    <property name="text">
-    <string>Show Figures</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F</string>
+    <string>Print Figures</string>
    </property>
   </action>
   <action name="actionSave_Project">
@@ -162,7 +159,7 @@
   </action>
   <action name="actionShow_CWD">
    <property name="text">
-    <string>Show CWD</string>
+    <string>Print CWD</string>
    </property>
   </action>
  </widget>

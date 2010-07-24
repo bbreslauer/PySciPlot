@@ -113,7 +113,7 @@ class ManageWavesDialog(Module):
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionManageWavesDialog")
-        self.menuEntry.setShortcut("Ctrl+V")
+        self.menuEntry.setShortcut("Ctrl+W")
         self.menuEntry.setText("Manage Waves")
         self.menuEntry.triggered.connect(self.window.show)
         self.menu = vars(self._app.ui)["menuData"]

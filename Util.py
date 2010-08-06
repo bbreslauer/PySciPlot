@@ -19,6 +19,7 @@ def setWidgetValue(widget, value):
                     'QColorButton':   'widget.setColor(value)',
                     'QCheckBox':      'widget.setChecked(value)',
                     'QComboBox':      'widget.setCurrentIndex(widget.findText(str(value)))',
+                    'QGroupBox':      'widget.setChecked(value)',
                     'QButtonGroup':   'pass',
                  }
 
@@ -45,6 +46,7 @@ def getWidgetValue(widget):
                     'QColorButton':   'str(widget.text())',
                     'QCheckBox':      'widget.isChecked()',
                     'QComboBox':      'str(widget.currentText())',
+                    'QGroupBox':      'widget.isChecked()',
                     'QButtonGroup':   'str(widget.checkedButton().text())',
                  }
 
@@ -74,6 +76,26 @@ def goodTextColor(backgroundColor):
         return "#ffffff"
 
 
+def frange(start, end=None, inc=None):
+    "A range function, that does accept float increments."
 
+    if end == None:
+        end = start + 0.0
+        start = 0.0
+    else: start += 0.0 # force it to be a float
+
+    if inc == None:
+        inc = 1.0
+
+    count = int((end - start) / inc)
+    if start + count * inc != end:
+        # count is always one short
+        count += 1
+
+    L = [None,] * count
+    for i in xrange(count):
+        L[i] = start + i * inc
+
+    return L
 
 

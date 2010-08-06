@@ -3,7 +3,7 @@
 # convert all ui files to py source code
 for file in `ls *.ui`
 do
-    ~/usr/local/bin/pyuic4 -o ${file}.py ${file}
+    pyuic4 -o ${file}.py ${file}
     
     # remove all connectSlotsByName entries in py files
     sed '/connectSlotsByName/d' ${file}.py > ${file}.py.new

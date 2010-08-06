@@ -1,4 +1,4 @@
-#!/home/ben/usr/local/bin/python
+#!/usr/bin/python
 
 import sys, string, signal, os, re, time
 

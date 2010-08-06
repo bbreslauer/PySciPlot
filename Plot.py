@@ -2,7 +2,9 @@ from PyQt4.QtCore import QObject, pyqtSignal
 
 from pylab import nan
 from matplotlib.axes import Axes
+from matplotlib import ticker
 
+import Util
 from Waves import Waves
 from Wave import Wave
 from Trace import Trace
@@ -24,6 +26,10 @@ class Plot(QObject):
                     'plotBottomAxisAutoscale':  { 'default': True },
                     'plotBottomAxisMinimum':    { 'default': -10 },
                     'plotBottomAxisMaximum':    { 'default': 10 },
+                    'plotBottomAxisScaleType':  { 'default': 'Linear' },
+                    'plotBottomAxisTicks':      { 'default': True },
+                    'plotBottomAxisMajorTicks': { 'default': 5 },
+                    'plotBottomAxisMinorTicks': { 'default': 3 },
                     'plotLeftAxisAutoscale':    { 'default': True },
                     'plotLeftAxisMinimum':      { 'default': -10 },
                     'plotLeftAxisMaximum':      { 'default': 10 },
@@ -144,6 +150,21 @@ class Plot(QObject):
         if not self.get('plotLeftAxisAutoscale'):
             self._axes.set_ylim(self.get('plotLeftAxisMinimum'), self.get('plotLeftAxisMaximum'))
 
+        # Set axis scaling 
+        
+        
+        # Set ticks
+        xaxis = self._axes.get_xaxis()
+        if self.get('plotBottomAxisTicks'):
+            [minorTicks, majorTicks] = self.getTickValues('bottom')
+            xaxis.set_major_locator(ticker.FixedLocator(majorTicks))
+            xaxis.set_major_formatter(ticker.ScalarFormatter())
+            xaxis.set_minor_locator(ticker.FixedLocator(minorTicks))
+            xaxis.set_minor_formatter(ticker.NullFormatter())
+        else:
+            xaxis.set_major_locator(ticker.NullLocator())
+            xaxis.set_minor_locator(ticker.NullLocator())
+
         if drawBool:
             self._figure._canvas.draw()
 
@@ -152,6 +173,30 @@ class Plot(QObject):
     def removeTrace(self, trace):
         self._traces.remove(trace)
         self.traceRemoved.emit()
+
+    def getTickValues(self, axisName):
+        """
+        Returns a tuple with two list, the major and minor tick locations.
+        """
+
+        if axisName == 'bottom':
+            [axisMin, axisMax] = self._axes.get_xlim()
+            majorTicksNum = self.get('plotBottomAxisMajorTicks')
+            minorTicksNum = self.get('plotBottomAxisMinorTicks')
+
+        majorStepSize = (axisMax - axisMin) / majorTicksNum
+        majorTicks = Util.frange(axisMin, axisMax, majorStepSize)
+
+        minorStepSize = majorStepSize / minorTicksNum
+        minorTicks = Util.frange(axisMin, axisMax, minorStepSize)
+
+        return [majorTicks, minorTicks]
+
+######
+# Working on tick marks right now
+######
+
+
 
 
 

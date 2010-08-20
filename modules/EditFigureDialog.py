@@ -123,6 +123,9 @@ class EditFigureDialog(Module):
         self._ui.figureSettingsSave.clicked.connect(self.saveFigureSettings)
         self._ui.figureSettingsLoad.clicked.connect(self.loadFigureSettings)
 
+        self._ui.traceSettingsSave.clicked.connect(self.saveTraceSettings)
+        self._ui.traceSettingsLoad.clicked.connect(self.loadTraceSettings)
+
         self._ui.plotBottomAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotLeftAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotTopAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
@@ -514,6 +517,34 @@ class EditFigureDialog(Module):
         if fileName != "":
             FigureSettings.loadSettings(fileName, self)
 
+    def saveTraceSettings(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Save Trace Settings")
+        fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
+        fileDialog.setDefaultSuffix("pspt")
+        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+
+        # Save current working directory
+        self._app.cwd = str(fileDialog.directory().absolutePath())
+
+        if fileName != "":
+            TraceSettings.writeSettings(fileName, self)
+
+    def loadTraceSettings(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Load Trace Settings")
+        fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
+        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+        
+        # Save current working directory
+        self._app.cwd = str(fileDialog.directory().absolutePath())
+
+        if fileName != "":
+            TraceSettings.loadSettings(fileName, self)
+
+
 
 
     """Module-required methods"""
@@ -615,6 +646,61 @@ class FigureSettings():
             for widgetName in figureDialog.widgets.keys():
                 if figureDialog.widgets[widgetName]['object'] == 'figure':
                     figureDialog.setUiValue(widgetName, config.get('Figure', str(widgetName)))
+
+
+class TraceSettings():
+    """
+    Save/Load trace settings to/from a file.
+    """
+
+    @staticmethod
+    def collectSettings(config, figureDialog):
+        """
+        Pull all of the settings into a ConfigParser class, but do not
+        write them out yet.  This allows us to collect a whole bunch of 
+        settings and just write them out once.
+        """
+
+        for widgetName in figureDialog.widgets.keys():
+            if figureDialog.widgets[widgetName]['object'] == 'trace':
+                config.set('Trace', str(widgetName), str(figureDialog.getUiValue(widgetName)))
+        return config
+
+    @staticmethod
+    def writeSettings(fileName, figureDialog):
+        """
+        Write all the trace settings to a file.
+        """
+
+        # Verify that the file is actually a file or does not exist
+        if os.path.isfile(fileName) or not os.path.exists(fileName):
+            config = ConfigParser.SafeConfigParser()
+            config.optionxform = str
+            config.add_section('Application')
+            config.set('Application', 'pysciplot_version', '1')
+            config.add_section('Trace')
+            
+            config = TraceSettings.collectSettings(config, figureDialog)
+    
+            with open(fileName, 'wb') as configFile:
+                config.write(configFile)
+
+    
+    @staticmethod
+    def loadSettings(fileName, figureDialog):
+        """
+        Load the trace settings from a file.
+        """
+
+        if os.path.isfile(fileName):
+            config = ConfigParser.SafeConfigParser()
+            config.optionxform = str
+            config.read(fileName)
+            version = config.get('Application', 'pysciplot_version')
+
+            for widgetName in figureDialog.widgets.keys():
+                if figureDialog.widgets[widgetName]['object'] == 'trace':
+                    figureDialog.setUiValue(widgetName, config.get('Trace', str(widgetName)))
 
 
 

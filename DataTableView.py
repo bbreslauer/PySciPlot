@@ -11,7 +11,6 @@ class DataTableView(QTableView):
     This is the actual view for the DataTableModel.
 
     Signals that are emitted from this class are:
-        test
     """
 
     # Signals
@@ -210,18 +209,31 @@ class DataTableView(QTableView):
     def keyPressEvent(self, event):
         """Capture certain types of keypress events and handle them different ways."""
         # When data has been edited, move to the next row in the column and continue editing.
-        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            currentIndex = self.currentIndex()
-            newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
-            self.setCurrentIndex(newIndex)
-            self.edit(newIndex)
-            self.setCurrentIndex(newIndex)
+        currentIndex = self.currentIndex()
+
+        print "row: " + str(currentIndex.row()) + ", col: " + str(currentIndex.column())
+
+        if currentIndex.isValid():
+            if self.state() == QAbstractItemView.EditingState:
+                if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+                    newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
+                    self.setCurrentIndex(newIndex)
+                    self.edit(newIndex)
+                    self.setCurrentIndex(newIndex)
+                    return
+                elif event.key() == Qt.Key_Up:
+                    newIndex = self.model().createIndex(currentIndex.row() - 1, currentIndex.column())
+                    #print "nrow: " + str(newIndex.row()) + ", ncol: " + str(newIndex.column())
+                    #self.setCurrentIndex(newIndex)
+                    self.setState(QAbstractItemView.NoState)
+                elif event.key() == Qt.Key_Down:
+                    newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
+                    #print "nrow: " + str(newIndex.row()) + ", ncol: " + str(newIndex.column())
+                    #self.setCurrentIndex(newIndex)
+                    self.setState(QAbstractItemView.NoState)
         
-        # Do something else
-        elif event.key() == Qt.Key_Return:
-            pass
-        else:
-            QTableView.keyPressEvent(self, event)
+        # Nothing found, so resort to default behavior
+        QTableView.keyPressEvent(self, event)
 
     # Helper function for debugging 
     def printAllHeaders(self,  logicalIndex):

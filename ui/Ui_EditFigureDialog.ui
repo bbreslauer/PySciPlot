@@ -154,7 +154,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="figureTab">
       <property name="sizePolicy">
@@ -1603,6 +1603,20 @@ color: rgb(255, 255, 255);</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="6" column="2" colspan="2">
+           <widget class="QPushButton" name="traceSettingsLoad">
+            <property name="text">
+             <string>Load Trace Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QPushButton" name="traceSettingsSave">
+            <property name="text">
+             <string>Save Trace Settings</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

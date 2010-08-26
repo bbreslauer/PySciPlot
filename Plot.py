@@ -20,23 +20,26 @@ class Plot(QObject):
 
     # Properties
     properties = {
-                    'plotNum':                  { 'default': 1 },
-                    'plotName':                 { 'default': '' },
-                    'plotBackgroundColor':      { 'default': '#ffffff' },
-                    'plotBottomAxisAutoscale':  { 'default': True },
-                    'plotBottomAxisMinimum':    { 'default': -10 },
-                    'plotBottomAxisMaximum':    { 'default': 10 },
-                    'plotBottomAxisScaleType':  { 'default': 'Linear' },
-                    'plotBottomAxisTicks':      { 'default': True },
-                    'plotBottomAxisMajorTicks': { 'default': 5 },
-                    'plotBottomAxisMinorTicks': { 'default': 3 },
-                    'plotLeftAxisAutoscale':    { 'default': True },
-                    'plotLeftAxisMinimum':      { 'default': -10 },
-                    'plotLeftAxisMaximum':      { 'default': 10 },
-                    'plotTopAxisVisible':       { 'default': True },
-                    'plotLeftAxisVisible':      { 'default': True },
-                    'plotBottomAxisVisible':    { 'default': True },
-                    'plotRightAxisVisible':     { 'default': True },
+                    'plotNum':                         { 'default': 1 },
+                    'plotName':                        { 'default': '' },
+                    'plotBackgroundColor':             { 'default': '#ffffff' },
+                    'plotBottomAxisAutoscale':         { 'default': True },
+                    'plotBottomAxisMinimum':           { 'default': -10 },
+                    'plotBottomAxisMaximum':           { 'default': 10 },
+                    'plotBottomAxisScaleType':         { 'default': 'Linear' },
+                    'plotBottomAxisTicks':             { 'default': True },
+                    'plotBottomAxisMajorTicksNumber':  { 'default': 5 },
+                    'plotBottomAxisMajorTicksSpacing': { 'default': 2 },
+                    'plotBottomAxisMinorTicksNumber':  { 'default': 3 },
+                    'plotBottomAxisUseTickSpacing':    { 'default': False },
+                    'plotBottomAxisUseTickNumber':     { 'default': True },
+                    'plotLeftAxisAutoscale':           { 'default': True },
+                    'plotLeftAxisMinimum':             { 'default': -10 },
+                    'plotLeftAxisMaximum':             { 'default': 10 },
+                    'plotTopAxisVisible':              { 'default': True },
+                    'plotLeftAxisVisible':             { 'default': True },
+                    'plotBottomAxisVisible':           { 'default': True },
+                    'plotRightAxisVisible':            { 'default': True },
                  }
 
     def __init__(self, figure, plotNum, plotName=""):
@@ -156,11 +159,31 @@ class Plot(QObject):
         # Set ticks
         xaxis = self._axes.get_xaxis()
         if self.get('plotBottomAxisTicks'):
-            [minorTicks, majorTicks] = self.getTickValues('bottom')
-            xaxis.set_major_locator(ticker.FixedLocator(majorTicks))
-            xaxis.set_major_formatter(ticker.ScalarFormatter())
-            xaxis.set_minor_locator(ticker.FixedLocator(minorTicks))
-            xaxis.set_minor_formatter(ticker.NullFormatter())
+
+            # Set major ticks
+            xaxis.set_major_formatter(ticker.FormatStrFormatter('%.2f'))
+            
+            if self.get('plotBottomAxisUseTickNumber'):
+                # User has defined how many major tick marks to display
+                majorTicksNum = self.get('plotBottomAxisMajorTicksNumber')
+                xaxis.set_major_locator(ticker.LinearLocator(majorTicksNum))
+                
+                # The minor ticks option defines how many ticks between each pair of major ticks
+                # Therefore, we need to calculate how many total minor ticks there will be
+                # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
+                minorTicksNum = (self.get('plotBottomAxisMinorTicksNumber') + 1) * (len(xaxis.get_major_ticks()) - 1) + 1
+                xaxis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
+                xaxis.set_minor_formatter(ticker.NullFormatter())
+            else:
+                # User has defined the spacing between major tick marks
+                xaxis.set_major_locator(ticker.MultipleLocator(self.get('plotBottomAxisMajorTicksSpacing')))
+                
+                # We need to set the minor ticks by spacing instead of number because they will be offset if (axis_max - axis_min) / major_tick_num is not an integer
+                minorTicksSpacing = float(self.get('plotBottomAxisMajorTicksSpacing')) / float((self.get('plotBottomAxisMinorTicksNumber') + 1))
+                xaxis.set_minor_locator(ticker.MultipleLocator(minorTicksSpacing))
+                xaxis.set_minor_formatter(ticker.NullFormatter())
+                        
+
         else:
             xaxis.set_major_locator(ticker.NullLocator())
             xaxis.set_minor_locator(ticker.NullLocator())
@@ -173,24 +196,6 @@ class Plot(QObject):
     def removeTrace(self, trace):
         self._traces.remove(trace)
         self.traceRemoved.emit()
-
-    def getTickValues(self, axisName):
-        """
-        Returns a tuple with two list, the major and minor tick locations.
-        """
-
-        if axisName == 'bottom':
-            [axisMin, axisMax] = self._axes.get_xlim()
-            majorTicksNum = self.get('plotBottomAxisMajorTicks')
-            minorTicksNum = self.get('plotBottomAxisMinorTicks')
-
-        majorStepSize = (axisMax - axisMin) / majorTicksNum
-        majorTicks = Util.frange(axisMin, axisMax, majorStepSize)
-
-        minorStepSize = majorStepSize / minorTicksNum
-        minorTicks = Util.frange(axisMin, axisMax, minorStepSize)
-
-        return [majorTicks, minorTicks]
 
 ######
 # Working on tick marks right now

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>618</width>
-    <height>500</height>
+    <width>617</width>
+    <height>592</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -154,7 +154,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="figureTab">
       <property name="sizePolicy">
@@ -354,18 +354,27 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QPushButton" name="figureSettingsSave">
-         <property name="text">
-          <string>Save Figure Settings</string>
+       <item row="8" column="0" rowspan="2" colspan="3">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Save/Load</string>
          </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QPushButton" name="figureSettingsLoad">
-         <property name="text">
-          <string>Load Figure Settings</string>
-         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QPushButton" name="figureSettingsSave">
+            <property name="text">
+             <string>Save Figure Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="figureSettingsLoad">
+            <property name="text">
+             <string>Load Figure Settings</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -392,7 +401,7 @@
       <attribute name="title">
        <string>Plots</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
        <item>
         <widget class="QGroupBox" name="plotOptionsGroupBox">
          <property name="sizePolicy">
@@ -424,7 +433,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0" colspan="2">
+          <item row="5" column="0" colspan="2">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -614,12 +623,60 @@ background-color: rgb(255, 255, 255);</string>
                 <property name="checked">
                  <bool>true</bool>
                 </property>
-                <layout class="QGridLayout" name="gridLayout_11">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
+                <layout class="QGridLayout" name="gridLayout_21">
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QGroupBox" name="groupBox_12">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="title">
                     <string>Major Ticks</string>
                    </property>
+                   <property name="flat">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_20">
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="plotBottomAxisMajorTicksSpacing">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="value">
+                       <double>2.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="plotBottomAxisUseTickSpacing">
+                      <property name="text">
+                       <string>Spacing between</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QSpinBox" name="plotBottomAxisMajorTicksNumber">
+                      <property name="value">
+                       <number>5</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="plotBottomAxisUseTickNumber">
+                      <property name="text">
+                       <string>Number of</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                  <item row="1" column="0">
@@ -629,15 +686,8 @@ background-color: rgb(255, 255, 255);</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="plotBottomAxisMajorTicks">
-                   <property name="value">
-                    <number>5</number>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="1">
-                  <widget class="QSpinBox" name="plotBottomAxisMinorTicks">
+                  <widget class="QSpinBox" name="plotBottomAxisMinorTicksNumber">
                    <property name="value">
                     <number>3</number>
                    </property>
@@ -974,6 +1024,43 @@ background-color: rgb(255, 255, 255);</string>
          </layout>
         </widget>
        </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_10">
+         <property name="title">
+          <string>Save/Load</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Save Plot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Load Plot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>Include Trace Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="checkBox_2">
+            <property name="text">
+             <string>Include Trace Data</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="traceTab">
@@ -992,7 +1079,7 @@ background-color: rgb(255, 255, 255);</string>
       <attribute name="title">
        <string>Traces</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0">
        <item>
         <widget class="QGroupBox" name="tracesGroupBox">
          <property name="sizePolicy">
@@ -1604,18 +1691,53 @@ color: rgb(255, 255, 255);</string>
             </property>
            </spacer>
           </item>
-          <item row="6" column="2" colspan="2">
-           <widget class="QPushButton" name="traceSettingsLoad">
-            <property name="text">
-             <string>Load Trace Settings</string>
+          <item row="6" column="0" colspan="5">
+           <widget class="QGroupBox" name="groupBox_9">
+            <property name="title">
+             <string>Save/Load</string>
             </property>
+            <layout class="QGridLayout" name="gridLayout_7">
+             <item row="2" column="1" colspan="2">
+              <widget class="QPushButton" name="traceSave">
+               <property name="text">
+                <string>Save Trace</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QRadioButton" name="traceSaveOptions">
+               <property name="text">
+                <string>Currently-selected Options</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QRadioButton" name="traceSaveDataOptions">
+               <property name="text">
+                <string>Data and Options</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="traceSettingsSave">
-            <property name="text">
-             <string>Save Trace Settings</string>
+          <item row="7" column="0" colspan="5">
+           <widget class="QGroupBox" name="groupBox_11">
+            <property name="title">
+             <string>Load</string>
             </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QPushButton" name="traceLoad">
+               <property name="text">
+                <string>Load Trace</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>

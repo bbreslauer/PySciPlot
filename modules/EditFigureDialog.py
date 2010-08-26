@@ -1,4 +1,4 @@
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, QObject
 from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox, QColor, QColorDialog, QFileDialog
 
 import ConfigParser, os
@@ -24,35 +24,38 @@ class EditFigureDialog(Module):
     # the value is a dict with the following parameters
     #   - 'object' = figure, plot, trace
     #       which object this widget applies to
-    widgets = { 'plotName':                     { 'object': 'plot'   },
-                'plotBackgroundColor':          { 'object': 'plot'   },
-                'plotBottomAxisAutoscale':      { 'object': 'plot'   },
-                'plotBottomAxisMinimum':        { 'object': 'plot'   },
-                'plotBottomAxisMaximum':        { 'object': 'plot'   },
-                'plotBottomAxisScaleType':      { 'object': 'plot'   },
-                'plotBottomAxisTicks':          { 'object': 'plot'   },
-                'plotBottomAxisMajorTicks':     { 'object': 'plot'   },
-                'plotBottomAxisMinorTicks':     { 'object': 'plot'   },
-                'plotLeftAxisAutoscale':        { 'object': 'plot'   },
-                'plotLeftAxisMinimum':          { 'object': 'plot'   },
-                'plotLeftAxisMaximum':          { 'object': 'plot'   },
-                'plotTopAxisVisible':           { 'object': 'plot'   },
-                'plotLeftAxisVisible':          { 'object': 'plot'   },
-                'plotBottomAxisVisible':        { 'object': 'plot'   },
-                'plotRightAxisVisible':         { 'object': 'plot'   },
-                'figureName':                   { 'object': 'figure' },
-                'figureTitle':                  { 'object': 'figure' },
-                'figureRows':                   { 'object': 'figure' },
-                'figureColumns':                { 'object': 'figure' },
-                'figureBackgroundColor':        { 'object': 'figure' },
-                'traceLineStyle':               { 'object': 'trace'  },
-                'tracePointMarker':             { 'object': 'trace'  },
-                'traceLineColor':               { 'object': 'trace'  },
-                'traceLineWidth':               { 'object': 'trace'  },
-                'tracePointMarkerEdgeColor':    { 'object': 'trace'  },
-                'tracePointMarkerFaceColor':    { 'object': 'trace'  },
-                'tracePointMarkerEdgeWidth':    { 'object': 'trace'  },
-                'tracePointMarkerSize':         { 'object': 'trace'  },
+    widgets = { 'plotName':                           { 'object': 'plot'   },
+                'plotBackgroundColor':                { 'object': 'plot'   },
+                'plotBottomAxisAutoscale':            { 'object': 'plot'   },
+                'plotBottomAxisMinimum':              { 'object': 'plot'   },
+                'plotBottomAxisMaximum':              { 'object': 'plot'   },
+                'plotBottomAxisScaleType':            { 'object': 'plot'   },
+                'plotBottomAxisTicks':                { 'object': 'plot'   },
+                'plotBottomAxisMajorTicksNumber':     { 'object': 'plot'   },
+                'plotBottomAxisMajorTicksSpacing':    { 'object': 'plot'   },
+                'plotBottomAxisMinorTicksNumber':     { 'object': 'plot'   },
+                'plotBottomAxisUseTickSpacing':       { 'object': 'plot'   },
+                'plotBottomAxisUseTickNumber':        { 'object': 'plot'   },
+                'plotLeftAxisAutoscale':              { 'object': 'plot'   },
+                'plotLeftAxisMinimum':                { 'object': 'plot'   },
+                'plotLeftAxisMaximum':                { 'object': 'plot'   },
+                'plotTopAxisVisible':                 { 'object': 'plot'   },
+                'plotLeftAxisVisible':                { 'object': 'plot'   },
+                'plotBottomAxisVisible':              { 'object': 'plot'   },
+                'plotRightAxisVisible':               { 'object': 'plot'   },
+                'figureName':                         { 'object': 'figure' },
+                'figureTitle':                        { 'object': 'figure' },
+                'figureRows':                         { 'object': 'figure' },
+                'figureColumns':                      { 'object': 'figure' },
+                'figureBackgroundColor':              { 'object': 'figure' },
+                'traceLineStyle':                     { 'object': 'trace'  },
+                'tracePointMarker':                   { 'object': 'trace'  },
+                'traceLineColor':                     { 'object': 'trace'  },
+                'traceLineWidth':                     { 'object': 'trace'  },
+                'tracePointMarkerEdgeColor':          { 'object': 'trace'  },
+                'tracePointMarkerFaceColor':          { 'object': 'trace'  },
+                'tracePointMarkerEdgeWidth':          { 'object': 'trace'  },
+                'tracePointMarkerSize':               { 'object': 'trace'  },
                 }
 
 
@@ -103,6 +106,7 @@ class EditFigureDialog(Module):
         self._ui.plotBottomAxisMinimum.setMaximum(1.7E308)
         self._ui.plotBottomAxisMaximum.setMinimum(-1.7E308)
         self._ui.plotBottomAxisMaximum.setMaximum(1.7E308)
+        self._ui.plotBottomAxisMajorTicksSpacing.setMaximum(1.7E308)
         self._ui.plotLeftAxisMinimum.setMinimum(-1.7E308)
         self._ui.plotLeftAxisMinimum.setMaximum(1.7E308)
         self._ui.plotLeftAxisMaximum.setMinimum(-1.7E308)
@@ -123,13 +127,16 @@ class EditFigureDialog(Module):
         self._ui.figureSettingsSave.clicked.connect(self.saveFigureSettings)
         self._ui.figureSettingsLoad.clicked.connect(self.loadFigureSettings)
 
-        self._ui.traceSettingsSave.clicked.connect(self.saveTraceSettings)
-        self._ui.traceSettingsLoad.clicked.connect(self.loadTraceSettings)
+        self._ui.traceSave.clicked.connect(self.saveTrace)
+        self._ui.traceLoad.clicked.connect(self.loadTrace)
 
         self._ui.plotBottomAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotLeftAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotTopAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotRightAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
+
+        self._ui.plotBottomAxisUseTickSpacing.clicked.connect(self.plotUi_axisMajorTicksToggled)
+        self._ui.plotBottomAxisUseTickNumber.clicked.connect(self.plotUi_axisMajorTicksToggled)
 
 
         def createFigure():
@@ -362,14 +369,32 @@ class EditFigureDialog(Module):
         Toggle enabled/disabled status of min/max fields for plot axes.
         """
 
-        self._ui.plotBottomAxisMinimum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
-        self._ui.plotBottomAxisMaximum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
-        self._ui.plotLeftAxisMinimum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
-        self._ui.plotLeftAxisMaximum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
-        self._ui.plotTopAxisMinimum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
-        self._ui.plotTopAxisMaximum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
-        self._ui.plotRightAxisMinimum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
-        self._ui.plotRightAxisMaximum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
+        if self._widget.sender() is self._ui.plotBottomAxisAutoscale:
+            self._ui.plotBottomAxisMinimum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
+            self._ui.plotBottomAxisMaximum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
+        elif self._widget.sender() is self._ui.plotLeftAxisAutoscale:
+            self._ui.plotLeftAxisMinimum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
+            self._ui.plotLeftAxisMaximum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
+        elif self._widget.sender() is self._ui.plotTopAxisAutoscale:
+            self._ui.plotTopAxisMinimum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
+            self._ui.plotTopAxisMaximum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
+        elif self._widget.sender() is self._ui.plotRightAxisAutoscale:
+            self._ui.plotRightAxisMinimum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
+            self._ui.plotRightAxisMaximum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
+
+    def plotUi_axisMajorTicksToggled(self, checked):
+        """
+        Toggle enabled/disabled status of major tick options.
+        """
+
+        if self._widget.sender() is self._ui.plotBottomAxisUseTickSpacing:
+            self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(True)
+            self._ui.plotBottomAxisMajorTicksNumber.setEnabled(False)
+        elif self._widget.sender() is self._ui.plotBottomAxisUseTickNumber:
+            self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(False)
+            self._ui.plotBottomAxisMajorTicksNumber.setEnabled(True)
+
+
 
     def traceObject_updateAttributes(self, traces=None):
         updateBool = False
@@ -517,8 +542,8 @@ class EditFigureDialog(Module):
         if fileName != "":
             FigureSettings.loadSettings(fileName, self)
 
-    def saveTraceSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Save Trace Settings")
+    def saveTrace(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Save Trace")
         fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
         fileDialog.setDefaultSuffix("pspt")
         fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
@@ -529,10 +554,11 @@ class EditFigureDialog(Module):
         self._app.cwd = str(fileDialog.directory().absolutePath())
 
         if fileName != "":
-            TraceSettings.writeSettings(fileName, self)
+            optionsOnly = Util.getWidgetValue(self._ui.traceSaveOptions)
+            TraceSave.writeSettings(fileName, self, optionsOnly)
 
-    def loadTraceSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Load Trace Settings")
+    def loadTrace(self):
+        fileDialog = QFileDialog(self._app.ui.workspace, "Load Trace")
         fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
         fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
         fileDialog.exec_()
@@ -542,7 +568,7 @@ class EditFigureDialog(Module):
         self._app.cwd = str(fileDialog.directory().absolutePath())
 
         if fileName != "":
-            TraceSettings.loadSettings(fileName, self)
+            TraceSave.loadSettings(fileName, self)
 
 
 
@@ -648,7 +674,7 @@ class FigureSettings():
                     figureDialog.setUiValue(widgetName, config.get('Figure', str(widgetName)))
 
 
-class TraceSettings():
+class TraceSave():
     """
     Save/Load trace settings to/from a file.
     """
@@ -667,9 +693,12 @@ class TraceSettings():
         return config
 
     @staticmethod
-    def writeSettings(fileName, figureDialog):
+    def writeSettings(fileName, figureDialog, optionsOnly):
         """
         Write all the trace settings to a file.
+
+        The optionsOnly argument indicates whether to save only the options, or the options
+        and the data.
         """
 
         # Verify that the file is actually a file or does not exist
@@ -680,7 +709,7 @@ class TraceSettings():
             config.set('Application', 'pysciplot_version', '1')
             config.add_section('Trace')
             
-            config = TraceSettings.collectSettings(config, figureDialog)
+            config = TraceSave.collectSettings(config, figureDialog)
     
             with open(fileName, 'wb') as configFile:
                 config.write(configFile)

@@ -52,8 +52,16 @@
      </property>
      <addaction name="separator"/>
     </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <addaction name="actionData"/>
+     <addaction name="actionPlot"/>
+    </widget>
     <addaction name="menuNew"/>
     <addaction name="menuImport"/>
+    <addaction name="menuExport"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
     <addaction name="separator"/>
@@ -160,6 +168,16 @@
   <action name="actionShow_CWD">
    <property name="text">
     <string>Print CWD</string>
+   </property>
+  </action>
+  <action name="actionData">
+   <property name="text">
+    <string>Data</string>
+   </property>
+  </action>
+  <action name="actionPlot">
+   <property name="text">
+    <string>Plot</string>
    </property>
   </action>
  </widget>

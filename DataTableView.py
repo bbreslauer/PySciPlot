@@ -211,7 +211,7 @@ class DataTableView(QTableView):
         # When data has been edited, move to the next row in the column and continue editing.
         currentIndex = self.currentIndex()
 
-        print "row: " + str(currentIndex.row()) + ", col: " + str(currentIndex.column())
+        #print "row: " + str(currentIndex.row()) + ", col: " + str(currentIndex.column())
 
         if currentIndex.isValid():
             if self.state() == QAbstractItemView.EditingState:

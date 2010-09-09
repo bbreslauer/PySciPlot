@@ -1,5 +1,7 @@
 # Functions for saving to files
 
+from PyQt4.QtGui import QMdiArea
+
 import xml.dom.minidom
 
 
@@ -19,9 +21,10 @@ def writeProjectToFile(app, fileName):
     dom.appendChild(p)
     p.setAttribute("version", str(app._version))
 
+    appWindowList = app.ui.workspace.subWindowList(QMdiArea.StackingOrder)
     getWaves(app, dom)
-    getTables(app, dom)
-    getFigures(app, dom)
+    getTables(app, dom, appWindowList)
+    getFigures(app, dom, appWindowList)
 
     fileHandle = open(fileName, "w")
     dom.writexml(fileHandle, indent='', addindent='  ', newl='\n')
@@ -97,7 +100,7 @@ def getWave(app, dom, waves, waveObj):
 
     data.appendChild(dom.createTextNode(str(dataString)))
 
-def getTables(app, dom, tablesList=[]):
+def getTables(app, dom, appWindowList, tablesList=[]):
     """
     Get tables and put them into the xml document.  We only store
     the names of the waves in the table.
@@ -105,6 +108,9 @@ def getTables(app, dom, tablesList=[]):
     app is the pysciplot application.
 
     dom is the main dom object.
+
+    appWindowList is a list of the windows in the mdi area, so that we
+    can determine the order of the windows.
     
     tablesList is a list of table objects to export.  If tablesList is
     empty, then get all the tables.
@@ -121,13 +127,14 @@ def getTables(app, dom, tablesList=[]):
         windows = app.ui.workspace.subWindowList()
 
         for window in windows:
-            if type(window.widget()).__name__ == "DataTableView":
-                tablesList.append(window.widget())
+            print type(window).__name__
+            if type(window).__name__ == "DataTableSubWindow":
+                tablesList.append(window)
 
     for table in tablesList:
-        getTable(app, dom, tables, table)
+        getTable(app, dom, appWindowList, tables, table)
 
-def getTable(app, dom, tables, tableObj):
+def getTable(app, dom, appWindowList, tables, tableObj):
     """
     Convert a table object into xml.
 
@@ -142,16 +149,24 @@ def getTable(app, dom, tables, tableObj):
 
     table = dom.createElement("table")
     tableName = dom.createElement("name")
-    tableName.appendChild(dom.createTextNode(str(tableObj.name())))
+    tableName.appendChild(dom.createTextNode(str(tableObj.widget().name())))
     table.appendChild(tableName)
 
-    for waveObj in tableObj.model().waves().waves():
+    # Get attributes of the window
+    table.setAttribute("stackingOrder", str(appWindowList.index(tableObj)))
+    table.setAttribute("windowState", str(int(tableObj.windowState())))
+    table.setAttribute("width", str(tableObj.width()))
+    table.setAttribute("height", str(tableObj.height()))
+    table.setAttribute("xpos", str(tableObj.x()))
+    table.setAttribute("ypos", str(tableObj.y()))
+
+    for waveObj in tableObj.widget().model().waves().waves():
         wave = dom.createElement("wave")
         wave.appendChild(dom.createTextNode(str(waveObj.name())))
         table.appendChild(wave)
     tables.appendChild(table)
 
-def getFigures(app, dom, figuresList=[]):
+def getFigures(app, dom, appWindowList, figuresList=[]):
     """
     Get figures and put them into the xml document.
 
@@ -159,6 +174,9 @@ def getFigures(app, dom, figuresList=[]):
 
     dom is the main dom object.
 
+    appWindowList is a list of the windows in the mdi area, so that we
+    can determine the order of the windows.
+    
     figuresList is a list of figure objects to export.  If figuresList is
     empty, then get all the figures in the app.
     """
@@ -175,9 +193,9 @@ def getFigures(app, dom, figuresList=[]):
         figuresList = app.figures().figures()
 
     for figure in figuresList:
-        getFigure(app, dom, figures, figure)
+        getFigure(app, dom, appWindowList, figures, figure)
 
-def getFigure(app, dom, figures, figureObj):
+def getFigure(app, dom, appWindowList, figures, figureObj):
     """
     Convert a figure object into xml.
 
@@ -185,12 +203,23 @@ def getFigure(app, dom, figures, figureObj):
 
     dom is the main dom object.
 
+    appWindowList is a list of the windows in the mdi area, so that we
+    can determine the order of the windows.
+    
     figures is the dom object for holding all the figures.
 
     figureObj is the figure object that we are converting.
     """
 
     figure = dom.createElement("figure")
+
+    # Get attributes of the window
+    figure.setAttribute("stackingOrder", str(appWindowList.index(figureObj._figureSubWindow)))
+    figure.setAttribute("windowState", str(int(figureObj._figureSubWindow.windowState())))
+    figure.setAttribute("width", str(figureObj._figureSubWindow.width()))
+    figure.setAttribute("height", str(figureObj._figureSubWindow.height()))
+    figure.setAttribute("xpos", str(figureObj._figureSubWindow.x()))
+    figure.setAttribute("ypos", str(figureObj._figureSubWindow.y()))
     
     # Get all the figure properties
     for propName in figureObj.properties.keys():

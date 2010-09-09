@@ -1,5 +1,7 @@
 from PyQt4.QtGui import QPushButton, QColor, QColorDialog
 
+from DialogSubWindow import DialogSubWindow
+
 import Util
 
 class QColorButton(QPushButton):
@@ -28,5 +30,13 @@ class QColorButton(QPushButton):
         newColor = QColorDialog.getColor(QColor(str(self.text())))
         if newColor.isValid():
             self.setColor(newColor)
+
+
+class DataTableSubWindow(DialogSubWindow):
+    pass
+
+class FigureSubWindow(DialogSubWindow):
+    pass
+
 
 

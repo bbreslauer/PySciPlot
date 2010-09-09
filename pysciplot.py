@@ -14,6 +14,7 @@ from Figures import Figures
 from TraceListEntry import TraceListEntry
 from DataTableView import DataTableView
 from DialogSubWindow import DialogSubWindow
+from Gui import DataTableSubWindow
 from Preferences import Preferences
 from models.FigureListModel import FigureListModel
 from models.WavesListModel import WavesListModel
@@ -107,7 +108,7 @@ class pysciplot(QMainWindow):
         """
 
         tableView = DataTableView(tableModel, self, "Table", self)
-        tableViewSubWindow = QMdiSubWindow()
+        tableViewSubWindow = DataTableSubWindow()
         tableViewSubWindow.setWidget(tableView)
         tableViewSubWindow.setAttribute(Qt.WA_DeleteOnClose)
         self.ui.workspace.addSubWindow(tableViewSubWindow)

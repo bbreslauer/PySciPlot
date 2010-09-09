@@ -9,7 +9,7 @@ from mpl_toolkits.axes_grid.axislines import Axes
 from Waves import Waves
 from Wave import Wave
 from Plot import Plot
-from DialogSubWindow import DialogSubWindow
+from Gui import FigureSubWindow
 
 class Figure(QObject):
     """
@@ -49,7 +49,7 @@ class Figure(QObject):
         # Graphical stuff
         self._figure = MPLFigure()
         self._canvas = FigureCanvas(self._figure)
-        self._figureSubWindow = DialogSubWindow(self._app.ui.workspace)
+        self._figureSubWindow = FigureSubWindow(self._app.ui.workspace)
         self._figureSubWindow.setWidget(self._canvas)
         self._app.ui.workspace.addSubWindow(self._figureSubWindow)
         self._canvas.setParent(self._figureSubWindow)

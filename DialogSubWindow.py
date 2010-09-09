@@ -3,7 +3,7 @@ from PyQt4.QtGui import QMdiSubWindow
 class DialogSubWindow(QMdiSubWindow):
     """A simple wrapper class to QMdiSubWindow."""
 
-    def __init__(self, parent=0):
+    def __init__(self, parent=None):
         QMdiSubWindow.__init__(self, parent)
         self.setParent(parent)
         self._parent = parent

@@ -460,7 +460,7 @@ class EditFigureDialog(Module):
         traceListModel = self._ui.traceTableView.model()
         traceListModel.clearData()
             
-        for trace in plot.getTraces():
+        for trace in plot.traces():
             traceListModel.addEntry(TraceListEntry(trace))
 
         traceListModel.doReset()

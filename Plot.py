@@ -94,7 +94,7 @@ class Plot(QObject):
         trace.propertyChanged.connect(self.refresh)
         return True
     
-    def getTraces(self):
+    def traces(self):
         return self._traces
 
     def numTraces(self):

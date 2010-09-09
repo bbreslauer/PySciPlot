@@ -223,10 +223,13 @@ class Wave(QObject):
         Currently, these conversions are:
         1) Remove leading and trailing spaces
         2) Replace all whitespace with underscores
+        3) Replace any <> with ()
         """
 
         waveName = waveName.strip()
         waveName = waveName.replace(" ","_")
+        waveName = waveName.replace("<","(")
+        waveName = waveName.replace(">",")")
         return waveName
 
     @staticmethod

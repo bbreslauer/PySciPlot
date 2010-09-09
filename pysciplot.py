@@ -6,6 +6,7 @@ from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDial
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant
 
+import Util, Save
 from Wave import Wave
 from Waves import Waves
 from Figure import Figure
@@ -32,6 +33,7 @@ class pysciplot(QMainWindow):
         self.ui.setupUi(self)
     
         # Variables
+        self._version = 1
         self._waves = Waves()
         self._figures = Figures()
         self._loadedModules = {}
@@ -195,7 +197,17 @@ class pysciplot(QMainWindow):
         Save the current project to a file which will be selected by the user.
         """
 
-        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", "/")
+        fileDialog = QFileDialog(self.ui.workspace, "Save Project")
+        fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
+        fileDialog.setDefaultSuffix("psp")
+        fileDialog.setConfirmOverwrite(True)
+        fileDialog.setDirectory(Util.fileDialogDirectory(self))
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+
+        print fileName
+        Save.writeProjectToFile(self, fileName)
+
 
     def saveProject(self):
         """
@@ -203,6 +215,11 @@ class pysciplot(QMainWindow):
         that location.
         """
         pass
+
+        
+
+
+
 
     def loadProject(self):
         pass

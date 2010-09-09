@@ -18,19 +18,19 @@ class Waves(QObject):
     waveRemoved = pyqtSignal(Wave)
     waveRenamed = pyqtSignal()
 
-    def __init__(self, wavesIn=[], keepWavesUnique=True):
+    def __init__(self, wavesIn=[], uniqueNames=True):
         """
         Initialize a waves.  Add the initial set of wave(s) to the list.
         
         wavesIn is a list of Wave objects to be populated in the Waves object.
-        keepWavesUnique determines whether the Wave objects in this Waves should have unique names.  Default is true.
+        uniqueNames determines whether the Wave objects in this Waves should have unique names.  Default is true.
         """
 
         QObject.__init__(self)
 
         self._waves = []
         
-        self._keepWavesUnique = keepWavesUnique
+        self._uniqueNames = uniqueNames
         for wave in wavesIn:
             self.addWave(wave)
 
@@ -43,6 +43,10 @@ class Waves(QObject):
     def waves(self):
         """Return the waves list."""
         return self._waves
+
+    def uniqueNames(self):
+        """Return uniqueNames variable."""
+        return self._uniqueNames
 
     def getWaveByName(self, name):
         """
@@ -93,7 +97,7 @@ class Waves(QObject):
 
         if name == "":
             return False
-        if self._keepWavesUnique:
+        if self._uniqueNames:
             return self.uniqueWaveName(name)
         return True
 
@@ -131,7 +135,7 @@ class Waves(QObject):
         Emits the waveAdded signal if the wave was added.
         """
 
-        if self._keepWavesUnique and not self.uniqueWave(wave):
+        if self._uniqueNames and not self.uniqueWave(wave):
             return False
         self._waves.insert(position, wave)
         wave.nameChanged.connect(self.emitWaveRenamed)

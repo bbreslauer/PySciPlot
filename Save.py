@@ -93,7 +93,7 @@ def getWave(app, dom, waves, waveObj):
     dataString = ""
     for element in dataList:
         if dataType == "String":
-            dataString += "\'" + str(element) + "\'"
+            dataString += str(element).encode('base64_codec')
         else:
             dataString += str(element)
         dataString += " "

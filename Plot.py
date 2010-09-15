@@ -20,26 +20,26 @@ class Plot(QObject):
 
     # Properties
     properties = {
-                    'plotNum':                         { 'default': 1 },
-                    'plotName':                        { 'default': '' },
-                    'plotBackgroundColor':             { 'default': '#ffffff' },
-                    'plotBottomAxisAutoscale':         { 'default': True },
-                    'plotBottomAxisMinimum':           { 'default': -10 },
-                    'plotBottomAxisMaximum':           { 'default': 10 },
-                    'plotBottomAxisScaleType':         { 'default': 'Linear' },
-                    'plotBottomAxisTicks':             { 'default': True },
-                    'plotBottomAxisMajorTicksNumber':  { 'default': 5 },
-                    'plotBottomAxisMajorTicksSpacing': { 'default': 2 },
-                    'plotBottomAxisMinorTicksNumber':  { 'default': 3 },
-                    'plotBottomAxisUseTickSpacing':    { 'default': False },
-                    'plotBottomAxisUseTickNumber':     { 'default': True },
-                    'plotLeftAxisAutoscale':           { 'default': True },
-                    'plotLeftAxisMinimum':             { 'default': -10 },
-                    'plotLeftAxisMaximum':             { 'default': 10 },
-                    'plotTopAxisVisible':              { 'default': True },
-                    'plotLeftAxisVisible':             { 'default': True },
-                    'plotBottomAxisVisible':           { 'default': True },
-                    'plotRightAxisVisible':            { 'default': True },
+                    'plotNum':                         { 'type': int, 'default': 1 },
+                    'plotName':                        { 'type': str, 'default': '' },
+                    'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
+                    'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
+                    'plotBottomAxisMinimum':           { 'type': int, 'default': -10 },
+                    'plotBottomAxisMaximum':           { 'type': int, 'default': 10 },
+                    'plotBottomAxisScaleType':         { 'type': str, 'default': 'Linear' },
+                    'plotBottomAxisTicks':             { 'type': bool, 'default': True },
+                    'plotBottomAxisMajorTicksNumber':  { 'type': int, 'default': 5 },
+                    'plotBottomAxisMajorTicksSpacing': { 'type': int, 'default': 2 },
+                    'plotBottomAxisMinorTicksNumber':  { 'type': int, 'default': 3 },
+                    'plotBottomAxisUseTickSpacing':    { 'type': bool, 'default': False },
+                    'plotBottomAxisUseTickNumber':     { 'type': bool, 'default': True },
+                    'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
+                    'plotLeftAxisMinimum':             { 'type': int, 'default': -10 },
+                    'plotLeftAxisMaximum':             { 'type': int, 'default': 10 },
+                    'plotTopAxisVisible':              { 'type': bool, 'default': True },
+                    'plotLeftAxisVisible':             { 'type': bool, 'default': True },
+                    'plotBottomAxisVisible':           { 'type': bool, 'default': True },
+                    'plotRightAxisVisible':            { 'type': bool, 'default': True },
                  }
 
     def __init__(self, figure, plotNum, plotName=""):
@@ -135,6 +135,9 @@ class Plot(QObject):
 
 
     def refresh(self, drawBool=True):
+        if not self._figure:
+            return False
+
         print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
         
         self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))

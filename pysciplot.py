@@ -6,7 +6,7 @@ from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDial
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant
 
-import Util, Save
+import Util, Save, Load
 from Wave import Wave
 from Waves import Waves
 from Figure import Figure
@@ -61,11 +61,13 @@ class pysciplot(QMainWindow):
 
         # create default waves
         self.setTestData()
-        self.createDefaultTable()
+        #self.createDefaultTable()
 
         self.loadModule("ManageWavesDialog")
         self.loadModule("EditFigureDialog")
         self.loadModule("ImportCSV")
+
+        Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
     def waves(self):
         return self._waves
@@ -102,19 +104,31 @@ class pysciplot(QMainWindow):
         # Remove it from the loaded modules list
         self._loadedModules.pop(moduleName)
 
-    def createDataTableView(self, tableModel):
+    def createTable(self, waves=[], tableName="Table"):
+        """
+        Create a table.
+        """
+
+        model = DataTableModel(waves, self)
+
+        # Connect slots
+        self._waves.waveRemoved.connect(model.removeColumn)
+
+        return self.createDataTableView(model, tableName)
+
+    def createDataTableView(self, tableModel, tableName="Table"):
         """
         Create a table view based on the given model.
         """
 
-        tableView = DataTableView(tableModel, self, "Table", self)
+        tableView = DataTableView(tableModel, self, tableName, self)
         tableViewSubWindow = DataTableSubWindow()
         tableViewSubWindow.setWidget(tableView)
         tableViewSubWindow.setAttribute(Qt.WA_DeleteOnClose)
         self.ui.workspace.addSubWindow(tableViewSubWindow)
 
         tableViewSubWindow.setVisible(True)
-        return tableView
+        return tableViewSubWindow
 
     def createModulesLoadingDialog(self):
         """
@@ -220,8 +234,6 @@ class pysciplot(QMainWindow):
         
 
 
-
-
     def loadProject(self):
         pass
 
@@ -229,12 +241,7 @@ class pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
-        dtm = DataTableModel([self._waves.waves()[0], self._waves.waves()[1]], self)
-        
-        # Connect slots
-        self._waves.waveRemoved.connect(dtm.removeColumn)
-
-        return self.createDataTableView(dtm)
+        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
         
     def printAllWaves(self):
         print self._waves

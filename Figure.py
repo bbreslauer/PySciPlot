@@ -26,12 +26,12 @@ class Figure(QObject):
 
     # Properties
     properties = {  
-                    'figureName':               { 'default': '' },
-                    'figureTitle':              { 'default': '' },
-                    'figureRows':               { 'default': 1 },
-                    'figureColumns':            { 'default': 1 },
-                    'figureAxesPadding':        { 'default': 0.1 },
-                    'figureBackgroundColor':    { 'default': '#ffffff' },
+                'figureName':               { 'type': str,   'default': '' },
+                'figureTitle':              { 'type': str,   'default': '' },
+                'figureRows':               { 'type': int,   'default': 1 },
+                'figureColumns':            { 'type': int,   'default': 1 },
+                'figureAxesPadding':        { 'type': float, 'default': 0.1 },
+                'figureBackgroundColor':    { 'type': str,   'default': '#ffffff' },
                  }
 
     def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
@@ -122,6 +122,23 @@ class Figure(QObject):
             self.plotRenamed.emit(plot.get('plotNum'), name)
         
         plot.plotRenamed.connect(emitPlotRenamed)
+
+    def replacePlot(self, plotNum, plot):
+        """Replace the current plot in plotNum with a new plot."""
+        if plotNum <= self.numPlots():
+            # Disconnect current signals
+            self.getPlot(plotNum).plotRenamed.disconnect()
+
+            # Replace with new plot
+            self._plots[plotNum - 1] = plot
+        
+            def emitPlotRenamed(name):
+                self.plotRenamed.emit(plot.get('plotNum'), name)
+            
+            plot.plotRenamed.connect(emitPlotRenamed)
+
+        return False
+
 
     def refreshPlot(self, plotNum, drawBool=True):
         self.getPlot(plotNum).refresh(drawBool)

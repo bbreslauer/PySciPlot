@@ -107,9 +107,9 @@ def loadTables(app, tables):
         tableWindow = app.createTable(waves, name)
 
         # Reset QT widget values
+        tableWindow.setWindowState(Qt.WindowState(tableAttrs["windowState"]))
         tableWindow.resize(tableAttrs["width"], tableAttrs["height"])
         tableWindow.move(tableAttrs["xpos"], tableAttrs["ypos"])
-        tableWindow.setWindowState(Qt.WindowState(tableAttrs["windowState"]))
 
 
 
@@ -156,10 +156,9 @@ def loadFigures(app, figures):
         figureWindow = app.figures().addFigure(figureObj).get("figureSubWindow")
 
         # Reset QT widget values
+        figureWindow.setWindowState(Qt.WindowState(figureAttrs["windowState"]))
         figureWindow.resize(figureAttrs["width"], figureAttrs["height"])
         figureWindow.move(figureAttrs["xpos"], figureAttrs["ypos"])
-        #figureWindow.setWindowState(Qt.WindowState(figureAttrs["windowState"]))
-        # if we set the window state, then the window is shaded...
 
 
 

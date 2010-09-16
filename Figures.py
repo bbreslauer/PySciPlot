@@ -65,6 +65,15 @@ class Figures(QObject):
         self.figureRemoved.emit()
         return removedFigure
 
+    def removeAllFigures(self):
+        """
+        Remove all figures from this object.
+        """
+
+        self._figures = []
+        self.figureRemoved.emit()
+        return True
+
     def length(self):
         return len(self._figures)
 

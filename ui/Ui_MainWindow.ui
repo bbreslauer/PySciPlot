@@ -45,6 +45,7 @@
       <string>New</string>
      </property>
      <addaction name="actionNew_Table"/>
+     <addaction name="actionNew_Project"/>
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="title">
@@ -62,6 +63,7 @@
     <addaction name="menuNew"/>
     <addaction name="menuImport"/>
     <addaction name="menuExport"/>
+    <addaction name="actionLoad_Project"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
     <addaction name="separator"/>
@@ -178,6 +180,16 @@
   <action name="actionPlot">
    <property name="text">
     <string>Plot</string>
+   </property>
+  </action>
+  <action name="actionLoad_Project">
+   <property name="text">
+    <string>Load Project</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
    </property>
   </action>
  </widget>

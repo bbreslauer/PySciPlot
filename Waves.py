@@ -16,6 +16,7 @@ class Waves(QObject):
     # Signals
     waveAdded   = pyqtSignal(Wave)
     waveRemoved = pyqtSignal(Wave)
+    waveRemoved = pyqtSignal()
     waveRenamed = pyqtSignal()
 
     def __init__(self, wavesIn=[], uniqueNames=True):
@@ -164,5 +165,16 @@ class Waves(QObject):
                 self.waveRemoved.emit(wave)
                 return wave
         return False
+
+    def removeAllWaves(self):
+        """
+        Remove all waves from this object.
+
+        Emits the waveRemoved signal after all waves are removed.
+        """
+
+        self._waves = []
+        self.waveRemoved.emit()
+        return True
 
 

@@ -7,6 +7,7 @@ from PyQt4.QtCore import Qt
 from Wave import Wave
 from Figure import Figure
 from Plot import Plot
+from Trace import Trace
 
 def loadProjectFromFile(app, fileName):
     """
@@ -21,12 +22,22 @@ def loadProjectFromFile(app, fileName):
     # root project element
     p = dom.documentElement
 
+    # Load waves first
     child = p.firstChild
     while child is not None:
         if child.nodeType is xml.dom.minidom.Node.ELEMENT_NODE:
             if child.nodeName == "waves":
                 loadWaves(app, child)
-            elif child.nodeName == "tables":
+
+        # Move on to next child
+        child = child.nextSibling
+
+    # Now load tables and figures.  It doesn't matter which
+    # is loaded first.
+    child = p.firstChild
+    while child is not None:
+        if child.nodeType is xml.dom.minidom.Node.ELEMENT_NODE:
+            if child.nodeName == "tables":
                 loadTables(app, child)
             elif child.nodeName == "figures":
                 loadFigures(app, child)
@@ -68,11 +79,6 @@ def loadWaves(app, waves):
         
         # Load wave into application
         app.waves().addWave(Wave(name, dataType, dataList))
-        
-
-
-
-
 
 def loadTables(app, tables):
     """
@@ -111,9 +117,6 @@ def loadTables(app, tables):
         tableWindow.resize(tableAttrs["width"], tableAttrs["height"])
         tableWindow.move(tableAttrs["xpos"], tableAttrs["ypos"])
 
-
-
-
 def loadFigures(app, figures):
     """
     Load given figures into the application.
@@ -135,7 +138,7 @@ def loadFigures(app, figures):
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
                 if child.nodeName == "plots":
-                    plots = loadPlots(child)
+                    plots = loadPlots(app, child)
                 else:
                     figureProps[child.nodeName] = str(child.firstChild.data.strip())
 
@@ -160,12 +163,9 @@ def loadFigures(app, figures):
         figureWindow.resize(figureAttrs["width"], figureAttrs["height"])
         figureWindow.move(figureAttrs["xpos"], figureAttrs["ypos"])
 
-
-
-
-def loadPlots(plots):
+def loadPlots(app, plots):
     """
-    Load given plots into the application.
+    Convert plots in xml to plot objects.
     """
 
     plotList = plots.getElementsByTagName("plot")
@@ -180,7 +180,7 @@ def loadPlots(plots):
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
                 if child.nodeName == "traces":
-                    traces = loadTraces(child)
+                    traces = loadTraces(app, child)
                 else:
                     plotProps[child.nodeName] = str(child.firstChild.data.strip())
 
@@ -201,10 +201,43 @@ def loadPlots(plots):
 
     return plotsObjList
 
+def loadTraces(app, traces):
+    """
+    Convert traces in xml to trace objects.
+    """
 
+    traceList = traces.getElementsByTagName("trace")
+    tracesObjList = []
 
-def loadTraces(traces):
-    return []
+    for trace in traceList:
+        traceProps = {} # internal trace properties
+        xWave = ""
+        yWave = ""
+
+        # Get trace from xml
+        child = trace.firstChild
+        while child is not None:
+            if child.nodeType is child.ELEMENT_NODE:
+                if child.nodeName == "xWave":
+                    xWave = app.waves().getWaveByName(str(child.firstChild.data.strip()))
+                elif child.nodeName == "yWave":
+                    yWave = app.waves().getWaveByName(str(child.firstChild.data.strip()))
+                else:
+                    traceProps[child.nodeName] = str(child.firstChild.data.strip())
+
+            # Move on to next child
+            child = child.nextSibling
+
+        # Create trace
+        traceObj = Trace(xWave, yWave)
+        actualtraceProps = traceObj.properties.keys()
+        for (key, value) in traceProps.items():
+            if key in actualtraceProps:
+                traceObj.set_(key, traceObj.properties[key]["type"](value))
+
+        tracesObjList.append(traceObj)
+
+    return tracesObjList
 
 
 

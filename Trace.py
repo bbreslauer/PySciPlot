@@ -6,14 +6,14 @@ class Trace(QObject):
     # Properties
     # Each property has three values, the first is the gui name, the second is the matplotlib name, and the third is whether to use a symbol lookup table
     properties = {
-            'traceLineColor':               { 'default': '#000000', 'mplname': 'color',           'symlookup': False },
-            'traceLineStyle':               { 'default': 'Solid',   'mplname': 'linestyle',       'symlookup': True  },
-            'traceLineWidth':               { 'default': 1.0,       'mplname': 'linewidth',       'symlookup': False },
-            'tracePointMarker':             { 'default': 'Point',   'mplname': 'marker',          'symlookup': True  },
-            'tracePointMarkerEdgeColor':    { 'default': '#000000', 'mplname': 'markeredgecolor', 'symlookup': False },
-            'tracePointMarkerEdgeWidth':    { 'default': 1.0,       'mplname': 'markeredgewidth', 'symlookup': False },
-            'tracePointMarkerFaceColor':    { 'default': '#000000', 'mplname': 'markerfacecolor', 'symlookup': False },
-            'tracePointMarkerSize':         { 'default': 1.0,       'mplname': 'markersize',      'symlookup': False },
+            'traceLineColor':               { 'type': str,   'default': '#000000', 'mplname': 'color',           'symlookup': False },
+            'traceLineStyle':               { 'type': str,   'default': 'Solid',   'mplname': 'linestyle',       'symlookup': True  },
+            'traceLineWidth':               { 'type': float, 'default': 1.0,       'mplname': 'linewidth',       'symlookup': False },
+            'tracePointMarker':             { 'type': str,   'default': 'Point',   'mplname': 'marker',          'symlookup': True  },
+            'tracePointMarkerEdgeColor':    { 'type': str,   'default': '#000000', 'mplname': 'markeredgecolor', 'symlookup': False },
+            'tracePointMarkerEdgeWidth':    { 'type': float, 'default': 1.0,       'mplname': 'markeredgewidth', 'symlookup': False },
+            'tracePointMarkerFaceColor':    { 'type': str,   'default': '#000000', 'mplname': 'markerfacecolor', 'symlookup': False },
+            'tracePointMarkerSize':         { 'type': float, 'default': 1.0,       'mplname': 'markersize',      'symlookup': False },
                  }
 
 
@@ -58,7 +58,7 @@ class Trace(QObject):
     yChanged = pyqtSignal()
     propertyChanged = pyqtSignal()
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x=None, y=None):
         QObject.__init__(self)
         self._plot = None
         self.initializeVariables()

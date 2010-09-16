@@ -52,6 +52,9 @@ class pysciplot(QMainWindow):
         # Make signal/slot connections
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
+        self.ui.actionNew_Project.triggered.connect(self.resetToDefaults)
+        self.ui.actionLoad_Project.triggered.connect(self.loadProject)
+        self.ui.actionSave_Project.triggered.connect(self.saveProject)
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
         
@@ -67,7 +70,7 @@ class pysciplot(QMainWindow):
         self.loadModule("EditFigureDialog")
         self.loadModule("ImportCSV")
 
-        Load.loadProjectFromFile(self, "/home/ben/test.psp")
+        #Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
     def waves(self):
         return self._waves
@@ -115,6 +118,13 @@ class pysciplot(QMainWindow):
         self._waves.waveRemoved.connect(model.removeColumn)
 
         return self.createDataTableView(model, tableName)
+
+    def createDefaultTable(self):
+        # Create new wave to put into this table
+        wave = Wave(self.waves().findGoodWaveName())
+        self._waves.addWave(wave)
+
+        return self.createTable([wave])
 
     def createDataTableView(self, tableModel, tableName="Table"):
         """
@@ -229,19 +239,73 @@ class pysciplot(QMainWindow):
         Save the current project to a file.  If project has previously been saved, use
         that location.
         """
-        pass
+
+        self.saveProjectAs()
 
         
 
 
     def loadProject(self):
-        pass
+        """
+        Load a project from a file which will be selected by the user.
+        """
+
+        # Reset app to a clean slate
+        self.resetToDefaults()
+
+        # Now load the project
+        fileDialog = QFileDialog(self.ui.workspace, "Load Project")
+        fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
+        fileDialog.setDefaultSuffix("psp")
+        fileDialog.setConfirmOverwrite(False)
+        fileDialog.setDirectory(Util.fileDialogDirectory(self))
+        fileDialog.exec_()
+        fileName = str(fileDialog.selectedFiles()[0])
+
+        print fileName
+        Load.loadProjectFromFile(self, fileName)
+
+    def resetToDefaults(self):
+        """
+        Reset the application to the defaults.  At the very least,
+        this will delete all waves, tables, and figures.
+
+        Before resetting, this will ask the user if they want to save
+        the current project.
+        """
+        
+        # Check to see if we want to save the current project
+        saveProjectMessage = QMessageBox()
+        saveProjectMessage.setText("You are about to load another project.")
+        saveProjectMessage.setInformativeText("Do you want to save your current project?")
+        saveProjectMessage.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
+        saveProjectResponse = saveProjectMessage.exec_()
+        if saveProjectResponse == QMessageBox.Save:
+            self.saveProject()
+        elif saveProjectResponse == QMessageBox.Cancel:
+            return
+
+        # Now reset to a clean slate
+        subWindows = self.ui.workspace.subWindowList()
+
+        for window in subWindows:
+            if type(window).__name__ in ["DataTableSubWindow", "FigureSubWindow"]:
+                window.setAttribute(Qt.WA_DeleteOnClose)
+                window.close()
+            else:
+                window.setVisible(False)
+
+        self._waves.removeAllWaves()
+        self._figures.removeAllFigures()
+
+
+
 
     ######################
     # temporary methods, for testing
     ######################
-    def createDefaultTable(self):
-        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
+#    def createDefaultTable(self):
+#        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
         
     def printAllWaves(self):
         print self._waves

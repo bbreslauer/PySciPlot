@@ -4,7 +4,7 @@ import sys, string, signal, os, re, time
 
 from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
-from PyQt4.QtCore import Qt, QVariant
+from PyQt4.QtCore import Qt, QVariant, QFile
 
 import Util, Save, Load
 from Wave import Wave
@@ -39,6 +39,7 @@ class pysciplot(QMainWindow):
         self._figures = Figures()
         self._loadedModules = {}
         self.cwd = "" # current working directory
+        self.setCurrentProject("")
 
         # Let the workspace resize when the main window is resized
         self.setCentralWidget(self.ui.workspace)
@@ -230,7 +231,10 @@ class pysciplot(QMainWindow):
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
-        print fileName
+        if fileName != "":
+            # Save current working directory
+            self.cwd = os.path.dirname(fileName)
+
         Save.writeProjectToFile(self, fileName)
 
 
@@ -240,7 +244,10 @@ class pysciplot(QMainWindow):
         that location.
         """
 
-        self.saveProjectAs()
+        if self.currentProjectFile != "" and QFile.exists(self.currentProjectFile):
+            Save.writeProjectToFile(self, self.currentProjectFile)
+        else:
+            self.saveProjectAs()
 
         
 
@@ -262,7 +269,10 @@ class pysciplot(QMainWindow):
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
-        print fileName
+        if fileName != "":
+            # Save current working directory
+            self.cwd = os.path.dirname(fileName)
+
         Load.loadProjectFromFile(self, fileName)
 
     def resetToDefaults(self):
@@ -297,8 +307,14 @@ class pysciplot(QMainWindow):
 
         self._waves.removeAllWaves()
         self._figures.removeAllFigures()
+        self.setCurrentProject("")
 
-
+    def setCurrentProject(self, fileName):
+        self.currentProjectFile = fileName
+        if fileName != "":
+            self.setWindowTitle("PySciPlot - " + fileName)
+        else:
+            self.setWindowTitle("PySciPlot")
 
 
     ######################

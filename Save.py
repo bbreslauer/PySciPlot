@@ -29,6 +29,8 @@ def writeProjectToFile(app, fileName):
     fileHandle = open(fileName, "w")
     dom.writexml(fileHandle, indent='', addindent='  ', newl='\n')
 
+    app.setCurrentProject(fileName)
+
 
 # Get specific sets of data
 

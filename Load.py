@@ -34,19 +34,31 @@ def loadProjectFromFile(app, fileName):
 
     # Now load tables and figures.  It doesn't matter which
     # is loaded first.
+    stackingOrder = []
     child = p.firstChild
     while child is not None:
         if child.nodeType is xml.dom.minidom.Node.ELEMENT_NODE:
             if child.nodeName == "tables":
-                loadTables(app, child)
+                loadTables(app, child, stackingOrder)
             elif child.nodeName == "figures":
-                loadFigures(app, child)
+                loadFigures(app, child, stackingOrder)
 
         # Move on to next child
         child = child.nextSibling
     
+    # Order windows according to stackingOrder
+    topWindow = None
+    while stackingOrder:
+        window = stackingOrder.pop(0)
+        if window is not None:
+            window.raise_()
+            topWindow = window
 
+    # Focus the top window
+    if topWindow is not None:
+        topWindow.setFocus(Qt.OtherFocusReason)
 
+    app.setCurrentProject(fileName)
 
 def loadWaves(app, waves):
     """
@@ -80,7 +92,7 @@ def loadWaves(app, waves):
         # Load wave into application
         app.waves().addWave(Wave(name, dataType, dataList))
 
-def loadTables(app, tables):
+def loadTables(app, tables, stackingOrder):
     """
     Load given tables into the application.
     """
@@ -117,7 +129,12 @@ def loadTables(app, tables):
         tableWindow.resize(tableAttrs["width"], tableAttrs["height"])
         tableWindow.move(tableAttrs["xpos"], tableAttrs["ypos"])
 
-def loadFigures(app, figures):
+        # Add to stackingOrder
+        if tableAttrs["stackingOrder"] >= len(stackingOrder):
+            stackingOrder.extend([None] * (tableAttrs["stackingOrder"] - len(stackingOrder) + 1))
+        stackingOrder[tableAttrs["stackingOrder"]] = tableWindow
+
+def loadFigures(app, figures, stackingOrder):
     """
     Load given figures into the application.
     """
@@ -162,6 +179,11 @@ def loadFigures(app, figures):
         figureWindow.setWindowState(Qt.WindowState(figureAttrs["windowState"]))
         figureWindow.resize(figureAttrs["width"], figureAttrs["height"])
         figureWindow.move(figureAttrs["xpos"], figureAttrs["ypos"])
+
+        # Add to stackingOrder
+        if figureAttrs["stackingOrder"] >= len(stackingOrder):
+            stackingOrder.extend([None] * (figureAttrs["stackingOrder"] - len(stackingOrder) + 1))
+        stackingOrder[figureAttrs["stackingOrder"]] = figureWindow
 
 def loadPlots(app, plots):
     """

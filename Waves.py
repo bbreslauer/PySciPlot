@@ -15,7 +15,7 @@ class Waves(QObject):
 
     # Signals
     waveAdded   = pyqtSignal(Wave)
-    waveRemoved = pyqtSignal((Wave, ), ())
+    waveRemoved = pyqtSignal((), (Wave, ))
     waveRenamed = pyqtSignal()
 
     def __init__(self, wavesIn=[], uniqueNames=True):
@@ -161,7 +161,7 @@ class Waves(QObject):
             if self._waves[index].name() == name:
                 wave = self._waves.pop(index)
                 wave.nameChanged.disconnect(self.emitWaveRenamed)
-                self.waveRemoved.emit(wave)
+                self.waveRemoved[Wave].emit(wave)
                 return wave
         return False
 

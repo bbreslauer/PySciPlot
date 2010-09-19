@@ -4,6 +4,7 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogB
 import ConfigParser, os
 
 import Util
+from Wave import Wave
 from Trace import Trace
 from Module import Module
 from Figure import Figure
@@ -89,17 +90,17 @@ class EditFigureDialog(Module):
         self._xListModel = WavesListModel(self._app.waves())
         self._ui.xAxisListView.setModel(self._xListModel)
         self._app.waves().waveAdded.connect(self._xListModel.doReset)
-        self._app.waves().waveRemoved.connect(self._xListModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._xListModel.doReset)
         
         self._yListModel = WavesListModel(self._app.waves())
         self._ui.yAxisListView.setModel(self._yListModel)
         self._app.waves().waveAdded.connect(self._yListModel.doReset)
-        self._app.waves().waveRemoved.connect(self._yListModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._yListModel.doReset)
 
         # Setup trace list
         traceListModel = TraceListModel()
         self._ui.traceTableView.setModel(traceListModel)
-        self._app.waves().waveRemoved.connect(traceListModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self.deleteTracesWithWave)
         self.setupTraceListMenu()
 
         # Setup max/min values for spin boxes
@@ -492,6 +493,13 @@ class EditFigureDialog(Module):
 
         self.plotUi_refreshTraceList()
 
+    def deleteTracesWithWave(self, wave):
+        for traceListEntry in self._ui.traceTableView.model()._data:
+            if wave.name() in [traceListEntry.columnValue(0), traceListEntry.columnValue(1)]:
+                self.currentPlot().removeTrace(traceListEntry.getTrace())
+
+        self.plotUi_refreshTraceList()
+
     def showTraceListMenu(self, point):
         """Display the menu that occurs when right clicking on a plot list entry."""
 
@@ -607,9 +615,9 @@ class EditFigureDialog(Module):
         self._app.figures().figureRemoved.disconnect(self._figureListModel.doReset)
         self._ui.plotSelector.currentIndexChanged.disconnect(self.plotUi_refreshTraceList)
         self._app.waves().waveAdded.disconnect(self._xListModel.doReset)
-        self._app.waves().waveRemoved.disconnect(self._xListModel.doReset)
+        self._app.waves().waveRemoved[Wave].disconnect(self._xListModel.doReset)
         self._app.waves().waveAdded.disconnect(self._yListModel.doReset)
-        self._app.waves().waveRemoved.disconnect(self._yListModel.doReset)
+        self._app.waves().waveRemoved[Wave].disconnect(self._yListModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

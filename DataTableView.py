@@ -41,7 +41,7 @@ class DataTableView(QTableView):
 
         # Connect signals
         self.model().waves().waveAdded.connect(self.fullReset)
-        self.model().waves().waveRemoved.connect(self.fullReset)
+        self.model().waves().waveRemoved[Wave].connect(self.fullReset)
     
     def name(self):
         """Return the name of the table."""

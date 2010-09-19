@@ -1,5 +1,6 @@
 from PyQt4.QtCore import QAbstractTableModel, QVariant, Qt, QModelIndex, QString, pyqtSignal
 
+from Wave import Wave
 from Waves import Waves
 
 class DataTableModel(QAbstractTableModel):
@@ -34,7 +35,9 @@ class DataTableModel(QAbstractTableModel):
 
         # Connect signals from waves object
         self._waves.waveAdded.connect(self.doReset)
-        self._waves.waveRemoved.connect(self.doReset)
+        self._waves.waveRemoved[Wave].connect(self.doReset)
+        if parent:
+            parent.waves().waveRemoved[Wave].connect(self.removeColumn)
         
         # This makes sure that all entries in the table are editable
         self.resetBlankRows()

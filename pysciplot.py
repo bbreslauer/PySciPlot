@@ -2,6 +2,8 @@
 
 import sys, string, signal, os, re, time
 
+from optparse import OptionParser
+
 from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant, QFile
@@ -254,30 +256,31 @@ class pysciplot(QMainWindow):
         
 
 
-    def loadProject(self):
+    def loadProject(self, fileName="", confirmReset=True):
         """
         Load a project from a file which will be selected by the user.
         """
 
         # Reset app to a clean slate
-        self.resetToDefaults()
-
+        self.resetToDefaults(confirmReset)
+        
         # Now load the project
-        fileDialog = QFileDialog(self.ui.workspace, "Load Project")
-        fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
-        fileDialog.setDefaultSuffix("psp")
-        fileDialog.setConfirmOverwrite(False)
-        fileDialog.setDirectory(Util.fileDialogDirectory(self))
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
-
-        if fileName != "":
-            # Save current working directory
-            self.cwd = os.path.dirname(fileName)
-
+        if fileName == "":
+            fileDialog = QFileDialog(self.ui.workspace, "Load Project")
+            fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
+            fileDialog.setDefaultSuffix("psp")
+            fileDialog.setConfirmOverwrite(False)
+            fileDialog.setDirectory(Util.fileDialogDirectory(self))
+            fileDialog.exec_()
+            fileName = str(fileDialog.selectedFiles()[0])
+    
+            if fileName != "":
+                # Save current working directory
+                self.cwd = os.path.dirname(fileName)
+    
         Load.loadProjectFromFile(self, fileName)
 
-    def resetToDefaults(self):
+    def resetToDefaults(self, confirm=True):
         """
         Reset the application to the defaults.  At the very least,
         this will delete all waves, tables, and figures.
@@ -286,16 +289,17 @@ class pysciplot(QMainWindow):
         the current project.
         """
         
-        # Check to see if we want to save the current project
-        saveProjectMessage = QMessageBox()
-        saveProjectMessage.setText("You are about to load another project.")
-        saveProjectMessage.setInformativeText("Do you want to save your current project?")
-        saveProjectMessage.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
-        saveProjectResponse = saveProjectMessage.exec_()
-        if saveProjectResponse == QMessageBox.Save:
-            self.saveProject()
-        elif saveProjectResponse == QMessageBox.Cancel:
-            return
+        if confirm:
+            # Check to see if we want to save the current project
+            saveProjectMessage = QMessageBox()
+            saveProjectMessage.setText("You are about to load another project.")
+            saveProjectMessage.setInformativeText("Do you want to save your current project?")
+            saveProjectMessage.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
+            saveProjectResponse = saveProjectMessage.exec_()
+            if saveProjectResponse == QMessageBox.Save:
+                self.saveProject()
+            elif saveProjectResponse == QMessageBox.Cancel:
+                return
 
         # Now reset to a clean slate
         subWindows = self.ui.workspace.subWindowList()
@@ -391,6 +395,17 @@ class pysciplot(QMainWindow):
 
 
 
+def setupOptions():
+    usage = "usage: %prog [options] project-file.psp"
+
+    parser = OptionParser(usage)
+
+    parser.add_option("-v", type="int", dest="verbosity", metavar="[level]", help="Verbosity level (between 0 and 3)")
+
+    return parser.parse_args()
+
+
+
 if __name__ == "__main__":
     # check to make sure we are using at least Qt 4.6.1, as there is a bugfix in that version that causes
     # qheaderview logicalindices to refactor when removing a column
@@ -402,9 +417,17 @@ if __name__ == "__main__":
 #    print QT_VERSION_STR
 #    print PYQT_VERSION_STR
 
+    (options, args) = setupOptions()
+    
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
     window = pysciplot()
     window.show()
+    
+    if len(args) > 0:
+        # load the first arg (which should be a file) as a project
+        if args[0].split('.')[-1] == "psp":
+            window.loadProject(os.path.abspath(args[0]), False)
+
     sys.exit(app.exec_())
 

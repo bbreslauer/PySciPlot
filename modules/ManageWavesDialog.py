@@ -28,7 +28,7 @@ class ManageWavesDialog(Module):
 
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
-        self._app.waves().waveRemoved.connect(self._wavesListModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
         self._ui.wavesListView.selectionModel().currentChanged.connect(self.updateWaveOptionsUi)
         self._ui.waveOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.updateWaveOptionsUi)
         self._ui.waveOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.applyWaveOptions)
@@ -128,7 +128,7 @@ class ManageWavesDialog(Module):
     def unload(self):
         # Disconnect some slots
         self._app.waves().waveAdded.disconnect(self._wavesListModel.doReset)
-        self._app.waves().waveRemoved.disconnect(self._wavesListModel.doReset)
+        self._app.waves().waveRemoved[Wave].disconnect(self._wavesListModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

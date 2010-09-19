@@ -21,6 +21,7 @@ from models.WavesListModel import WavesListModel
 from models.DataTableModel import DataTableModel
 from ui.Ui_MainWindow import Ui_MainWindow
 from ui.Ui_ModulesLoadingDialog import Ui_ModulesLoadingDialog
+from ui.Ui_SaveFigureOptionsDialog import Ui_SaveFigureOptionsDialog
 
 
 class pysciplot(QMainWindow):
@@ -57,6 +58,7 @@ class pysciplot(QMainWindow):
         self.ui.actionLoad_Project.triggered.connect(self.loadProject)
         self.ui.actionSave_Project.triggered.connect(self.saveProject)
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
+        self.ui.actionSave_Current_Figure.triggered.connect(self.saveCurrentFigure)
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
         
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
@@ -315,6 +317,54 @@ class pysciplot(QMainWindow):
             self.setWindowTitle("PySciPlot - " + fileName)
         else:
             self.setWindowTitle("PySciPlot")
+
+
+
+    def saveCurrentFigure(self):
+        """
+        Save the current figure to a file.
+
+        First we make sure that the active window has a figure in it.
+        Then we ask the user for certain options to be set.
+        Then we ask for the file to save the figure to.
+        Then we save the file.
+        """
+
+        currentWindow = self.ui.workspace.activeSubWindow()
+
+        # Check if the active window has a figure in it
+        if type(currentWindow).__name__ != "FigureSubWindow":
+            notFigureMessage = QMessageBox()
+            notFigureMessage.setText("The active window is not a figure, so you cannot save it as a figure.")
+            notFigureMessage.exec_()
+            return False
+        
+        # Ask user for user-configurable options
+        figureOptionsDialog = QDialog()
+        figureOptionsUi = Ui_SaveFigureOptionsDialog()
+        figureOptionsUi.setupUi(figureOptionsDialog)
+        figureOptionsSubWindow = self.ui.workspace.addSubWindow(figureOptionsDialog)
+        figureOptionsResult = figureOptionsDialog.exec_()
+        figureOptionsSubWindow.close()
+        
+        dpi = 100
+        orientation = "Landscape"
+
+        if figureOptionsResult == QDialog.Accepted:
+            dpi = Util.getWidgetValue(figureOptionsUi.dpi)
+            orientation = Util.getWidgetValue(figureOptionsUi.orientation)
+        else:
+            return False
+        
+        # As user for the filename to save to
+        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", Util.fileDialogDirectory(self))
+
+        if fileName != "":
+            # Save current working directory
+            self.cwd = os.path.dirname(str(fileName))
+        
+        # Save the figure to the file
+        currentWindow.widget().figure.savefig(str(fileName), dpi=dpi, orientation=orientation)
 
 
     ######################

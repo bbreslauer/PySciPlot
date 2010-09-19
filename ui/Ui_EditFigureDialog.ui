@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>617</width>
-    <height>592</height>
+    <width>679</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -426,28 +426,22 @@
           <string>Plot Options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="3" column="0" colspan="2">
+          <item row="4" column="0" colspan="3">
            <widget class="QDialogButtonBox" name="plotOptionsButtons">
             <property name="standardButtons">
              <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="2">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="plotName">
+            <property name="minimumSize">
              <size>
-              <width>20</width>
-              <height>40</height>
+              <width>100</width>
+              <height>0</height>
              </size>
             </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="plotName"/>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_3">
@@ -489,7 +483,7 @@ background-color: rgb(255, 255, 255);</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item row="0" column="2" rowspan="3">
            <widget class="QTabWidget" name="axisTabWidget">
             <widget class="QWidget" name="bottomAxisTab">
              <attribute name="title">
@@ -498,6 +492,18 @@ background-color: rgb(255, 255, 255);</string>
              <layout class="QGridLayout" name="gridLayout_8">
               <item row="2" column="0">
                <widget class="QGroupBox" name="groupBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>185</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="title">
                  <string>Axis</string>
                 </property>
@@ -509,6 +515,18 @@ background-color: rgb(255, 255, 255);</string>
                   <widget class="QDoubleSpinBox" name="plotBottomAxisMinimum">
                    <property name="enabled">
                     <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>70</width>
+                     <height>0</height>
+                    </size>
                    </property>
                    <property name="minimum">
                     <double>-99.989999999999995</double>
@@ -525,6 +543,18 @@ background-color: rgb(255, 255, 255);</string>
                   <widget class="QDoubleSpinBox" name="plotBottomAxisMaximum">
                    <property name="enabled">
                     <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>70</width>
+                     <height>0</height>
+                    </size>
                    </property>
                    <property name="minimum">
                     <double>-99.989999999999995</double>
@@ -587,6 +617,12 @@ background-color: rgb(255, 255, 255);</string>
                  </item>
                  <item row="5" column="1">
                   <widget class="QComboBox" name="plotBottomAxisScaleType">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <item>
                     <property name="text">
                      <string>Linear</string>
@@ -647,6 +683,18 @@ background-color: rgb(255, 255, 255);</string>
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>70</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="value">
                        <double>2.000000000000000</double>
                       </property>
@@ -661,6 +709,18 @@ background-color: rgb(255, 255, 255);</string>
                     </item>
                     <item row="1" column="1">
                      <widget class="QSpinBox" name="plotBottomAxisMajorTicksNumber">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>70</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="value">
                        <number>5</number>
                       </property>
@@ -681,6 +741,12 @@ background-color: rgb(255, 255, 255);</string>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_15">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>Minor Ticks</string>
                    </property>
@@ -688,6 +754,18 @@ background-color: rgb(255, 255, 255);</string>
                  </item>
                  <item row="1" column="1">
                   <widget class="QSpinBox" name="plotBottomAxisMinorTicksNumber">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>70</width>
+                     <height>0</height>
+                    </size>
+                   </property>
                    <property name="value">
                     <number>3</number>
                    </property>
@@ -1020,6 +1098,19 @@ background-color: rgb(255, 255, 255);</string>
              </layout>
             </widget>
            </widget>
+          </item>
+          <item row="2" column="1">
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>

@@ -99,6 +99,7 @@ class EditFigureDialog(Module):
         # Setup trace list
         traceListModel = TraceListModel()
         self._ui.traceTableView.setModel(traceListModel)
+        self._app.waves().waveRemoved.connect(traceListModel.doReset)
         self.setupTraceListMenu()
 
         # Setup max/min values for spin boxes

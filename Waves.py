@@ -15,8 +15,7 @@ class Waves(QObject):
 
     # Signals
     waveAdded   = pyqtSignal(Wave)
-    waveRemoved = pyqtSignal(Wave)
-    waveRemoved = pyqtSignal()
+    waveRemoved = pyqtSignal((Wave, ), ())
     waveRenamed = pyqtSignal()
 
     def __init__(self, wavesIn=[], uniqueNames=True):

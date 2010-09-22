@@ -8,7 +8,7 @@ from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDial
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant, QFile
 
-import Util, Save, Load
+import Util, Save, Load, config
 from Wave import Wave
 from Waves import Waves
 from Figure import Figure
@@ -400,7 +400,7 @@ def setupOptions():
 
     parser = OptionParser(usage)
 
-    parser.add_option("-v", type="int", dest="verbosity", metavar="[level]", help="Verbosity level (between 0 and 3)")
+    parser.add_option("-d", type="int", dest="debug", metavar="[level]", help="Debug level (between 0 and 3)")
 
     return parser.parse_args()
 
@@ -418,6 +418,8 @@ if __name__ == "__main__":
 #    print PYQT_VERSION_STR
 
     (options, args) = setupOptions()
+
+    config.debugLevel = options.debug
     
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)

@@ -1,6 +1,7 @@
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, QAction, QAbstractItemView, QItemSelectionModel
 
+import Util
 from Wave import Wave
 from AddWaveAction import AddWaveAction
 from models.DataTableModel import DataTableModel
@@ -42,6 +43,8 @@ class DataTableView(QTableView):
         # Connect signals
         self.model().waves().waveAdded.connect(self.fullReset)
         self.model().waves().waveRemoved[Wave].connect(self.fullReset)
+        
+        Util.debug(1, "DataTableView.init", "Created table")
     
     def name(self):
         """Return the name of the table."""
@@ -59,6 +62,7 @@ class DataTableView(QTableView):
         
         if not wave:
             wave = self._mainWindow.waves().insertNewWave(len(self._mainWindow.waves().waves()))
+        Util.debug(1, "DataTableView.insertColumn", "Inserted column into table")
         return self.model().insertColumn(position, wave)
 
     def insertColumnLeft(self, position, wave=0):
@@ -109,12 +113,14 @@ class DataTableView(QTableView):
     def removeWaveFromTable(self, position):
         """Remove wave from model.  point is the pixel that is clicked on."""
         self.model().removeColumn(self.model().waves().waves()[position])
+        Util.debug(1, "DataTableView.removeWaveFromTable", "Removed column from table")
        
     def addWaveToTable(self, wave, position):
         """Add wave to model at position."""
         if wave:
             # insertColumn will check if waves must be unique, and will fail (and return False)
             # if waves must be unique and this is a duplicate wave
+            Util.debug(3, "DataTableView.addWaveToTable", "Attempting to add wave to table")
             return self.insertColumn(position, wave)
         return False
     
@@ -212,21 +218,24 @@ class DataTableView(QTableView):
         currentIndex = self.currentIndex()
 
         #print "row: " + str(currentIndex.row()) + ", col: " + str(currentIndex.column())
-
+        
         if currentIndex.isValid():
             if self.state() == QAbstractItemView.EditingState:
                 if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+                    Util.debug(3, "DataTableView.keyPressEvent", "Enter key pressed in table")
                     newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
                     self.setCurrentIndex(newIndex)
                     self.edit(newIndex)
                     self.setCurrentIndex(newIndex)
                     return
                 elif event.key() == Qt.Key_Up:
+                    Util.debug(3, "DataTableView.keyPressEvent", "Up key pressed in table")
                     newIndex = self.model().createIndex(currentIndex.row() - 1, currentIndex.column())
                     #print "nrow: " + str(newIndex.row()) + ", ncol: " + str(newIndex.column())
                     #self.setCurrentIndex(newIndex)
                     self.setState(QAbstractItemView.NoState)
                 elif event.key() == Qt.Key_Down:
+                    Util.debug(3, "DataTableView.keyPressEvent", "Down key pressed in table")
                     newIndex = self.model().createIndex(currentIndex.row() + 1, currentIndex.column())
                     #print "nrow: " + str(newIndex.row()) + ", ncol: " + str(newIndex.column())
                     #self.setCurrentIndex(newIndex)

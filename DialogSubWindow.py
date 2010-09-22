@@ -1,3 +1,4 @@
+import Util
 from PyQt4.QtGui import QMdiSubWindow
 
 class DialogSubWindow(QMdiSubWindow):
@@ -13,8 +14,10 @@ class DialogSubWindow(QMdiSubWindow):
         self.widget().setVisible(True)
         self.raise_()
         self._parent.setActiveSubWindow(self)
+        Util.debug(3, "DialogSubWindow.show", "Showing " + str(type(self).__name__) + " window")
     
     def hide(self):
         self.setVisible(False)
+        Util.debug(3, "DialogSubWindow.hide", "Hiding " + str(type(self).__name__) + " window")
 
 

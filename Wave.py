@@ -1,3 +1,5 @@
+import Util
+
 from PyQt4.QtCore import QObject, pyqtSignal
 
 from pylab import nan
@@ -32,6 +34,8 @@ class Wave(QObject):
 
         QObject.__init__(self)
 
+        Util.debug(2, "Wave.init", "Creating wave " + waveName)
+
         self._data = []
         self._name = ""
         self._dataType = dataType
@@ -41,6 +45,8 @@ class Wave(QObject):
                 self._data.append(0)
             else:
                 self._data.extend(map(self.convertValueToDataType, dataIn))
+        
+        Util.debug(1, "Wave.init", "Created wave " + self._name)
 
     def __str__(self):
         return "%s (%s): %s\n" % (self._name, self._dataType, self._data)
@@ -98,6 +104,7 @@ class Wave(QObject):
 
         validName = Wave.validateWaveName(name)
         if validName != self._name:
+            Util.debug(2, "Wave.setName", "Changed wave name from " + str(self._name) + " to " + str(validName))
             self._name = validName
             self.nameChanged.emit()
         return self._name
@@ -118,6 +125,7 @@ class Wave(QObject):
                     # +1 because list[len(list)] doesn't exist, due to zero-indexing
                     self._data.extend([''] * (position - len(self._data) + 1))
                 self._data[position] = value
+                Util.debug(3, "Wave.setData", "Changed data at position " + str(position) + " in wave " + str(self._name))
                 self.dataModified.emit()
                 return True
         return False
@@ -129,6 +137,8 @@ class Wave(QObject):
 
         for i, v in enumerate(self._data):
             self._data[i] = self.convertValueToDataType(v)
+
+        Util.debug(2, "Wave.recastData", "Recast all data in " + str(self._name) + "to " + str(self._dataType) + "type")
 
     def insert(self, position, value):
         """
@@ -142,6 +152,7 @@ class Wave(QObject):
                 value = self.convertValueToDataType(value)
             if self.goodValue(value):
                 self._data.insert(position, value)
+                Util.debug(2, "Wave.insert", "Inserted data into wave " + str(self._name))
                 self.dataModified.emit()
                 return True
         return False
@@ -155,6 +166,7 @@ class Wave(QObject):
         result = True
         for value in values:
             result = result and self.push(value)
+        Util.debug(2, "Wave.extend", "Extended wave " + str(self._name) + " with " + str(len(values)) + " entries")
         return result
 
     def push(self, value):
@@ -173,6 +185,7 @@ class Wave(QObject):
         """
         
         value = self._data.pop(position)
+        Util.debug(2, "Wave.pop", "Popped value at position " + str(position) + " from " + str(self._name))
         self.dataModified.emit()
         return value
 
@@ -198,6 +211,8 @@ class Wave(QObject):
         """
         
         self._dataType = dataType
+
+        Util.debug(2, "Wave.setDataType", "Changed data type to " + str(self._dataType) + " for wave " + str(self._name))
 
         # Now convert all the current data in the wave to the new type
         self.recastData()

@@ -1,5 +1,7 @@
 # Utility functions
 
+import config
+
 from PyQt4.QtGui import QColor
 
 from Exceptions import UnknownWidgetTypeError
@@ -71,15 +73,20 @@ def fileDialogDirectory(app):
 
 
 def goodTextColor(backgroundColor):
-        """Determines whether complementary color should be white or black."""
-        lightness = QColor(backgroundColor).lightnessF()
-        if lightness > 0.4:
-            return "#000000"
-        return "#ffffff"
+    """
+    Determines whether complementary color should be white or black.
+    """
+
+    lightness = QColor(backgroundColor).lightnessF()
+    if lightness > 0.4:
+        return "#000000"
+    return "#ffffff"
 
 
 def frange(start, end=None, inc=None):
-    "A range function, that does accept float increments."
+    """
+    A range function that accepts float increments.
+    """
 
     if end == None:
         end = start + 0.0
@@ -99,5 +106,18 @@ def frange(start, end=None, inc=None):
         L[i] = start + i * inc
 
     return L
+
+
+def debug(level, caller, text):
+    """
+    Output the text if the given debug level is at or below the level
+    given when the application was started. So if the user requests a
+    debug level of 2, then all 0, 1, and 2 debug strings will be printed.
+    """
+
+    if level <= config.debugLevel:
+        print "[%s] %s" % (caller, text)
+
+
 
 

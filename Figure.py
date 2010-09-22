@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
 from mpl_toolkits.axes_grid.axislines import Axes
 
+import Util
 from Waves import Waves
 from Wave import Wave
 from Plot import Plot
@@ -37,6 +38,8 @@ class Figure(QObject):
     def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
         QObject.__init__(self)
         
+        Util.debug(2, "Figure.init", "Creating figure")
+
         self.initializeProperties()
 
         self._app = app
@@ -64,11 +67,14 @@ class Figure(QObject):
 
         # Connect signals
         self.propertyChanged.connect(self.refresh)
+        
+        Util.debug(1, "Figure.init", "Created figure " + self.get('figureName'))
 
     def __str__(self):
         return "name: %s, rows: %s, columns: %s" % (self.get('figureName'), self.get('figureRows'), self.get('figureColumns'))
 
     def initializeProperties(self):
+        Util.debug(2, "Figure.initializeProperties", "Initializing properties for new figure")
         for prop in self.properties.keys():
             vars(self)["_" + prop] = self.properties[prop]['default']
 
@@ -78,6 +84,8 @@ class Figure(QObject):
     def set_(self, variable, value):
         if value != "" and value != vars(self)["_" + variable]:
             vars(self)["_" + variable] = value
+
+            Util.debug(2, "Figure.set", "Setting " + str(variable) + " to " + str(value) + " for figure " + str(self.get('figureName')))
 
             # See if we should emit any signals
             if variable == 'figureName':
@@ -104,6 +112,7 @@ class Figure(QObject):
         return self._plots
 
     def extendPlots(self, plotNum):
+        Util.debug(2, "Figure.extendPlots", "Extending plots on figure to contain " + str(plotNum) + " plots")
         for i in range(len(self._plots), plotNum):
             plot = Plot(self, i + 1)
             self.appendPlot(plot)
@@ -117,6 +126,8 @@ class Figure(QObject):
         # it within the for loop.  Strange, but true.  So the way to work around that
         # is to have a separate method be called.
         self._plots.append(plot)
+
+        Util.debug(2, "Figure.appendPlot", "Added plot " + str(plot.get('plotNum')))
         
         def emitPlotRenamed(name):
             self.plotRenamed.emit(plot.get('plotNum'), name)
@@ -131,6 +142,8 @@ class Figure(QObject):
 
             # Replace with new plot
             self._plots[plotNum - 1] = plot
+
+            Util.debug(2, "Figure.replacePlot", "Replaced plot " + str(plotNum))
         
             def emitPlotRenamed(name):
                 self.plotRenamed.emit(plot.get('plotNum'), name)
@@ -141,17 +154,22 @@ class Figure(QObject):
 
 
     def refreshPlot(self, plotNum, drawBool=True):
+        Util.debug(1, "Figure.refreshPlot", "Refreshing plot " + str(plotNum))
         self.getPlot(plotNum).refresh(drawBool)
+        Util.debug(1, "Figure.refreshPlot", "Refreshed plot " + str(plotNum))
 
     def refresh(self, *args):
         """
         Refresh everything related to the figure display, including plots and text.
         """
         
+        Util.debug(1, "Figure.refresh", "Refreshing all plots")
+
         displayedPlots = self.numPlots()
 
         self.extendPlots(displayedPlots)
 
+        Util.debug(3, "Figure.refresh", "Clearing figure")
         self.mplFigure().clf()
 
         self.mplFigure().suptitle(str(self.get('figureTitle')))
@@ -161,7 +179,10 @@ class Figure(QObject):
         for plotNum in range(1, displayedPlots + 1):
             self.refreshPlot(plotNum, False)
 
+        Util.debug(3, "Figure.refresh", "Drawing canvas")
         self._canvas.draw()
+        
+        Util.debug(1, "Figure.refresh", "Finished refreshing all plots")
 
     def showFigure(self):
         self._figureSubWindow.show()

@@ -1,5 +1,7 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 
+import Util
+
 from Wave import Wave
 
 class Waves(QObject):
@@ -28,6 +30,8 @@ class Waves(QObject):
 
         QObject.__init__(self)
 
+        Util.debug(1, "Waves.init", "Creating waves object")
+
         self._waves = []
         
         self._uniqueNames = uniqueNames
@@ -53,6 +57,8 @@ class Waves(QObject):
         Return the wave with the given name, if it exists.  Return False if no such wave is found.
         """
 
+        Util.debug(2, "Waves.getWaveByName", "Getting the wave with name " + str(name))
+
         for wave in self._waves:
             if Wave.getName(wave) == name:
                 return wave
@@ -62,12 +68,15 @@ class Waves(QObject):
         """
         Find an unused wave name in this Waves object and return that name.  If baseName is provided, then it will be used as the beginning of the name.
         """
+        
+        Util.debug(3, "Waves.findGoodWaveName", "Finding acceptable wave name with base " + str(baseName))
 
         allWaveNames = map(Wave.getName, self._waves)
         counter = 1
         while True:
             testName = str(baseName) + str(counter)
             if testName not in allWaveNames:
+                Util.debug(3, "Waves.findGoodWaveName", "Found acceptable wave name: " + str(testName))
                 return testName
             else:
                 counter += 1
@@ -126,6 +135,7 @@ class Waves(QObject):
 
         Emits the waveAdded signal if the wave is added.
         """
+        Util.debug(2, "Waves.addWave", "Adding wave")
         return self.insertWave(len(self._waves), wave)
 
     def insertWave(self, position, wave):
@@ -137,6 +147,7 @@ class Waves(QObject):
 
         if self._uniqueNames and not self.uniqueWave(wave):
             return False
+        Util.debug(2, "Waves.insertWave", "Inserting wave " + str(wave.name()) + " at position " + str(position))
         self._waves.insert(position, wave)
         wave.nameChanged.connect(self.emitWaveRenamed)
         self.waveAdded.emit(wave)
@@ -148,6 +159,7 @@ class Waves(QObject):
 
         Emits the waveAdded signal if the wave is added.
         """
+        Util.debug(2, "Waves.insertNewWave", "Inserting new wave")
         return self.insertWave(position, Wave(self.findGoodWaveName()))
 
     def removeWave(self, name):
@@ -162,6 +174,7 @@ class Waves(QObject):
                 wave = self._waves.pop(index)
                 wave.nameChanged.disconnect(self.emitWaveRenamed)
                 self.waveRemoved[Wave].emit(wave)
+                Util.debug(2, "Waves.removeWave", "Removed wave " + str(wave.name()))
                 return wave
         return False
 
@@ -174,6 +187,7 @@ class Waves(QObject):
 
         self._waves = []
         self.waveRemoved.emit()
+        Util.debug(2, "Waves.removeAllWaves", "Removed all waves")
         return True
 
 

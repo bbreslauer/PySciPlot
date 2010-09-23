@@ -1,3 +1,5 @@
+import Util
+
 from PyQt4.QtCore import QObject, pyqtSignal
 
 class Trace(QObject):
@@ -60,6 +62,7 @@ class Trace(QObject):
 
     def __init__(self, x=None, y=None):
         QObject.__init__(self)
+        Util.debug(2, "Trace.init", "Creating trace")
         self._plot = None
         self.initializeVariables()
         self.initializeProperties()
@@ -67,25 +70,32 @@ class Trace(QObject):
         self.setY(y)
 
     def initializeVariables(self):
+        Util.debug(3, "Trace.initializeVariables", "Initializing variables")
         self._x = None
         self._y = None
         
     def initializeProperties(self):
+        Util.debug(3, "Trace.initializeProperties", "Initializing properties")
         for prop in self.properties.keys():
             vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable, lookupSymbol=False):
-        if lookupSymbol and self.properties[variable]['symlookup']:
-            return self.symbols[variable][vars(self)["_" + variable]]
-        return vars(self)["_" + variable]
+        try:
+            if lookupSymbol and self.properties[variable]['symlookup']:
+                return self.symbols[variable][vars(self)["_" + variable]]
+            return vars(self)["_" + variable]
+        except AttributeError:
+            return self.properties[variable]['default']
 
     def set_(self, variable, value):
         # Only plotName can be blank
         if value != "" and value != vars(self)["_" + variable]:
             if type(value).__name__ == 'QString':
                 value = str(value)
-
+            
             vars(self)["_" + variable] = value
+
+            Util.debug(2, "Trace.set", "Setting " + str(variable) + " to " + str(value) + " for trace")
 
             self.propertyChanged.emit()
 
@@ -97,14 +107,14 @@ class Trace(QObject):
         self._plot = plot
     
     def setX(self, x):
+        Util.debug(2, "Trace.setX", "Setting x trace")
         self._x = x
         self.xChanged.emit()
         
     def setY(self, y):
+        Util.debug(2, "Trace.setY", "Setting y trace")
         self._y = y
         self.yChanged.emit()
-
-    
     
     def getX(self):
         return self._x

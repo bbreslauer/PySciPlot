@@ -45,6 +45,8 @@ class Plot(QObject):
     def __init__(self, figure, plotNum, plotName=""):
         QObject.__init__(self)
 
+        Util.debug(2, "Plot.init", "Creating plot")
+        
         self.initializeProperties()
 
         self._figure = None
@@ -60,21 +62,30 @@ class Plot(QObject):
         self.traceRemoved.connect(self.refresh)
         self.plotRenamed.connect(self.refresh)
         self.propertyChanged.connect(self.refresh)
+        
+        Util.debug(1, "Plot.init", "Created plot " + plotName)
     
     def __str__(self):
         return "Num: %s, Name: %s" % (self.get('plotNum'), self.get('plotName'))
 
     def initializeProperties(self):
+        Util.debug(3, "Plot.initializeProperties", "Initializing properties for plot " + str(self.get('plotName')))
         for prop in self.properties.keys():
             vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable):
-        return vars(self)["_" + variable]
+        try:
+            Util.debug(3, "Plot.get", "Getting variable " + str(variable) + " for plot " + str(self._plotName))
+            return vars(self)["_" + variable]
+        except AttributeError:
+            return self.properties[variable]['default']
 
     def set_(self, variable, value):
         # Only plotName can be blank
         if (value != "" or variable == 'plotName') and value != vars(self)["_" + variable]:
             vars(self)["_" + variable] = value
+
+            Util.debug(2, "Plot.set", "Setting " + str(variable) + " to " + str(value) + " for plot " + str(self.get('plotName')))
 
             # See if we should emit any signals
             if variable == 'plotName':
@@ -89,6 +100,7 @@ class Plot(QObject):
         self._traces.append(trace)
         #trace.addPlot(self)
         self.traceAdded.emit()
+        Util.debug(1, "Plot.addTrace", "Added trace " + trace.getXName() + "-" + trace.getYName() + "to plot " + str(self.get('plotName')))
         trace.getX().dataModified.connect(self.refresh)
         trace.getY().dataModified.connect(self.refresh)
         trace.propertyChanged.connect(self.refresh)
@@ -101,6 +113,7 @@ class Plot(QObject):
         return len(self._traces)
 
     def getTraceAsFloat(self, trace):
+        Util.debug(2, "Plot.getTraceAsFloat", "Getting trace " + trace.getXName() + "-" + trace.getYName() + " as floats")
         xData = Wave.convertToFloatList(trace.getX())
         yData = Wave.convertToFloatList(trace.getY())
 
@@ -114,6 +127,7 @@ class Plot(QObject):
         return Trace(xData, yData)
 
     def getTracesAsFloat(self):
+        Util.debug(2, "Plot.getTracesAsFloat", "Getting traces as floats")
         tmpTraces = []
         for trace in self._traces:
             tmpTraces.append(self.getTraceAsFloat(trace))
@@ -121,6 +135,7 @@ class Plot(QObject):
         return tmpTraces
 
     def convertTraceDataToFloat(self, trace):
+        Util.debug(2, "Plot.convertTraceDataToFloat", "Converting data")
         xData = Wave.convertToFloatList(trace.getX())
         yData = Wave.convertToFloatList(trace.getY())
 
@@ -135,6 +150,9 @@ class Plot(QObject):
 
 
     def refresh(self, drawBool=True):
+        
+        Util.debug(1, "Plot.refresh", "Refreshing plot")
+
         if not self._figure:
             return False
 
@@ -143,14 +161,17 @@ class Plot(QObject):
         self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))
         self._axes.clear()
 
+        Util.debug(2, "Plot.refresh", "Setting plot properties")
         self._axes.set_title(self.get('plotName'))
         self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
 
+        Util.debug(2, "Plot.refresh", "Setting traces")
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)
             self._axes.plot(x, y, **(trace.getFormat()))
         
         # Set minimum and maximum for axes
+        Util.debug(2, "Plot.refresh", "Setting axes properties")
         if not self.get('plotBottomAxisAutoscale'):
             self._axes.set_xlim(self.get('plotBottomAxisMinimum'), self.get('plotBottomAxisMaximum'))
         if not self.get('plotLeftAxisAutoscale'):
@@ -160,6 +181,7 @@ class Plot(QObject):
         
         
         # Set ticks
+        Util.debug(2, "Plot.refresh", "Setting ticks")
         xaxis = self._axes.get_xaxis()
         if self.get('plotBottomAxisTicks'):
 
@@ -192,11 +214,14 @@ class Plot(QObject):
             xaxis.set_minor_locator(ticker.NullLocator())
 
         if drawBool:
+            Util.debug(2, "Plot.refresh", "Drawing plot")
             self._figure._canvas.draw()
 
+        Util.debug(1, "Plot.refresh", "Refreshed plot")
         return True
 
     def removeTrace(self, trace):
+        Util.debug(1, "Plot.removeTrace", "Removing trace " + trace.getXName() + "-" + trace.getYName())
         self._traces.remove(trace)
         self.traceRemoved.emit()
 

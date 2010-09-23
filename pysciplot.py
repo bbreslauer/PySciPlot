@@ -33,10 +33,12 @@ class pysciplot(QMainWindow):
 
     def __init__(self):
         QMainWindow.__init__(self)
+        Util.debug(2, "App", "Setting up UI")
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
     
         # Variables
+        Util.debug(2, "App", "Initializing variables")
         self._version = 1
         self._waves = Waves()
         self._figures = Figures()
@@ -51,9 +53,11 @@ class pysciplot(QMainWindow):
         self.createModulesLoadingDialog()
 
         # Load Preferences
+        Util.debug(2, "App", "Loading Preferences from file")
         self.preferences = Preferences(self, "~/.pysciplotrc")
         
         # Make signal/slot connections
+        Util.debug(2, "App", "Connecting signals and slots")
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
         self.ui.actionNew_Project.triggered.connect(self.resetToDefaults)
@@ -71,6 +75,7 @@ class pysciplot(QMainWindow):
         self.setTestData()
         #self.createDefaultTable()
 
+        Util.debug(2, "App", "Loading modules")
         self.loadModule("ManageWavesDialog")
         self.loadModule("EditFigureDialog")
         self.loadModule("ImportCSV")
@@ -88,6 +93,7 @@ class pysciplot(QMainWindow):
         Import the module named moduleName.
         """
         
+        Util.debug(2, "App.loadModule", "Loading module " + str(moduleName))
         # Import module
         moduleImport = __import__("modules." + moduleName)
         module = eval("moduleImport." + str(moduleName) + "." + str(moduleName) + "(self)")
@@ -106,6 +112,7 @@ class pysciplot(QMainWindow):
         Unload a module.
         """
 
+        Util.debug(2, "App.unloadModule", "Unloading module " + str(moduleName))
         # Unload the module
         self._loadedModules[moduleName].unload()
 
@@ -117,6 +124,7 @@ class pysciplot(QMainWindow):
         Create a table.
         """
 
+        Util.debug(2, "App.createTable", "Creating a table")
         model = DataTableModel(waves, self)
 
         # Connect slots
@@ -227,6 +235,7 @@ class pysciplot(QMainWindow):
         Save the current project to a file which will be selected by the user.
         """
 
+        Util.debug(2, "App.saveProjectAs", "Saving project as")
         fileDialog = QFileDialog(self.ui.workspace, "Save Project")
         fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
         fileDialog.setDefaultSuffix("psp")
@@ -248,6 +257,7 @@ class pysciplot(QMainWindow):
         that location.
         """
 
+        Util.debug(2, "App.saveProject", "Saving project")
         if self.currentProjectFile != "" and QFile.exists(self.currentProjectFile):
             Save.writeProjectToFile(self, self.currentProjectFile)
         else:
@@ -261,6 +271,8 @@ class pysciplot(QMainWindow):
         Load a project from a file which will be selected by the user.
         """
 
+        Util.debug(2, "App.loadProject", "Loading project from file " + str(fileName))
+        
         # Reset app to a clean slate
         self.resetToDefaults(confirmReset)
         
@@ -289,6 +301,8 @@ class pysciplot(QMainWindow):
         the current project.
         """
         
+        Util.debug(2, "App.resetToDefaults", "Resetting application to defaults")
+        
         if confirm:
             # Check to see if we want to save the current project
             saveProjectMessage = QMessageBox()
@@ -316,6 +330,7 @@ class pysciplot(QMainWindow):
         self.setCurrentProject("")
 
     def setCurrentProject(self, fileName):
+        Util.debug(3, "App.setCurrentProject", "Setting current project title")
         self.currentProjectFile = fileName
         if fileName != "":
             self.setWindowTitle("PySciPlot - " + fileName)
@@ -333,6 +348,8 @@ class pysciplot(QMainWindow):
         Then we ask for the file to save the figure to.
         Then we save the file.
         """
+
+        Util.debug(2, "App.saveCurrentFigure", "Saving current Figure")
 
         currentWindow = self.ui.workspace.activeSubWindow()
 

@@ -1,5 +1,7 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 
+import Util
+
 from Figure import Figure
 
 class Figures(QObject):
@@ -25,11 +27,15 @@ class Figures(QObject):
         """
 
         QObject.__init__(self)
+        
+        Util.debug(2, "Figures.init", "Creating figures object")
 
         self._figures = []
         
         for figure in figuresIn:
             self.addFigure(figure)
+        
+        Util.debug(2, "Figures.init", "Created figures object")
 
     def __str__(self):
         string = "Figures:\n"
@@ -47,6 +53,7 @@ class Figures(QObject):
         """Add a figure to the object."""
         self._figures.append(figure)
         self.figureAdded.emit()
+        Util.debug(2, "Figures.addFigure", "Added figure " + figure.get('figureName') + " to figures object")
         return figure
     
     def getFigure(self, index):
@@ -63,6 +70,7 @@ class Figures(QObject):
         except IndexError:
             return False
         self.figureRemoved.emit()
+        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('figureName') + " from figures object")
         return removedFigure
 
     def removeAllFigures(self):
@@ -72,6 +80,7 @@ class Figures(QObject):
 
         self._figures = []
         self.figureRemoved.emit()
+        Util.debug(2, "Figures.removeAllFigures", "Removed all figures from figures object")
         return True
 
     def length(self):

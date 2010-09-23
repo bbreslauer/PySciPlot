@@ -1,5 +1,7 @@
 # Functions for saving to files
 
+import Util
+
 from PyQt4.QtGui import QMdiArea
 
 import xml.dom.minidom
@@ -12,6 +14,8 @@ def writeProjectToFile(app, fileName):
     Need to move this to its own class, and have separate methods for gathering
     each bit of data (waves, a wave, figures, a figure, etc)
     """
+
+    Util.debug(1, "Save", "Writing project to file")
 
     # Create document
     dom = xml.dom.minidom.Document()
@@ -46,6 +50,8 @@ def getWaves(app, dom, waveNames=[]):
     get all the waves.
     """
     
+    Util.debug(1, "Save", "Getting waves")
+
     p = dom.firstChild
 
     # Create and add waves object
@@ -78,6 +84,8 @@ def getWave(app, dom, waves, waveObj):
 
     waveObj is the wave object that we are converting.
     """
+
+    Util.debug(1, "Save", "Getting a wave")
 
     wave = dom.createElement("wave")
     dataType = waveObj.dataType()
@@ -118,6 +126,8 @@ def getTables(app, dom, appWindowList, tablesList=[]):
     empty, then get all the tables.
     """
     
+    Util.debug(1, "Save", "Getting tables")
+
     p = dom.firstChild
 
     # Create and add tables object to dom
@@ -148,6 +158,8 @@ def getTable(app, dom, appWindowList, tables, tableObj):
 
     tableObj is the table object that we are converting.
     """
+
+    Util.debug(1, "Save", "Getting a table")
 
     table = dom.createElement("table")
     tableName = dom.createElement("name")
@@ -183,6 +195,8 @@ def getFigures(app, dom, appWindowList, figuresList=[]):
     empty, then get all the figures in the app.
     """
 
+    Util.debug(1, "Save", "Getting figures")
+
     p = dom.firstChild
 
     # Create and add figures object
@@ -212,6 +226,8 @@ def getFigure(app, dom, appWindowList, figures, figureObj):
 
     figureObj is the figure object that we are converting.
     """
+
+    Util.debug(1, "Save", "Getting a figure")
 
     figure = dom.createElement("figure")
 

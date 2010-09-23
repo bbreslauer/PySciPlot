@@ -79,7 +79,10 @@ class Figure(QObject):
             vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable):
-        return vars(self)["_" + variable]
+        try:
+            return vars(self)["_" + variable]
+        except AttributeError:
+            return self.properties[variable]['default']
 
     def set_(self, variable, value):
         if value != "" and value != vars(self)["_" + variable]:

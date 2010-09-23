@@ -57,11 +57,11 @@ class Wave(QObject):
 
     def name(self):
         """Return the name of the wave."""
-        return self._name
+        return str(self._name)
     
     def dataType(self):
         """Return the type of data that can be stored in the wave."""
-        return self._dataType
+        return str(self._dataType)
         #return self._validDataType
 
     def validValue(self, value):
@@ -138,7 +138,7 @@ class Wave(QObject):
         for i, v in enumerate(self._data):
             self._data[i] = self.convertValueToDataType(v)
 
-        Util.debug(2, "Wave.recastData", "Recast all data in " + str(self._name) + "to " + str(self._dataType) + "type")
+        Util.debug(2, "Wave.recastData", "Recast all data in " + str(self._name) + " to " + str(self._dataType) + " type")
 
     def insert(self, position, value):
         """

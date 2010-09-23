@@ -1,5 +1,7 @@
 # Functions for loading from files
 
+import Util
+
 import xml.dom.minidom
 
 from PyQt4.QtCore import Qt
@@ -16,6 +18,8 @@ def loadProjectFromFile(app, fileName):
     Waves must be imported before anything else. Otherwise, the waves
     might not exist and the other stuff would error out.
     """
+
+    Util.debug(1, "Load", "Loading project from file")
 
     dom = xml.dom.minidom.parse(fileName)
     
@@ -65,6 +69,8 @@ def loadWaves(app, waves):
     Load given waves into the application.
     """
     
+    Util.debug(1, "Load", "Loading waves from file")
+
     waveList = waves.getElementsByTagName("wave")
     
     for wave in waveList:
@@ -96,6 +102,8 @@ def loadTables(app, tables, stackingOrder):
     """
     Load given tables into the application.
     """
+
+    Util.debug(1, "Load", "Loading tables from file")
 
     tableList = tables.getElementsByTagName("table")
 
@@ -138,6 +146,8 @@ def loadFigures(app, figures, stackingOrder):
     """
     Load given figures into the application.
     """
+    
+    Util.debug(1, "Load", "Loading figures from file")
 
     figureList = figures.getElementsByTagName("figure")
 
@@ -190,6 +200,8 @@ def loadPlots(app, plots):
     Convert plots in xml to plot objects.
     """
 
+    Util.debug(1, "Load", "Loading plots from file")
+
     plotList = plots.getElementsByTagName("plot")
     plotsObjList = []
 
@@ -227,6 +239,8 @@ def loadTraces(app, traces):
     """
     Convert traces in xml to trace objects.
     """
+
+    Util.debug(1, "Load", "Loading traces from file")
 
     traceList = traces.getElementsByTagName("trace")
     tracesObjList = []

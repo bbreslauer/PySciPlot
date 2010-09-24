@@ -139,7 +139,6 @@ def getTables(app, dom, appWindowList, tablesList=[]):
         windows = app.ui.workspace.subWindowList()
 
         for window in windows:
-            print type(window).__name__
             if type(window).__name__ == "DataTableSubWindow":
                 tablesList.append(window)
 

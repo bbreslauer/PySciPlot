@@ -28,6 +28,7 @@ class Plot(QObject):
                     'plotBottomAxisMaximum':           { 'type': int, 'default': 10 },
                     'plotBottomAxisScaleType':         { 'type': str, 'default': 'Linear' },
                     'plotBottomAxisTicks':             { 'type': bool, 'default': True },
+                    'plotBottomAxisLabel':             { 'type': str, 'default': ''},
                     'plotBottomAxisMajorTicksNumber':  { 'type': int, 'default': 5 },
                     'plotBottomAxisMajorTicksSpacing': { 'type': int, 'default': 2 },
                     'plotBottomAxisMinorTicksNumber':  { 'type': int, 'default': 3 },
@@ -65,25 +66,40 @@ class Plot(QObject):
         
         Util.debug(1, "Plot.init", "Created plot " + plotName)
     
+        self.get('plotBottomAxisUseTickNumber')
+
     def __str__(self):
         return "Num: %s, Name: %s" % (self.get('plotNum'), self.get('plotName'))
 
     def initializeProperties(self):
         Util.debug(3, "Plot.initializeProperties", "Initializing properties for plot " + str(self.get('plotName')))
+        self.get('plotBottomAxisUseTickNumber')
         for prop in self.properties.keys():
             vars(self)["_" + prop] = self.properties[prop]['default']
 
     def get(self, variable):
         try:
-            Util.debug(3, "Plot.get", "Getting variable " + str(variable) + " for plot " + str(self._plotName))
+            Util.debug(3, "Plot.get", "Getting variable " + str(variable) + "=" + str(vars(self)["_" + variable]) + " for plot " + str(self._plotName))
             return vars(self)["_" + variable]
         except AttributeError:
             return self.properties[variable]['default']
+        except KeyError:
+            pass
 
     def set_(self, variable, value):
         # Only plotName can be blank
         if (value != "" or variable == 'plotName') and value != vars(self)["_" + variable]:
-            vars(self)["_" + variable] = value
+            if variable in self.properties.keys():
+                if self.properties[variable]['type'] == bool:
+                    # Need to do specialized bool testing because bool('False') == True
+                    if value == "True":
+                        vars(self)["_" + variable] = True
+                    else:
+                        vars(self)["_" + variable] = False
+                else:
+                    vars(self)["_" + variable] = self.properties[variable]['type'](value)
+            else:
+                vars(self)["_" + variable] = value
 
             Util.debug(2, "Plot.set", "Setting " + str(variable) + " to " + str(value) + " for plot " + str(self.get('plotName')))
 
@@ -100,7 +116,7 @@ class Plot(QObject):
         self._traces.append(trace)
         #trace.addPlot(self)
         self.traceAdded.emit()
-        Util.debug(1, "Plot.addTrace", "Added trace " + trace.getXName() + "-" + trace.getYName() + "to plot " + str(self.get('plotName')))
+        Util.debug(1, "Plot.addTrace", "Added trace " + trace.getXName() + "-" + trace.getYName() + " to plot " + str(self.get('plotName')))
         trace.getX().dataModified.connect(self.refresh)
         trace.getY().dataModified.connect(self.refresh)
         trace.propertyChanged.connect(self.refresh)
@@ -189,6 +205,7 @@ class Plot(QObject):
             xaxis.set_major_formatter(ticker.FormatStrFormatter('%.2f'))
             
             if self.get('plotBottomAxisUseTickNumber'):
+                Util.debug(3, "Plot.refresh" + str(self), "Bottom axis using set number of ticks")
                 # User has defined how many major tick marks to display
                 majorTicksNum = self.get('plotBottomAxisMajorTicksNumber')
                 xaxis.set_major_locator(ticker.LinearLocator(majorTicksNum))
@@ -200,6 +217,7 @@ class Plot(QObject):
                 xaxis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
                 xaxis.set_minor_formatter(ticker.NullFormatter())
             else:
+                Util.debug(3, "Plot.refresh", "Bottom axis using spacing for ticks")
                 # User has defined the spacing between major tick marks
                 xaxis.set_major_locator(ticker.MultipleLocator(self.get('plotBottomAxisMajorTicksSpacing')))
                 
@@ -207,11 +225,14 @@ class Plot(QObject):
                 minorTicksSpacing = float(self.get('plotBottomAxisMajorTicksSpacing')) / float((self.get('plotBottomAxisMinorTicksNumber') + 1))
                 xaxis.set_minor_locator(ticker.MultipleLocator(minorTicksSpacing))
                 xaxis.set_minor_formatter(ticker.NullFormatter())
-                        
+                
 
         else:
             xaxis.set_major_locator(ticker.NullLocator())
             xaxis.set_minor_locator(ticker.NullLocator())
+
+        # Set labels
+        xaxis.set_label(self.get('plotBottomAxisLabel'))
 
         if drawBool:
             Util.debug(2, "Plot.refresh", "Drawing plot")

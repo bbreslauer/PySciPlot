@@ -164,6 +164,7 @@ def loadFigures(app, figures, stackingOrder):
         child = figure.firstChild
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
+                Util.debug(3, "Load.loadFigures", "Loading " + str(child.nodeName))
                 if child.nodeName == "plots":
                     plots = loadPlots(app, child)
                 else:
@@ -177,7 +178,7 @@ def loadFigures(app, figures, stackingOrder):
         actualFigureProps = figureObj.properties.keys()
         for (key, value) in figureProps.items():
             if key in actualFigureProps:
-                figureObj.set_(key, figureObj.properties[key]["type"](value))
+                figureObj.set_(key, value)
 
         for plot in plots:
             plot.set_("figure", figureObj)
@@ -194,6 +195,9 @@ def loadFigures(app, figures, stackingOrder):
         if figureAttrs["stackingOrder"] >= len(stackingOrder):
             stackingOrder.extend([None] * (figureAttrs["stackingOrder"] - len(stackingOrder) + 1))
         stackingOrder[figureAttrs["stackingOrder"]] = figureWindow
+
+        # Refresh figure
+        #figureObj.refresh()
 
 def loadPlots(app, plots):
     """
@@ -213,6 +217,7 @@ def loadPlots(app, plots):
         child = plot.firstChild
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
+                Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName) + "=" + str(child.firstChild.data.strip()))
                 if child.nodeName == "traces":
                     traces = loadTraces(app, child)
                 else:
@@ -226,7 +231,7 @@ def loadPlots(app, plots):
         actualPlotProps = plotObj.properties.keys()
         for (key, value) in plotProps.items():
             if key in actualPlotProps:
-                plotObj.set_(key, plotObj.properties[key]["type"](value))
+                plotObj.set_(key, value)
 
         for trace in traces:
             plotObj.addTrace(trace)
@@ -254,6 +259,7 @@ def loadTraces(app, traces):
         child = trace.firstChild
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
+                Util.debug(3, "Load.loadTraces", "Loading " + str(child.nodeName))
                 if child.nodeName == "xWave":
                     xWave = app.waves().getWaveByName(str(child.firstChild.data.strip()))
                 elif child.nodeName == "yWave":
@@ -269,7 +275,7 @@ def loadTraces(app, traces):
         actualtraceProps = traceObj.properties.keys()
         for (key, value) in traceProps.items():
             if key in actualtraceProps:
-                traceObj.set_(key, traceObj.properties[key]["type"](value))
+                traceObj.set_(key, value)
 
         tracesObjList.append(traceObj)
 

@@ -88,12 +88,18 @@ class Trace(QObject):
             return self.properties[variable]['default']
 
     def set_(self, variable, value):
-        # Only plotName can be blank
         if value != "" and value != vars(self)["_" + variable]:
-            if type(value).__name__ == 'QString':
-                value = str(value)
-            
-            vars(self)["_" + variable] = value
+            if variable in self.properties.keys():
+                if self.properties[variable]['type'] == bool:
+                    # Need to do specialized bool testing because bool('False') == True
+                    if value == "True":
+                        vars(self)["_" + variable] = True
+                    else:
+                        vars(self)["_" + variable] = False
+                else:
+                    vars(self)["_" + variable] = self.properties[variable]['type'](value)
+            else:
+                vars(self)["_" + variable] = value
 
             Util.debug(2, "Trace.set", "Setting " + str(variable) + " to " + str(value) + " for trace")
 

@@ -85,8 +85,19 @@ class Figure(QObject):
             return self.properties[variable]['default']
 
     def set_(self, variable, value):
+
         if value != "" and value != vars(self)["_" + variable]:
-            vars(self)["_" + variable] = value
+            if variable in self.properties.keys():
+                if self.properties[variable]['type'] == bool:
+                    # Need to do specialized bool testing because bool('False') == True
+                    if value == "True":
+                        vars(self)["_" + variable] = True
+                    else:
+                        vars(self)["_" + variable] = False
+                else:
+                    vars(self)["_" + variable] = self.properties[variable]['type'](value)
+            else:
+                vars(self)["_" + variable] = value
 
             Util.debug(2, "Figure.set", "Setting " + str(variable) + " to " + str(value) + " for figure " + str(self.get('figureName')))
 
@@ -115,7 +126,7 @@ class Figure(QObject):
         return self._plots
 
     def extendPlots(self, plotNum):
-        Util.debug(2, "Figure.extendPlots", "Extending plots on figure to contain " + str(plotNum) + " plots")
+        Util.debug(2, "Figure.extendPlots", "Extending plots on figure to contain " + str(plotNum + 1) + " plots")
         for i in range(len(self._plots), plotNum):
             plot = Plot(self, i + 1)
             self.appendPlot(plot)

@@ -80,7 +80,7 @@ class pysciplot(QMainWindow):
         self.loadModule("EditFigureDialog")
         self.loadModule("ImportCSV")
 
-        #Load.loadProjectFromFile(self, "/home/ben/test.psp")
+        Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
     def waves(self):
         return self._waves

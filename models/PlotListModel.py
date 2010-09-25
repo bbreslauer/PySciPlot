@@ -26,7 +26,7 @@ class PlotListModel(QAbstractListModel):
         """Return the name of the figure entry at the given index."""
 
         if index.isValid() and role == Qt.DisplayRole and self._figure:
-            plotNum = index.row() + 1
+            plotNum = index.row()
             return str(plotNum) + " - " + str(self._figure.getPlot(plotNum).get('plotName'))
         return QVariant()
 
@@ -66,7 +66,7 @@ class PlotListModel(QAbstractListModel):
 #        figure.plotRenamed.connect(self.emitDataChanged)
 
     def getPlot(self, row):
-        plotNum = row + 1
+        plotNum = row
         if self._figure:
             return self._figure.getPlot(plotNum)
         return None

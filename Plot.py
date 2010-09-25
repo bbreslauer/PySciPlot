@@ -29,6 +29,7 @@ class Plot(QObject):
                     'plotBottomAxisScaleType':         { 'type': str, 'default': 'Linear' },
                     'plotBottomAxisTicks':             { 'type': bool, 'default': True },
                     'plotBottomAxisLabel':             { 'type': str, 'default': ''},
+                    'plotBottomAxisVisible':           { 'type': bool, 'default': True },
                     'plotBottomAxisMajorTicksNumber':  { 'type': int, 'default': 5 },
                     'plotBottomAxisMajorTicksSpacing': { 'type': int, 'default': 2 },
                     'plotBottomAxisMinorTicksNumber':  { 'type': int, 'default': 3 },
@@ -37,9 +38,16 @@ class Plot(QObject):
                     'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
                     'plotLeftAxisMinimum':             { 'type': int, 'default': -10 },
                     'plotLeftAxisMaximum':             { 'type': int, 'default': 10 },
-                    'plotTopAxisVisible':              { 'type': bool, 'default': True },
+                    'plotLeftAxisScaleType':           { 'type': str, 'default': 'Linear' },
+                    'plotLeftAxisTicks':               { 'type': bool, 'default': True },
+                    'plotLeftAxisLabel':               { 'type': str, 'default': ''},
                     'plotLeftAxisVisible':             { 'type': bool, 'default': True },
-                    'plotBottomAxisVisible':           { 'type': bool, 'default': True },
+                    'plotLeftAxisMajorTicksNumber':    { 'type': int, 'default': 5 },
+                    'plotLeftAxisMajorTicksSpacing':   { 'type': int, 'default': 2 },
+                    'plotLeftAxisMinorTicksNumber':    { 'type': int, 'default': 3 },
+                    'plotLeftAxisUseTickSpacing':      { 'type': bool, 'default': False },
+                    'plotLeftAxisUseTickNumber':       { 'type': bool, 'default': True },
+                    'plotTopAxisVisible':              { 'type': bool, 'default': True },
                     'plotRightAxisVisible':            { 'type': bool, 'default': True },
                  }
 
@@ -92,7 +100,7 @@ class Plot(QObject):
             if variable in self.properties.keys():
                 if self.properties[variable]['type'] == bool:
                     # Need to do specialized bool testing because bool('False') == True
-                    if value == "True":
+                    if (type(value) == str and value == "True") or (type(value) == bool and value):
                         vars(self)["_" + variable] = True
                     else:
                         vars(self)["_" + variable] = False
@@ -174,7 +182,11 @@ class Plot(QObject):
 
         #print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
         
-        self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum'))
+        if self._figure.get('figureLinkPlotAxes'):
+            self._axes = self._figure.grid[self.get('plotNum')]
+        else:
+            self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum') + 1)
+
         self._axes.clear()
 
         Util.debug(2, "Plot.refresh", "Setting plot properties")
@@ -198,41 +210,46 @@ class Plot(QObject):
         
         # Set ticks
         Util.debug(2, "Plot.refresh", "Setting ticks")
-        xaxis = self._axes.get_xaxis()
-        if self.get('plotBottomAxisTicks'):
 
-            # Set major ticks
-            xaxis.set_major_formatter(ticker.FormatStrFormatter('%.2f'))
-            
-            if self.get('plotBottomAxisUseTickNumber'):
-                Util.debug(3, "Plot.refresh" + str(self), "Bottom axis using set number of ticks")
-                # User has defined how many major tick marks to display
-                majorTicksNum = self.get('plotBottomAxisMajorTicksNumber')
-                xaxis.set_major_locator(ticker.LinearLocator(majorTicksNum))
+        for axisName in ['Bottom', 'Left']:
+            axis = None
+            if axisName == 'Bottom':
+                axis = self._axes.get_xaxis()
+            elif axisName == 'Left':
+                axis = self._axes.get_yaxis()
+
+            if self.get('plot' + axisName + 'AxisTicks'):
+    
+                # Set major ticks
+                axis.set_major_formatter(ticker.FormatStrFormatter('%.2f'))
                 
-                # The minor ticks option defines how many ticks between each pair of major ticks
-                # Therefore, we need to calculate how many total minor ticks there will be
-                # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
-                minorTicksNum = (self.get('plotBottomAxisMinorTicksNumber') + 1) * (len(xaxis.get_major_ticks()) - 1) + 1
-                xaxis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
-                xaxis.set_minor_formatter(ticker.NullFormatter())
+                if self.get('plot' + axisName + 'AxisUseTickNumber'):
+                    Util.debug(3, "Plot.refresh" + str(self), axisName + " axis using set number of ticks")
+                    # User has defined how many major tick marks to display
+                    majorTicksNum = self.get('plot' + axisName + 'AxisMajorTicksNumber')
+                    axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
+                    
+                    # The minor ticks option defines how many ticks between each pair of major ticks
+                    # Therefore, we need to calculate how many total minor ticks there will be
+                    # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
+                    minorTicksNum = (self.get('plot' + axisName + 'AxisMinorTicksNumber') + 1) * (len(axis.get_major_ticks()) - 1) + 1
+                    axis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
+                    axis.set_minor_formatter(ticker.NullFormatter())
+                else:
+                    Util.debug(3, "Plot.refresh", axisName + " axis using spacing for ticks")
+                    # User has defined the spacing between major tick marks
+                    axis.set_major_locator(ticker.MultipleLocator(self.get('plot' + axisName + 'AxisMajorTicksSpacing')))
+                    
+                    # We need to set the minor ticks by spacing instead of number because they will be offset if (axis_max - axis_min) / major_tick_num is not an integer
+                    minorTicksSpacing = float(self.get('plot' + axisName + 'AxisMajorTicksSpacing')) / float((self.get('plot' + axisName + 'AxisMinorTicksNumber') + 1))
+                    axis.set_minor_locator(ticker.MultipleLocator(minorTicksSpacing))
+                    axis.set_minor_formatter(ticker.NullFormatter())
             else:
-                Util.debug(3, "Plot.refresh", "Bottom axis using spacing for ticks")
-                # User has defined the spacing between major tick marks
-                xaxis.set_major_locator(ticker.MultipleLocator(self.get('plotBottomAxisMajorTicksSpacing')))
-                
-                # We need to set the minor ticks by spacing instead of number because they will be offset if (axis_max - axis_min) / major_tick_num is not an integer
-                minorTicksSpacing = float(self.get('plotBottomAxisMajorTicksSpacing')) / float((self.get('plotBottomAxisMinorTicksNumber') + 1))
-                xaxis.set_minor_locator(ticker.MultipleLocator(minorTicksSpacing))
-                xaxis.set_minor_formatter(ticker.NullFormatter())
-                
+                axis.set_major_locator(ticker.NullLocator())
+                axis.set_minor_locator(ticker.NullLocator())
 
-        else:
-            xaxis.set_major_locator(ticker.NullLocator())
-            xaxis.set_minor_locator(ticker.NullLocator())
-
-        # Set labels
-        xaxis.set_label(self.get('plotBottomAxisLabel'))
+            # Set labels
+            axis.set_label_text(self.get('plot' + axisName + 'AxisLabel'))
 
         if drawBool:
             Util.debug(2, "Plot.refresh", "Drawing plot")

@@ -92,7 +92,7 @@ class Trace(QObject):
             if variable in self.properties.keys():
                 if self.properties[variable]['type'] == bool:
                     # Need to do specialized bool testing because bool('False') == True
-                    if value == "True":
+                    if (type(value) == str and value == "True") or (type(value) == bool and value):
                         vars(self)["_" + variable] = True
                     else:
                         vars(self)["_" + variable] = False

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
 from mpl_toolkits.axes_grid.axislines import Axes
+from mpl_toolkits.axes_grid1 import Grid
 
 import Util
 from Waves import Waves
@@ -31,11 +32,12 @@ class Figure(QObject):
                 'figureTitle':              { 'type': str,   'default': '' },
                 'figureRows':               { 'type': int,   'default': 1 },
                 'figureColumns':            { 'type': int,   'default': 1 },
-                'figureAxesPadding':        { 'type': float, 'default': 0.1 },
+                'figureAxesPadding':        { 'type': float, 'default': 0.5 },
                 'figureBackgroundColor':    { 'type': str,   'default': '#ffffff' },
+                'figureLinkPlotAxes':       { 'type': bool,  'default': False },
                  }
 
-    def __init__(self, app, name, nrows=1, ncols=1, padding=0.1):
+    def __init__(self, app, name):
         QObject.__init__(self)
         
         Util.debug(2, "Figure.init", "Creating figure")
@@ -43,11 +45,6 @@ class Figure(QObject):
         self.initializeProperties()
 
         self._app = app
-
-        self.set_('figureRows', nrows)
-        self.set_('figureColumns', ncols)
-        self.set_('figureAxesPadding', padding)
-        self.set_('figureBackgroundColor', '#ffffff')
 
         # Graphical stuff
         self._figure = MPLFigure()
@@ -90,7 +87,7 @@ class Figure(QObject):
             if variable in self.properties.keys():
                 if self.properties[variable]['type'] == bool:
                     # Need to do specialized bool testing because bool('False') == True
-                    if value == "True":
+                    if (type(value) == str and value == "True") or (type(value) == bool and value):
                         vars(self)["_" + variable] = True
                     else:
                         vars(self)["_" + variable] = False
@@ -118,17 +115,17 @@ class Figure(QObject):
         return self.get('figureRows') * self.get('figureColumns')
 
     def getPlot(self, plotNum):
-        if plotNum <= self.numPlots():
-            return self._plots[plotNum - 1]
+        if plotNum < self.numPlots():
+            return self._plots[plotNum]
         return None
     
     def plots(self):
         return self._plots
 
     def extendPlots(self, plotNum):
-        Util.debug(2, "Figure.extendPlots", "Extending plots on figure to contain " + str(plotNum + 1) + " plots")
-        for i in range(len(self._plots), plotNum):
-            plot = Plot(self, i + 1)
+        Util.debug(2, "Figure.extendPlots", "Extending figure to contain " + str(plotNum + 1) + " plots")
+        for i in range(len(self._plots), plotNum + 1):
+            plot = Plot(self, i)
             self.appendPlot(plot)
 
     def appendPlot(self, plot):
@@ -150,12 +147,12 @@ class Figure(QObject):
 
     def replacePlot(self, plotNum, plot):
         """Replace the current plot in plotNum with a new plot."""
-        if plotNum <= self.numPlots():
+        if plotNum < self.numPlots():
             # Disconnect current signals
             self.getPlot(plotNum).plotRenamed.disconnect()
 
             # Replace with new plot
-            self._plots[plotNum - 1] = plot
+            self._plots[plotNum] = plot
 
             Util.debug(2, "Figure.replacePlot", "Replaced plot " + str(plotNum))
         
@@ -186,17 +183,23 @@ class Figure(QObject):
         Util.debug(3, "Figure.refresh", "Clearing figure")
         self.mplFigure().clf()
 
+        if self.get('figureLinkPlotAxes'):
+            self.grid = Grid(self.mplFigure(), 111, nrows_ncols = (self.get('figureRows'), self.get('figureColumns')), axes_pad=self.get('figureAxesPadding'), share_x=False, share_y=False)
+        else:
+            self.mplFigure().subplots_adjust(wspace=self.get('figureAxesPadding'), hspace=self.get('figureAxesPadding'))
+
         self.mplFigure().suptitle(str(self.get('figureTitle')))
         
         self.mplFigure().set_facecolor(str(self.get('figureBackgroundColor')))
 
-        for plotNum in range(1, displayedPlots + 1):
+        for plotNum in range(0, displayedPlots):
             self.refreshPlot(plotNum, False)
 
         Util.debug(3, "Figure.refresh", "Drawing canvas")
         self._canvas.draw()
         
         Util.debug(1, "Figure.refresh", "Finished refreshing all plots")
+
 
     def showFigure(self):
         self._figureSubWindow.show()

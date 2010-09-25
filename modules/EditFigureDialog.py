@@ -32,6 +32,7 @@ class EditFigureDialog(Module):
                 'plotBottomAxisMaximum':              { 'object': 'plot'   },
                 'plotBottomAxisScaleType':            { 'object': 'plot'   },
                 'plotBottomAxisTicks':                { 'object': 'plot'   },
+                'plotBottomAxisLabel':                { 'object': 'plot'   },
                 'plotBottomAxisMajorTicksNumber':     { 'object': 'plot'   },
                 'plotBottomAxisMajorTicksSpacing':    { 'object': 'plot'   },
                 'plotBottomAxisMinorTicksNumber':     { 'object': 'plot'   },
@@ -40,6 +41,14 @@ class EditFigureDialog(Module):
                 'plotLeftAxisAutoscale':              { 'object': 'plot'   },
                 'plotLeftAxisMinimum':                { 'object': 'plot'   },
                 'plotLeftAxisMaximum':                { 'object': 'plot'   },
+                'plotLeftAxisScaleType':              { 'object': 'plot'   },
+                'plotLeftAxisTicks':                  { 'object': 'plot'   },
+                'plotLeftAxisLabel':                  { 'object': 'plot'   },
+                'plotLeftAxisMajorTicksNumber':       { 'object': 'plot'   },
+                'plotLeftAxisMajorTicksSpacing':      { 'object': 'plot'   },
+                'plotLeftAxisMinorTicksNumber':       { 'object': 'plot'   },
+                'plotLeftAxisUseTickSpacing':         { 'object': 'plot'   },
+                'plotLeftAxisUseTickNumber':          { 'object': 'plot'   },
                 'plotTopAxisVisible':                 { 'object': 'plot'   },
                 'plotLeftAxisVisible':                { 'object': 'plot'   },
                 'plotBottomAxisVisible':              { 'object': 'plot'   },
@@ -48,7 +57,9 @@ class EditFigureDialog(Module):
                 'figureTitle':                        { 'object': 'figure' },
                 'figureRows':                         { 'object': 'figure' },
                 'figureColumns':                      { 'object': 'figure' },
+                'figureAxesPadding':                  { 'object': 'figure' },
                 'figureBackgroundColor':              { 'object': 'figure' },
+                'figureLinkPlotAxes':                 { 'object': 'figure' },
                 'traceLineStyle':                     { 'object': 'trace'  },
                 'tracePointMarker':                   { 'object': 'trace'  },
                 'traceLineColor':                     { 'object': 'trace'  },
@@ -307,10 +318,8 @@ class EditFigureDialog(Module):
             self._ui.plotSelector.model().doReset()
            
             if currentPlotIndex >= (figure.numPlots() - 1):
-                print "a"
                 self._ui.plotSelector.setCurrentIndex(0)
             else:
-                print "b" + str(currentPlotIndex)
                 self._ui.plotSelector.setCurrentIndex(currentPlotIndex)
 
             

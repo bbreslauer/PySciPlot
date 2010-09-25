@@ -184,10 +184,13 @@ class DataTableModel(QAbstractTableModel):
 
         # Remove all trailing blank entries for each column
         for wave in self._waves.waves():
-            _tmp = wave.pop()
-            while _tmp == "":
+            try:
                 _tmp = wave.pop()
-            wave.push(_tmp)
+                while _tmp == "":
+                    _tmp = wave.pop()
+                wave.push(_tmp)
+            except IndexError:
+                pass
 
         # Now add as many blanks as are need to each column
         rows = self.rowCount()

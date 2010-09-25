@@ -79,6 +79,7 @@ class pysciplot(QMainWindow):
         self.loadModule("ManageWavesDialog")
         self.loadModule("EditFigureDialog")
         self.loadModule("ImportCSV")
+        self.loadModule("ImportBinary")
 
         #Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
@@ -408,6 +409,7 @@ class pysciplot(QMainWindow):
         self._waves.addWave(Wave("Wave2", "Integer", [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
         self._waves.addWave(Wave("Wave3", "Integer", [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
         self._waves.addWave(Wave("Wave4", "Integer", [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
+        self._waves.addWave(Wave("Wave5", "Integer", range(4194304)))
 
 
 

@@ -42,7 +42,8 @@ class Wave(QObject):
 
         if self.setName(waveName):
             if dataIn == []:
-                self._data.append(0)
+                pass
+                #self._data.append(0)
             else:
                 self._data.extend(map(self.convertValueToDataType, dataIn))
         
@@ -217,6 +218,19 @@ class Wave(QObject):
         # Now convert all the current data in the wave to the new type
         self.recastData()
 
+    def replaceData(self, values):
+        """
+        Replaces all the data in the wave.  Equivalent to removing all the data followed by Wave.extend, but more efficient.
+
+        Emits the dataModified signal.
+        """
+        
+        self._data = []
+        for value in values:
+            self._data.append(value)
+        self.recastData()
+        
+        self.dataModified.emit()
 
 
 

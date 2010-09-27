@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>373</width>
+    <width>438</width>
     <height>129</height>
    </rect>
   </property>
@@ -40,7 +40,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Data Type</string>
+      <string>Data Type (byte length)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -52,38 +52,59 @@
    </item>
    <item row="2" column="1">
     <widget class="QComboBox" name="dataType">
-     <item>
-      <property name="text">
-       <string>Signed Integer</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Unsigned Integer</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Float</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string># Bytes</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QSpinBox" name="numBytes">
-     <property name="value">
+     <property name="currentIndex">
       <number>4</number>
      </property>
+     <item>
+      <property name="text">
+       <string>Signed Integer (1)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Unsigned Integer (1)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Short (2)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Unsigned Short (2)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Integer (4)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Unsigned Integer (4)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Long (8)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Unsigned Long (8)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Float (4)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Double (8)</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="0" column="3">
@@ -93,10 +114,44 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4">
+   <item row="4" column="0" colspan="4">
     <widget class="QPushButton" name="importDataButton">
      <property name="text">
       <string>Import Data</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QComboBox" name="byteOrder">
+     <item>
+      <property name="text">
+       <string>Native</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Big Endian</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Little Endian</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Network</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Byte Order</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

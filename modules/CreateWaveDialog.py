@@ -36,6 +36,7 @@ class CreateWaveDialog(Module):
         self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
         self._ui.createWaveButton.clicked.connect(self.createWave)
         self._ui.closeWindowButton.clicked.connect(self.closeWindow)
+        self._ui.functionInsertWaveButton.clicked.connect(self.insertWaveIntoFunction)
 
     def closeWindow(self):
         self._widget.parent().close()
@@ -83,6 +84,7 @@ class CreateWaveDialog(Module):
 
         # Reset certain ui fields
         self._ui.copyWaveOriginalWave.setCurrentIndex(0)
+        self._ui.functionInsertWave.setCurrentIndex(0)
 
     def parseFunction(self, waveLength, functionString):
         """
@@ -98,24 +100,53 @@ class CreateWaveDialog(Module):
             s_oneindex - 1-based row index 
         """
 
-        specialValuesList = re.findall('[s|w]_\w*', functionString)
+        specialValuesList = re.findall('s_\w*', functionString)
         specialValuesString = str.join(', ', specialValuesList)
+        
+        wavesList = re.findall('w_\w*', functionString)
+        wavesString = str.join(', ', wavesList)
+        
+        specialValuesAndWavesList = re.findall('[s|w]_\w*', functionString)
+        specialValuesAndWavesString = str.join(', ', specialValuesAndWavesList)
         
         # Need to create the lambda string first so that we can expand all
         # the arguments to the lambda before creating the actual anonymous
         # function.
-        function = eval('lambda ' + specialValuesString + ': eval(\'' + str(functionString) + '\')')
+        function = eval('lambda ' + specialValuesAndWavesString + ': eval(\'' + str(functionString) + '\')')
         
+        # Determine the length of the smallest wave, so that we don't apply the function past that
+        waveLengths = []
+        if waveLength > 0:
+            waveLengths.append(waveLength)
+        for waveName in wavesList:
+            waveNameNoPrefix = waveName[2:]
+            waveLengths.append(len(self._app.waves().getWaveByName(waveNameNoPrefix).data()))
+
+        waveLength = min(waveLengths)
+
+        # Define s_ values
         s_index = range(waveLength)
         s_oneindex = range(1, waveLength + 1)
 
-        data = eval('map(function, ' + specialValuesString + ')')
+        # Define waves that are used in the function
+        for waveName in wavesList:
+            waveNameNoPrefix = waveName[2:]
+            exec(str(waveName) + ' = ' + str(self._app.waves().getWaveByName(waveNameNoPrefix).data()[:waveLength]))
+
+        # Apply the function
+        data = eval('map(function, ' + specialValuesAndWavesString + ')')
 
         return data
 
 
+    def insertWaveIntoFunction(self):
+        """
+        Take the wave from functionInsertWave and insert it into the function definition.
+        """
 
-
+        waveName = self._ui.functionInsertWave.model().index(self._ui.functionInsertWave.currentIndex(), 0).internalPointer().name()
+        self._ui.functionEquation.insert("w_" + str(waveName))
+        return True
 
 
 

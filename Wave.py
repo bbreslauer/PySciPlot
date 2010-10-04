@@ -50,7 +50,7 @@ class Wave(QObject):
         Util.debug(1, "Wave.init", "Created wave " + self._name)
 
     def __str__(self):
-        return "%s (%s): %s\n" % (self._name, self._dataType, self._data)
+        return "%s (%s, %s): %s\n" % (self._name, self._dataType, len(self._data), self._data)
 
     def data(self):
         """Return the data list."""

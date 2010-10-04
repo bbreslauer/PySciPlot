@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_ImportBinary.ui'
 #
-# Created: Sun Sep 26 22:45:04 2010
+# Created: Mon Oct  4 10:19:36 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_ImportBinary(object):
     def setupUi(self, ImportBinary):
         ImportBinary.setObjectName("ImportBinary")
-        ImportBinary.resize(373, 129)
+        ImportBinary.resize(438, 129)
         self.gridLayout = QtGui.QGridLayout(ImportBinary)
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtGui.QLabel(ImportBinary)
@@ -71,7 +71,7 @@ class Ui_ImportBinary(object):
         ImportBinary.setWindowTitle(QtGui.QApplication.translate("ImportBinary", "Import Binary Data", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("ImportBinary", "Binary File", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("ImportBinary", "Wave Name", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("ImportBinary", "Data Type", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("ImportBinary", "Data Type (byte length)", None, QtGui.QApplication.UnicodeUTF8))
         self.dataType.setItemText(0, QtGui.QApplication.translate("ImportBinary", "Signed Integer (1)", None, QtGui.QApplication.UnicodeUTF8))
         self.dataType.setItemText(1, QtGui.QApplication.translate("ImportBinary", "Unsigned Integer (1)", None, QtGui.QApplication.UnicodeUTF8))
         self.dataType.setItemText(2, QtGui.QApplication.translate("ImportBinary", "Short (2)", None, QtGui.QApplication.UnicodeUTF8))

@@ -20,6 +20,11 @@ class WavesListModel(QStringListModel):
 
     def rowCount(self, parent=QModelIndex()):
         return len(self._waves.waves())
+
+    def index(self, row, column, parent=QModelIndex()):
+        if row > self._waves.length():
+            return self.createIndex(row, column, parent)
+        return self.createIndex(row, column, self._waves.waves()[row])
     
     def data(self, index, role):
         if index.isValid() and role == Qt.DisplayRole:

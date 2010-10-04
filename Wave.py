@@ -63,7 +63,6 @@ class Wave(QObject):
     def dataType(self):
         """Return the type of data that can be stored in the wave."""
         return str(self._dataType)
-        #return self._validDataType
 
     def validValue(self, value):
         """Determine whether a given value is acceptable for this wave."""
@@ -104,7 +103,7 @@ class Wave(QObject):
         """
 
         validName = Wave.validateWaveName(name)
-        if validName != self._name:
+        if validName != self._name and validName != "":
             Util.debug(2, "Wave.setName", "Changed wave name from " + str(self._name) + " to " + str(validName))
             self._name = validName
             self.nameChanged.emit()
@@ -251,12 +250,17 @@ class Wave(QObject):
 
         Currently, these conversions are:
         1) Remove leading and trailing spaces
-        2) Replace all whitespace with underscores
-        3) Replace any <> with ()
+        2) Replace 4 simple binary math operations (+-*/) with underscores
+        3) Replace all whitespace with underscores
+        4) Replace any <> with ()
         """
 
         waveName = waveName.strip()
         waveName = waveName.replace(" ","_")
+        waveName = waveName.replace("+","_")
+        waveName = waveName.replace("-","_")
+        waveName = waveName.replace("*","_")
+        waveName = waveName.replace("/","_")
         waveName = waveName.replace("<","(")
         waveName = waveName.replace(">",")")
         return waveName

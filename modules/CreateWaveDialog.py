@@ -1,0 +1,153 @@
+from PyQt4.QtGui import QWidget, QAction
+from PyQt4.QtCore import Qt
+
+import re, inspect
+from math import *
+from numpy import *
+
+import Util
+from Wave import Wave
+from DialogSubWindow import DialogSubWindow
+from models.WavesListModel import WavesListModel
+from modules.Module import Module
+from ui.Ui_CreateWaveDialog import Ui_CreateWaveDialog
+
+class CreateWaveDialog(Module):
+    """Module to display the Create Wave dialog window."""
+
+    def __init__(self, app):
+        Module.__init__(self, app)
+
+    def buildWidget(self):
+        """Create the widget and populate it."""
+
+        # Create enclosing widget and UI
+        self._widget = QWidget()
+        self._ui = Ui_CreateWaveDialog()
+        self._ui.setupUi(self._widget)
+        
+        # Set up model and view
+        self._wavesListModel = WavesListModel(self._app.waves())
+        self._ui.copyWaveOriginalWave.setModel(self._wavesListModel)
+        self._ui.functionInsertWave.setModel(self._wavesListModel)
+
+        # Connect some slots
+        self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
+        self._ui.createWaveButton.clicked.connect(self.createWave)
+        self._ui.closeWindowButton.clicked.connect(self.closeWindow)
+
+    def closeWindow(self):
+        self._widget.parent().close()
+
+
+    def createWave(self):
+        """
+        Create the wave, using whatever starting point (blank, copy, function, etc) is necessary.
+        """
+
+        # Check if the wave is unique in the application
+        if not self._app.waves().goodWaveName(Util.getWidgetValue(self._ui.waveName)):
+            warningMessage = QMessageBox()
+            warningMessage.setWindowTitle("Error!")
+            warningMessage.setText("The name you chose has already been used. Please enter a new name.")
+            warningMessage.setIcon(QMessageBox.Critical)
+            warningMessage.setStandardButtons(QMessageBox.Ok)
+            warningMessage.setDefaultButton(QMessageBox.Ok)
+            result = warningMessage.exec_()
+            return False
+
+        wave = Wave(Util.getWidgetValue(self._ui.waveName), Util.getWidgetValue(self._ui.dataType))
+        
+        # Check how the wave should be initially populated
+        initialWaveDataTab = self._ui.waveDataTabs.currentWidget().objectName()
+
+        if initialWaveDataTab == "blankTab":
+            # The wave will be blank, so don't do anything
+            pass
+
+        elif initialWaveDataTab == "copyWaveTab":
+            # Copy the data from another wave
+            originalWave = self._ui.copyWaveOriginalWave.model().index(self._ui.copyWaveOriginalWave.currentIndex(), 0).internalPointer()
+            wave.extend(originalWave.data())
+
+        elif initialWaveDataTab == "functionTab":
+            waveLength = Util.getWidgetValue(self._ui.functionWaveLength)
+            functionString = Util.getWidgetValue(self._ui.functionEquation)
+            data = self.parseFunction(waveLength, functionString)
+            wave.extend(data)
+        
+
+        # Add wave to application
+        self._app.waves().addWave(wave)
+
+        # Reset certain ui fields
+        self._ui.copyWaveOriginalWave.setCurrentIndex(0)
+
+    def parseFunction(self, waveLength, functionString):
+        """
+        Parse the function string into an actual function and return the data
+        for the wave. Any python math and numpy functions are allowed.
+
+        Special values:
+        w_name - the wave with name 'name'
+        s_val  - a special value, see the list below
+
+        s_ values:
+            s_index - 0-based row index
+            s_oneindex - 1-based row index 
+        """
+
+        specialValuesList = re.findall('[s|w]_\w*', functionString)
+        specialValuesString = str.join(', ', specialValuesList)
+        
+        # Need to create the lambda string first so that we can expand all
+        # the arguments to the lambda before creating the actual anonymous
+        # function.
+        function = eval('lambda ' + specialValuesString + ': eval(\'' + str(functionString) + '\')')
+        
+        s_index = range(waveLength)
+        s_oneindex = range(1, waveLength + 1)
+
+        data = eval('map(function, ' + specialValuesString + ')')
+
+        return data
+
+
+
+
+
+
+
+    def load(self):
+        self.window = DialogSubWindow(self._app.ui.workspace)
+
+        self.menuEntry = QAction(self._app)
+        self.menuEntry.setObjectName("actionCreateWaveDialog")
+        self.menuEntry.setShortcut("Ctrl+W")
+        self.menuEntry.setText("Create Waves")
+        self.menuEntry.triggered.connect(self.window.show)
+        self.menu = vars(self._app.ui)["menuData"]
+        self.menu.addAction(self.menuEntry)
+
+        self.buildWidget()
+        self.window.setWidget(self._widget)
+        self._widget.setParent(self.window)
+
+        self.window.hide()
+
+    def unload(self):
+        # Disconnect some slots
+        self._app.waves().waveAdded.disconnect(self._wavesListModel.doReset)
+        self._app.waves().waveRemoved[Wave].disconnect(self._wavesListModel.doReset)
+        self.menuEntry.triggered.disconnect()
+
+        self._widget.deleteLater()
+        self.window.deleteLater()
+        self.menu.removeAction(self.menuEntry)
+
+
+
+
+
+

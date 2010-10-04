@@ -48,6 +48,10 @@ class Waves(QObject):
         """Return the waves list."""
         return self._waves
 
+    def length(self):
+        """Return the number of waves."""
+        return len(self._waves)
+
     def uniqueNames(self):
         """Return uniqueNames variable."""
         return self._uniqueNames
@@ -103,7 +107,8 @@ class Waves(QObject):
         """
         Determine if name is a good Wave name for this Waves object.  Returns False if name is an empty string.  If wave names can be duplicates, then return True.  If wave names must be unique and this name is, then return True.  Otherwise return False.
         """
-
+        
+        name = Wave.validateWaveName(name)
         if name == "":
             return False
         if self._uniqueNames:

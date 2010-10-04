@@ -35,22 +35,13 @@ class ManageWavesDialog(Module):
         
         # Define handler functions
         def addWave():
-            """Add a wave to the list of all waves in the main window."""
+            """Add a wave to the list of all waves in the main window. It starts out as a default, and can be
+            edited later by the user."""
 
-            name = str(self._ui.waveNameLineEdit.text())
-            if Wave.validateWaveName(name) == "":
-                failedMessage = QMessageBox()
-                failedMessage.setText("Name cannot be blank")
-                failedMessage.exec_()
-            else:
-                newWave = Wave(name)
-                newWave.setDataType(Util.getWidgetValue(self._ui.dataType))
-                if not self._app.waves().addWave(newWave):
-                    failedMessage = QMessageBox()
-                    failedMessage.setText("Name already exists: " + name)
-                    failedMessage.exec_()
-            self._ui.waveNameLineEdit.setText("")
-        def removeWaves():
+            newWave = Wave(self._app.waves().findGoodWaveName())
+            self._app.waves().addWave(newWave)
+
+        def removeWave():
             """Remove waves from the list of all waves in the main window."""
             wavesToRemove = []
 
@@ -64,9 +55,8 @@ class ManageWavesDialog(Module):
             self._widget.parent().close()
             
         # Connect buttons to handler functions
-        self._ui.waveNameLineEdit.returnPressed.connect(addWave)
         self._ui.createWaveButton.clicked.connect(addWave)
-        self._ui.removeWaveButton.clicked.connect(removeWaves)
+        self._ui.removeWaveButton.clicked.connect(removeWave)
         self._ui.closeButton.clicked.connect(closeWindow)
 
         return self._widget
@@ -78,31 +68,47 @@ class ManageWavesDialog(Module):
         """
 
         if self._ui.wavesListView.currentIndex():
-            waveDataType = self._app.waves().getWaveByName(str(self._ui.wavesListView.currentIndex().data().toString())).dataType()
-            Util.setWidgetValue(self._ui.dataType, waveDataType)
+            wave = self._app.waves().getWaveByName(str(self._ui.wavesListView.currentIndex().data().toString()))
+
+            Util.setWidgetValue(self._ui.waveName, wave.name())
+            Util.setWidgetValue(self._ui.dataType, wave.dataType())
 
     def applyWaveOptions(self):
         """
         Set the selected waves to have the currently-selected options.
         """
 
-        # Make sure user wants to actually change the data type
-        warningMessage = QMessageBox()
-        warningMessage.setWindowTitle("Warning!")
-        warningMessage.setText("If you change the data type, then you may lose data if it cannot be properly converted.")
-        warningMessage.setInformativeText("Are you sure you want to continue?")
-        warningMessage.setIcon(QMessageBox.Warning)
-        warningMessage.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        warningMessage.setDefaultButton(QMessageBox.No)
-        result = warningMessage.exec_()
+        if self._ui.wavesListView.currentIndex():
+            wave = self._app.waves().getWaveByName(str(self._ui.wavesListView.currentIndex().data().toString()))
+            
+            # Make sure the user wants to change the wave's name
+            if wave.name() != Util.getWidgetValue(self._ui.waveName) and not self._app.waves().goodWaveName(Util.getWidgetValue(self._ui.waveName)):
+                warningMessage = QMessageBox()
+                warningMessage.setWindowTitle("Error!")
+                warningMessage.setText("You are trying to change the wave name, but the one you have chosen has already been used. Please enter a new name.")
+                warningMessage.setIcon(QMessageBox.Critical)
+                warningMessage.setStandardButtons(QMessageBox.Ok)
+                warningMessage.setDefaultButton(QMessageBox.Ok)
+                result = warningMessage.exec_()
+                return False
 
-        if result != QMessageBox.Yes:
-            return False
+            # Make sure the user wants to actually change the data type
+            if wave.dataType() != Util.getWidgetValue(self._ui.dataType):
+                warningMessage = QMessageBox()
+                warningMessage.setWindowTitle("Warning!")
+                warningMessage.setText("If you change the data type, then you may lose data if it cannot be properly converted.")
+                warningMessage.setInformativeText("Are you sure you want to continue?")
+                warningMessage.setIcon(QMessageBox.Warning)
+                warningMessage.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                warningMessage.setDefaultButton(QMessageBox.No)
+                result = warningMessage.exec_()
 
-        if self._ui.wavesListView.selectedIndexes():
-            for index in self._ui.wavesListView.selectedIndexes():
-                wave = self._app.waves().getWaveByName(str(index.data().toString()))
-                wave.setDataType(Util.getWidgetValue(self._ui.dataType))
+                if result != QMessageBox.Yes:
+                    return False
+
+            # All warnings have been accepted, so we can continue with actually modifying the wave
+            wave.setName(Util.getWidgetValue(self._ui.waveName))
+            wave.setDataType(Util.getWidgetValue(self._ui.dataType))
 
         return True
 

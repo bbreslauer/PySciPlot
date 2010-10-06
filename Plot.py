@@ -10,7 +10,10 @@ from Wave import Wave
 from Trace import Trace
 
 class Plot(QObject):
-    """This class contains all the information about a plot inside a figure."""
+    """This class contains all the information about a plot inside a figure.
+    
+    plotNum is 0-based
+    """
 
     # Signals
     plotRenamed = pyqtSignal(str)
@@ -20,7 +23,7 @@ class Plot(QObject):
 
     # Properties
     properties = {
-                    'plotNum':                         { 'type': int, 'default': 1 },
+                    'plotNum':                         { 'type': int, 'default': 0 },
                     'plotName':                        { 'type': str, 'default': '' },
                     'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
                     'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
@@ -179,6 +182,10 @@ class Plot(QObject):
 
         if not self._figure:
             return False
+        
+        # Do not refresh the plot if it is not being displayed
+        if self.get('plotNum') + 1 > self._figure.numPlots():
+            return False 
 
         #print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
         

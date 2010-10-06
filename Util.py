@@ -119,5 +119,18 @@ def debug(level, caller, text):
         print "[%s] %s" % (caller, text)
 
 
+def uniqueList(l):
+    """
+    Return a list with all unique entries.
+    """
+
+    s = set(l)
+    return list(s)
+
+
+
+
+
+
 
 

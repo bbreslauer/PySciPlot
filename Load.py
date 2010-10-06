@@ -217,7 +217,10 @@ def loadPlots(app, plots):
         child = plot.firstChild
         while child is not None:
             if child.nodeType is child.ELEMENT_NODE:
-                Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName) + "=" + str(child.firstChild.data.strip()))
+                try:
+                    Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName) + "=" + str(child.firstChild.data.strip()))
+                except:
+                    Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName))
                 if child.nodeName == "traces":
                     traces = loadTraces(app, child)
                 else:

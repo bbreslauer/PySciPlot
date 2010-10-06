@@ -58,7 +58,7 @@ class Figure(QObject):
         self.set_('figureName', name)
 
         self._plots = []
-        self.extendPlots(1)
+        self.extendPlots(0)
 
         self.refresh()
 
@@ -160,6 +160,8 @@ class Figure(QObject):
                 self.plotRenamed.emit(plot.get('plotNum'), name)
             
             plot.plotRenamed.connect(emitPlotRenamed)
+            
+            return True
 
         return False
 
@@ -178,7 +180,7 @@ class Figure(QObject):
 
         displayedPlots = self.numPlots()
 
-        self.extendPlots(displayedPlots)
+        self.extendPlots(displayedPlots - 1)
 
         Util.debug(3, "Figure.refresh", "Clearing figure")
         self.mplFigure().clf()

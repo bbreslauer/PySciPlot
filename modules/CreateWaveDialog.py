@@ -100,15 +100,21 @@ class CreateWaveDialog(Module):
             s_oneindex - 1-based row index 
         """
 
-        specialValuesList = re.findall('s_\w*', functionString)
+        specialValuesList = Util.uniqueList(re.findall('s_\w*', functionString))
         specialValuesString = str.join(', ', specialValuesList)
         
-        wavesList = re.findall('w_\w*', functionString)
+        wavesList = Util.uniqueList(re.findall('w_\w*', functionString))
         wavesString = str.join(', ', wavesList)
         
-        specialValuesAndWavesList = re.findall('[s|w]_\w*', functionString)
+        specialValuesAndWavesList = Util.uniqueList(re.findall('[s|w]_\w*', functionString))
         specialValuesAndWavesString = str.join(', ', specialValuesAndWavesList)
         
+        # First, let's check if this is a simple function that can be performed completely
+        # with built-ins, in which case we don't need to worry about getting any special
+        # values and waves
+        if len(specialValuesAndWavesList) == 0:
+            return eval(functionString)
+
         # Need to create the lambda string first so that we can expand all
         # the arguments to the lambda before creating the actual anonymous
         # function.
@@ -121,8 +127,11 @@ class CreateWaveDialog(Module):
         for waveName in wavesList:
             waveNameNoPrefix = waveName[2:]
             waveLengths.append(len(self._app.waves().getWaveByName(waveNameNoPrefix).data()))
-
-        waveLength = min(waveLengths)
+        
+        if len(waveLengths) == 0:
+            waveLength = 0
+        else:
+            waveLength = min(waveLengths)
 
         # Define s_ values
         s_index = range(waveLength)

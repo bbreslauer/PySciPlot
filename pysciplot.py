@@ -60,8 +60,8 @@ class pysciplot(QMainWindow):
         Util.debug(2, "App", "Connecting signals and slots")
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
-        self.ui.actionNew_Project.triggered.connect(self.resetToDefaults)
-        self.ui.actionLoad_Project.triggered.connect(self.loadProject)
+        self.ui.actionNew_Project.triggered.connect(self.newProjectSlot)
+        self.ui.actionLoad_Project.triggered.connect(self.loadProjectSlot)
         self.ui.actionSave_Project.triggered.connect(self.saveProject)
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
         self.ui.actionSave_Current_Figure.triggered.connect(self.saveCurrentFigure)
@@ -243,6 +243,7 @@ class pysciplot(QMainWindow):
         fileDialog.setDefaultSuffix("psp")
         fileDialog.setConfirmOverwrite(True)
         fileDialog.setDirectory(Util.fileDialogDirectory(self))
+        fileDialog.setAcceptMode(QFileDialog.AcceptSave)
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
@@ -266,7 +267,11 @@ class pysciplot(QMainWindow):
             self.saveProjectAs()
 
         
-
+    def loadProjectSlot(self):
+        """
+        Slot to pick up menu selection and run loadProject.  Required because of different parameters.
+        """
+        self.loadProject()
 
     def loadProject(self, fileName="", confirmReset=True):
         """
@@ -285,6 +290,7 @@ class pysciplot(QMainWindow):
             fileDialog.setDefaultSuffix("psp")
             fileDialog.setConfirmOverwrite(False)
             fileDialog.setDirectory(Util.fileDialogDirectory(self))
+            fileDialog.setAcceptMode(QFileDialog.AcceptOpen)
             fileDialog.exec_()
             fileName = str(fileDialog.selectedFiles()[0])
     
@@ -293,6 +299,13 @@ class pysciplot(QMainWindow):
                 self.cwd = os.path.dirname(fileName)
     
         Load.loadProjectFromFile(self, fileName)
+        
+    def newProjectSlot(self):
+        """
+        Slot to pick up menu selection and create a new project.  Required because of different parameters.
+        """
+        Util.debug(2, "App.newProject", "Creating new project")        
+        self.resetToDefaults(True)
 
     def resetToDefaults(self, confirm=True):
         """

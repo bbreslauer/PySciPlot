@@ -3,6 +3,7 @@ from PyQt4.QtCore import QObject, pyqtSignal
 from pylab import nan
 from matplotlib.axes import Axes
 from matplotlib import ticker
+import numpy
 
 import Util
 from Waves import Waves
@@ -27,29 +28,31 @@ class Plot(QObject):
                     'plotName':                        { 'type': str, 'default': '' },
                     'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
                     'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
-                    'plotBottomAxisMinimum':           { 'type': int, 'default': -10 },
-                    'plotBottomAxisMaximum':           { 'type': int, 'default': 10 },
+                    'plotBottomAxisMinimum':           { 'type': float, 'default': -10 },
+                    'plotBottomAxisMaximum':           { 'type': float, 'default': 10 },
                     'plotBottomAxisScaleType':         { 'type': str, 'default': 'Linear' },
                     'plotBottomAxisTicks':             { 'type': bool, 'default': True },
                     'plotBottomAxisLabel':             { 'type': str, 'default': ''},
                     'plotBottomAxisVisible':           { 'type': bool, 'default': True },
                     'plotBottomAxisMajorTicksNumber':  { 'type': int, 'default': 5 },
-                    'plotBottomAxisMajorTicksSpacing': { 'type': int, 'default': 2 },
+                    'plotBottomAxisMajorTicksSpacing': { 'type': float, 'default': 2 },
                     'plotBottomAxisMinorTicksNumber':  { 'type': int, 'default': 3 },
                     'plotBottomAxisUseTickSpacing':    { 'type': bool, 'default': False },
                     'plotBottomAxisUseTickNumber':     { 'type': bool, 'default': True },
+                    'plotBottomAxisTickLabelFormat':   { 'type': str, 'default': '%.2g'},
                     'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
-                    'plotLeftAxisMinimum':             { 'type': int, 'default': -10 },
-                    'plotLeftAxisMaximum':             { 'type': int, 'default': 10 },
+                    'plotLeftAxisMinimum':             { 'type': float, 'default': -10 },
+                    'plotLeftAxisMaximum':             { 'type': float, 'default': 10 },
                     'plotLeftAxisScaleType':           { 'type': str, 'default': 'Linear' },
                     'plotLeftAxisTicks':               { 'type': bool, 'default': True },
                     'plotLeftAxisLabel':               { 'type': str, 'default': ''},
                     'plotLeftAxisVisible':             { 'type': bool, 'default': True },
                     'plotLeftAxisMajorTicksNumber':    { 'type': int, 'default': 5 },
-                    'plotLeftAxisMajorTicksSpacing':   { 'type': int, 'default': 2 },
+                    'plotLeftAxisMajorTicksSpacing':   { 'type': float, 'default': 2 },
                     'plotLeftAxisMinorTicksNumber':    { 'type': int, 'default': 3 },
                     'plotLeftAxisUseTickSpacing':      { 'type': bool, 'default': False },
                     'plotLeftAxisUseTickNumber':       { 'type': bool, 'default': True },
+                    'plotLeftAxisTickLabelFormat':     { 'type': str, 'default': '%.2g'},
                     'plotTopAxisVisible':              { 'type': bool, 'default': True },
                     'plotRightAxisVisible':            { 'type': bool, 'default': True },
                  }
@@ -228,7 +231,7 @@ class Plot(QObject):
             if self.get('plot' + axisName + 'AxisTicks'):
     
                 # Set major ticks
-                axis.set_major_formatter(ticker.FormatStrFormatter('%.2f'))
+                axis.set_major_formatter(ticker.FormatStrFormatter(self.get('plot' + axisName + 'AxisTickLabelFormat')))
                 
                 if self.get('plot' + axisName + 'AxisUseTickNumber'):
                     Util.debug(3, "Plot.refresh" + str(self), axisName + " axis using set number of ticks")
@@ -245,11 +248,15 @@ class Plot(QObject):
                 else:
                     Util.debug(3, "Plot.refresh", axisName + " axis using spacing for ticks")
                     # User has defined the spacing between major tick marks
-                    axis.set_major_locator(ticker.MultipleLocator(self.get('plot' + axisName + 'AxisMajorTicksSpacing')))
+                    majorTicks = list(numpy.arange(self.get('plot' + axisName + 'AxisMinimum'), self.get('plot' + axisName + 'AxisMaximum'), self.get('plot' + axisName + 'AxisMajorTicksSpacing')))
+                    if (self.get('plot' + axisName + 'AxisMaximum') - majorTicks[-1]) % self.get('plot' + axisName + 'AxisMajorTicksSpacing') == 0:
+                        majorTicks.append(self.get('plot' + axisName + 'AxisMaximum'))
+                    axis.set_major_locator(ticker.FixedLocator(majorTicks))
                     
-                    # We need to set the minor ticks by spacing instead of number because they will be offset if (axis_max - axis_min) / major_tick_num is not an integer
+                    # We need to calculate the minor tick values
                     minorTicksSpacing = float(self.get('plot' + axisName + 'AxisMajorTicksSpacing')) / float((self.get('plot' + axisName + 'AxisMinorTicksNumber') + 1))
-                    axis.set_minor_locator(ticker.MultipleLocator(minorTicksSpacing))
+                    minorTicks = list(numpy.arange(self.get('plot' + axisName + 'AxisMinimum'), self.get('plot' + axisName + 'AxisMaximum'), minorTicksSpacing))
+                    axis.set_minor_locator(ticker.FixedLocator(minorTicks))
                     axis.set_minor_formatter(ticker.NullFormatter())
             else:
                 axis.set_major_locator(ticker.NullLocator())

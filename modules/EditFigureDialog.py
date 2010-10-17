@@ -38,6 +38,7 @@ class EditFigureDialog(Module):
                 'plotBottomAxisMinorTicksNumber':     { 'object': 'plot'   },
                 'plotBottomAxisUseTickSpacing':       { 'object': 'plot'   },
                 'plotBottomAxisUseTickNumber':        { 'object': 'plot'   },
+                'plotBottomAxisTickLabelFormat':      { 'object': 'plot'   },
                 'plotLeftAxisAutoscale':              { 'object': 'plot'   },
                 'plotLeftAxisMinimum':                { 'object': 'plot'   },
                 'plotLeftAxisMaximum':                { 'object': 'plot'   },
@@ -49,6 +50,7 @@ class EditFigureDialog(Module):
                 'plotLeftAxisMinorTicksNumber':       { 'object': 'plot'   },
                 'plotLeftAxisUseTickSpacing':         { 'object': 'plot'   },
                 'plotLeftAxisUseTickNumber':          { 'object': 'plot'   },
+                'plotLeftAxisTickLabelFormat':        { 'object': 'plot'   },
                 'plotTopAxisVisible':                 { 'object': 'plot'   },
                 'plotLeftAxisVisible':                { 'object': 'plot'   },
                 'plotBottomAxisVisible':              { 'object': 'plot'   },
@@ -114,17 +116,6 @@ class EditFigureDialog(Module):
         self._app.waves().waveRemoved[Wave].connect(self.deleteTracesWithWave)
         self.setupTraceListMenu()
 
-        # Setup max/min values for spin boxes
-        self._ui.plotBottomAxisMinimum.setMinimum(-1.7E308)
-        self._ui.plotBottomAxisMinimum.setMaximum(1.7E308)
-        self._ui.plotBottomAxisMaximum.setMinimum(-1.7E308)
-        self._ui.plotBottomAxisMaximum.setMaximum(1.7E308)
-        self._ui.plotBottomAxisMajorTicksSpacing.setMaximum(1.7E308)
-        self._ui.plotLeftAxisMinimum.setMinimum(-1.7E308)
-        self._ui.plotLeftAxisMinimum.setMaximum(1.7E308)
-        self._ui.plotLeftAxisMaximum.setMinimum(-1.7E308)
-        self._ui.plotLeftAxisMaximum.setMaximum(1.7E308)
-
         # Setup buttons
         self._ui.figureOptionsButtons.button(QDialogButtonBox.Apply).clicked.connect(self.figureObject_setAttributes)
         self._ui.figureOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.figureUi_resetFields)
@@ -148,8 +139,10 @@ class EditFigureDialog(Module):
         self._ui.plotTopAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
         self._ui.plotRightAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
 
-        self._ui.plotBottomAxisUseTickSpacing.clicked.connect(self.plotUi_axisMajorTicksToggled)
-        self._ui.plotBottomAxisUseTickNumber.clicked.connect(self.plotUi_axisMajorTicksToggled)
+        self._ui.plotBottomAxisUseTickSpacing.toggled.connect(self.plotUi_axisMajorTicksToggled)
+        self._ui.plotBottomAxisUseTickNumber.toggled.connect(self.plotUi_axisMajorTicksToggled)
+        self._ui.plotLeftAxisUseTickSpacing.toggled.connect(self.plotUi_axisMajorTicksToggled)
+        self._ui.plotLeftAxisUseTickNumber.toggled.connect(self.plotUi_axisMajorTicksToggled)
 
 
         def createFigure():
@@ -393,17 +386,25 @@ class EditFigureDialog(Module):
             self._ui.plotRightAxisMinimum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
             self._ui.plotRightAxisMaximum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
 
+
     def plotUi_axisMajorTicksToggled(self, checked):
         """
         Toggle enabled/disabled status of major tick options.
         """
-
-        if self._widget.sender() is self._ui.plotBottomAxisUseTickSpacing:
-            self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(True)
-            self._ui.plotBottomAxisMajorTicksNumber.setEnabled(False)
-        elif self._widget.sender() is self._ui.plotBottomAxisUseTickNumber:
-            self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(False)
-            self._ui.plotBottomAxisMajorTicksNumber.setEnabled(True)
+        
+        if checked:
+            if self._widget.sender() is self._ui.plotBottomAxisUseTickSpacing:
+                self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(True)
+                self._ui.plotBottomAxisMajorTicksNumber.setEnabled(False)
+            elif self._widget.sender() is self._ui.plotBottomAxisUseTickNumber:
+                self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(False)
+                self._ui.plotBottomAxisMajorTicksNumber.setEnabled(True)
+            elif self._widget.sender() is self._ui.plotLeftAxisUseTickSpacing:
+                self._ui.plotLeftAxisMajorTicksSpacing.setEnabled(True)
+                self._ui.plotLeftAxisMajorTicksNumber.setEnabled(False)
+            elif self._widget.sender() is self._ui.plotLeftAxisUseTickNumber:
+                self._ui.plotLeftAxisMajorTicksSpacing.setEnabled(False)
+                self._ui.plotLeftAxisMajorTicksNumber.setEnabled(True)
 
 
 

@@ -3,6 +3,7 @@ from PyQt4.QtCore import QObject, pyqtSignal
 from pylab import nan
 from matplotlib.axes import Axes
 from matplotlib import ticker
+from matplotlib.artist import setp
 import numpy
 
 import Util
@@ -26,6 +27,7 @@ class Plot(QObject):
     properties = {
                     'plotNum':                         { 'type': int, 'default': 0 },
                     'plotName':                        { 'type': str, 'default': '' },
+                    'plotNameFont':                    { 'type': dict, 'default': {} },
                     'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
                     'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
                     'plotBottomAxisMinimum':           { 'type': float, 'default': -10 },
@@ -40,6 +42,8 @@ class Plot(QObject):
                     'plotBottomAxisUseTickSpacing':    { 'type': bool, 'default': False },
                     'plotBottomAxisUseTickNumber':     { 'type': bool, 'default': True },
                     'plotBottomAxisTickLabelFormat':   { 'type': str, 'default': '%.2g'},
+                    'plotBottomAxisTickLabelFont':     { 'type': dict, 'default': {} },
+                    'plotBottomAxisLabelFont':         { 'type': dict, 'default': {} },
                     'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
                     'plotLeftAxisMinimum':             { 'type': float, 'default': -10 },
                     'plotLeftAxisMaximum':             { 'type': float, 'default': 10 },
@@ -53,6 +57,8 @@ class Plot(QObject):
                     'plotLeftAxisUseTickSpacing':      { 'type': bool, 'default': False },
                     'plotLeftAxisUseTickNumber':       { 'type': bool, 'default': True },
                     'plotLeftAxisTickLabelFormat':     { 'type': str, 'default': '%.2g'},
+                    'plotLeftAxisTickLabelFont':       { 'type': dict, 'default': {} },
+                    'plotLeftAxisLabelFont':           { 'type': dict, 'default': {} },
                     'plotTopAxisVisible':              { 'type': bool, 'default': True },
                     'plotRightAxisVisible':            { 'type': bool, 'default': True },
                  }
@@ -200,7 +206,7 @@ class Plot(QObject):
         self._axes.clear()
 
         Util.debug(2, "Plot.refresh", "Setting plot properties")
-        self._axes.set_title(self.get('plotName'))
+        self._axes.set_title(self.get('plotName'), **(self.get('plotNameFont')))
         self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
 
         Util.debug(2, "Plot.refresh", "Setting traces")
@@ -262,8 +268,12 @@ class Plot(QObject):
                 axis.set_major_locator(ticker.NullLocator())
                 axis.set_minor_locator(ticker.NullLocator())
 
+            # Set font for tick labels
+            if self.get('plot' + axisName + 'AxisTickLabelFont') != {}:
+                setp(axis.get_majorticklabels(), **(self.get('plot' + axisName + 'AxisTickLabelFont')))
+
             # Set labels
-            axis.set_label_text(self.get('plot' + axisName + 'AxisLabel'))
+            axis.set_label_text(self.get('plot' + axisName + 'AxisLabel'), self.get('plot' + axisName + 'AxisLabelFont'))
 
         if drawBool:
             Util.debug(2, "Plot.refresh", "Drawing plot")

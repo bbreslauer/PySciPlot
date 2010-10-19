@@ -4,6 +4,7 @@ from PyQt4.QtGui import QAction
 import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
+from matplotlib.font_manager import FontProperties
 from mpl_toolkits.axes_grid.axislines import Axes
 from mpl_toolkits.axes_grid1 import Grid
 
@@ -30,6 +31,7 @@ class Figure(QObject):
     properties = {  
                 'figureName':               { 'type': str,   'default': '' },
                 'figureTitle':              { 'type': str,   'default': '' },
+                'figureTitleFont':          { 'type': dict,  'default': {} },
                 'figureRows':               { 'type': int,   'default': 1 },
                 'figureColumns':            { 'type': int,   'default': 1 },
                 'figureAxesPadding':        { 'type': float, 'default': 0.5 },
@@ -190,7 +192,7 @@ class Figure(QObject):
         else:
             self.mplFigure().subplots_adjust(wspace=self.get('figureAxesPadding'), hspace=self.get('figureAxesPadding'))
 
-        self.mplFigure().suptitle(str(self.get('figureTitle')))
+        self.mplFigure().suptitle(str(self.get('figureTitle')), **(self.get('figureTitleFont')))
         
         self.mplFigure().set_facecolor(str(self.get('figureBackgroundColor')))
 

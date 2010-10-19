@@ -2,6 +2,7 @@
 
 import config
 
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QColor
 
 from Exceptions import UnknownWidgetTypeError
@@ -19,10 +20,12 @@ def setWidgetValue(widget, value):
                     'QSpinBox':       'widget.setValue(int(value))',
                     'QDoubleSpinBox': 'widget.setValue(float(value))',
                     'QColorButton':   'widget.setColor(value)',
+                    'QFontButton':    'widget.setFont(value)',
                     'QCheckBox':      'widget.setChecked(value)',
                     'QRadioButton':   'widget.setChecked(value)',
                     'QComboBox':      'widget.setCurrentIndex(widget.findText(str(value)))',
                     'QGroupBox':      'widget.setChecked(value)',
+                    'QListWidget':    'widget.setCurrentItem((widget.findItems(str(value), Qt.MatchExactly) or [widget.item(0)])[0])',
                     'QButtonGroup':   'pass',
                  }
 
@@ -47,11 +50,13 @@ def getWidgetValue(widget):
                     'QSpinBox':       'int(widget.value())',
                     'QDoubleSpinBox': 'float(widget.value())',
                     'QColorButton':   'str(widget.text())',
+                    'QFontButton':    'widget.getFont()',
                     'QCheckBox':      'widget.isChecked()',
                     'QRadioButton':   'widget.isChecked()',
                     'QComboBox':      'str(widget.currentText())',
                     'QGroupBox':      'widget.isChecked()',
                     'QButtonGroup':   'str(widget.checkedButton().text())',
+                    'QListWidget':    'str(widget.currentItem().text())',
                  }
 
     if widgetType in dictionary.keys():

@@ -4,7 +4,7 @@ import sys, string, signal, os, re, time
 
 from optparse import OptionParser
 
-from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
+from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem, qApp
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant, QFile
 
@@ -37,6 +37,7 @@ class pysciplot(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
     
+    def setup(self):
         # Variables
         Util.debug(2, "App", "Initializing variables")
         self._version = 1
@@ -414,6 +415,7 @@ class pysciplot(QMainWindow):
 
     def printAllFigures(self):
         print self._figures
+        print QApplication.instance().__dict__
 
     def printCWD(self):
         print self.cwd
@@ -456,13 +458,14 @@ if __name__ == "__main__":
     
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
-    window = pysciplot()
-    window.show()
+    app.window = pysciplot()
+    app.window.setup()
+    app.window.show()
     
     if len(args) > 0:
         # load the first arg (which should be a file) as a project
         if args[0].split('.')[-1] == "psp":
-            window.loadProject(os.path.abspath(args[0]), False)
+            app.window.loadProject(os.path.abspath(args[0]), False)
 
     sys.exit(app.exec_())
 

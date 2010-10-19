@@ -26,6 +26,7 @@ class EditFigureDialog(Module):
     #   - 'object' = figure, plot, trace
     #       which object this widget applies to
     widgets = { 'plotName':                           { 'object': 'plot'   },
+                'plotNameFont':                       { 'object': 'plot'   },
                 'plotBackgroundColor':                { 'object': 'plot'   },
                 'plotBottomAxisAutoscale':            { 'object': 'plot'   },
                 'plotBottomAxisMinimum':              { 'object': 'plot'   },
@@ -39,6 +40,8 @@ class EditFigureDialog(Module):
                 'plotBottomAxisUseTickSpacing':       { 'object': 'plot'   },
                 'plotBottomAxisUseTickNumber':        { 'object': 'plot'   },
                 'plotBottomAxisTickLabelFormat':      { 'object': 'plot'   },
+                'plotBottomAxisTickLabelFont':        { 'object': 'plot'   },
+                'plotBottomAxisLabelFont':            { 'object': 'plot'   },
                 'plotLeftAxisAutoscale':              { 'object': 'plot'   },
                 'plotLeftAxisMinimum':                { 'object': 'plot'   },
                 'plotLeftAxisMaximum':                { 'object': 'plot'   },
@@ -51,12 +54,15 @@ class EditFigureDialog(Module):
                 'plotLeftAxisUseTickSpacing':         { 'object': 'plot'   },
                 'plotLeftAxisUseTickNumber':          { 'object': 'plot'   },
                 'plotLeftAxisTickLabelFormat':        { 'object': 'plot'   },
+                'plotLeftAxisTickLabelFont':          { 'object': 'plot'   },
+                'plotLeftAxisLabelFont':              { 'object': 'plot'   },
                 'plotTopAxisVisible':                 { 'object': 'plot'   },
                 'plotLeftAxisVisible':                { 'object': 'plot'   },
                 'plotBottomAxisVisible':              { 'object': 'plot'   },
                 'plotRightAxisVisible':               { 'object': 'plot'   },
                 'figureName':                         { 'object': 'figure' },
                 'figureTitle':                        { 'object': 'figure' },
+                'figureTitleFont':                    { 'object': 'figure' },
                 'figureRows':                         { 'object': 'figure' },
                 'figureColumns':                      { 'object': 'figure' },
                 'figureAxesPadding':                  { 'object': 'figure' },
@@ -213,6 +219,8 @@ class EditFigureDialog(Module):
         for widgetName in self.widgets.keys():
             if type(vars(self._ui)[widgetName]).__name__ == 'QColorButton':
                 vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].createColorDialog)
+            elif type(vars(self._ui)[widgetName]).__name__ == 'QFontButton':
+                vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].showFontDialog)
 
         return self._widget
 

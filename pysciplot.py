@@ -4,7 +4,7 @@ import sys, string, signal, os, re, time
 
 from optparse import OptionParser
 
-from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem, qApp
+from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant, QFile
 
@@ -415,7 +415,6 @@ class pysciplot(QMainWindow):
 
     def printAllFigures(self):
         print self._figures
-        print QApplication.instance().__dict__
 
     def printCWD(self):
         print self.cwd

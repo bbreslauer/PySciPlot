@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QPushButton, QColor, QColorDialog, QFont, QFontDialog, QDialog, QDialogButtonBox, qApp, QApplication
+from PyQt4.QtGui import QPushButton, QColor, QColorDialog, QFont, QFontDialog, QDialog, QDialogButtonBox, QApplication
 
 import matplotlib.font_manager as fm
 

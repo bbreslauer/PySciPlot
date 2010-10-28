@@ -10,11 +10,9 @@ class DataTableModel(QAbstractTableModel):
     A DataTableModel object contains links to all the Wave objects that are displayed in the associated view.
 
     Signals that are emitted from this class are:
-        blankRowsReset - emitted whenever the trailing blank rows for a table are removed and re-added
     """
 
     # Signals
-    blankRowsReset = pyqtSignal()
     dataChanged = pyqtSignal(QModelIndex, QModelIndex)
     
     def __init__(self, wavesIn=[], parent=None, *args):
@@ -39,9 +37,6 @@ class DataTableModel(QAbstractTableModel):
         if parent:
             parent.waves().waveRemoved[Wave].connect(self.removeColumn)
         
-        # This makes sure that all entries in the table are editable
-        self.resetBlankRows()
-        
     def rowCount(self, parent = QModelIndex()):
         """Return the number of rows."""
 
@@ -52,14 +47,14 @@ class DataTableModel(QAbstractTableModel):
         for wave in self._waves.waves():
             if (len(wave.data()) > rows):
                 rows = len(wave.data())
-        return rows
+        return rows + 1 # Want the extra row for adding more rows of data
 
     def columnCount(self, parent = QModelIndex()):
         """Return the number of columns."""
 
         return len(self._waves.waves())
 
-    def data(self, index, role):
+    def data(self, index, role = Qt.DisplayRole):
         """Return the data at position index with the given role."""
 
         if not index.isValid():
@@ -71,12 +66,14 @@ class DataTableModel(QAbstractTableModel):
         elif index.row() >= len(self._waves.waves()[index.column()].data()):
             return QVariant()
         elif self._waves.waves()[index.column()].data()[index.row()] == "":
-            return ""
-        elif int == self._waves.waves()[index.column()].dataType():
-            long(self._waves.waves()[index.column()].data()[index.row()])
-        elif float == self._waves.waves()[index.column()].dataType():
-            float(self._waves.waves()[index.column()].data()[index.row()])
-        return str(self._waves.waves()[index.column()].data()[index.row()])
+            return QVariant()
+        elif 'Integer' == self._waves.waves()[index.column()].dataType():
+            return long(self._waves.waves()[index.column()].data()[index.row()])
+        elif 'Decimal' == self._waves.waves()[index.column()].dataType():
+            return float(self._waves.waves()[index.column()].data()[index.row()])
+        elif 'String' == self._waves.waves()[index.column()].dataType():
+            return str(self._waves.waves()[index.column()].data()[index.row()])
+        return QVariant()
 
     def headerData(self, section, orientation, role):
         """
@@ -114,7 +111,6 @@ class DataTableModel(QAbstractTableModel):
         if self._waves.insertWave(position, wave):
             wave.nameChanged.connect(self.doReset)
             wave.dataModified.connect(self.doReset)
-            self.resetBlankRows()
             return True
         return False
 
@@ -165,37 +161,18 @@ class DataTableModel(QAbstractTableModel):
         if index.isValid() and role == Qt.EditRole:
             wave = self._waves.waves()[index.column()]
 
+            # Disregard if there is no change
+            if self.data(index) == value.toString():
+                return False
+
             if value == "":
                 result = wave.setData(index.row(), value)
             else:
                 result = wave.setData(index.row(), wave.convertValueToDataType(value.toString()))
             
             self.dataChanged.emit(index, index)
-            self.resetBlankRows()
 
         return result
-
-    def resetBlankRows(self):
-        """
-        Make sure that all columns have the same number of rows, and that the number of rows is equal to the number of entries in the largest column plus one blank row at the end for entering more data.
-
-        Emits the blankRowsReset signal.
-        """
-
-        # Remove all trailing blank entries for each column
-        for wave in self._waves.waves():
-            try:
-                _tmp = wave.pop()
-                while _tmp == "":
-                    _tmp = wave.pop()
-                wave.push(_tmp)
-            except IndexError:
-                pass
-
-        # Now add as many blanks as are need to each column
-        rows = self.rowCount()
-        for wave in self._waves.waves():
-            wave.extend([""] * (rows - len(wave.data()) + 1))
 
     def doReset(self, *args):
         """Take any number of arguments and just reset the model."""

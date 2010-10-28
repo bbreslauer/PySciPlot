@@ -84,7 +84,6 @@ class ImportBinary(Module):
             while binDatum != "":
                 try:
                     datum = struct.unpack(byteOrder + dataTypeChar, binDatum)
-                    print datum[0]
                     wave.push(datum[0])
                 except:
                     pass

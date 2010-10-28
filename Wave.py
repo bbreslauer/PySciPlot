@@ -79,6 +79,9 @@ class Wave(QObject):
     def convertValueToDataType(self, value):
         newValue = ''
 
+        if isinstance(value, QObject):
+            return ""
+
         try:
             if self._dataType == "Integer":
                 newValue = long(float(value))
@@ -120,7 +123,7 @@ class Wave(QObject):
             if value != "":
                 value = self.convertValueToDataType(value)
             if value:
-                if position > len(self._data):
+                if position >= len(self._data):
                     # extend the list enough so that we can modify the value at position
                     # +1 because list[len(list)] doesn't exist, due to zero-indexing
                     self._data.extend([''] * (position - len(self._data) + 1))

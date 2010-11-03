@@ -34,9 +34,14 @@ class CreateWaveDialog(Module):
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
+        self._ui.copyWaveOriginalWave.activated.connect(self.resetCopyWaveLimits)
         self._ui.createWaveButton.clicked.connect(self.createWave)
         self._ui.closeWindowButton.clicked.connect(self.closeWindow)
         self._ui.functionInsertWaveButton.clicked.connect(self.insertWaveIntoFunction)
+
+        # Make sure selection list and stack are aligned
+        self._ui.waveDataSelectionList.setCurrentRow(0)
+        self._ui.waveDataStack.setCurrentIndex(0)
 
     def closeWindow(self):
         self._widget.parent().close()
@@ -61,16 +66,18 @@ class CreateWaveDialog(Module):
         wave = Wave(Util.getWidgetValue(self._ui.waveName), Util.getWidgetValue(self._ui.dataType))
         
         # Check how the wave should be initially populated
-        initialWaveDataTab = self._ui.waveDataTabs.currentWidget().objectName()
+        initialWaveDataTab = self._ui.waveDataStack.currentWidget().objectName()
 
         if initialWaveDataTab == "blankTab":
             # The wave will be blank, so don't do anything
             pass
 
-        elif initialWaveDataTab == "copyWaveTab":
+        elif initialWaveDataTab == "copyTab":
             # Copy the data from another wave
             originalWave = self._ui.copyWaveOriginalWave.model().index(self._ui.copyWaveOriginalWave.currentIndex(), 0).internalPointer()
-            wave.extend(originalWave.data())
+            startingIndex = Util.getWidgetValue(self._ui.copyWaveStartingIndex)
+            endingIndex = Util.getWidgetValue(self._ui.copyWaveEndingIndex)
+            wave.extend(originalWave.data(startingIndex, endingIndex))
 
         elif initialWaveDataTab == "functionTab":
             waveLength = Util.getWidgetValue(self._ui.functionWaveLength)
@@ -85,6 +92,17 @@ class CreateWaveDialog(Module):
         # Reset certain ui fields
         self._ui.copyWaveOriginalWave.setCurrentIndex(0)
         self._ui.functionInsertWave.setCurrentIndex(0)
+
+    def resetCopyWaveLimits(self, null=None):
+        """
+        Reset the spin boxes for selecting the data limits to the current wave's max values.
+        """
+        wave = self._ui.copyWaveOriginalWave.model().index(self._ui.copyWaveOriginalWave.currentIndex(), 0).internalPointer()
+        maxIndex = wave.length()
+        self._ui.copyWaveStartingIndex.setMaximum(maxIndex)
+        self._ui.copyWaveEndingIndex.setMaximum(maxIndex)
+        Util.setWidgetValue(self._ui.copyWaveEndingIndex, maxIndex)
+        
 
     def parseFunction(self, waveLength, functionString):
         """

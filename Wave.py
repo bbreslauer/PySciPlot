@@ -52,9 +52,13 @@ class Wave(QObject):
     def __str__(self):
         return "%s (%s, %s): %s\n" % (self._name, self._dataType, len(self._data), self._data)
 
-    def data(self):
-        """Return the data list."""
-        return self._data
+    def data(self, start=None, end=None):
+        """Return the data list slice. Default to returning full data list."""
+        return self._data[start:end]
+
+    def length(self):
+        """Return the length of the wave."""
+        return len(self._data)
 
     def name(self):
         """Return the name of the wave."""

@@ -244,12 +244,3 @@ class DataTableView(QTableView):
         # Nothing found, so resort to default behavior
         QTableView.keyPressEvent(self, event)
 
-    # Helper function for debugging 
-    def printAllHeaders(self,  logicalIndex):
-        for i in range(len(self.model().waves)):
-            print "vis: " + str(i) + ", log: " + str(self.horizontalHeader().logicalIndex(i)) + ", name: " + self.model().waves[self.horizontalHeader().logicalIndex(i)].getName()
-        print
-        for i in range(len(self.model().waves)):
-            print "log: " + str(i) + ", vis: " + str(self.horizontalHeader().visualIndex(i)) + ", name: " + self.model().waves[i].getName()
-        print
-    

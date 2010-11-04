@@ -18,6 +18,12 @@ class WavesListModel(QStringListModel):
         self._waves.waveRenamed.connect(self.doReset)
         self._waves.waveRemoved[Wave].connect(self.doReset)
 
+    def waves(self):
+        return self._waves
+
+    def appendRow(self, wave):
+        self._waves.addWave(wave)
+
     def rowCount(self, parent=QModelIndex()):
         return len(self._waves.waves())
 
@@ -26,7 +32,7 @@ class WavesListModel(QStringListModel):
             return self.createIndex(row, column, parent)
         return self.createIndex(row, column, self._waves.waves()[row])
     
-    def data(self, index, role):
+    def data(self, index, role = Qt.DisplayRole):
         if index.isValid() and role == Qt.DisplayRole:
             return QVariant(QString(self._waves.waves()[index.row()].name()))
         else:
@@ -43,7 +49,12 @@ class WavesListModel(QStringListModel):
             return True
         return False
 
-            
+    def removeWave(self, name):
+        self._waves.removeWave(name)
+
+    def removeAllWaves(self):
+        self._waves.removeAllWaves()
+
     def doReset(self, *args):
         self.reset()
 

@@ -1,7 +1,7 @@
 from PyQt4.QtGui import QWidget, QAction
 from PyQt4.QtCore import Qt
 
-import re, inspect
+import re
 from math import *
 from numpy import *
 
@@ -49,7 +49,7 @@ class CreateWaveDialog(Module):
 
     def createWave(self):
         """
-        Create the wave, using whatever starting point (blank, copy, function, etc) is necessary.
+        Create the wave, using whatever starting point (basic, copy, function, etc) is necessary.
         """
 
         # Check if the wave is unique in the application
@@ -68,9 +68,17 @@ class CreateWaveDialog(Module):
         # Check how the wave should be initially populated
         initialWaveDataTab = self._ui.waveDataStack.currentWidget().objectName()
 
-        if initialWaveDataTab == "blankTab":
-            # The wave will be blank, so don't do anything
-            pass
+        if initialWaveDataTab == "basicTab":
+            # Basic wave. Need to determine the type
+            basicWaveType = Util.getWidgetValue(self._ui.basicWaveType)
+            if basicWaveType == "Blank":
+                pass
+            elif basicWaveType == "Index (starting at 0)":
+                basicWaveLength = Util.getWidgetValue(self._ui.basicWaveLength)
+                wave.extend(range(0, basicWaveLength))
+            elif basicWaveType == "Index (starting at 1)":
+                basicWaveLength = Util.getWidgetValue(self._ui.basicWaveLength)
+                wave.extend(range(1, basicWaveLength+1))
 
         elif initialWaveDataTab == "copyTab":
             # Copy the data from another wave

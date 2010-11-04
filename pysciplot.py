@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import sys, string, signal, os, re, time
 
@@ -82,6 +82,7 @@ class pysciplot(QMainWindow):
         self.loadModule("ImportCSV")
         self.loadModule("ImportBinary")
         self.loadModule("CreateWaveDialog")
+        self.loadModule("CreateTableDialog")
 
         #Load.loadProjectFromFile(self, "/home/ben/test.psp")
         

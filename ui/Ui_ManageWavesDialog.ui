@@ -39,20 +39,13 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="0" colspan="2">
-       <widget class="QPushButton" name="createWaveButton">
-        <property name="text">
-         <string>Create Wave</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
        <widget class="QListView" name="wavesListView">
         <property name="selectionMode">
          <enum>QAbstractItemView::SingleSelection</enum>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
+      <item row="2" column="0" colspan="2">
        <widget class="QPushButton" name="removeWaveButton">
         <property name="text">
          <string>Remove Wave</string>
@@ -139,7 +132,7 @@
    <item row="1" column="0" colspan="2">
     <widget class="QPushButton" name="closeButton">
      <property name="text">
-      <string>Close</string>
+      <string>Close Window</string>
      </property>
     </widget>
    </item>

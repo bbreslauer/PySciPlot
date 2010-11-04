@@ -44,7 +44,6 @@
      <property name="title">
       <string>New</string>
      </property>
-     <addaction name="actionNew_Table"/>
      <addaction name="actionNew_Project"/>
     </widget>
     <widget class="QMenu" name="menuImport">

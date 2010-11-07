@@ -527,7 +527,7 @@ background-color: rgb(255, 255, 255);</string>
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="bottomAxisTab">
              <attribute name="title">
@@ -1579,25 +1579,6 @@ background-color: rgb(255, 255, 255);</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="addTraceButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Add Trace</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0" colspan="2">
            <widget class="QTableView" name="traceTableView">
             <property name="sizePolicy">
@@ -1648,6 +1629,32 @@ background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="text">
              <string>Y Axis</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="addTraceButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Add Trace(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="removeTraceButton">
+            <property name="text">
+             <string>Remove Trace(s)</string>
             </property>
            </widget>
           </item>
@@ -2159,5 +2166,134 @@ color: rgb(255, 255, 255);</string>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>plotBottomAxisAutoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotBottomAxisMaximum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>348</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>348</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotBottomAxisAutoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotBottomAxisMinimum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>348</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>348</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotBottomAxisUseTickSpacing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotBottomAxisMajorTicksSpacing</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>560</x>
+     <y>225</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotBottomAxisUseTickNumber</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotBottomAxisMajorTicksNumber</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>486</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>554</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotLeftAxisAutoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotLeftAxisMinimum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotLeftAxisAutoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotLeftAxisMaximum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>351</x>
+     <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotLeftAxisUseTickSpacing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotLeftAxisMajorTicksSpacing</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>500</x>
+     <y>225</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>552</x>
+     <y>225</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>plotLeftAxisUseTickNumber</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>plotLeftAxisMajorTicksNumber</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>253</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>558</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -140,16 +140,6 @@ class EditFigureDialog(Module):
         self._ui.traceSave.clicked.connect(self.saveTrace)
         self._ui.traceLoad.clicked.connect(self.loadTrace)
 
-        self._ui.plotBottomAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
-        self._ui.plotLeftAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
-        self._ui.plotTopAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
-        self._ui.plotRightAxisAutoscale.stateChanged.connect(self.plotUi_axisAutoscaleToggled)
-
-        self._ui.plotBottomAxisUseTickSpacing.toggled.connect(self.plotUi_axisMajorTicksToggled)
-        self._ui.plotBottomAxisUseTickNumber.toggled.connect(self.plotUi_axisMajorTicksToggled)
-        self._ui.plotLeftAxisUseTickSpacing.toggled.connect(self.plotUi_axisMajorTicksToggled)
-        self._ui.plotLeftAxisUseTickNumber.toggled.connect(self.plotUi_axisMajorTicksToggled)
-
 
         def createFigure():
             figure = Figure(self._app, "NewFigure")
@@ -375,46 +365,6 @@ class EditFigureDialog(Module):
         for widgetName in self.widgets.keys():
             if self.widgets[widgetName]['object'] == 'trace':
                 self.setUiValueFromObject(widgetName)
-
-    def plotUi_axisAutoscaleToggled(self, checkState):
-        """
-        Toggle enabled/disabled status of min/max fields for plot axes.
-        """
-
-        if self._widget.sender() is self._ui.plotBottomAxisAutoscale:
-            self._ui.plotBottomAxisMinimum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
-            self._ui.plotBottomAxisMaximum.setEnabled(not self._ui.plotBottomAxisAutoscale.isChecked())
-        elif self._widget.sender() is self._ui.plotLeftAxisAutoscale:
-            self._ui.plotLeftAxisMinimum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
-            self._ui.plotLeftAxisMaximum.setEnabled(not self._ui.plotLeftAxisAutoscale.isChecked())
-        elif self._widget.sender() is self._ui.plotTopAxisAutoscale:
-            self._ui.plotTopAxisMinimum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
-            self._ui.plotTopAxisMaximum.setEnabled(not self._ui.plotTopAxisAutoscale.isChecked())
-        elif self._widget.sender() is self._ui.plotRightAxisAutoscale:
-            self._ui.plotRightAxisMinimum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
-            self._ui.plotRightAxisMaximum.setEnabled(not self._ui.plotRightAxisAutoscale.isChecked())
-
-
-    def plotUi_axisMajorTicksToggled(self, checked):
-        """
-        Toggle enabled/disabled status of major tick options.
-        """
-        
-        if checked:
-            if self._widget.sender() is self._ui.plotBottomAxisUseTickSpacing:
-                self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(True)
-                self._ui.plotBottomAxisMajorTicksNumber.setEnabled(False)
-            elif self._widget.sender() is self._ui.plotBottomAxisUseTickNumber:
-                self._ui.plotBottomAxisMajorTicksSpacing.setEnabled(False)
-                self._ui.plotBottomAxisMajorTicksNumber.setEnabled(True)
-            elif self._widget.sender() is self._ui.plotLeftAxisUseTickSpacing:
-                self._ui.plotLeftAxisMajorTicksSpacing.setEnabled(True)
-                self._ui.plotLeftAxisMajorTicksNumber.setEnabled(False)
-            elif self._widget.sender() is self._ui.plotLeftAxisUseTickNumber:
-                self._ui.plotLeftAxisMajorTicksSpacing.setEnabled(False)
-                self._ui.plotLeftAxisMajorTicksNumber.setEnabled(True)
-
-
 
     def traceObject_updateAttributes(self, traces=None):
         updateBool = False

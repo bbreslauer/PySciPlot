@@ -1,5 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal, Qt
-from PyQt4.QtGui import QAction
+from PyQt4.QtGui import QAction, QApplication
 
 import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -39,14 +39,14 @@ class Figure(QObject):
                 'figureLinkPlotAxes':       { 'type': bool,  'default': False },
                  }
 
-    def __init__(self, app, name):
+    def __init__(self, name):
         QObject.__init__(self)
         
         Util.debug(2, "Figure.init", "Creating figure")
 
         self.initializeProperties()
 
-        self._app = app
+        self._app = QApplication.instance().window
 
         # Graphical stuff
         self._figure = MPLFigure()

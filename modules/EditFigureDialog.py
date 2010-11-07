@@ -83,8 +83,8 @@ class EditFigureDialog(Module):
     # To create a new widget, update the widgets dict above and also the properties variable in the object that it deals with, and implement code to use that widget
     
     
-    def __init__(self, app):
-        Module.__init__(self, app)
+    def __init__(self):
+        Module.__init__(self)
 
     def buildWidget(self):
         """Create the widget and populate it."""
@@ -142,7 +142,7 @@ class EditFigureDialog(Module):
 
 
         def createFigure():
-            figure = Figure(self._app, "NewFigure")
+            figure = Figure("NewFigure")
             self._app.figures().addFigure(figure)
 
             # Select figure

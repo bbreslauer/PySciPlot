@@ -55,7 +55,7 @@ class pysciplot(QMainWindow):
 
         # Load Preferences
         Util.debug(2, "App", "Loading Preferences from file")
-        self.preferences = Preferences(self, "~/.pysciplotrc")
+        self.preferences = Preferences("~/.pysciplotrc")
         
         # Make signal/slot connections
         Util.debug(2, "App", "Connecting signals and slots")
@@ -100,7 +100,7 @@ class pysciplot(QMainWindow):
         Util.debug(2, "App.loadModule", "Loading module " + str(moduleName))
         # Import module
         moduleImport = __import__("modules." + moduleName)
-        module = eval("moduleImport." + str(moduleName) + "." + str(moduleName) + "(self)")
+        module = eval("moduleImport." + str(moduleName) + "." + str(moduleName) + "()")
 
         # Initialize the module
         # No parameters are required because the module can access everything

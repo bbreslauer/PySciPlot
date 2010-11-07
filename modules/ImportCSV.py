@@ -12,8 +12,8 @@ from ui.Ui_ImportCSV import Ui_ImportCSV
 class ImportCSV(Module):
     """Module to import data as CSV (or TSV, etc)."""
 
-    def __init__(self, app):
-        Module.__init__(self, app)
+    def __init__(self):
+        Module.__init__(self)
 
     def buildWidget(self):
         self._widget = QWidget()

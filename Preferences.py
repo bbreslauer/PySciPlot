@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog
+from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
 import ConfigParser, os
 
@@ -20,8 +20,8 @@ class Preferences():
             'defaultDirectory': ''
             }
 
-    def __init__(self, app, fileName):
-        self._app = app
+    def __init__(self, fileName):
+        self._app = QApplication.instance().window
         self.preferencesFile = os.path.expanduser(fileName)
 
         self._widget = QWidget()

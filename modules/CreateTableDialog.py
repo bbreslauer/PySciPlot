@@ -11,8 +11,8 @@ from ui.Ui_CreateTableDialog import Ui_CreateTableDialog
 class CreateTableDialog(Module):
     """Module to display the Create Table dialog window."""
 
-    def __init__(self, app):
-        Module.__init__(self, app)
+    def __init__(self):
+        Module.__init__(self)
 
     def buildWidget(self):
         """Create the widget and populate it."""

@@ -174,7 +174,7 @@ def loadFigures(app, figures, stackingOrder):
             child = child.nextSibling
 
         # Load figure into application
-        figureObj = Figure(app, "NoName")
+        figureObj = Figure("NoName")
         actualFigureProps = figureObj.properties.keys()
         for (key, value) in figureProps.items():
             if key in actualFigureProps:

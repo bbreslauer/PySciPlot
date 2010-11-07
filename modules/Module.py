@@ -1,3 +1,5 @@
+from PyQt4.QtGui import QApplication
+
 class Module():
     """
     Base class for all modules.  All modules should inherit this class and
@@ -7,9 +9,9 @@ class Module():
     unload - Do everything necessary to unload the module
     """
 
-    def __init__(self, app):
+    def __init__(self):
         """Initialize the module."""
-        self._app = app
+        self._app = QApplication.instance().window
 
     def load(self):
         """

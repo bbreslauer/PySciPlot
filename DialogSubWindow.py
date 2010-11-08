@@ -8,6 +8,10 @@ class DialogSubWindow(QMdiSubWindow):
         QMdiSubWindow.__init__(self, parent)
         self.setParent(parent)
         self._parent = parent
+
+    def setWidget(self, widget):
+        QMdiSubWindow.setWidget(self, widget)
+        self.resize(widget.size())
     
     def show(self):
         self.setVisible(True)

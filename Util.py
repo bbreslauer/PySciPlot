@@ -3,7 +3,7 @@
 import config
 
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QColor
+from PyQt4.QtGui import QColor, QApplication
 
 from Exceptions import UnknownWidgetTypeError
 
@@ -65,11 +65,13 @@ def getWidgetValue(widget):
         raise UnknownWidgetTypeError(widgetType)
 
 
-def fileDialogDirectory(app):
+def fileDialogDirectory():
     """
     Set the initial directory for a QFileDialog to either the cwd or
     the default directory.
     """
+
+    app = QApplication.instance().window
 
     if app.cwd != "":
         return app.cwd

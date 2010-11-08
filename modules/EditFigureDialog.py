@@ -496,7 +496,7 @@ class EditFigureDialog(Module):
         fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings")
         fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
         fileDialog.setDefaultSuffix("pspf")
-        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.setDirectory(Util.fileDialogDirectory())
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
@@ -509,7 +509,7 @@ class EditFigureDialog(Module):
     def loadFigureSettings(self):
         fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings")
         fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
-        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.setDirectory(Util.fileDialogDirectory())
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
         
@@ -523,7 +523,7 @@ class EditFigureDialog(Module):
         fileDialog = QFileDialog(self._app.ui.workspace, "Save Trace")
         fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
         fileDialog.setDefaultSuffix("pspt")
-        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.setDirectory(Util.fileDialogDirectory())
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
 
@@ -537,7 +537,7 @@ class EditFigureDialog(Module):
     def loadTrace(self):
         fileDialog = QFileDialog(self._app.ui.workspace, "Load Trace")
         fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
-        fileDialog.setDirectory(Util.fileDialogDirectory(self._app))
+        fileDialog.setDirectory(Util.fileDialogDirectory())
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
         

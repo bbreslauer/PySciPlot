@@ -1,5 +1,5 @@
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, QAction, QAbstractItemView, QItemSelectionModel
+from PyQt4.QtGui import QTableView, QDialog, QMdiSubWindow, QMessageBox, QMenu, QAction, QAbstractItemView, QItemSelectionModel, QApplication
 
 import Util
 from Wave import Wave
@@ -17,21 +17,19 @@ class DataTableView(QTableView):
     # Signals
 
 
-    def __init__(self, model, parent, nameIn, mainWindow, *args):
+    def __init__(self, model, parent, nameIn, *args):
         """
         Initialize a view.  Setup the window, title text, row and column headers.
 
         model is the DataTableModel to use.
         parent is the window parent.
         nameIn is the window title.
-        mainWindow is the pysciplot object
         """
 
         QTableView.__init__(self, parent, *args)
         self.setParent(parent)
-        self._mainWindow = mainWindow
+        self._app = QApplication.instance().window
         self.setModel(model)
-        self.setMinimumSize(600, 300)
         self.setWindowTitle(nameIn)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setSelectionMode(QTableView.ExtendedSelection)
@@ -61,7 +59,7 @@ class DataTableView(QTableView):
         """
         
         if not wave:
-            wave = self._mainWindow.waves().insertNewWave(len(self._mainWindow.waves().waves()))
+            wave = self._app.waves().insertNewWave(len(self._app.waves().waves()))
         Util.debug(1, "DataTableView.insertColumn", "Inserted column into table")
         return self.model().insertColumn(position, wave)
 
@@ -88,13 +86,13 @@ class DataTableView(QTableView):
         renameWaveUi = Ui_RenameWaveDialog()
         renameWaveUi.setupUi(renameWaveDialog)
         renameWaveUi.oldWaveName.setText(currentWave.name())
-        self._mainWindow.ui.workspace.addSubWindow(renameWaveSubWindow)
+        self._app.ui.workspace.addSubWindow(renameWaveSubWindow)
         renameWaveDialog.setVisible(True)
         
         def saveRename():
             """Save button pressed.  Do work to save new name."""
             newName = currentWave.validateWaveName(str(renameWaveUi.newWaveNameLineEdit.text()))
-            if self._mainWindow.waves().goodWaveName(newName) and currentWave.setName(newName):
+            if self._app.waves().goodWaveName(newName) and currentWave.setName(newName):
                 renameWaveSubWindow.close()
             else:
                 failedMessage = QMessageBox()
@@ -145,7 +143,7 @@ class DataTableView(QTableView):
             
         # Get current list of waves for "add wave to table" menu
         self.addWaveMenu.clear()
-        for wave in self._mainWindow.waves().waves():
+        for wave in self._app.waves().waves():
             self.addWaveMenu.addAction(AddWaveAction(wave, self.addWaveMenu))
         
         # Connect actions
@@ -211,7 +209,12 @@ class DataTableView(QTableView):
         self.setModel(tmpModel)
         self.reset()
         return True
-    
+   
+    def reset(self):
+        QTableView.reset(self)
+        self.resizeRowsToContents()
+        self.resizeColumnsToContents()
+
     def keyPressEvent(self, event):
         """Capture certain types of keypress events and handle them different ways."""
         # When data has been edited, move to the next row in the column and continue editing.

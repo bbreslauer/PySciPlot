@@ -81,10 +81,15 @@ class Wave(QObject):
         return False
 
     def convertValueToDataType(self, value):
-        newValue = ''
+        newValue = None
 
+        # We might get QVariants occasionally, and we want to discard them
         if isinstance(value, QObject):
-            return ""
+            return None
+
+        # Cannot cast an empty value (only spaces) to a long or float, so we're taking care of this case early
+        if str(value).strip() == "":
+            return str("")
 
         try:
             if self._dataType == "Integer":
@@ -95,6 +100,12 @@ class Wave(QObject):
                 newValue = str(value)
         except ValueError:
             pass
+        except TypeError:
+            # Get this if the cast does not work
+            # will return None
+            pass
+
+        Util.debug(3, "Wave.convertValueToDataType", "Converting value " + str(value) + " to type " + str(self._dataType) + " (" + str(newValue) + ")")
         return newValue
 
     def goodValue(self, value):
@@ -124,10 +135,12 @@ class Wave(QObject):
         """
 
         if position >= 0:
-            if value != "":
-                value = self.convertValueToDataType(value)
-            if value:
+            value = self.convertValueToDataType(value)
+            if value != None:
                 if position >= len(self._data):
+                    # If we are editing the end of the list (or beyond) and we are entering a blank entry, don't extend the list
+                    if value == "":
+                        return False
                     # extend the list enough so that we can modify the value at position
                     # +1 because list[len(list)] doesn't exist, due to zero-indexing
                     self._data.extend([''] * (position - len(self._data) + 1))

@@ -1,5 +1,6 @@
 from PyQt4.QtCore import QAbstractTableModel, QVariant, Qt, QModelIndex, QString, pyqtSignal
 
+import Util
 from Wave import Wave
 from Waves import Waves
 
@@ -67,10 +68,13 @@ class DataTableModel(QAbstractTableModel):
             return QVariant()
         elif self._waves.waves()[index.column()].data()[index.row()] == "":
             return QVariant()
+        #
+        # If we return long() or float() instead of str(), then the view uses a spinbox
+        # and we cannot easily return to a blank entry
         elif 'Integer' == self._waves.waves()[index.column()].dataType():
-            return long(self._waves.waves()[index.column()].data()[index.row()])
+            return str(self._waves.waves()[index.column()].data()[index.row()])
         elif 'Decimal' == self._waves.waves()[index.column()].dataType():
-            return float(self._waves.waves()[index.column()].data()[index.row()])
+            return str(self._waves.waves()[index.column()].data()[index.row()])
         elif 'String' == self._waves.waves()[index.column()].dataType():
             return str(self._waves.waves()[index.column()].data()[index.row()])
         return QVariant()
@@ -158,6 +162,8 @@ class DataTableModel(QAbstractTableModel):
 
         result = False
 
+        Util.debug(2, "DataTableModel.setData", "Setting data")
+
         if index.isValid() and role == Qt.EditRole:
             wave = self._waves.waves()[index.column()]
 
@@ -165,10 +171,11 @@ class DataTableModel(QAbstractTableModel):
             if self.data(index) == value.toString():
                 return False
 
-            if value == "":
-                result = wave.setData(index.row(), value)
-            else:
-                result = wave.setData(index.row(), wave.convertValueToDataType(value.toString()))
+            # Convert from QVariant to QString to str
+            value = str(value.toString())
+
+            Util.debug(2, "DataTableModel.setData", "Setting " + str(wave.name()) + "[" + str(index.row()) + "] to " + str(wave.convertValueToDataType(value)))
+            result = wave.setData(index.row(), wave.convertValueToDataType(value))
             
             self.dataChanged.emit(index, index)
 

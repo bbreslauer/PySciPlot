@@ -31,7 +31,7 @@ class ImportCSV(Module):
 
     def csvFileSelector(self):
         """Button-lineedit link"""
-        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", Util.fileDialogDirectory(self._app), "Comma Separated Values (*.csv);;All Files(*.*)"))
+        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", Util.fileDialogDirectory(), "Comma Separated Values (*.csv);;All Files(*.*)"))
 
         if csvFile != "":
             # Save current working directory

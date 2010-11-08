@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QWidget, QAction
+from PyQt4.QtGui import QWidget, QAction, QMessageBox
 from PyQt4.QtCore import Qt
 
 import Util
@@ -37,7 +37,7 @@ class CreateTableDialog(Module):
         self._ui.removeWaveButton.clicked.connect(self.removeWaveFromTable)
 
     def closeWindow(self):
-        self.resetLists()
+        self.resetForm()
         self._widget.parent().close()
 
 
@@ -61,11 +61,23 @@ class CreateTableDialog(Module):
 
         tableName = Util.getWidgetValue(self._ui.tableName)
         waves = self._tableWavesListModel.waves().waves()
+        if len(waves) == 0:
+            warningMessage = QMessageBox()
+            warningMessage.setWindowTitle("Problem!")
+            warningMessage.setText("You must select at least one wave in order to create a table.")
+            warningMessage.setIcon(QMessageBox.Critical)
+            warningMessage.setStandardButtons(QMessageBox.Ok)
+            warningMessage.setDefaultButton(QMessageBox.Ok)
+            result = warningMessage.exec_()
+            return False
+
         names = map(Wave.getName, waves)
         self._app.createTable(waves, tableName)
         self.closeWindow()
+        return True
 
-    def resetLists(self):
+    def resetForm(self):
+        Util.setWidgetValue(self._ui.tableName, "Table")
         self._allWavesListModel.doReset()
         self._tableWavesListModel.removeAllWaves()
         self._tableWavesListModel.doReset()

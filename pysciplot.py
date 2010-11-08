@@ -148,10 +148,11 @@ class pysciplot(QMainWindow):
         Create a table view based on the given model.
         """
 
-        tableView = DataTableView(tableModel, self, tableName, self)
+        tableView = DataTableView(tableModel, self, tableName)
         tableViewSubWindow = DataTableSubWindow()
         tableViewSubWindow.setWidget(tableView)
         tableViewSubWindow.setAttribute(Qt.WA_DeleteOnClose)
+        tableViewSubWindow.resize(600, 300)
         self.ui.workspace.addSubWindow(tableViewSubWindow)
 
         tableViewSubWindow.setVisible(True)
@@ -244,7 +245,7 @@ class pysciplot(QMainWindow):
         fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
         fileDialog.setDefaultSuffix("psp")
         fileDialog.setConfirmOverwrite(True)
-        fileDialog.setDirectory(Util.fileDialogDirectory(self))
+        fileDialog.setDirectory(Util.fileDialogDirectory())
         fileDialog.setAcceptMode(QFileDialog.AcceptSave)
         fileDialog.exec_()
         fileName = str(fileDialog.selectedFiles()[0])
@@ -291,7 +292,7 @@ class pysciplot(QMainWindow):
             fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
             fileDialog.setDefaultSuffix("psp")
             fileDialog.setConfirmOverwrite(False)
-            fileDialog.setDirectory(Util.fileDialogDirectory(self))
+            fileDialog.setDirectory(Util.fileDialogDirectory())
             fileDialog.setAcceptMode(QFileDialog.AcceptOpen)
             fileDialog.exec_()
             fileName = str(fileDialog.selectedFiles()[0])
@@ -395,7 +396,7 @@ class pysciplot(QMainWindow):
             return False
         
         # As user for the filename to save to
-        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", Util.fileDialogDirectory(self))
+        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", Util.fileDialogDirectory())
 
         if fileName != "":
             # Save current working directory

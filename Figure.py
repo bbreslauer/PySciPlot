@@ -44,9 +44,9 @@ class Figure(QObject):
         
         Util.debug(2, "Figure.init", "Creating figure")
 
-        self.initializeProperties()
-
         self._app = QApplication.instance().window
+
+        self.initializeProperties()
 
         # Graphical stuff
         self._figure = MPLFigure()

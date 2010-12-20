@@ -1,0 +1,34 @@
+
+1) Create the spec file (only need to do once)
+
+python2 ~/usr/local/pyinstaller/Makespec.py -n psp pysciplot.py
+
+--or--
+
+python2 ~/usr/local/pyinstaller/Makespec.py --onefile -n pspone pysciplot.py
+
+
+2) Edit the specfile and add the following hookspath line to the Analysis line (make sure to change the pathex ending from a paren to a comma)
+
+              hookspath=['/home/ben/programming/pysciplot/branches/mpl/pyinstaller'])
+
+
+3) Build the project
+
+python2 ~/usr/local/pyinstaller/Build.py psp.spec
+
+
+
+
+
+
+
+
+
+
+
+OTHER STUFF TO DO
+Create the hooks file
+edit the PyQt4.Qt hooks file in pyinstaller files, adding the modules that don't exist there
+
+you can use the verbose option with pyinstaller to determine what is getting loaded from the wrong location

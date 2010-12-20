@@ -1,6 +1,6 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 
-from pylab import nan
+from numpy import nan
 from matplotlib.axes import Axes
 from matplotlib import ticker
 from matplotlib.artist import setp

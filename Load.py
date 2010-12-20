@@ -1,5 +1,4 @@
 # Functions for loading from files
-
 import Util
 
 import xml.dom.minidom

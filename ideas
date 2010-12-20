@@ -1,0 +1,43 @@
+# IMPORTANT
+
+DONE - plot axes need to be able to have limits that are non-integers
+
+createwavedialog
+    DONE - need to remove duplicate arguments in lambda definition and eval statement
+    DONE - need to change how the blank entries in the data table view are done, so that they don't show up in the actual waves.  the blank entries can cause issues with function definitions, and also it isn't very clean.
+
+
+
+
+when changing data in a table, there are too many plot updates
+
+add default values to properties
+
+need to change from configparser to xml.dom in order to be able to save multiple traces in a plot (or multiple plots in a figure)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+inputting formula and special characters (perhaps with latex syntax)
+
+shift data points (like x + 5, for all values in x)
+
+controlling tick marks (how many, how large, major/minor, minimum spacing, inside/outside, etc)
+
+export to any format (esp. eps)
+
+locking the graph window size, so you can see how it will look
+
+saving preferences as default, so all graphs will have the same look
+
+use wave as tick labels.  look at jesse conversation on 5/23/2010 for more info about this

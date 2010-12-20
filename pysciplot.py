@@ -8,7 +8,14 @@ from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDial
 from PyQt4.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt4.QtCore import Qt, QVariant, QFile
 
-import Util, Save, Load, config
+import matplotlib
+matplotlib.use('Qt4Agg')
+
+import Util
+import Save
+import Load
+import config
+import pyinstaller.hiddenmodules
 from Wave import Wave
 from Waves import Waves
 from Figure import Figure
@@ -454,7 +461,7 @@ if __name__ == "__main__":
 #    print PYQT_VERSION_STR
 
     (options, args) = setupOptions()
-
+    
     config.debugLevel = options.debug
     
     signal.signal(signal.SIGINT, signal.SIG_DFL)

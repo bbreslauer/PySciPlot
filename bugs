@@ -1,0 +1,12 @@
+** Message: pygobject_register_sinkfunc is deprecated (GtkWindow)
+** Message: pygobject_register_sinkfunc is deprecated (GtkInvisible)
+** Message: pygobject_register_sinkfunc is deprecated (GtkObject)
+/usr/lib/python2.6/site-packages/gtk-2.0/gtk/__init__.py:127: RuntimeWarning: PyOS_InputHook is not available for interactive use of PyGTK
+  set_interactive(1)
+
+these are caused by matplotlib being compiled with pygtk, and pygtk has deprecated some functions that matplotlib uses.  there is nothing i can do about this, until matplotlib fixes this problem. - not exactly true, if you use the Qt4Agg instead of the GtkAgg, then these are not produced
+
+
+
+
+if fonts cannot be found, delete ~/.matplotlib/fontList.cache .  This should be fixed by matplotlib revision r8712, but that has not yet been released. -- 2010-12-19

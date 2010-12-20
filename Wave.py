@@ -1,8 +1,7 @@
 import Util
 
 from PyQt4.QtCore import QObject, pyqtSignal
-
-from pylab import nan
+from numpy import nan
 
 class Wave(QObject):
     """

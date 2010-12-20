@@ -1,7 +1,6 @@
 from PyQt4.QtCore import QObject, pyqtSignal, Qt
 from PyQt4.QtGui import QAction, QApplication
 
-import matplotlib.pyplot as plot
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
 from matplotlib.font_manager import FontProperties

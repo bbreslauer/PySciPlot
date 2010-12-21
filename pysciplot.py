@@ -45,6 +45,10 @@ class pysciplot(QMainWindow):
         self.ui.setupUi(self)
     
     def setup(self):
+        """
+        Setup the application.
+        """
+
         # Variables
         Util.debug(2, "App", "Initializing variables")
         self._version = 1
@@ -94,9 +98,15 @@ class pysciplot(QMainWindow):
         #Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
     def waves(self):
+        """
+        Return the app's Waves object.  NOT A LIST OF WAVES.
+        """
         return self._waves
 
     def figures(self):
+        """
+        Return the app's Figures object.  NOT A LIST OF FIGURES.
+        """
         return self._figures
 
     def loadModule(self, moduleName):

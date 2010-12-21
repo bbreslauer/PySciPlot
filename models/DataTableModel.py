@@ -174,8 +174,8 @@ class DataTableModel(QAbstractTableModel):
             # Convert from QVariant to QString to str
             value = str(value.toString())
 
-            Util.debug(2, "DataTableModel.setData", "Setting " + str(wave.name()) + "[" + str(index.row()) + "] to " + str(wave.convertValueToDataType(value)))
-            result = wave.setData(index.row(), wave.convertValueToDataType(value))
+            Util.debug(2, "DataTableModel.setData", "Setting " + str(wave.name()) + "[" + str(index.row()) + "] to " + str(wave.castToWaveType(value)))
+            result = wave.setData(index.row(), wave.castToWaveType(value))
             
             self.dataChanged.emit(index, index)
 

@@ -53,7 +53,7 @@ class Figures(QObject):
         """Add a figure to the object."""
         self._figures.append(figure)
         self.figureAdded.emit()
-        Util.debug(2, "Figures.addFigure", "Added figure " + figure.get('figureName') + " to figures object")
+        Util.debug(2, "Figures.addFigure", "Added figure " + figure.get('figureWindowTitle') + " to figures object")
         return figure
     
     def getFigure(self, index):
@@ -70,7 +70,7 @@ class Figures(QObject):
         except IndexError:
             return False
         self.figureRemoved.emit()
-        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('figureName') + " from figures object")
+        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('figureWindowTitle') + " from figures object")
         return removedFigure
 
     def removeAllFigures(self):

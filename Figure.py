@@ -11,7 +11,7 @@ import Util
 from Waves import Waves
 from Wave import Wave
 from Plot import Plot
-from Gui import FigureSubWindow
+from gui.SubWindows import FigureSubWindow
 
 class Figure(QObject):
     """
@@ -28,7 +28,7 @@ class Figure(QObject):
 
     # Properties
     properties = {  
-                'figureName':               { 'type': str,   'default': '' },
+                'figureWindowTitle':        { 'type': str,   'default': '' },
                 'figureTitle':              { 'type': str,   'default': '' },
                 'figureTitleFont':          { 'type': dict,  'default': {} },
                 'figureRows':               { 'type': int,   'default': 1 },
@@ -38,7 +38,7 @@ class Figure(QObject):
                 'figureLinkPlotAxes':       { 'type': bool,  'default': False },
                  }
 
-    def __init__(self, name):
+    def __init__(self, windowTitle):
         QObject.__init__(self)
         
         Util.debug(2, "Figure.init", "Creating figure")
@@ -56,7 +56,7 @@ class Figure(QObject):
         self._canvas.setParent(self._figureSubWindow)
         self.showFigure()
         
-        self.set_('figureName', name)
+        self.set_('figureWindowTitle', windowTitle)
 
         self._plots = []
         self.extendPlots(0)
@@ -66,10 +66,10 @@ class Figure(QObject):
         # Connect signals
         self.propertyChanged.connect(self.refresh)
         
-        Util.debug(1, "Figure.init", "Created figure " + self.get('figureName'))
+        Util.debug(1, "Figure.init", "Created figure " + self.get('figureWindowTitle'))
 
     def __str__(self):
-        return "name: %s, rows: %s, columns: %s" % (self.get('figureName'), self.get('figureRows'), self.get('figureColumns'))
+        return "name: %s, rows: %s, columns: %s" % (self.get('figureWindowTitle'), self.get('figureRows'), self.get('figureColumns'))
 
     def initializeProperties(self):
         Util.debug(2, "Figure.initializeProperties", "Initializing properties for new figure")
@@ -97,10 +97,10 @@ class Figure(QObject):
             else:
                 vars(self)["_" + variable] = value
 
-            Util.debug(2, "Figure.set", "Setting " + str(variable) + " to " + str(value) + " for figure " + str(self.get('figureName')))
+            Util.debug(2, "Figure.set", "Setting " + str(variable) + " to " + str(value) + " for figure " + str(self.get('figureWindowTitle')))
 
             # See if we should emit any signals
-            if variable == 'figureName':
+            if variable == 'figureWindowTitle':
                 self._figureSubWindow.setWindowTitle(value)
                 self.figureRenamed.emit(value)
             else:

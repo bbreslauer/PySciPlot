@@ -14,7 +14,7 @@ from models.WavesListModel import WavesListModel
 from models.TraceListModel import TraceListModel
 from models.PlotListModel import PlotListModel
 from TraceListEntry import TraceListEntry
-from Gui import QColorButton
+from gui.QColorButton import QColorButton
 from ui.Ui_EditFigureDialog import Ui_EditFigureDialog
 
 class EditFigureDialog(Module):
@@ -60,7 +60,7 @@ class EditFigureDialog(Module):
                 'plotLeftAxisVisible':                { 'object': 'plot'   },
                 'plotBottomAxisVisible':              { 'object': 'plot'   },
                 'plotRightAxisVisible':               { 'object': 'plot'   },
-                'figureName':                         { 'object': 'figure' },
+                'figureWindowTitle':                  { 'object': 'figure' },
                 'figureTitle':                        { 'object': 'figure' },
                 'figureTitleFont':                    { 'object': 'figure' },
                 'figureRows':                         { 'object': 'figure' },
@@ -115,7 +115,7 @@ class EditFigureDialog(Module):
         self._ui.yAxisListView.setModel(self._yListModel)
         self._app.waves().waveAdded.connect(self._yListModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._yListModel.doReset)
-
+        
         # Setup trace list
         traceListModel = TraceListModel()
         self._ui.traceTableView.setModel(traceListModel)
@@ -133,12 +133,6 @@ class EditFigureDialog(Module):
         self._ui.traceOptionsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.plotUi_resetTraceOptions)
 
         self._ui.addTraceButton.clicked.connect(self.addTracesToPlot)
-
-        self._ui.figureSettingsSave.clicked.connect(self.saveFigureSettings)
-        self._ui.figureSettingsLoad.clicked.connect(self.loadFigureSettings)
-
-        self._ui.traceSave.clicked.connect(self.saveTrace)
-        self._ui.traceLoad.clicked.connect(self.loadTrace)
 
 
         def createFigure():
@@ -209,8 +203,8 @@ class EditFigureDialog(Module):
         for widgetName in self.widgets.keys():
             if type(vars(self._ui)[widgetName]).__name__ == 'QColorButton':
                 vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].createColorDialog)
-            elif type(vars(self._ui)[widgetName]).__name__ == 'QFontButton':
-                vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].showFontDialog)
+            elif type(vars(self._ui)[widgetName]).__name__ == 'QTextOptionsButton':
+                vars(self._ui)[widgetName].clicked.connect(vars(self._ui)[widgetName].showTextOptionsDialog)
 
         return self._widget
 
@@ -489,67 +483,6 @@ class EditFigureDialog(Module):
         # the menu is opened again.
         self.deleteTraceFromTraceListAction.triggered.disconnect(deleteTraceHelper)
 
-
-
-    # Saving options to files
-    def saveFigureSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Save Figure Settings")
-        fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
-        fileDialog.setDefaultSuffix("pspf")
-        fileDialog.setDirectory(Util.fileDialogDirectory())
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
-
-        # Save current working directory
-        self._app.cwd = str(fileDialog.directory().absolutePath())
-
-        if fileName != "":
-            FigureSettings.writeSettings(fileName, self)
-
-    def loadFigureSettings(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Load Figure Settings")
-        fileDialog.setFilter("PySciPlot Figure Settings (*.pspf);;All Files (*.*)")
-        fileDialog.setDirectory(Util.fileDialogDirectory())
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
-        
-        # Save current working directory
-        self._app.cwd = str(fileDialog.directory().absolutePath())
-
-        if fileName != "":
-            FigureSettings.loadSettings(fileName, self)
-
-    def saveTrace(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Save Trace")
-        fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
-        fileDialog.setDefaultSuffix("pspt")
-        fileDialog.setDirectory(Util.fileDialogDirectory())
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
-
-        # Save current working directory
-        self._app.cwd = str(fileDialog.directory().absolutePath())
-
-        if fileName != "":
-            optionsOnly = Util.getWidgetValue(self._ui.traceSaveOptions)
-            TraceSave.writeSettings(fileName, self, optionsOnly)
-
-    def loadTrace(self):
-        fileDialog = QFileDialog(self._app.ui.workspace, "Load Trace")
-        fileDialog.setFilter("PySciPlot Trace Settings (*.pspt);;All Files (*.*)")
-        fileDialog.setDirectory(Util.fileDialogDirectory())
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
-        
-        # Save current working directory
-        self._app.cwd = str(fileDialog.directory().absolutePath())
-
-        if fileName != "":
-            TraceSave.loadSettings(fileName, self)
-
-
-
-
     """Module-required methods"""
     def getMenuNameToAddTo(self):
         return "menuPlot"
@@ -591,125 +524,5 @@ class EditFigureDialog(Module):
         self._widget.deleteLater()
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
-
-
-
-
-
-class FigureSettings():
-    """
-    Save/Load figure settings to/from a file.
-    """
-
-    @staticmethod
-    def collectSettings(config, figureDialog):
-        """
-        Pull all of the settings into a ConfigParser class, but do not
-        write them out yet.  This allows us to collect a whole bunch of 
-        settings and just write them out once.
-        """
-
-        for widgetName in figureDialog.widgets.keys():
-            if figureDialog.widgets[widgetName]['object'] == 'figure':
-                config.set('Figure', str(widgetName), str(figureDialog.getUiValue(widgetName)))
-        return config
-
-    @staticmethod
-    def writeSettings(fileName, figureDialog):
-        """
-        Write all the figure settings to a file.
-        """
-
-        # Verify that the file is actually a file or does not exist
-        if os.path.isfile(fileName) or not os.path.exists(fileName):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.add_section('Application')
-            config.set('Application', 'pysciplot_version', '1')
-            config.add_section('Figure')
-            
-            config = FigureSettings.collectSettings(config, figureDialog)
-    
-            with open(fileName, 'wb') as configFile:
-                config.write(configFile)
-
-    
-    @staticmethod
-    def loadSettings(fileName, figureDialog):
-        """
-        Load the figure settings from a file.
-        """
-
-        if os.path.isfile(fileName):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.read(fileName)
-            version = config.get('Application', 'pysciplot_version')
-
-            for widgetName in figureDialog.widgets.keys():
-                if figureDialog.widgets[widgetName]['object'] == 'figure':
-                    figureDialog.setUiValue(widgetName, config.get('Figure', str(widgetName)))
-
-
-class TraceSave():
-    """
-    Save/Load trace settings to/from a file.
-    """
-
-    @staticmethod
-    def collectSettings(config, figureDialog):
-        """
-        Pull all of the settings into a ConfigParser class, but do not
-        write them out yet.  This allows us to collect a whole bunch of 
-        settings and just write them out once.
-        """
-
-        for widgetName in figureDialog.widgets.keys():
-            if figureDialog.widgets[widgetName]['object'] == 'trace':
-                config.set('Trace', str(widgetName), str(figureDialog.getUiValue(widgetName)))
-        return config
-
-    @staticmethod
-    def writeSettings(fileName, figureDialog, optionsOnly):
-        """
-        Write all the trace settings to a file.
-
-        The optionsOnly argument indicates whether to save only the options, or the options
-        and the data.
-        """
-
-        # Verify that the file is actually a file or does not exist
-        if os.path.isfile(fileName) or not os.path.exists(fileName):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.add_section('Application')
-            config.set('Application', 'pysciplot_version', '1')
-            config.add_section('Trace')
-            
-            config = TraceSave.collectSettings(config, figureDialog)
-    
-            with open(fileName, 'wb') as configFile:
-                config.write(configFile)
-
-    
-    @staticmethod
-    def loadSettings(fileName, figureDialog):
-        """
-        Load the trace settings from a file.
-        """
-
-        if os.path.isfile(fileName):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.read(fileName)
-            version = config.get('Application', 'pysciplot_version')
-
-            for widgetName in figureDialog.widgets.keys():
-                if figureDialog.widgets[widgetName]['object'] == 'trace':
-                    figureDialog.setUiValue(widgetName, config.get('Trace', str(widgetName)))
-
-
-
-
 
 

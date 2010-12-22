@@ -23,7 +23,7 @@ from Figures import Figures
 from TraceListEntry import TraceListEntry
 from DataTableView import DataTableView
 from DialogSubWindow import DialogSubWindow
-from Gui import DataTableSubWindow
+from gui.SubWindows import DataTableSubWindow
 from Preferences import Preferences
 from models.FigureListModel import FigureListModel
 from models.WavesListModel import WavesListModel

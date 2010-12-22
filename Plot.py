@@ -210,6 +210,7 @@ class Plot(QObject):
         self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
 
         Util.debug(2, "Plot.refresh", "Setting traces")
+        # Plotting data
         for trace in self._traces:
             [x, y] = self.convertTraceDataToFloat(trace)
             self._axes.plot(x, y, **(trace.getFormat()))

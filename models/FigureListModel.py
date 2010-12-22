@@ -24,7 +24,7 @@ class FigureListModel(QAbstractListModel):
 
         if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
             if self._figures.getFigure(index.row()):
-                return self._figures.getFigure(index.row()).get('figureName')
+                return self._figures.getFigure(index.row()).get('figureWindowTitle')
         return QVariant()
 
     def headerData(self, section, orientation, role):
@@ -49,7 +49,7 @@ class FigureListModel(QAbstractListModel):
             # Do not allow for blank figure names
             if value == "":
                 return False
-            self._figures.getFigure(index.row()).set_('figureName', str(value.toString()))
+            self._figures.getFigure(index.row()).set_('figureWindowTitle', str(value.toString()))
             return True
         return False
 

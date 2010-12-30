@@ -2,6 +2,8 @@ from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
 import ConfigParser, os
 
+import xml.dom.minidom
+
 import Util
 from DialogSubWindow import DialogSubWindow
 from ui.Ui_Preferences import Ui_Preferences
@@ -16,8 +18,11 @@ class Preferences():
     file will also be updated.
     """
 
+    # These are the defaults for each preference. They will be overwritten
+    # by the user's preferences at startup.
     prefs = {
-            'defaultDirectory': ''
+            'projectDirectory': {'current': '', 'initial': ''},
+            'defaultDirectory': {'current': '', 'initial': ''},
             }
 
     def __init__(self, fileName):

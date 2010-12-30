@@ -5,7 +5,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
 from matplotlib.font_manager import FontProperties
 from mpl_toolkits.axes_grid.axislines import Axes
-from mpl_toolkits.axes_grid1 import Grid
+#from mpl_toolkits.axes_grid1 import Grid
 
 import Util
 from Waves import Waves

@@ -59,8 +59,6 @@ class Plot(QObject):
                     'plotLeftAxisTickLabelFormat':     { 'type': str, 'default': '%.2g'},
                     'plotLeftAxisTickLabelFont':       { 'type': dict, 'default': {} },
                     'plotLeftAxisLabelFont':           { 'type': dict, 'default': {} },
-                    'plotTopAxisVisible':              { 'type': bool, 'default': True },
-                    'plotRightAxisVisible':            { 'type': bool, 'default': True },
                  }
 
     def __init__(self, figure, plotNum, plotName=""):

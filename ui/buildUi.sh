@@ -11,6 +11,6 @@ do
 done
 
 # rename files
-#rename -f s/ui.py.new/py/g *.ui.py.new
-rename ui.py.new py *.ui.py.new
+rename -f s/ui.py.new/py/g *.ui.py.new
+#rename ui.py.new py *.ui.py.new
 

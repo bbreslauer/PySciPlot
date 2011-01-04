@@ -31,12 +31,13 @@ class ImportCSV(Module):
 
     def csvFileSelector(self):
         """Button-lineedit link"""
-        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", Util.fileDialogDirectory(), "Comma Separated Values (*.csv);;All Files(*.*)"))
+        directory = os.path.dirname(Util.getWidgetValue(self._ui.csvFileName))
+        if not os.path.isdir(directory):
+            directory = self._app.preferences.getInternal('projectDirectory')
+
+        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Comma Separated Values (*.csv);;All Files(*.*)"))
 
         if csvFile != "":
-            # Save current working directory
-            self._app.cwd = os.path.dirname(csvFile)
-
             return Util.setWidgetValue(self._ui.csvFileName, csvFile)
         return False
 

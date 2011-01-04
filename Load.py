@@ -1,7 +1,7 @@
 # Functions for loading from files
 import Util
 
-import xml.dom.minidom
+import xml.dom.minidom, os.path
 
 from PyQt4.QtCore import Qt
 
@@ -19,8 +19,11 @@ def loadProjectFromFile(app, fileName):
     """
 
     Util.debug(1, "Load", "Loading project from file")
-
-    dom = xml.dom.minidom.parse(fileName)
+    
+    if os.path.isfile(fileName):
+        dom = xml.dom.minidom.parse(fileName)
+    else:
+        return False
     
     # root project element
     p = dom.documentElement

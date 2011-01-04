@@ -4,7 +4,7 @@ import Util
 
 from PyQt4.QtGui import QMdiArea
 
-import xml.dom.minidom
+import xml.dom.minidom, os.path
 
 
 def writeProjectToFile(app, fileName):
@@ -29,9 +29,10 @@ def writeProjectToFile(app, fileName):
     getWaves(app, dom)
     getTables(app, dom, appWindowList)
     getFigures(app, dom, appWindowList)
-
-    fileHandle = open(fileName, "w")
-    dom.writexml(fileHandle, indent='', addindent='  ', newl='\n')
+    
+    if os.path.isfile(fileName):
+        with open(fileName, "w") as fileHandle:
+            dom.writexml(fileHandle, indent='', addindent='  ', newl='\n')
 
     app.setCurrentProject(fileName)
 

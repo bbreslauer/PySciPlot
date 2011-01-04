@@ -71,7 +71,6 @@
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Figures"/>
-    <addaction name="actionShow_CWD"/>
     <addaction name="actionShow_Waves"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>

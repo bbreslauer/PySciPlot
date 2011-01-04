@@ -64,21 +64,6 @@ def getWidgetValue(widget):
     else:
         raise UnknownWidgetTypeError(widgetType)
 
-
-def fileDialogDirectory():
-    """
-    Set the initial directory for a QFileDialog to either the cwd or
-    the default directory.
-    """
-
-    app = QApplication.instance().window
-
-    if app.cwd != "":
-        return app.cwd
-    else:
-        return app.preferences.get("defaultDirectory")
-
-
 def goodTextColor(backgroundColor):
     """
     Determines whether complementary color should be white or black.

@@ -55,7 +55,7 @@ class pysciplot(QMainWindow):
         self._waves = Waves()
         self._figures = Figures()
         self._loadedModules = {}
-        self.cwd = "" # current working directory
+        self.projectDir = "" # current project directory
         self.setCurrentProject("")
 
         # Let the workspace resize when the main window is resized
@@ -80,7 +80,6 @@ class pysciplot(QMainWindow):
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
         
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
-        self.ui.actionShow_CWD.triggered.connect(self.printCWD)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
 
         # create default waves
@@ -258,21 +257,19 @@ class pysciplot(QMainWindow):
         """
 
         Util.debug(2, "App.saveProjectAs", "Saving project as")
-        fileDialog = QFileDialog(self.ui.workspace, "Save Project")
-        fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
-        fileDialog.setDefaultSuffix("psp")
-        fileDialog.setConfirmOverwrite(True)
-        fileDialog.setDirectory(Util.fileDialogDirectory())
-        fileDialog.setAcceptMode(QFileDialog.AcceptSave)
-        fileDialog.exec_()
-        fileName = str(fileDialog.selectedFiles()[0])
+        
+        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", self.projectDirectory(), "PySciPlot Project (*.psp);;All Files (*.*)"))
 
-        if fileName != "":
-            # Save current working directory
-            self.cwd = os.path.dirname(fileName)
+#        fileDialog = QFileDialog(self.ui.workspace, "Save Project")
+#        fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
+#        fileDialog.setDefaultSuffix("psp")
+#        fileDialog.setConfirmOverwrite(True)
+#        fileDialog.setDirectory(self.projectDirectory())
+#        fileDialog.setAcceptMode(QFileDialog.AcceptSave)
+#        fileDialog.exec_()
+#        fileName = str(fileDialog.selectedFiles()[0])
 
         Save.writeProjectToFile(self, fileName)
-
 
     def saveProject(self):
         """
@@ -309,14 +306,10 @@ class pysciplot(QMainWindow):
             fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
             fileDialog.setDefaultSuffix("psp")
             fileDialog.setConfirmOverwrite(False)
-            fileDialog.setDirectory(Util.fileDialogDirectory())
+            fileDialog.setDirectory(self.projectDirectory())
             fileDialog.setAcceptMode(QFileDialog.AcceptOpen)
             fileDialog.exec_()
             fileName = str(fileDialog.selectedFiles()[0])
-    
-            if fileName != "":
-                # Save current working directory
-                self.cwd = os.path.dirname(fileName)
     
         Load.loadProjectFromFile(self, fileName)
         
@@ -372,6 +365,11 @@ class pysciplot(QMainWindow):
         else:
             self.setWindowTitle("PySciPlot")
 
+    def projectDirectory(self):
+        if os.path.isdir(self.projectDir):
+            return self.projectDir
+        return self.preferences.getInternal('projectDirectory')
+
 
 
     def saveCurrentFigure(self):
@@ -413,12 +411,8 @@ class pysciplot(QMainWindow):
             return False
         
         # As user for the filename to save to
-        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", Util.fileDialogDirectory())
+        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", self.projectDirectory())
 
-        if fileName != "":
-            # Save current working directory
-            self.cwd = os.path.dirname(str(fileName))
-        
         # Save the figure to the file
         currentWindow.widget().figure.savefig(str(fileName), dpi=dpi, orientation=orientation)
 
@@ -434,9 +428,6 @@ class pysciplot(QMainWindow):
 
     def printAllFigures(self):
         print self._figures
-
-    def printCWD(self):
-        print self.cwd
 
     def setTestData(self):
         self._waves.addWave(Wave("Wave1", "Integer", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))

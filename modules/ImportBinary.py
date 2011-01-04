@@ -43,12 +43,13 @@ class ImportBinary(Module):
 
     def fileSelector(self):
         """Button-lineedit link"""
-        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", Util.fileDialogDirectory(), "Binary (*.bin *.dat);;All Files(*.*)"))
+        directory = os.path.dirname(Util.getWidgetValue(self._ui.fileName))
+        if not os.path.isdir(directory):
+            directory = self._app.preferences.getInternal('projectDirectory')
+
+        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Binary (*.bin *.dat);;All Files(*.*)"))
 
         if fileName != "":
-            # Save current working directory
-            self._app.cwd = os.path.dirname(fileName)
-
             return Util.setWidgetValue(self._ui.fileName, fileName)
         return False
 

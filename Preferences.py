@@ -1,6 +1,6 @@
 from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
-import ConfigParser, os
+import os
 
 import xml.dom.minidom
 
@@ -21,8 +21,8 @@ class Preferences():
     # These are the defaults for each preference. They will be overwritten
     # by the user's preferences at startup.
     prefs = {
-            'projectDirectory': {'current': '', 'initial': ''},
-            'defaultDirectory': {'current': '', 'initial': ''},
+            'projectDirectory': '~/',  # Dir for where to store project files
+            'defaultDirectory': '~/',  # Dir for other purposes
             }
 
     def __init__(self, fileName):
@@ -42,6 +42,7 @@ class Preferences():
         self._ui.buttons.button(QDialogButtonBox.Save).clicked.connect(self.savePreferences)
         self._ui.buttons.button(QDialogButtonBox.Cancel).clicked.connect(self.hideDialog)
         self._ui.defaultDirectoryButton.clicked.connect(self.defaultDirectorySelector)
+        self._ui.projectDirectoryButton.clicked.connect(self.projectDirectorySelector)
 
         self._window = DialogSubWindow(self._app.ui.workspace)
         self._window.setWidget(self._widget)
@@ -50,12 +51,18 @@ class Preferences():
         self._window.hide()
 
 
-    def get(self, variable):
+    def getInternal(self, variable):
         return self.prefs[variable]
+
+    def getUi(self, variable):
+        return Util.getWidgetValue(vars(self._ui)[variable])
 
     def setInternal(self, variable, value):
         self.prefs[variable] = value
         return True
+    
+    def setUi(self, variable, value):
+        return Util.setWidgetValue(vars(self._ui)[variable], value)
 
     def showDialog(self):
         self.resetUi()
@@ -72,12 +79,19 @@ class Preferences():
         """
 
         if os.path.isfile(self.preferencesFile):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.read(self.preferencesFile)
+            dom = xml.dom.minidom.parse(self.preferencesFile)
 
-            for pref in self.prefs.keys():
-                self.setInternal(pref, config.get('Preferences', str(pref)))
+            # root prefs element
+            p = dom.documentElement
+            
+            # Load preferences from file
+            child = p.firstChild
+            while child is not None:
+                if child.nodeType is xml.dom.minidom.Node.ELEMENT_NODE:
+                    if child.nodeName in self.prefs.keys():
+                        self.setInternal(child.nodeName, str(child.firstChild.data.strip()))
+
+                child = child.nextSibling
 
             return True
         return False
@@ -88,7 +102,7 @@ class Preferences():
         """
 
         for pref in self.prefs.keys():
-            Util.setWidgetValue(vars(self._ui)[pref], self.get(pref))
+            self.setUi(pref, self.getInternal(pref))
 
     def savePreferences(self):
         """
@@ -106,23 +120,35 @@ class Preferences():
         """
 
         if os.path.isfile(self.preferencesFile) or not os.path.exists(self.preferencesFile):
-            config = ConfigParser.SafeConfigParser()
-            config.optionxform = str
-            config.add_section('Preferences')
+            # Create document
+            dom = xml.dom.minidom.Document()
 
+            # Create root preferences element
+            p = dom.createElement("Preferences")
+            dom.appendChild(p)
+            
+            # Add each preference to dom
             for pref in self.prefs.keys():
-                config.set('Preferences', str(pref), Util.getWidgetValue(vars(self._ui)[pref]))
+                child = dom.createElement(pref)
+                child.appendChild(dom.createTextNode(str(self.getUi(pref))))
+                p.appendChild(child)
 
-            with open(self.preferencesFile, 'wb') as configFile:
-                config.write(configFile)
+            with open(self.preferencesFile, 'w') as preferencesFile:
+                dom.writexml(preferencesFile, indent='', addindent='  ', newl='\n')
 
 
 
     # Methods for specific preferences
     def defaultDirectorySelector(self):
         directory = QFileDialog.getExistingDirectory(self._app.ui.workspace, "Select Default Directory", Util.getWidgetValue(self._ui.defaultDirectory))
-        if directory != "":
-            return Util.setWidgetValue(self._ui.defaultDirectory, directory)
+        if os.path.isdir(directory):
+            return self.setUi('defaultDirectory', directory)
+        return False
+
+    def projectDirectorySelector(self):
+        directory = QFileDialog.getExistingDirectory(self._app.ui.workspace, "Select Project Directory", Util.getWidgetValue(self._ui.projectDirectory))
+        if os.path.isdir(directory):
+            return self.setUi('projectDirectory', directory)
         return False
 
 

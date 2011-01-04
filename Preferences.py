@@ -1,8 +1,6 @@
 from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
-import os
-
-import xml.dom.minidom
+import os, pickle
 
 import Util
 from DialogSubWindow import DialogSubWindow
@@ -21,8 +19,9 @@ class Preferences():
     # These are the defaults for each preference. They will be overwritten
     # by the user's preferences at startup.
     prefs = {
-            'projectDirectory': '~/',  # Dir for where to store project files
-            'defaultDirectory': '~/',  # Dir for other purposes
+            'projectDirectory': '~/',   # Dir for where to store project files
+            'defaultDirectory': '~/',   # Dir for other purposes
+            'textOptions': {},          # Default text options
             }
 
     def __init__(self, fileName):
@@ -43,6 +42,7 @@ class Preferences():
         self._ui.buttons.button(QDialogButtonBox.Cancel).clicked.connect(self.hideDialog)
         self._ui.defaultDirectoryButton.clicked.connect(self.defaultDirectorySelector)
         self._ui.projectDirectoryButton.clicked.connect(self.projectDirectorySelector)
+        self._ui.textOptions.clicked.connect(self._ui.textOptions.showTextOptionsDialog)
 
         self._window = DialogSubWindow(self._app.ui.workspace)
         self._window.setWidget(self._widget)
@@ -73,29 +73,21 @@ class Preferences():
         self._window.hide()
 
     def loadPreferencesFile(self):
-        """
-        Read preferences from file into internal cache.
-        If file cannot be found, return False
-        """
-
         if os.path.isfile(self.preferencesFile):
-            dom = xml.dom.minidom.parse(self.preferencesFile)
+            with open(self.preferencesFile, 'r') as fileHandle:
+                self.prefs = pickle.load(fileHandle)
 
-            # root prefs element
-            p = dom.documentElement
-            
-            # Load preferences from file
-            child = p.firstChild
-            while child is not None:
-                if child.nodeType is xml.dom.minidom.Node.ELEMENT_NODE:
-                    if child.nodeName in self.prefs.keys():
-                        self.setInternal(child.nodeName, str(child.firstChild.data.strip()))
 
-                child = child.nextSibling
+    def uiToInternal(self):
+        """
+        Copy the UI pref values to the internal prefs dict.
+        """
+        for pref in self.prefs.keys():
+            self.setInternal(pref, self.getUi(pref))
 
-            return True
-        return False
-            
+
+
+
     def resetUi(self):
         """
         Update UI to the current internal cache of preferences.
@@ -109,32 +101,18 @@ class Preferences():
         Save preferences to file and then read file to internal cache.
         Close dialog afterwards.
         """
-
+        
+        self.uiToInternal()
         self.writePreferences()
         self.loadPreferencesFile()
         self.hideDialog()
 
     def writePreferences(self):
-        """
-        Write preferences to file from UI.
-        """
-
         if os.path.isfile(self.preferencesFile) or not os.path.exists(self.preferencesFile):
-            # Create document
-            dom = xml.dom.minidom.Document()
+            with open(self.preferencesFile, 'wb') as fileHandle:
+                pickle.dump(self.prefs, fileHandle)
 
-            # Create root preferences element
-            p = dom.createElement("Preferences")
-            dom.appendChild(p)
-            
-            # Add each preference to dom
-            for pref in self.prefs.keys():
-                child = dom.createElement(pref)
-                child.appendChild(dom.createTextNode(str(self.getUi(pref))))
-                p.appendChild(child)
 
-            with open(self.preferencesFile, 'w') as preferencesFile:
-                dom.writexml(preferencesFile, indent='', addindent='  ', newl='\n')
 
 
 

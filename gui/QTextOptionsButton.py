@@ -22,6 +22,7 @@ class QTextOptionsButton(QPushButton):
     
     def __init__(self, *args):
         QPushButton.__init__(self, *args)
+        self._app = QApplication.instance().window
 
         self.textOptions = {}
         self.setTextOptionsToDefaults()
@@ -30,8 +31,8 @@ class QTextOptionsButton(QPushButton):
         self._dialog = QDialog()
         self._ui = Ui_TextOptionsDialog()
         self._ui.setupUi(self._dialog)
-        
-        self._window = DialogSubWindow(QApplication.instance().window.ui.workspace)
+
+        self._window = DialogSubWindow(self._app.ui.workspace)
         self._window.setWidget(self._dialog)
         self._dialog.setParent(self._window)
         
@@ -84,8 +85,15 @@ class QTextOptionsButton(QPushButton):
             self.textOptions = textOptions
 
     def setTextOptionsToDefaults(self):
+        """
+        Check for a value in user's preferences. If none exists, then go with the program's default.
+        """
+
         for variable in self.defaultTextOptions.keys():
-            self.textOptions[variable] = self.defaultTextOptions[variable]['default']
+            if 'preferences' in self._app.__dict__.keys() and variable in self._app.preferences.getInternal('textOptions').keys():
+                self.textOptions[variable] = self._app.preferences.getInternal('textOptions')[variable]
+            else:
+                self.textOptions[variable] = self.defaultTextOptions[variable]['default']
     
     def showTextOptionsDialog(self):
         """

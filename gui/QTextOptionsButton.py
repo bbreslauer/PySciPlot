@@ -10,7 +10,7 @@ import Util
 class QTextOptionsButton(QPushButton):
     """A push button that is used to select a font and text options."""
     
-    defaultTextOptions = {  'name':                 { 'type': str, 'default': 'Bitstream Vera Sans' },
+    textOptionProperties = {'name':                 { 'type': str, 'default': 'Bitstream Vera Sans' },
                             'style':                { 'type': str, 'default': 'normal' },
                             'variant':              { 'type': str, 'default': 'normal' },
                             'stretch':              { 'type': int, 'default': 100 },
@@ -23,13 +23,13 @@ class QTextOptionsButton(QPushButton):
                             'linespacing':          { 'type': float, 'default': 1.2 },
                             'rotation':             { 'type': str, 'default': 'horizontal' },
                          }
-    
+
     def __init__(self, *args):
         QPushButton.__init__(self, *args)
         self._app = QApplication.instance().window
 
         self.textOptions = {}
-        self.setTextOptionsToDefaults()
+        self.setTextOptions()
 
         # Create dialog
         self._dialog = QDialog()
@@ -55,7 +55,6 @@ class QTextOptionsButton(QPushButton):
         # Enter fonts into the ui widget
         self._ui.name.addItems(fontList)
         
-        
         # Connect slots
         self._ui.buttons.button(QDialogButtonBox.Ok).clicked.connect(self.okClicked)
         self._ui.buttons.button(QDialogButtonBox.Cancel).clicked.connect(self.cancelClicked)
@@ -75,7 +74,7 @@ class QTextOptionsButton(QPushButton):
     def getUiTextOptions(self):
         textOptions = {}
 
-        for variable in self.defaultTextOptions.keys():
+        for variable in self.textOptionProperties.keys():
             textOptions[variable] = Util.getWidgetValue(vars(self._ui)[variable])
     
         return textOptions
@@ -84,21 +83,34 @@ class QTextOptionsButton(QPushButton):
         return self.textOptions
         
     def setTextOptions(self, textOptions={}):
-        if textOptions == {}:
-            self.setTextOptionsToDefaults()
-        else:
-            self.textOptions = textOptions
-
-    def setTextOptionsToDefaults(self):
         """
-        Check for a value in user's preferences. If none exists, then go with the program's default.
+        Set text options.
+
+        This method will set every option in the textOptionProperties keys list.
+        The following questions will be asked for each option (in order),
+        and the first positive result will be used.
+
+        1) Is the option passed to this method?
+        2) Did the user set a preference for this option?
+        3) Set the option to the default in this class.
         """
 
-        for variable in self.defaultTextOptions.keys():
-            if 'preferences' in self._app.__dict__.keys() and variable in self._app.preferences.getInternal('textOptions').keys():
-                self.textOptions[variable] = self._app.preferences.getInternal('textOptions')[variable]
+        # Start by getting some key lists, so we don't have to create the
+        # lists multiple times
+        passedKeys = textOptions.keys()
+        doPreferencesExist = 'preferences' in self._app.__dict__.keys()
+        if doPreferencesExist:
+            preferenceKeys = self._app.preferences.getInternal('textOptions').keys()
+
+        for prop in self.textOptionProperties.keys():
+            if prop in passedKeys:
+                pass
+            elif doPreferencesExist and prop in preferenceKeys:
+                textOptions[prop] = self._app.preferences.getInternal('textOptions')[prop]
             else:
-                self.textOptions[variable] = self.defaultTextOptions[variable]['default']
+                textOptions[prop] = self.textOptionProperties[prop]['default']
+
+        self.textOptions = textOptions
     
     def showTextOptionsDialog(self):
         """

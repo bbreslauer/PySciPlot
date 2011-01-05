@@ -30,7 +30,7 @@ class Figure(QObject):
     properties = {  
                 'figureWindowTitle':        { 'type': str,   'default': '' },
                 'figureTitle':              { 'type': str,   'default': '' },
-                'figureTitleFont':          { 'type': dict,  'default': {} },
+                'figureTitleFont':          { 'type': dict,  'default': {'size': 20, 'verticalalignment': 'top'} },
                 'figureRows':               { 'type': int,   'default': 1 },
                 'figureColumns':            { 'type': int,   'default': 1 },
                 'figureAxesPadding':        { 'type': float, 'default': 0.5 },

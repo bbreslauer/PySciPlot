@@ -27,7 +27,7 @@ class Plot(QObject):
     properties = {
                     'plotNum':                         { 'type': int, 'default': 0 },
                     'plotName':                        { 'type': str, 'default': '' },
-                    'plotNameFont':                    { 'type': dict, 'default': {} },
+                    'plotNameFont':                    { 'type': dict, 'default': {'size': 18, 'verticalalignment': 'baseline'} },
                     'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
                     'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
                     'plotBottomAxisMinimum':           { 'type': float, 'default': -10 },
@@ -42,8 +42,8 @@ class Plot(QObject):
                     'plotBottomAxisUseTickSpacing':    { 'type': bool, 'default': False },
                     'plotBottomAxisUseTickNumber':     { 'type': bool, 'default': True },
                     'plotBottomAxisTickLabelFormat':   { 'type': str, 'default': '%.2g'},
-                    'plotBottomAxisTickLabelFont':     { 'type': dict, 'default': {} },
-                    'plotBottomAxisLabelFont':         { 'type': dict, 'default': {} },
+                    'plotBottomAxisTickLabelFont':     { 'type': dict, 'default': {'verticalalignment': 'top'} },
+                    'plotBottomAxisLabelFont':         { 'type': dict, 'default': {'verticalalignment': 'top'} },
                     'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
                     'plotLeftAxisMinimum':             { 'type': float, 'default': -10 },
                     'plotLeftAxisMaximum':             { 'type': float, 'default': 10 },
@@ -57,8 +57,8 @@ class Plot(QObject):
                     'plotLeftAxisUseTickSpacing':      { 'type': bool, 'default': False },
                     'plotLeftAxisUseTickNumber':       { 'type': bool, 'default': True },
                     'plotLeftAxisTickLabelFormat':     { 'type': str, 'default': '%.2g'},
-                    'plotLeftAxisTickLabelFont':       { 'type': dict, 'default': {} },
-                    'plotLeftAxisLabelFont':           { 'type': dict, 'default': {} },
+                    'plotLeftAxisTickLabelFont':       { 'type': dict, 'default': {'horizontalalignment': 'right'} },
+                    'plotLeftAxisLabelFont':           { 'type': dict, 'default': {'horizontalalignment': 'right', 'rotation': 'vertical'} },
                  }
 
     def __init__(self, figure, plotNum, plotName=""):

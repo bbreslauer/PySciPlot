@@ -2,7 +2,7 @@ from PyQt4.QtCore import QObject, pyqtSignal
 
 from numpy import nan
 from matplotlib.axes import Axes
-from matplotlib import ticker
+from matplotlib import ticker, colors
 from matplotlib.artist import setp
 import numpy
 
@@ -206,6 +206,7 @@ class Plot(QObject):
         Util.debug(2, "Plot.refresh", "Setting plot properties")
         self._axes.set_title(self.get('plotName'), **(self.get('plotNameFont')))
         self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
+#        self._axes.set_axis_bgcolor(colors.colorConverter.to_rgba('#FF0000', .1))
 
         Util.debug(2, "Plot.refresh", "Setting traces")
         # Plotting data

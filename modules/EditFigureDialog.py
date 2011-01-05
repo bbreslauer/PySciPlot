@@ -1,8 +1,6 @@
 from PyQt4.QtCore import Qt, QObject
 from PyQt4.QtGui import QWidget, QMenu, QAction, QMessageBox, QPalette, QDialogButtonBox, QColor, QColorDialog, QFileDialog
 
-import ConfigParser, os
-
 import Util
 from Wave import Wave
 from Trace import Trace

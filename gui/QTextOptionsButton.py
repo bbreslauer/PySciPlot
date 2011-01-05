@@ -18,6 +18,7 @@ class QTextOptionsButton(QPushButton):
                             'size':                 { 'type': int, 'default': 12 },
                             'color':                { 'type': str, 'default': '#000000' },
                             'backgroundcolor':      { 'type': str, 'default': '#ffffff' },
+                            'alpha':                { 'type': float, 'default': 1.0 },
                             'horizontalalignment':  { 'type': str, 'default': 'center' },
                             'verticalalignment':    { 'type': str, 'default': 'center' },
                             'linespacing':          { 'type': float, 'default': 1.2 },

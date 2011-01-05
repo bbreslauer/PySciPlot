@@ -85,9 +85,6 @@ class Preferences():
         for pref in self.prefs.keys():
             self.setInternal(pref, self.getUi(pref))
 
-
-
-
     def resetUi(self):
         """
         Update UI to the current internal cache of preferences.

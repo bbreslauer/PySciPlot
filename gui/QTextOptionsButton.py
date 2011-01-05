@@ -10,14 +10,18 @@ import Util
 class QTextOptionsButton(QPushButton):
     """A push button that is used to select a font and text options."""
     
-    defaultTextOptions = {  'name':             { 'type': str, 'default': 'Bitstream Vera Sans' },
-                            'style':            { 'type': str, 'default': 'normal' },
-                            'variant':          { 'type': str, 'default': 'normal' },
-                            'stretch':          { 'type': int, 'default': 100 },
-                            'weight':           { 'type': int, 'default': 100 },
-                            'size':             { 'type': int, 'default': 12 },
-                            'color':            { 'type': str, 'default': '#000000' },
-                            'backgroundcolor':  { 'type': str, 'default': '#ffffff' },
+    defaultTextOptions = {  'name':                 { 'type': str, 'default': 'Bitstream Vera Sans' },
+                            'style':                { 'type': str, 'default': 'normal' },
+                            'variant':              { 'type': str, 'default': 'normal' },
+                            'stretch':              { 'type': int, 'default': 100 },
+                            'weight':               { 'type': int, 'default': 100 },
+                            'size':                 { 'type': int, 'default': 12 },
+                            'color':                { 'type': str, 'default': '#000000' },
+                            'backgroundcolor':      { 'type': str, 'default': '#ffffff' },
+                            'horizontalalignment':  { 'type': str, 'default': 'center' },
+                            'verticalalignment':    { 'type': str, 'default': 'center' },
+                            'linespacing':          { 'type': float, 'default': 1.2 },
+                            'rotation':             { 'type': str, 'default': 'horizontal' },
                          }
     
     def __init__(self, *args):
@@ -58,6 +62,7 @@ class QTextOptionsButton(QPushButton):
         self._ui.buttons.button(QDialogButtonBox.Reset).clicked.connect(self.resetUi)
         self._ui.color.clicked.connect(self._ui.color.createColorDialog)
         self._ui.backgroundcolor.clicked.connect(self._ui.backgroundcolor.createColorDialog)
+        self._ui.rotation.currentIndexChanged[str].connect(self.rotationBoxHandler)
     
     def setUiTextOptions(self, textOptions):
         """
@@ -70,7 +75,7 @@ class QTextOptionsButton(QPushButton):
     def getUiTextOptions(self):
         textOptions = {}
 
-        for variable in self.textOptions.keys():
+        for variable in self.defaultTextOptions.keys():
             textOptions[variable] = Util.getWidgetValue(vars(self._ui)[variable])
     
         return textOptions
@@ -118,4 +123,17 @@ class QTextOptionsButton(QPushButton):
         """Reset the textOptions dialog to the textOptions in this button."""
         
         self.setUiTextOptions(self.textOptions)
+
+    def rotationBoxHandler(self, text):
+        """
+        Either enable or disable the custom rotation value spinbox, depending
+        on the value in the rotation combo box.
+        """
+
+        if text == 'custom':
+            self._ui.rotationCustom.setEnabled(True)
+        else:
+            self._ui.rotationCustom.setEnabled(False)
+
+
 

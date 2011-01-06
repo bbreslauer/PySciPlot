@@ -16,7 +16,7 @@ DONE - add default values to properties
 DONE - need to change from configparser to xml.dom in order to be able to save multiple traces in a plot (or multiple plots in a figure)
 
 separate out tick label vs actual ticks, so that one can be displayed without the other (or at least labels can be hidden)
-need to change QColorButton to act more like QTextOptionsButton, with an internal store instead of just pulling from the label text.  then we might be able to use alphas as well.
+DONE - need to change QColorButton to act more like QTextOptionsButton, with an internal store instead of just pulling from the label text.  then we might be able to use alphas as well.
     line 209 of Plot.py contains the necessary code to incorporate alpha transparency to any color
 
 

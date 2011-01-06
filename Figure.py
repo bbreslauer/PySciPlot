@@ -1,5 +1,5 @@
 from PyQt4.QtCore import QObject, pyqtSignal, Qt
-from PyQt4.QtGui import QAction, QApplication
+from PyQt4.QtGui import QAction, QColor, QApplication
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure
@@ -34,7 +34,7 @@ class Figure(QObject):
                 'figureRows':               { 'type': int,   'default': 1 },
                 'figureColumns':            { 'type': int,   'default': 1 },
                 'figureAxesPadding':        { 'type': float, 'default': 0.5 },
-                'figureBackgroundColor':    { 'type': str,   'default': '#ffffff' },
+                'figureBackgroundColor':    { 'type': tuple, 'default': (1, 1, 1, 1) },
                 'figureLinkPlotAxes':       { 'type': bool,  'default': False },
                  }
 
@@ -192,8 +192,7 @@ class Figure(QObject):
             self.mplFigure().subplots_adjust(wspace=self.get('figureAxesPadding'), hspace=self.get('figureAxesPadding'))
 
         self.mplFigure().suptitle(str(self.get('figureTitle')), **(self.get('figureTitleFont')))
-        
-        self.mplFigure().set_facecolor(str(self.get('figureBackgroundColor')))
+        self.mplFigure().set_facecolor(self.get('figureBackgroundColor'))
 
         for plotNum in range(0, displayedPlots):
             self.refreshPlot(plotNum, False)

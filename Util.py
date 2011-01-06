@@ -49,7 +49,7 @@ def getWidgetValue(widget):
                     'QLineEdit':      'str(widget.text())',
                     'QSpinBox':       'int(widget.value())',
                     'QDoubleSpinBox': 'float(widget.value())',
-                    'QColorButton':   'str(widget.getColor())',
+                    'QColorButton':   'widget.getRgbF()',
                     'QTextOptionsButton':    'widget.getTextOptions()',
                     'QCheckBox':      'widget.isChecked()',
                     'QRadioButton':   'widget.isChecked()',

@@ -1,8 +1,9 @@
 from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt4.QtGui import QColor
 
 from numpy import nan
 from matplotlib.axes import Axes
-from matplotlib import ticker, colors
+from matplotlib import ticker
 from matplotlib.artist import setp
 import numpy
 
@@ -28,7 +29,7 @@ class Plot(QObject):
                     'plotNum':                         { 'type': int, 'default': 0 },
                     'plotName':                        { 'type': str, 'default': '' },
                     'plotNameFont':                    { 'type': dict, 'default': {'size': 18, 'verticalalignment': 'baseline'} },
-                    'plotBackgroundColor':             { 'type': str, 'default': '#ffffff' },
+                    'plotBackgroundColor':             { 'type': tuple, 'default': (1, 1, 1, 1) },
                     'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
                     'plotBottomAxisMinimum':           { 'type': float, 'default': -10 },
                     'plotBottomAxisMaximum':           { 'type': float, 'default': 10 },
@@ -205,8 +206,7 @@ class Plot(QObject):
 
         Util.debug(2, "Plot.refresh", "Setting plot properties")
         self._axes.set_title(self.get('plotName'), **(self.get('plotNameFont')))
-        self._axes.set_axis_bgcolor(str(self.get('plotBackgroundColor')))
-#        self._axes.set_axis_bgcolor(colors.colorConverter.to_rgba('#FF0000', .1))
+        self._axes.set_axis_bgcolor(self.get('plotBackgroundColor'))
 
         Util.debug(2, "Plot.refresh", "Setting traces")
         # Plotting data

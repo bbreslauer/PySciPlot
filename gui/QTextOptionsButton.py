@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QPushButton, QDialog, QDialogButtonBox, QApplication
+from PyQt4.QtGui import QPushButton, QDialog, QDialogButtonBox, QColor, QApplication
 
 import matplotlib.font_manager as fm
 
@@ -16,8 +16,8 @@ class QTextOptionsButton(QPushButton):
                             'stretch':              { 'type': int, 'default': 100 },
                             'weight':               { 'type': int, 'default': 100 },
                             'size':                 { 'type': int, 'default': 12 },
-                            'color':                { 'type': str, 'default': '#000000' },
-                            'backgroundcolor':      { 'type': str, 'default': '#ffffff' },
+                            'color':                { 'type': tuple, 'default': (0, 0, 0, 1) },
+                            'backgroundcolor':      { 'type': tuple, 'default': (1, 1, 1, 0) },
                             'alpha':                { 'type': float, 'default': 1.0 },
                             'horizontalalignment':  { 'type': str, 'default': 'center' },
                             'verticalalignment':    { 'type': str, 'default': 'center' },

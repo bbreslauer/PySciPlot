@@ -1,5 +1,6 @@
 import Util
 from PyQt4.QtGui import QMdiSubWindow
+from PyQt4.QtCore import Qt
 
 class DialogSubWindow(QMdiSubWindow):
     """A simple wrapper class to QMdiSubWindow."""

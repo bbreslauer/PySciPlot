@@ -182,9 +182,7 @@ def loadFigures(app, figures, stackingOrder):
             if key in actualFigureProps:
                 figureObj.set_(key, value)
 
-        for plot in plots:
-            plot.set_("figure", figureObj)
-            figureObj.replacePlot(plot.get("plotNum"), plot)
+        figureObj._plots = plots
 
         figureWindow = app.figures().addFigure(figureObj).get("figureSubWindow")
 
@@ -209,7 +207,7 @@ def loadPlots(app, plots):
     Util.debug(1, "Load", "Loading plots from file")
 
     plotList = plots.getElementsByTagName("plot")
-    plotsObjList = []
+    plotsObjList = [''] * len(plotList)
 
     for plot in plotList:
         plotProps = {} # internal plot properties
@@ -232,7 +230,7 @@ def loadPlots(app, plots):
             child = child.nextSibling
 
         # Create plot
-        plotObj = Plot(None, plotProps["plotNum"])
+        plotObj = Plot()
         actualPlotProps = plotObj.properties.keys()
         for (key, value) in plotProps.items():
             if key in actualPlotProps:
@@ -241,7 +239,7 @@ def loadPlots(app, plots):
         for trace in traces:
             plotObj.addTrace(trace)
 
-        plotsObjList.append(plotObj)
+        plotsObjList[plotProps["plotNum"]] = plotObj
 
     return plotsObjList
 

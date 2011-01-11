@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PlotOptionsWidget</class>
+ <widget class="QPlotOptionsWidget" name="PlotOptionsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>797</width>
+    <height>410</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_29">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Select Plot</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="plotSelector">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+       <property name="minimumContentsLength">
+        <number>20</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>General Plot Options</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Plot Name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="name">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextOptionsButton" name="nameFont">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Font</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Plot Background</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QColorButton" name="backgroundColor">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>(255,255,255,255)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Plot Type</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="plotType">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDialogButtonBox" name="buttons">
+          <property name="standardButtons">
+           <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
+          </property>
+          <property name="centerButtons">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="plotTypeStack">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsDialog()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QColorButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QColorButton</header>
+   <slots>
+    <slot>createColorDialog()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QPlotOptionsWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/QPlotOptionsWidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>plotSelector</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>PlotOptionsWidget</receiver>
+   <slot>changeCurrentPlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>35</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>175</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttons</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>PlotOptionsWidget</receiver>
+   <slot>buttonClickHandler(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>474</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>502</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nameFont</sender>
+   <signal>clicked()</signal>
+   <receiver>nameFont</receiver>
+   <slot>showTextOptionsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>143</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>87</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backgroundColor</sender>
+   <signal>clicked()</signal>
+   <receiver>backgroundColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>changeCurrentPlot(int)</slot>
+  <slot>buttonClickHandler(QAbstractButton*)</slot>
+ </slots>
+</ui>

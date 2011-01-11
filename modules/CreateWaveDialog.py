@@ -173,7 +173,6 @@ class CreateWaveDialog(Module):
 
         return data
 
-
     def insertWaveIntoFunction(self):
         """
         Take the wave from functionInsertWave and insert it into the function definition.
@@ -182,8 +181,6 @@ class CreateWaveDialog(Module):
         waveName = self._ui.functionInsertWave.model().index(self._ui.functionInsertWave.currentIndex(), 0).internalPointer().name()
         self._ui.functionEquation.insert("w_" + str(waveName))
         return True
-
-
 
     def load(self):
         self.window = DialogSubWindow(self._app.ui.workspace)
@@ -211,9 +208,6 @@ class CreateWaveDialog(Module):
         self._widget.deleteLater()
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
-
-
-
 
 
 

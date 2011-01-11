@@ -18,9 +18,9 @@ class TraceListEntry():
         
     def columnValue(self, col):
         if col == 0:
-            return QString(self._trace.getXName())
+            return QString(self._trace.xName())
         elif col == 1:
-            return QString(self._trace.getYName())
+            return QString(self._trace.yName())
         return
 
     def getTrace(self):

@@ -2,7 +2,7 @@ from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
 import os, pickle
 
-import Util
+import Util, Property
 from DialogSubWindow import DialogSubWindow
 from ui.Ui_Preferences import Ui_Preferences
 
@@ -19,9 +19,9 @@ class Preferences():
     # These are the defaults for each preference. They will be overwritten
     # by the user's preferences at startup.
     prefs = {
-            'projectDirectory': '~/',   # Dir for where to store project files
-            'defaultDirectory': '~/',   # Dir for other purposes
-            'textOptions': {},          # Default text options
+            'projectDirectory': Property.String('~/'),   # Dir for where to store project files
+            'defaultDirectory': Property.String('~/'),   # Dir for other purposes
+            'textOptions':      Property.TextOptions(),  # Default text options
             }
 
     def __init__(self, fileName):
@@ -52,14 +52,16 @@ class Preferences():
 
 
     def getInternal(self, variable):
-        return self.prefs[variable]
+        try:
+            return self.prefs[variable].get()
+        except:
+            return None
 
     def getUi(self, variable):
         return Util.getWidgetValue(vars(self._ui)[variable])
 
     def setInternal(self, variable, value):
-        self.prefs[variable] = value
-        return True
+        return self.prefs[variable].set(value)
     
     def setUi(self, variable, value):
         return Util.setWidgetValue(vars(self._ui)[variable], value)
@@ -76,8 +78,7 @@ class Preferences():
         if os.path.isfile(self.preferencesFile):
             with open(self.preferencesFile, 'r') as fileHandle:
                 self.prefs = pickle.load(fileHandle)
-
-
+            
     def uiToInternal(self):
         """
         Copy the UI pref values to the internal prefs dict.
@@ -108,8 +109,6 @@ class Preferences():
         if os.path.isfile(self.preferencesFile) or not os.path.exists(self.preferencesFile):
             with open(self.preferencesFile, 'wb') as fileHandle:
                 pickle.dump(self.prefs, fileHandle)
-
-
 
 
 

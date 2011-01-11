@@ -1,150 +1,135 @@
-import Util
+from PyQt4.QtGui import QColor
 
-from PyQt4.QtCore import QObject, pyqtSignal
+import Util, Property
 
-class Trace(QObject):
+from Wave import *
+from FigureObject import *
+
+class Trace(FigureObject):
     """An x-y pair of data."""
-    
-    # Properties
-    # Each property has three values, the first is the gui name, the second is the matplotlib name, and the third is whether to use a symbol lookup table
-    properties = {
-            'traceLineColor':               { 'type': str,   'default': '#000000', 'mplname': 'color',           'symlookup': False },
-            'traceLineStyle':               { 'type': str,   'default': 'Solid',   'mplname': 'linestyle',       'symlookup': True  },
-            'traceLineWidth':               { 'type': float, 'default': 1.0,       'mplname': 'linewidth',       'symlookup': False },
-            'tracePointMarker':             { 'type': str,   'default': 'Point',   'mplname': 'marker',          'symlookup': True  },
-            'tracePointMarkerEdgeColor':    { 'type': str,   'default': '#000000', 'mplname': 'markeredgecolor', 'symlookup': False },
-            'tracePointMarkerEdgeWidth':    { 'type': float, 'default': 1.0,       'mplname': 'markeredgewidth', 'symlookup': False },
-            'tracePointMarkerFaceColor':    { 'type': str,   'default': '#000000', 'mplname': 'markerfacecolor', 'symlookup': False },
-            'tracePointMarkerSize':         { 'type': float, 'default': 1.0,       'mplname': 'markersize',      'symlookup': False },
-                 }
-
-
-    # Dictionaries for matplotlib symbol lookups
-    symbols = { 'tracePointMarker': 
-                                    {  'None': '',
-                                       'Point': '.',
-                                       'Pixel': ',',
-                                       'Circle': 'o',
-                                       'Triangle - Down': 'v',
-                                       'Triangle - Up': '^',
-                                       'Triangle - Left': '<',
-                                       'Triangle - Right': '>',
-                                       'Y - Down': '1',
-                                       'Y - Up': '2',
-                                       'Y - Left': '3',
-                                       'Y - Right': '4',
-                                       'Square': 's',
-                                       'Pentagon': 'p',
-                                       'Star': '*',
-                                       'Hexagon 1': 'h',
-                                       'Hexagon 2': 'H',
-                                       'Plus': '+',
-                                       'X': 'x',
-                                       'Diamond': 'D',
-                                       'Thin Diamond': 'd',
-                                       'Vertical Line': '|',
-                                       'Horizontal Line': '_',
-                                    },
-                'traceLineStyle':  
-                                    {  'None': '',
-                                       'Solid': '-',
-                                       'Dashed': '--',
-                                       'Dash Dot': '-.',
-                                       'Dotted': ':'
-                                    }
-            }
                             
-
-    # Signals
-    xChanged = pyqtSignal()
-    yChanged = pyqtSignal()
-    propertyChanged = pyqtSignal()
+    mplNames = {
+            'lineColor':               'color',
+            'lineStyle':               'linestyle',
+            'lineWidth':               'linewidth',
+            'pointMarker':             'marker',
+            'pointMarkerEdgeColor':    'markeredgecolor',
+            'pointMarkerEdgeWidth':    'markeredgewidth',
+            'pointMarkerFaceColor':    'markerfacecolor',
+            'pointMarkerSize':         'markersize',
+            }
 
     def __init__(self, x=None, y=None):
-        QObject.__init__(self)
         Util.debug(2, "Trace.init", "Creating trace")
-        self._plot = None
+
+        properties = {
+            'lineColor':               Property.Color(QColor(255,0,0,255)),
+            'lineStyle':               Property.LineStyle('Solid'),
+            'lineWidth':               Property.Float(1.0),
+            'pointMarker':             Property.PointMarker('Point'),
+            'pointMarkerEdgeColor':    Property.Color(QColor(0,0,0,255)),
+            'pointMarkerEdgeWidth':    Property.Float(1.0),
+            'pointMarkerFaceColor':    Property.Color(QColor(0,0,0,255)),
+            'pointMarkerSize':         Property.Float(1.0),
+                }
+
+        FigureObject.__init__(self, properties)
+
         self.initializeVariables()
-        self.initializeProperties()
         self.setX(x)
         self.setY(y)
+        self.setPlot(None)
+
+        self.getFormat()
 
     def initializeVariables(self):
         Util.debug(3, "Trace.initializeVariables", "Initializing variables")
         self._x = None
         self._y = None
         
-    def initializeProperties(self):
-        Util.debug(3, "Trace.initializeProperties", "Initializing properties")
-        for prop in self.properties.keys():
-            vars(self)["_" + prop] = self.properties[prop]['default']
-
-    def get(self, variable, lookupSymbol=False):
-        try:
-            if lookupSymbol and self.properties[variable]['symlookup']:
-                return self.symbols[variable][vars(self)["_" + variable]]
-            return vars(self)["_" + variable]
-        except AttributeError:
-            return self.properties[variable]['default']
-
-    def set_(self, variable, value):
-        if value != "" and value != vars(self)["_" + variable]:
-            if variable in self.properties.keys():
-                if self.properties[variable]['type'] == bool:
-                    # Need to do specialized bool testing because bool('False') == True
-                    if (type(value) == str and value == "True") or (type(value) == bool and value):
-                        vars(self)["_" + variable] = True
-                    else:
-                        vars(self)["_" + variable] = False
-                else:
-                    vars(self)["_" + variable] = self.properties[variable]['type'](value)
-            else:
-                vars(self)["_" + variable] = value
-
-            Util.debug(2, "Trace.set", "Setting " + str(variable) + " to " + str(value) + " for trace")
-
-            self.propertyChanged.emit()
-
-            return True
-        return False
-
-
     def setPlot(self, plot):
         self._plot = plot
+
+    def plot(self):
+        return self._plot
     
     def setX(self, x):
         Util.debug(2, "Trace.setX", "Setting x trace")
+        
+        # Disconnect previous wave's dataModified signal
+        try:
+            self._x.dataModified.disconnect(self.refresh)
+        except:
+            pass
+
+        # Set new wave
         self._x = x
-        self.xChanged.emit()
+
+        # Connect new wave's dataModified signal
+        self._x.dataModified.connect(self.refresh)
         
     def setY(self, y):
         Util.debug(2, "Trace.setY", "Setting y trace")
+        # Disconnect previous wave's dataModified signal
+        try:
+            self._y.dataModified.disconnect(self.refresh)
+        except:
+            pass
+
+        # Set new wave
         self._y = y
-        self.yChanged.emit()
+
+        # Connect new wave's dataModified signal
+        self._y.dataModified.connect(self.refresh)
     
-    def getX(self):
+    def x(self):
         return self._x
         
-    def getY(self):
+    def y(self):
         return self._y
 
-    def getXName(self):
+    def xName(self):
         return self._x.name()
 
-    def getYName(self):
+    def yName(self):
         return self._y.name()
 
-    def getLinestyleSymbol(self):
-        return self.lineStyleSymbols[self.getLinestyle()]
-
-    def getPointMarkerSymbol(self):
-        return self.pointMarkerSymbols[self.getPointMarker()]
-
     def getFormat(self):
-        formatDict = dict()
-
+        formatDict = {}
+        
         for prop in self.properties.keys():
-            formatDict[self.properties[prop]['mplname']] = self.get(prop, True)
-
+            formatDict[self.mplNames[prop]] = self.getMpl(prop)
         return formatDict
 
+    def convertDataToFloat(self):
+        xData = Wave.convertToFloatList(self.x())
+        yData = Wave.convertToFloatList(self.y())
+
+        # Make sure waves are the same length, or else matplotlib will complain and not plot them
+        diffLength = len(xData) - len(yData)
+        if diffLength < 0:
+            xData.extend([nan] * (- diffLength))
+        elif diffLength > 0:
+            yData.extend([nan] * diffLength)
+
+        return [xData, yData]
+
+    def refresh(self):
+        print "refreshing trace"
+
+        [x, y] = self.convertDataToFloat()
+        
+        # If this trace is not associated with a plot, then don't do anything
+        if self.plot() is None:
+            return
+
+        try:
+            self._line.remove()
+            "did try"
+        except:
+            pass
+        self._line = self.plot().axes().plot(x, y, **(self.getFormat()))[0]
+        self.plot().redraw()
+
+
+        

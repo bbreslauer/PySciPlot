@@ -57,7 +57,7 @@ class Wave(QObject):
         str -- Representation of the wave.
         """
 
-        return "%s (%s, %s): %s\n" % (self._name, self._dataType, len(self._data), self._data)
+        return "%s (%s, %s): %s" % (self._name, self._dataType, len(self._data), self._data)
 
     def data(self, start=None, end=None):
         """

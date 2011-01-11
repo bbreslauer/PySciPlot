@@ -25,9 +25,9 @@ class PlotListModel(QAbstractListModel):
     def data(self, index, role):
         """Return the name of the figure entry at the given index."""
 
-        if index.isValid() and role == Qt.DisplayRole and self._figure:
+        if index.isValid() and role == Qt.DisplayRole and self._figure and index.row() < self._figure.numPlots():
             plotNum = index.row()
-            return str(plotNum) + " - " + str(self._figure.getPlot(plotNum).get('plotName'))
+            return str(plotNum) + " - " + str(self._figure.getPlot(plotNum).get('name'))
         return QVariant()
 
     def headerData(self, section, orientation, role):
@@ -56,14 +56,8 @@ class PlotListModel(QAbstractListModel):
         self.dataChanged.emit(index, index)
 
     def setFigure(self, figure):
-#        try:
-#            figure.plotRenamed.disconnect(self.emitDataChanged)
-#        except TypeError:
-#            pass
-
         self._figure = figure
         self.doReset()
-#        figure.plotRenamed.connect(self.emitDataChanged)
 
     def getPlot(self, row):
         plotNum = row

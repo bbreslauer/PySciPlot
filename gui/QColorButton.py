@@ -1,46 +1,6 @@
 from PyQt4.QtGui import QPushButton, QColor, QColorDialog, QApplication
 
-import Util
-
-class QColorButton2(QPushButton):
-    """A push button that is used to select a color."""
-    
-    def __init__(self, *args):
-        QPushButton.__init__(self, *args)
-    
-    def getPrefix(self):
-        return str(self.text()).rpartition('#')[0]
-
-    def getColor(self):
-        splitText = str(self.text()).rpartition('#')
-        return splitText[1] + splitText[2]
-
-    def setColor(self, color):
-        """
-        Set the color of this button.  This will both set the background
-        color as well as set the text to the rgb hex value.
-        """
-        
-        colorText = '#ffffff'
-
-        _type = type(color).__name__
-        if _type == "QColor":
-            colorText = color.name()
-        else:
-            colorText = color
-        self.setStyleSheet("background-color: " + colorText + "; color: " + Util.goodTextColor(colorText))
-        self.setText(str(self.getPrefix()) + str(colorText))
-
-    def createColorDialog(self):
-        """
-        Create a dialog box to select a color.
-        """
-
-        newColor = QColorDialog.getColor(QColor(str(self.getColor())))
-        if newColor.isValid():
-            self.setColor(newColor)
-
-
+import Util, Property
 
 class QColorButton(QPushButton):
     """
@@ -55,45 +15,59 @@ class QColorButton(QPushButton):
         self._app = QApplication.instance().window
 
         # Define the internal color
-        self.setColor(QColor('#ffffff'))
+        self.color = QColor('#ffffff')
+        
+        self.updateButtonColorsAndText()
     
     def getQColor(self):
         """Return the QColor object representing the currently selected color."""
         return self.color
 
-    def getColor(self):
-        """Return (r, g, b, a) for the currently selected color, as floats between 0 and 1."""
-        return (str(self.getQColor().name()), float(self.getQColor().alphaF()))
-
     def getColorHex(self):
         """Return #rrggbb for the currently selected color."""
         return str(self.getQColor().name())
-
-    def getRgbF(self):
-        return self.getQColor().getRgbF()
 
     def setColor(self, color):
         """
         Change the color of this button. This will both set the background
         color of the button as well as set the text color to an appropriate value.
+        
+        color should be a QColor, but can also be a Property.Color
 
-        color can be one of the following, where <> indicates optional argument:
-        QColor
-        (r, g, b, <a>) with values between 0 and 1
-        [r, g, b, <a>] with values between 0 and 1
-        #rrggbb
+        Returns False if assignment failed, True if assignment succeeded.
         """
-        
-        _type = type(color).__name__
-        if _type == "QColor":
+
+        if isinstance(color, QColor):
             self.color = color
-        elif _type == "tuple" or _type == "list":
-            scaledColor = [int(x*255) for x in color]
-            self.color = QColor(*scaledColor)
+        elif isinstance(color, Property.Color):
+            self.color = color.get()
         else:
-            self.color = QColor(color)
+            return False
+
+        self.updateButtonColorsAndText()
+
+    def initButtonColor(self):
+        # See if the button (from the already-constructed UI) already has a
+        # value that we should use
+        splitText = str(self.text()).rpartition('(') # [2] now has "0,0,0,0)"
+        splitText = splitText[2].rpartition(')') # [0] now has "0,0,0,0"
+        textDefinedColor = splitText[0].split(',') # this now has a list of the four rgba values
+        textDefinedColor = map(int, textDefinedColor)
         
+        # If textDefinedColor is a valid list for QColor(), then use
+        # it. If it is not, the QColor() constructor will do fail
+        # and we will still have our original color.
+        if len(textDefinedColor) in (3, 4):
+            try:
+                self.color = QColor(*textDefinedColor)
+            except :
+                pass
+
+        print self.getColorHex()
+
+    def updateButtonColorsAndText(self):
         self.setStyleSheet("background-color: " + self.getColorHex() + "; color: " + Util.goodTextColor(self.getColorHex()))
+        self.setText(str(self.getQColor().getRgb()))
 
     def createColorDialog(self):
         """

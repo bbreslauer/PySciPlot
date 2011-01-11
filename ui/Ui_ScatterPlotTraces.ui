@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScatterPlotTraces</class>
+ <widget class="QWidget" name="ScatterPlotTraces">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>437</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QGroupBox" name="tracesGroupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>225</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Add/Select Traces</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="xAxisLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>X Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QListView" name="xAxisListView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="textElideMode">
+         <enum>Qt::ElideRight</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QListView" name="yAxisListView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectItems</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QTableView" name="traceTableView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="textElideMode">
+         <enum>Qt::ElideRight</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>75</number>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="yAxisLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Y Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="addTraceButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Add Trace(s)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="removeTraceButton">
+        <property name="text">
+         <string>Remove Trace(s)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="traceOptionsGroupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>300</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Trace Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5" columnstretch="0">
+      <property name="verticalSpacing">
+       <number>2</number>
+      </property>
+      <property name="margin">
+       <number>3</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Line Style</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="lineStyle">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Solid</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Dashed</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Dash Dot</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Dotted</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="lineWidth">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QColorButton" name="lineColor">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+           </property>
+           <property name="text">
+            <string>(0,0,0,255)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string>Marker Edge</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_21">
+           <property name="text">
+            <string>Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="pointMarkerEdgeWidth">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QColorButton" name="pointMarkerEdgeColor">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+           </property>
+           <property name="text">
+            <string>(0,0,0,255)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Marker</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="pointMarker">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="currentIndex">
+            <number>3</number>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+           </property>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Point</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Pixel</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Circle</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Triangle - Down</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Triangle - Up</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Triangle - Left</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Triangle - Right</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Y - Down</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Y - Up</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Y - Left</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Y - Right</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Square</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Pentagon</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Star</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hexagon 1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hexagon 2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Plus</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>X</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Diamond</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Thin Diamond</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Vertical Line</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Horizontal Line</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_18">
+           <property name="text">
+            <string>Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="pointMarkerSize">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="minimum">
+            <double>0.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QColorButton" name="pointMarkerFaceColor">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+           </property>
+           <property name="text">
+            <string>(0,0,0,255)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QColorButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QColorButton</header>
+   <slots>
+    <slot>createColorDialog()</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>addTraceButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ScatterPlotTraces</receiver>
+   <slot>addTracesToPlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>233</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeTraceButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ScatterPlotTraces</receiver>
+   <slot>deleteTraceFromPlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>traceTableView</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>ScatterPlotTraces</receiver>
+   <slot>showTraceListMenu()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>259</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>238</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineColor</sender>
+   <signal>clicked()</signal>
+   <receiver>lineColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>376</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>345</x>
+     <y>121</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pointMarkerFaceColor</sender>
+   <signal>clicked()</signal>
+   <receiver>pointMarkerFaceColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>358</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>383</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pointMarkerEdgeColor</sender>
+   <signal>clicked()</signal>
+   <receiver>pointMarkerEdgeColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>340</x>
+     <y>318</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addTracesToPlot()</slot>
+  <slot>deleteTraceFromPlot()</slot>
+  <slot>showTraceListMenu()</slot>
+ </slots>
+</ui>

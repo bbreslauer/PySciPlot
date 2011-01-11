@@ -7,289 +7,245 @@ from matplotlib import ticker
 from matplotlib.artist import setp
 import numpy
 
-import Util
+import Util, Property
 from Waves import Waves
 from Wave import Wave
 from Trace import Trace
+from FigureObject import *
 
-class Plot(QObject):
-    """This class contains all the information about a plot inside a figure.
-    
-    plotNum is 0-based
+class ScatterPlot(FigureObject):
+    """
+    This class is used for a scatter plot.
     """
 
-    # Signals
-    plotRenamed = pyqtSignal(str)
-    traceAdded = pyqtSignal()
-    traceRemoved = pyqtSignal()
-    propertyChanged = pyqtSignal()
+    def __init__(self, plot):
+        Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
 
-    # Properties
-    properties = {
-                    'plotNum':                         { 'type': int, 'default': 0 },
-                    'plotName':                        { 'type': str, 'default': '' },
-                    'plotNameFont':                    { 'type': dict, 'default': {'size': 18, 'verticalalignment': 'baseline'} },
-                    'plotBackgroundColor':             { 'type': tuple, 'default': (1, 1, 1, 1) },
-                    'plotBottomAxisAutoscale':         { 'type': bool, 'default': True },
-                    'plotBottomAxisMinimum':           { 'type': float, 'default': -10 },
-                    'plotBottomAxisMaximum':           { 'type': float, 'default': 10 },
-                    'plotBottomAxisScaleType':         { 'type': str, 'default': 'Linear' },
-                    'plotBottomAxisTicks':             { 'type': bool, 'default': True },
-                    'plotBottomAxisLabel':             { 'type': str, 'default': ''},
-                    'plotBottomAxisVisible':           { 'type': bool, 'default': True },
-                    'plotBottomAxisMajorTicksNumber':  { 'type': int, 'default': 5 },
-                    'plotBottomAxisMajorTicksSpacing': { 'type': float, 'default': 2 },
-                    'plotBottomAxisMinorTicksNumber':  { 'type': int, 'default': 3 },
-                    'plotBottomAxisUseTickSpacing':    { 'type': bool, 'default': False },
-                    'plotBottomAxisUseTickNumber':     { 'type': bool, 'default': True },
-                    'plotBottomAxisTickLabelFormat':   { 'type': str, 'default': '%.2g'},
-                    'plotBottomAxisTickLabelFont':     { 'type': dict, 'default': {'verticalalignment': 'top'} },
-                    'plotBottomAxisLabelFont':         { 'type': dict, 'default': {'verticalalignment': 'top'} },
-                    'plotLeftAxisAutoscale':           { 'type': bool, 'default': True },
-                    'plotLeftAxisMinimum':             { 'type': float, 'default': -10 },
-                    'plotLeftAxisMaximum':             { 'type': float, 'default': 10 },
-                    'plotLeftAxisScaleType':           { 'type': str, 'default': 'Linear' },
-                    'plotLeftAxisTicks':               { 'type': bool, 'default': True },
-                    'plotLeftAxisLabel':               { 'type': str, 'default': ''},
-                    'plotLeftAxisVisible':             { 'type': bool, 'default': True },
-                    'plotLeftAxisMajorTicksNumber':    { 'type': int, 'default': 5 },
-                    'plotLeftAxisMajorTicksSpacing':   { 'type': float, 'default': 2 },
-                    'plotLeftAxisMinorTicksNumber':    { 'type': int, 'default': 3 },
-                    'plotLeftAxisUseTickSpacing':      { 'type': bool, 'default': False },
-                    'plotLeftAxisUseTickNumber':       { 'type': bool, 'default': True },
-                    'plotLeftAxisTickLabelFormat':     { 'type': str, 'default': '%.2g'},
-                    'plotLeftAxisTickLabelFont':       { 'type': dict, 'default': {'horizontalalignment': 'right'} },
-                    'plotLeftAxisLabelFont':           { 'type': dict, 'default': {'horizontalalignment': 'right', 'rotation': 'vertical'} },
-                 }
+        # Add additional properties without deleting the ones defined in Plot()
+        properties = {
+                'bottomAxis':       Property.GenericAxis({
+                                                    'tickLabelFont':      Property.TextOptions({'verticalalignment': 'top'}),
+                                                    'labelFont':          Property.TextOptions({'verticalalignment': 'top'}),
+                                                    }),
+                'leftAxis':         Property.GenericAxis({
+                                                    'tickLabelFont':        Property.TextOptions({'horizontalalignment': 'right'}),
+                                                    'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
+                    }),
+                }
 
-    def __init__(self, figure, plotNum, plotName=""):
-        QObject.__init__(self)
+        FigureObject.__init__(self, properties)
 
-        Util.debug(2, "Plot.init", "Creating plot")
-        
-        self.initializeProperties()
-
-        self._figure = None
-        self._axes = None
+        self._plot = plot
         self._traces = []
 
-        self.set_('figure', figure)
-        self.set_('plotNum', plotNum)
-        self.set_('plotName', plotName)
-        
+    def plot(self):
+        return self._plot
 
-        self.traceAdded.connect(self.refresh)
-        self.traceRemoved.connect(self.refresh)
-        self.plotRenamed.connect(self.refresh)
-        self.propertyChanged.connect(self.refresh)
-        
-        Util.debug(1, "Plot.init", "Created plot " + plotName)
-    
-        self.get('plotBottomAxisUseTickNumber')
-
-    def __str__(self):
-        return "Num: %s, Name: %s" % (self.get('plotNum'), self.get('plotName'))
-
-    def initializeProperties(self):
-        Util.debug(3, "Plot.initializeProperties", "Initializing properties for plot " + str(self.get('plotName')))
-        self.get('plotBottomAxisUseTickNumber')
-        for prop in self.properties.keys():
-            vars(self)["_" + prop] = self.properties[prop]['default']
-
-    def get(self, variable):
-        try:
-            Util.debug(3, "Plot.get", "Getting variable " + str(variable) + "=" + str(vars(self)["_" + variable]) + " for plot " + str(self._plotName))
-            return vars(self)["_" + variable]
-        except AttributeError:
-            return self.properties[variable]['default']
-        except KeyError:
-            pass
-
-    def set_(self, variable, value):
-        # Only plotName can be blank
-        if (value != "" or variable == 'plotName') and value != vars(self)["_" + variable]:
-            if variable in self.properties.keys():
-                if self.properties[variable]['type'] == bool:
-                    # Need to do specialized bool testing because bool('False') == True
-                    if (type(value) == str and value == "True") or (type(value) == bool and value):
-                        vars(self)["_" + variable] = True
-                    else:
-                        vars(self)["_" + variable] = False
-                else:
-                    vars(self)["_" + variable] = self.properties[variable]['type'](value)
-            else:
-                vars(self)["_" + variable] = value
-
-            Util.debug(2, "Plot.set", "Setting " + str(variable) + " to " + str(value) + " for plot " + str(self.get('plotName')))
-
-            # See if we should emit any signals
-            if variable == 'plotName':
-                self.plotRenamed.emit(value)
-            else:
-                self.propertyChanged.emit()
-
-            return True
-        return False
-    
-    def addTrace(self, trace):
-        self._traces.append(trace)
-        #trace.addPlot(self)
-        self.traceAdded.emit()
-        Util.debug(1, "Plot.addTrace", "Added trace " + trace.getXName() + "-" + trace.getYName() + " to plot " + str(self.get('plotName')))
-        trace.getX().dataModified.connect(self.refresh)
-        trace.getY().dataModified.connect(self.refresh)
-        trace.propertyChanged.connect(self.refresh)
-        return True
-    
     def traces(self):
         return self._traces
 
-    def numTraces(self):
-        return len(self._traces)
-
-    def getTraceAsFloat(self, trace):
-        Util.debug(2, "Plot.getTraceAsFloat", "Getting trace " + trace.getXName() + "-" + trace.getYName() + " as floats")
-        xData = Wave.convertToFloatList(trace.getX())
-        yData = Wave.convertToFloatList(trace.getY())
-
-        # Make sure waves are the same length, or else matplotlib will complain and not plot them
-        diffLength = len(xData) - len(yData)
-        if diffLength < 0:
-            xData.extend([nan] * (- diffLength))
-        elif diffLength > 0:
-            yData.extend([nan] * diffLength)
-
-        return Trace(xData, yData)
-
-    def getTracesAsFloat(self):
-        Util.debug(2, "Plot.getTracesAsFloat", "Getting traces as floats")
-        tmpTraces = []
-        for trace in self._traces:
-            tmpTraces.append(self.getTraceAsFloat(trace))
-
-        return tmpTraces
-
-    def convertTraceDataToFloat(self, trace):
-        Util.debug(2, "Plot.convertTraceDataToFloat", "Converting data")
-        xData = Wave.convertToFloatList(trace.getX())
-        yData = Wave.convertToFloatList(trace.getY())
-
-        # Make sure waves are the same length, or else matplotlib will complain and not plot them
-        diffLength = len(xData) - len(yData)
-        if diffLength < 0:
-            xData.extend([nan] * (- diffLength))
-        elif diffLength > 0:
-            yData.extend([nan] * diffLength)
-
-        return [xData, yData]
-
-
-    def refresh(self, drawBool=True):
-        
-        Util.debug(1, "Plot.refresh", "Refreshing plot")
-
-        if not self._figure:
-            return False
-        
-        # Do not refresh the plot if it is not being displayed
-        if self.get('plotNum') + 1 > self._figure.numPlots():
-            return False 
-
-        #print "building r: " + str(self._figure.get('figureRows')) + ", c: " + str(self._figure.get('figureColumns')) + ", n: " + str(self.get('plotNum'))
-        
-        if self._figure.get('figureLinkPlotAxes'):
-            self._axes = self._figure.grid[self.get('plotNum')]
-        else:
-            self._axes = self._figure.mplFigure().add_subplot(self._figure.get('figureRows'), self._figure.get('figureColumns'), self.get('plotNum') + 1)
-
-        self._axes.clear()
-
-        Util.debug(2, "Plot.refresh", "Setting plot properties")
-        self._axes.set_title(self.get('plotName'), **(self.get('plotNameFont')))
-        self._axes.set_axis_bgcolor(self.get('plotBackgroundColor'))
-
-        Util.debug(2, "Plot.refresh", "Setting traces")
-        # Plotting data
-        for trace in self._traces:
-            [x, y] = self.convertTraceDataToFloat(trace)
-            self._axes.plot(x, y, **(trace.getFormat()))
-        
-        # Set minimum and maximum for axes
-        Util.debug(2, "Plot.refresh", "Setting axes properties")
-        if not self.get('plotBottomAxisAutoscale'):
-            self._axes.set_xlim(self.get('plotBottomAxisMinimum'), self.get('plotBottomAxisMaximum'))
-        if not self.get('plotLeftAxisAutoscale'):
-            self._axes.set_ylim(self.get('plotLeftAxisMinimum'), self.get('plotLeftAxisMaximum'))
-
-        # Set axis scaling 
-        
-        
-        # Set ticks
-        Util.debug(2, "Plot.refresh", "Setting ticks")
-
-        for axisName in ['Bottom', 'Left']:
-            axis = None
-            if axisName == 'Bottom':
-                axis = self._axes.get_xaxis()
-            elif axisName == 'Left':
-                axis = self._axes.get_yaxis()
-
-            if self.get('plot' + axisName + 'AxisTicks'):
-    
-                # Set major ticks
-                axis.set_major_formatter(ticker.FormatStrFormatter(self.get('plot' + axisName + 'AxisTickLabelFormat')))
-                
-                if self.get('plot' + axisName + 'AxisUseTickNumber'):
-                    Util.debug(3, "Plot.refresh" + str(self), axisName + " axis using set number of ticks")
-                    # User has defined how many major tick marks to display
-                    majorTicksNum = self.get('plot' + axisName + 'AxisMajorTicksNumber')
-                    axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
-                    
-                    # The minor ticks option defines how many ticks between each pair of major ticks
-                    # Therefore, we need to calculate how many total minor ticks there will be
-                    # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
-                    minorTicksNum = (self.get('plot' + axisName + 'AxisMinorTicksNumber') + 1) * (len(axis.get_major_ticks()) - 1) + 1
-                    axis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
-                    axis.set_minor_formatter(ticker.NullFormatter())
-                else:
-                    Util.debug(3, "Plot.refresh", axisName + " axis using spacing for ticks")
-                    # User has defined the spacing between major tick marks
-                    majorTicks = list(numpy.arange(self.get('plot' + axisName + 'AxisMinimum'), self.get('plot' + axisName + 'AxisMaximum'), self.get('plot' + axisName + 'AxisMajorTicksSpacing')))
-                    if (self.get('plot' + axisName + 'AxisMaximum') - majorTicks[-1]) % self.get('plot' + axisName + 'AxisMajorTicksSpacing') == 0:
-                        majorTicks.append(self.get('plot' + axisName + 'AxisMaximum'))
-                    axis.set_major_locator(ticker.FixedLocator(majorTicks))
-                    
-                    # We need to calculate the minor tick values
-                    minorTicksSpacing = float(self.get('plot' + axisName + 'AxisMajorTicksSpacing')) / float((self.get('plot' + axisName + 'AxisMinorTicksNumber') + 1))
-                    minorTicks = list(numpy.arange(self.get('plot' + axisName + 'AxisMinimum'), self.get('plot' + axisName + 'AxisMaximum'), minorTicksSpacing))
-                    axis.set_minor_locator(ticker.FixedLocator(minorTicks))
-                    axis.set_minor_formatter(ticker.NullFormatter())
-            else:
-                axis.set_major_locator(ticker.NullLocator())
-                axis.set_minor_locator(ticker.NullLocator())
-
-            # Set font for tick labels
-            if self.get('plot' + axisName + 'AxisTickLabelFont') != {}:
-                setp(axis.get_majorticklabels(), **(self.get('plot' + axisName + 'AxisTickLabelFont')))
-
-            # Set labels
-            axis.set_label_text(self.get('plot' + axisName + 'AxisLabel'), self.get('plot' + axisName + 'AxisLabelFont'))
-
-        if drawBool:
-            Util.debug(2, "Plot.refresh", "Drawing plot")
-            self._figure._canvas.draw()
-
-        Util.debug(1, "Plot.refresh", "Refreshed plot")
-        return True
+    def addTrace(self, trace):
+        trace.setPlot(self.plot())
+        self._traces.append(trace)
+        trace.refresh()
 
     def removeTrace(self, trace):
-        Util.debug(1, "Plot.removeTrace", "Removing trace " + trace.getXName() + "-" + trace.getYName())
         self._traces.remove(trace)
-        self.traceRemoved.emit()
+        self.refresh()
 
-######
-# Working on tick marks right now
-######
+
+
+    def update_bottomAxis(self):
+        Util.debug(3, "ScatterPlot.update_bottomAxis", "")
+        self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
+
+    def update_leftAxis(self):
+        Util.debug(3, "ScatterPlot.update_leftAxis", "")
+        self.update_axis('leftAxis', self.plot().axes().get_yaxis())
+
+    def update_axis(self, axisName, axis):
+        print "updating axis"
+
+        axisDict = self.getMpl(axisName)
+
+        # Set minimum and maximum for axes
+        if axisDict['autoscale']:
+            if axisName == 'bottomAxis':
+                self.plot().axes().autoscale(axis='x')
+            elif axisName == 'leftAxis':
+                self.plot().axes().autoscale(axis='y')
+        else:
+            if axisName == 'bottomAxis':
+                self.plot().axes().set_xlim(axisDict['minimum'], axisDict['maximum'])
+            elif axisName == 'leftAxis':
+                self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
+            
+        # Should we show any ticks
+        if axisDict['ticks']:
+
+            # Set major ticks
+            axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['tickLabelFormat']))
+            
+            if axisDict['useTickNumber']:
+                # User has defined the number of major tick marks to display
+                majorTicksNum = axisDict['majorTicksNumber']
+                axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
+                
+                # The minor ticks option defines how many ticks between each pair of major ticks
+                # Therefore, we need to calculate how many total minor ticks there will be
+                # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
+                minorTicksNum = (axisDict['minorTicksNumber'] + 1) * (len(axis.get_major_ticks()) - 1) + 1
+                axis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
+                axis.set_minor_formatter(ticker.NullFormatter())
+            else:
+                # User has defined the spacing between major tick marks
+                majorTicks = list(numpy.arange(axisDict['minimum'], axisDict['maximum'], axisDict['majorTicksSpacing']))
+                if (axisDict['maximum'] - majorTicks[-1]) % axisDict['majorTicksSpacing'] == 0:
+                    majorTicks.append(axisDict['maximum'])
+                axis.set_major_locator(ticker.FixedLocator(majorTicks))
+                
+                # We need to calculate the minor tick values
+                minorTicksSpacing = float(axisDict['majorTicksSpacing']) / float((axisDict['minorTicksNumber'] + 1))
+                minorTicks = list(numpy.arange(axisDict['minimum'], axisDict['maximum'], minorTicksSpacing))
+                axis.set_minor_locator(ticker.FixedLocator(minorTicks))
+                axis.set_minor_formatter(ticker.NullFormatter())
+        else:
+            axis.set_major_locator(ticker.NullLocator())
+            axis.set_minor_locator(ticker.NullLocator())
+
+        # Set font for tick labels
+        if axisDict['tickLabelFont'] != {}:
+            setp(axis.get_majorticklabels(), **(axisDict['tickLabelFont']))
+
+        # Set labels
+        axis.set_label_text(axisDict['label'], axisDict['labelFont'])
+
+        # Redraw the canvas
+        self.plot().redraw()
+
+    def refresh(self):
+        print "refreshing scatterplot"
+
+        self.plot().axes().cla()
+        self.update_bottomAxis()
+        self.update_leftAxis()
+
+        for trace in self.traces():
+            trace.refresh()
+
+class PieChart(FigureObject):
+
+    def __init__(self, plot):
+        Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
+
+        # Add additional properties without deleting the ones defined in Plot()
+        properties = {
+                }
+
+        FigureObject.__init__(self, properties)
+
+        self._plot = plot
+
+    def refresh(self):
+        print "refreshing piechart"
+
+class Plot(FigureObject):
+    """
+    This class contains general information about a plot inside a figure.
+
+    Information specific to the type of plot that this is (scatter, pie, etc)
+    is stored in Plot.plotTypeObject.
+    """
+
+    plotTypeClasses = {
+            'Scatter Plot': ScatterPlot,
+            'Pie Chart':    PieChart,
+            }
+
+    def __init__(self, plotName=""):
+        Util.debug(2, "Plot.init", "Creating plot")
+       
+        # Properties
+        properties = {
+                'name':             Property.String(''),
+                'nameFont':         Property.TextOptions({'size': 18, 'verticalalignment': 'baseline'}),
+                'backgroundColor':  Property.Color(QColor(255,255,255,255)),
+                'plotType':         Property.String('Scatter Plot'),
+                     }
+
+        FigureObject.__init__(self, properties)
+
+        # This is the object that contains all the code specific to the type of plot
+        self.plotTypeObject = ScatterPlot(self)
+
+        self.set('name', plotName)
+
+        self.mplHandles = {}
+
+        Util.debug(1, "Plot.init", "Created plot " + plotName)
+
+    def __str__(self):
+        return "Name: %s" % (self.get('name'))
+
+    def axes(self):
+        """
+        These are matplotlib axes, which are used for any kind of plot. They are not specific to one plot type (i.e. scatter).
+        """
+        return self._axes
+
+    def setAxes(self, axes):
+        self._axes = axes
+        self.refresh()
+
+
+    def update_name(self):
+        Util.debug(3, "Plot.update_name", "")
+        try:
+            self.axes().texts.remove(self.mplHandles['name'])
+            pass
+        except:
+            pass
+
+        self.mplHandles['name'] = self.axes().set_title(self.getMpl('name'), **(self.getMpl('nameFont')))
+        self.redraw()
+
+    def update_nameFont(self):
+        Util.debug(3, "Plot.update_nameFont", "")
+        self.update_name()
+
+
+    def update_backgroundColor(self):
+        Util.debug(3, "Plot.update_backgroundColor", "")
+        self.axes().set_axis_bgcolor(self.getMpl('backgroundColor'))
+        self.redraw()
+
+
+    def refresh(self):
+        print "refreshing plot"
+
+        # Clear the axes
+        self.axes().cla()
+
+        # Update the general plot options
+        self.update_name()
+        self.update_backgroundColor()
+
+        # Check if plot type has changed, and if it has, change the plot type object
+        if not isinstance(self.plotTypeObject, self.plotTypeClasses[self.get('plotType')]):
+            print "changing plot type"
+            self.plotTypeObject = self.plotTypeClasses[self.get('plotType')](self)
+
+
+        # Refresh the plot type object
+        "do update"
+        self.plotTypeObject.refresh()
+
+        # Finally, redraw the canvas
+        self.redraw()
+
+
+    def redraw(self):
+        self.axes().figure.canvas.draw()
 
 
 

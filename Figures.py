@@ -13,11 +13,13 @@ class Figures(QObject):
     Signals that are emitted from this class are:
         figureAdded   - emitted when a Figure is added
         figureRemoved - emitted when a Figure is removed
+        figureRenamed - emitted when a Figure's window is renamed
     """
 
     # Signals
     figureAdded   = pyqtSignal()
     figureRemoved = pyqtSignal()
+    figureRenamed = pyqtSignal()
 
     def __init__(self, figuresIn=[]):
         """
@@ -52,8 +54,9 @@ class Figures(QObject):
     def addFigure(self, figure):
         """Add a figure to the object."""
         self._figures.append(figure)
+        figure.properties['windowTitle'].modified.connect(self.emitFigureRenamed)
         self.figureAdded.emit()
-        Util.debug(2, "Figures.addFigure", "Added figure " + figure.get('figureWindowTitle') + " to figures object")
+        Util.debug(2, "Figures.addFigure", "Added figure " + figure.get('windowTitle') + " to figures object")
         return figure
     
     def getFigure(self, index):
@@ -67,10 +70,11 @@ class Figures(QObject):
         removedFigure = None
         try:
             removedFigure = self._figures.remove(figure)
+            figure.properties['windowTitle'].modified.disconnect(self.emitFigureRenamed)
         except IndexError:
             return False
         self.figureRemoved.emit()
-        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('figureWindowTitle') + " from figures object")
+        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('windowTitle') + " from figures object")
         return removedFigure
 
     def removeAllFigures(self):
@@ -86,6 +90,8 @@ class Figures(QObject):
     def length(self):
         return len(self._figures)
 
+    def emitFigureRenamed(self):
+        self.figureRenamed.emit()
 
 
 

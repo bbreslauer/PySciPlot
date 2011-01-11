@@ -250,10 +250,14 @@ def getFigure(app, dom, appWindowList, figures, figureObj):
     plots = dom.createElement("plots")
     figure.appendChild(plots)
 
-    for plotObj in figureObj.plots():
+    for plotNum, plotObj in enumerate(figureObj.plots()):
         plot = dom.createElement("plot")
         plots.appendChild(plot)
         
+        prop = dom.createElement("plotNum")
+        prop.appendChild(dom.createTextNode(str(plotNum)))
+        plot.appendChild(prop)
+
         for propName in plotObj.properties.keys():
             propValue = plotObj.get(propName)
             prop = dom.createElement(str(propName))
@@ -269,11 +273,11 @@ def getFigure(app, dom, appWindowList, figures, figureObj):
             traces.appendChild(trace)
 
             xWave = dom.createElement("xWave")
-            xWave.appendChild(dom.createTextNode(str(traceObj.getXName())))
+            xWave.appendChild(dom.createTextNode(str(traceObj.xName())))
             trace.appendChild(xWave)
 
             yWave = dom.createElement("yWave")
-            yWave.appendChild(dom.createTextNode(str(traceObj.getYName())))
+            yWave.appendChild(dom.createTextNode(str(traceObj.yName())))
             trace.appendChild(yWave)
 
             for propName in traceObj.properties.keys():

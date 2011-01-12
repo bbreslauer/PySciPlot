@@ -81,9 +81,8 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         index = self.getChild('traceTableView').indexAt(point)
         
         if index.row() < 0:
-            self.getChild('traceTableView').setCurrentIndex(self.getChild('traceTableView').model().index(-1,0))
             return False
-
+        
         def deleteTraceHelper():
             self.deleteTraceFromPlot(index.internalPointer().getTrace())
 

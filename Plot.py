@@ -24,11 +24,11 @@ class ScatterPlot(FigureObject):
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
                 'bottomAxis':       Property.GenericAxis({
-                                                    'tickLabelFont':      Property.TextOptions({'verticalalignment': 'top'}),
+                                                    'majorTicksLabelFont':      Property.TextOptions({'verticalalignment': 'top'}),
                                                     'labelFont':          Property.TextOptions({'verticalalignment': 'top'}),
                                                     }),
                 'leftAxis':         Property.GenericAxis({
-                                                    'tickLabelFont':        Property.TextOptions({'horizontalalignment': 'right'}),
+                                                    'majorTicksLabelFont':        Property.TextOptions({'horizontalalignment': 'right'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
                     }),
                 }
@@ -53,8 +53,6 @@ class ScatterPlot(FigureObject):
         self._traces.remove(trace)
         self.refresh()
 
-
-
     def update_bottomAxis(self):
         Util.debug(3, "ScatterPlot.update_bottomAxis", "")
         self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
@@ -64,8 +62,6 @@ class ScatterPlot(FigureObject):
         self.update_axis('leftAxis', self.plot().axes().get_yaxis())
 
     def update_axis(self, axisName, axis):
-        print "updating axis"
-
         axisDict = self.getMpl(axisName)
 
         # Set minimum and maximum for axes
@@ -81,12 +77,12 @@ class ScatterPlot(FigureObject):
                 self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
             
         # Should we show any ticks
-        if axisDict['ticks']:
+        if axisDict['majorTicksVisible']:
 
             # Set major ticks
-            axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['tickLabelFormat']))
+            axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['majorTicksLabelFormat']))
             
-            if axisDict['useTickNumber']:
+            if axisDict['useMajorTicksNumber']:
                 # User has defined the number of major tick marks to display
                 majorTicksNum = axisDict['majorTicksNumber']
                 axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
@@ -114,8 +110,8 @@ class ScatterPlot(FigureObject):
             axis.set_minor_locator(ticker.NullLocator())
 
         # Set font for tick labels
-        if axisDict['tickLabelFont'] != {}:
-            setp(axis.get_majorticklabels(), **(axisDict['tickLabelFont']))
+        if axisDict['majorTicksLabelFont'] != {}:
+            setp(axis.get_majorticklabels(), **(axisDict['majorTicksLabelFont']))
 
         # Set labels
         axis.set_label_text(axisDict['label'], axisDict['labelFont'])
@@ -124,8 +120,6 @@ class ScatterPlot(FigureObject):
         self.plot().redraw()
 
     def refresh(self):
-        print "refreshing scatterplot"
-
         self.plot().axes().cla()
         self.update_bottomAxis()
         self.update_leftAxis()
@@ -147,7 +141,7 @@ class PieChart(FigureObject):
         self._plot = plot
 
     def refresh(self):
-        print "refreshing piechart"
+        pass
 
 class Plot(FigureObject):
     """
@@ -221,8 +215,6 @@ class Plot(FigureObject):
 
 
     def refresh(self):
-        print "refreshing plot"
-
         # Clear the axes
         self.axes().cla()
 
@@ -232,12 +224,10 @@ class Plot(FigureObject):
 
         # Check if plot type has changed, and if it has, change the plot type object
         if not isinstance(self.plotTypeObject, self.plotTypeClasses[self.get('plotType')]):
-            print "changing plot type"
             self.plotTypeObject = self.plotTypeClasses[self.get('plotType')](self)
 
 
         # Refresh the plot type object
-        "do update"
         self.plotTypeObject.refresh()
 
         # Finally, redraw the canvas

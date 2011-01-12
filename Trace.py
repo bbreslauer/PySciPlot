@@ -115,8 +115,6 @@ class Trace(FigureObject):
         return [xData, yData]
 
     def refresh(self):
-        print "refreshing trace"
-
         [x, y] = self.convertDataToFloat()
         
         # If this trace is not associated with a plot, then don't do anything
@@ -125,9 +123,9 @@ class Trace(FigureObject):
 
         try:
             self._line.remove()
-            "did try"
         except:
             pass
+        
         self._line = self.plot().axes().plot(x, y, **(self.getFormat()))[0]
         self.plot().redraw()
 

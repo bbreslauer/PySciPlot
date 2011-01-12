@@ -57,7 +57,7 @@ class Wave(QObject):
         str -- Representation of the wave.
         """
 
-        return "%s (%s, %s): %s" % (self._name, self._dataType, len(self._data), self._data)
+        return "%s (%s, %s): %s\n" % (self._name, self._dataType, len(self._data), self._data)
 
     def data(self, start=None, end=None):
         """
@@ -82,7 +82,7 @@ class Wave(QObject):
         int -- Length of wave data.
         """
 
-        return len(self.data())
+        return len(self._data)
 
     def name(self):
         """
@@ -200,16 +200,16 @@ class Wave(QObject):
             return False
         
         # We are adding data to the list
-        if position >= len(self.data()):
+        if position >= self.length():
             # If we are editing the end of the list (or beyond) and we are entering a blank entry, don't extend the list
             if value == "":
                 return False
 
             # Extend the list enough so that we can modify the value at position
             # +1 because list[len(list)] doesn't exist, due to zero-indexing
-            self.data().extend([''] * (position - len(self.data()) + 1))
+            self._data.extend([''] * (position - self.length() + 1))
 
-        self.data()[position] = value
+        self._data[position] = value
         Util.debug(3, "Wave.setData", "Set " + str(self.name()) + "[" + str(position) + "] = " + str(value))
         self.dataModified.emit()
         return True
@@ -230,6 +230,8 @@ class Wave(QObject):
 
         for i, v in enumerate(self.data()):
             self._data[i] = self.castToWaveType(v)
+
+        self.dataModified.emit()
 
         Util.debug(2, "Wave.recastData", "Recast all data in " + str(self.name()) + " to " + str(self.dataType()) + " type")
 
@@ -320,7 +322,7 @@ class Wave(QObject):
         dataModified -- If the data has been changed.
         """
         
-        value = self.data().pop(position)
+        value = self._data.pop(position)
         Util.debug(2, "Wave.pop", "Popped value at position " + str(position) + " from " + str(self.name()))
         self.dataModified.emit()
         return value

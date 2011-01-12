@@ -63,8 +63,6 @@ class QColorButton(QPushButton):
             except :
                 pass
 
-        print self.getColorHex()
-
     def updateButtonColorsAndText(self):
         self.setStyleSheet("background-color: " + self.getColorHex() + "; color: " + Util.goodTextColor(self.getColorHex()))
         self.setText(str(self.getQColor().getRgb()))

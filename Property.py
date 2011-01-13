@@ -1,7 +1,6 @@
 from PyQt4.QtCore import QObject, pyqtSignal
 from PyQt4.QtGui import QColor
-
-import Type
+import copy
 
 class Property(QObject):
     """
@@ -27,18 +26,15 @@ class Property(QObject):
 
         QObject.__init__(self)
         
-        # The default value for this property. The default value could be different
-        # per instance, which is why this is not an instance attr. The first args 
-        # passed to __init__ will be assigned to self.default.
-        self.default = None
-        
         # The actual value of this property.
-        self.value = None
+        # We need to override the default initializer because when doing a deep
+        # copy of a dict-of-properties, the property objects are still just copied
+        # by reference. We need to copy their values, instead, so that we don't
+        # have multiple dictionaries pointing to the same property.
 
+        self._value = copy.deepcopy(self.default)
         if len(args) > 0:
-            self.setDefault(args[0])
-
-        self.reset()
+            self.set(args[0])
 
     def __reduce__(self):
         """
@@ -50,20 +46,28 @@ class Property(QObject):
         """
         String representation of this property.
         """
-        return "%s: default: %s, value: %s" % (self.__class__, self.getDefault(), self.get())
+        return "%s: value: %s" % (self.__class__, self.get())
+
+    def __eq__(self, other):
+        try:
+            return self.get() == other.get()
+        except:
+            return self.get() == other
+
+    def __ne__(self, other):
+        try:
+            return self.get() != other.get()
+        except:
+            return self.get() != other
 
     def __repr__(self):
         return self.__str__()
 
-    def get(self, variable='value'):
+    def get(self):
         """
         Return the value of this property in the form of castType.
         """
-        if variable == 'value':
-            return self.value
-        elif variable == 'default':
-            return self.default
-        return None
+        return self._value
     
     def getMpl(self):
         """Return the value of this property in a matplotlib compatible form."""
@@ -78,36 +82,16 @@ class Property(QObject):
         Emits modified signal if the assignment succeeded and the new value was 
         different from the old value.
         """
-        return self._set('value', newValue)
+        return self._set(newValue)
 
-    def getDefault(self):
-        """Return the default value for this property in the form of castType."""
-        return self.get('default')
-
-    def setDefault(self, newDefault):
-        """
-        Set the default value of this property.
-
-        Returns true if the assignment succeeded. Returns false otherwise.
-
-        Emits modified signal if the assignment succeeded and the new value was 
-        different from the old value.
-        """
-        return self._set('default', newDefault)
-
-    def reset(self):
-        """Reset the value of this property to the default."""
-        return self.set(self.getDefault())
-
-    def _set(self, variable, newValue):
+    def _set(self, newValue):
         """
         Cast newValue if necessary, then set variable to newValue.
 
-        Equivalent to calling _castIfProperty, and then _setVariable.
+        Equivalent to calling _castIfProperty, and then _setValue.
 
         This should not be considered a public method. Use set or setDefault instead.
         
-        variable should be either 'value' or 'default'.
         newValue is the value to set the variable to.
 
         Returns true if the assignment succeeded. Returns false otherwise.
@@ -121,7 +105,7 @@ class Property(QObject):
         
         # Do we need to do any last minute checking/scrubbing of the value
         # before casting it and setting it? If so, here is where we will do it
-        newValue = self._validateValue(variable, newValue)
+        newValue = self._validateValue(newValue)
 
         # Cast newValue to the appropriate Python type
         if self.castType not in (None, ""):
@@ -132,16 +116,15 @@ class Property(QObject):
                 return False
 
         # Finally, set the variable
-        return self._setVariable(variable, newValue)
+        return self._setValue(newValue)
 
-    def _setVariable(self, variable, newValue):
+    def _setValue(self, newValue):
         """
-        Set variable to newValue.
+        Set the property to newValue.
         
         This should not be considered a public method. Use set or setDefault instead.
         No type checking is done.
         
-        variable should be either 'value' or 'default'. It defaults to 'value'.
         newValue is the value to set the variable to. It defaults to self.default.
 
         Returns true if the assignment succeeded. Returns false otherwise.
@@ -150,20 +133,14 @@ class Property(QObject):
         different from the old value.
         """
 
-        if variable == 'value':
-            if self.value != newValue:
-                self.value = newValue
-                self.modified.emit()
-            else:
-                return False
-        elif variable == 'default':
-            self.default = newValue
+        if self._value != newValue:
+            self._value = newValue
+            self.modified.emit()
         else:
             return False
-        
         return True
 
-    def _validateValue(self, variable, newValue):
+    def _validateValue(self, newValue):
         """
         Do any last-minute scrubbing of the value, to make sure that it is an
         appropriate type before applying it to the property.
@@ -217,7 +194,7 @@ class Boolean(Property):
     default = False
     castType = bool
 
-    def _validateValue(self, variable, newValue):
+    def _validateValue(self, newValue):
         # bool('False') == True, because 'False' is a non-empty string, so
         # we need to check if newValue is a string, and if so, what its value is.
         if isinstance(newValue, str) and newValue.lower() in ('f', 'false'):
@@ -226,8 +203,57 @@ class Boolean(Property):
         return newValue
 
 class Dictionary(Property):
-    default = {}
+    default = dict()
     castType = dict
+
+    def keys(self):
+        return self.get().keys()
+
+    def _setValue(self, newValue):
+        """
+        First make sure that the new value is a dict.
+
+        Then check if the internal value is a dict. If it is not, replace
+        the internal value with the new value.
+
+        If the internal value is already a dict, then instead of blindly 
+        replacing the dictionary, we will update all the key/value entries
+        that are in newValue. If at least one of them changes, then the
+        modified signal will be emitted.
+        """
+        
+        if not isinstance(newValue, dict):
+            return False
+        else:
+            if not isinstance(self._value, dict) and not isinstance(self._value, Property):
+                self._value = dict(newValue)
+                self.modified.emit()
+                return True
+            else:
+                isModified = False
+                try:
+                    for (key, value) in newValue.items():
+                        # Check if the value is going to be changed
+                        if not isModified and value != self._value.get(key):
+                            isModified = True
+                        
+                        #self._value[key] = value
+                        self._setValueDictEntry(key, value)
+            
+                    if isModified:
+                        self.modified.emit()
+                    
+                    return True
+                except KeyError:
+                    return False
+
+    def _setValueDictEntry(self, key, value):
+        """
+        This is used to actually set the value. We abstract it to another method
+        because if the dict entry is supposed to be a property, we need to set it
+        via a set method rather than an =.
+        """
+        self._value[key] = value
 
 class List(Property):
     default = []
@@ -240,7 +266,7 @@ class Color(Property):
     def getMpl(self):
         return self.get().getRgbF()
     
-    def _validateValue(self, variable, newValue):
+    def _validateValue(self, newValue):
         # The passed value could be one of the following:
         # QColor()
         # (f, f, f, f)    where f are floats between 0 and 1
@@ -254,56 +280,82 @@ class Color(Property):
         return newValue
 
 
-class Options(Property):
-    default = Type.Options()
-    castType = Type.Options
+class Options(Dictionary):
+    """
+    This is a special type of dictionary, specifically one whose
+    values are Property's.
+    """
 
     def getMpl(self):
-        """Create a dict of types, not of properties."""
+        """Convert the dictionary from properties to python types."""
         mplDict = {}
 
-        for option in self.get().options():
-            mplDict[option] = self.get().get(option).getMpl()
+        for (key, value) in self.get().items():
+            mplDict[key] = value.getMpl()
 
         return mplDict
 
-    def _setVariable(self, variable, newValue):
-        """
-        We need to override the default because the Options type has
-        multiple internal values. If we used the default Property._setVariable
-        then we would be creating a new Type.Options each time, which results
-        in a lot of extra overhead. By doing this, we keep the same Type.Options
-        and just replace specific values.
-
-        But, if self.value or self.default is not yet set, then we cannot do this,
-        and so we will default back to the normal behavior.
-        """
-        if variable == 'value':
-            returnValue = True
-            try:
-                returnValue = self.value.setMultiple(newValue)
-            except:
-                self.value = newValue
-            if returnValue != None:
-                self.modified.emit()  # if returnValue is not None, then at least one
-                                      # entry has been modified.
-        elif variable == 'default':
-            try:
-                self.value.setMultiple(newValue, 'default')
-            except:
-                self.default = newValue
-        else:
-            return False
-
-        return True
-
+    def _setValueDictEntry(self, key, value):
+        self._value[key].set(value)
+        
 class TextOptions(Options):
-    default = Type.TextFormat()
-    castType = Type.TextFormat
+    default = { 
+        'name':                  String('Bitstream Vera Sans'),
+        'style':                 String('normal'),
+        'variant':               String('normal'),
+        'stretch':               Integer(100),
+        'weight':                Integer(100),
+        'size':                  Integer(12),
+        'color':                 Color(QColor(0,0,0,255)),
+        'backgroundcolor':       Color(QColor(255,255,255,0)),
+        'alpha':                 Float(1.0),
+        'horizontalalignment':   String('center'),
+        'verticalalignment':     String('center'),
+        'linespacing':           Float(1.2),
+        'rotation':              String('horizontal'),
+    }
 
 class GenericAxis(Options):
-    default = Type.GenericAxis()
-    castType = Type.GenericAxis
+    default = {
+        'autoscale':          Boolean(True),
+        'minimum':            Float(-10),
+        'maximum':            Float(10),
+        'scaleType':          String('Linear'),
+        'label':              String(''),
+        'labelFont':          TextOptions({'verticalalignment': 'top'}),
+        'visible':            Boolean(True),
+
+        'majorTicksVisible':                    Boolean(True),
+        'useMajorTicksSpacing':                 Boolean(False),
+        'useMajorTicksNumber':                  Boolean(True),
+        'majorTicksSpacing':                    Float(2),
+        'majorTicksNumber':                     Integer(5),
+        'majorTicksLabelFormat':                String('%.2g'),
+        'majorTicksLabelFont':                  TextOptions({'verticalalignment': 'top'}),
+        'majorTicksLabelPadding':               Integer(4),
+        'majorTicksDirection':                  String('in'),
+        'majorTicksColor':                      Color(QColor(0,0,0,255)),
+        'majorTicksLength':                     Integer(4),
+        'majorTicksWidth':                      Integer(1),
+        'majorTicksDisplayPrimary':             Boolean(True),
+        'majorTicksDisplaySecondary':           Boolean(True),
+        'majorTicksLabelDisplayPrimary':        Boolean(True),
+        'majorTicksLabelDisplaySecondary':      Boolean(False),
+        
+        'minorTicksVisible':                    Boolean(True),
+        'minorTicksNumber':                     Integer(5),
+        'minorTicksLabelFormat':                String('%.2g'),
+        'minorTicksLabelFont':                  TextOptions({'verticalalignment': 'top'}),
+        'minorTicksLabelPadding':               Integer(4),
+        'minorTicksDirection':                  String('in'),
+        'minorTicksColor':                      Color(QColor(0,0,0,255)),
+        'minorTicksLength':                     Integer(2),
+        'minorTicksWidth':                      Integer(1),
+        'minorTicksDisplayPrimary':             Boolean(True),
+        'minorTicksDisplaySecondary':           Boolean(True),
+        'minorTicksLabelDisplayPrimary':        Boolean(False),
+        'minorTicksLabelDisplaySecondary':      Boolean(False),
+    }
 
 class SymbolString(String):
     default = ""

@@ -112,7 +112,6 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             trace.set(option, Util.getWidgetValue(self.getChild(option)))
 
     def saveOptionsToSelectedTraces(self):
-        print "saving traces"
         indexes = self.getChild('traceTableView').selectedIndexes()
         
         traces = set()  # We use a set because each row has two selected indexes, and 

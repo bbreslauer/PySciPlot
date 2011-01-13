@@ -50,7 +50,7 @@ def getWidgetValue(widget):
                     'QSpinBox':       'int(widget.value())',
                     'QDoubleSpinBox': 'float(widget.value())',
                     'QColorButton':   'widget.getQColor()',
-                    'QTextOptionsButton':    'widget.getTextFormat()',
+                    'QTextOptionsButton':    'widget.getTextOptions()',
                     'QCheckBox':      'widget.isChecked()',
                     'QRadioButton':   'widget.isChecked()',
                     'QComboBox':      'str(widget.currentText())',

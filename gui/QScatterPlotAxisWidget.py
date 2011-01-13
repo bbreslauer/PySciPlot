@@ -16,7 +16,7 @@ class QScatterPlotAxisWidget(QEditFigureSubWidget):
         return options
 
     def setOptions(self, options):
-        for option in options.options():
-            Util.setWidgetValue(self.getChild(option), options.get(option).get())
+        for (option, value) in options.items():
+            Util.setWidgetValue(self.getChild(option), value.get())
 
 

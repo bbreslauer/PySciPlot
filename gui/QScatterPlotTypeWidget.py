@@ -36,10 +36,10 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         
         self.traces.saveOptionsToSelectedTraces()
         
-        bottomAxisUiOptions = self.bottomAxis.getOptions(plotTypeObject.get('bottomAxis').options())
+        bottomAxisUiOptions = self.bottomAxis.getOptions(plotTypeObject.get('bottomAxis').keys())
         plotTypeObject.set('bottomAxis', bottomAxisUiOptions)
 
-        leftAxisUiOptions = self.leftAxis.getOptions(plotTypeObject.get('leftAxis').options())
+        leftAxisUiOptions = self.leftAxis.getOptions(plotTypeObject.get('leftAxis').keys())
         plotTypeObject.set('leftAxis', leftAxisUiOptions)
 
     def resetUi(self):

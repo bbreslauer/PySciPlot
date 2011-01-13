@@ -6,7 +6,7 @@ from DialogSubWindow import DialogSubWindow
 from ui.Ui_TextOptionsDialog import *
 from gui.QTextOptionsDialog import *
 
-import Util, Property, Type
+import Util, Property
 
 class QTextOptionsButton(QPushButton):
     """A push button that is used to select a font and text options."""
@@ -15,13 +15,13 @@ class QTextOptionsButton(QPushButton):
         QPushButton.__init__(self, *args)
         self._app = QApplication.instance().window
 
-        self.textFormat = Type.TextFormat()
+        self.textOptions = Property.TextOptions()
 
-        # Set initial textFormat values based on application preferences
+        # Set initial textOptions values based on application preferences
         if 'preferences' in self._app.__dict__.keys():
             preferenceTextOptions = self._app.preferences.getInternal('textOptions')
             if preferenceTextOptions is not None:
-                self.textFormat.setMultiple(preferenceTextOptions)
+                self.setTextOptions(preferenceTextOptions)
 
         # Create dialog
         self._dialog = QTextOptionsDialog(self)
@@ -49,19 +49,16 @@ class QTextOptionsButton(QPushButton):
         self._ui.name.addItems(fontList)
         
     def getOption(self, option):
-        try:
-            return self.textFormat.get(option)
-        except KeyError:
-            return None
+        return self.textOptions.get()[option]
 
-    def getTextFormat(self):
-        return self.textFormat
+    def getTextOptions(self):
+        return self.textOptions
 
     def setTextOptions(self, textOptions={}):
         """
         Set text options.
         """
-        self.textFormat.setMultiple(textOptions)
+        self.textOptions.set(textOptions)
 
     def showTextOptionsDialog(self):
         """

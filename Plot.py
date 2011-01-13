@@ -7,7 +7,7 @@ from matplotlib import ticker
 from matplotlib.artist import setp
 import numpy
 
-import Util, Property, Type
+import Util, Property
 from Waves import Waves
 from Wave import Wave
 from Trace import Trace

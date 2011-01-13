@@ -24,27 +24,31 @@ class QTextOptionsDialog(QDialog):
             return self.findChild(QWidget, name)
 
     def saveUi(self):
-        textFormat = self.textOptionsButton().textFormat
-        for option in textFormat.options():
-            textFormat.set(option, Util.getWidgetValue(self.getChild(option)))
+        newOptions = {}
+        
+        for option in self.textOptionsButton().getTextOptions().get().keys():
+            newOptions[option] = Util.getWidgetValue(self.getChild(option))
+
 
         # If rotation is custom (i.e. an angle has been specified) then we need to
         # overwrite what was just added
         if Util.getWidgetValue(self.getChild('rotation')) == 'custom':
-            textFormat.set('rotation', Util.getWidgetValue(self.getChild('rotationCustom')))
+            newOptions['rotation'] = Util.getWidgetValue(self.getChild('rotationCustom'))
+
+        self.textOptionsButton().setTextOptions(newOptions)
 
     def resetUi(self):
         """Reset the textOptions dialog to the textOptions in the button."""
-        textOptionsButton = self.textOptionsButton()
-
-        for option in textOptionsButton.textFormat.options():
-            Util.setWidgetValue(self.getChild(option), textOptionsButton.getOption(option).get())
+        
+        textOptions = self.textOptionsButton().getTextOptions().get()
+        for (option, value) in textOptions.items():
+            Util.setWidgetValue(self.getChild(option), value.get())
 
         # If rotation is custom (i.e. an angle has been specified) then we need to
         # use that instead. An exception will be raised if the rotation option is not
         # a float, in which case we have already set it correctly above.
         try:
-            angle = float(textOptionsButton.getOption('rotation').get())
+            angle = float(textOptions['rotation'].get())
             Util.setWidgetValue(self.getChild('rotation'), 'custom')
             Util.setWidgetValue(self.getChild('rotationCustom'), angle)
         except:

@@ -42,7 +42,6 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         leftAxisUiOptions = self.leftAxis.getOptions(plotTypeObject.get('leftAxis').options())
         plotTypeObject.set('leftAxis', leftAxisUiOptions)
 
-
     def resetUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         

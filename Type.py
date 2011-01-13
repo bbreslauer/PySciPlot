@@ -22,25 +22,29 @@ class Options(object):
         return tuple([self.__class__, tuple([self.options()])])
 
     def set(self, option, value, variable='value'):
+        """
+        Return True if the value is set.
+        Return False if the value is not set or the value stays the same.
+        """
+
         if variable == 'value':
             try:
-                self._options[option].set(value)
+                return self._options[option].set(value)
             except (ValueError, TypeError):
                 return False
-            return True 
         elif variable == 'default':
             try:
-                self._options[option].setDefault(value)
+                return self._options[option].setDefault(value)
             except (ValueError, TypeError):
                 return False
-            return True 
         else:
             return False
 
     def setMultiple(self, options, variable='value'):
         """
         Return True if all entries in formatOptions are set successfully.
-        Return False if at least one entry in formatOptions fails to be set.
+        Return False if at least one entry in formatOptions is set successfully.
+        Return None if no entries are set successfully.
         """
         
         if options == None:
@@ -49,10 +53,18 @@ class Options(object):
         if isinstance(options, self.__class__):
             options = options.optionsDict()
 
-        returnValue = True
+        returnValue = None
+        allSet = True
+        oneSet = False
         for option in options.keys():
-            returnValue &= self.set(option, options[option], variable)
-        return returnValue
+            returnValue = self.set(option, options[option], variable)
+            allSet &= returnValue
+            oneSet |= returnValue
+        if allSet:
+            return True
+        elif oneSet:
+            return False
+        return None
 
     def get(self, option):
         """Return the value of an options."""
@@ -72,6 +84,7 @@ class Options(object):
 class TextFormat(Options):
 
     def __init__(self, options={}):
+
         defaultOptions = { 
             'name':                  Property.String('Bitstream Vera Sans'),
             'style':                 Property.String('normal'),
@@ -94,6 +107,7 @@ class TextFormat(Options):
 class GenericAxis(Options):
 
     def __init__(self, options={}):
+
         defaultOptions = {
             'autoscale':          Property.Boolean(True),
             'minimum':            Property.Float(-10),
@@ -133,7 +147,7 @@ class GenericAxis(Options):
             'minorTicksDisplaySecondary':           Property.Boolean(True),
             'minorTicksLabelDisplayPrimary':        Property.Boolean(False),
             'minorTicksLabelDisplaySecondary':      Property.Boolean(False),
-                }
+                 }
 
         self.setup(defaultOptions, options)
 

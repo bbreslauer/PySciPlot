@@ -271,6 +271,17 @@ color: rgb(0, 0, 0);
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>windowTitle</tabstop>
+  <tabstop>title</tabstop>
+  <tabstop>titleFont</tabstop>
+  <tabstop>rows</tabstop>
+  <tabstop>columns</tabstop>
+  <tabstop>linkPlotAxes</tabstop>
+  <tabstop>backgroundColor</tabstop>
+  <tabstop>axesPadding</tabstop>
+  <tabstop>buttons</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

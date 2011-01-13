@@ -669,6 +669,21 @@ color: rgb(255, 255, 255);</string>
    </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>xAxisListView</tabstop>
+  <tabstop>yAxisListView</tabstop>
+  <tabstop>addTraceButton</tabstop>
+  <tabstop>traceTableView</tabstop>
+  <tabstop>removeTraceButton</tabstop>
+  <tabstop>lineStyle</tabstop>
+  <tabstop>lineWidth</tabstop>
+  <tabstop>lineColor</tabstop>
+  <tabstop>pointMarker</tabstop>
+  <tabstop>pointMarkerSize</tabstop>
+  <tabstop>pointMarkerFaceColor</tabstop>
+  <tabstop>pointMarkerEdgeWidth</tabstop>
+  <tabstop>pointMarkerEdgeColor</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

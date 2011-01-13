@@ -150,7 +150,7 @@
          <number>1</number>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="basicTab">
          <layout class="QFormLayout" name="formLayout">
@@ -296,6 +296,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>waveName</tabstop>
+  <tabstop>dataType</tabstop>
+  <tabstop>waveDataSelectionList</tabstop>
+  <tabstop>basicWaveType</tabstop>
+  <tabstop>basicWaveLength</tabstop>
+  <tabstop>copyWaveOriginalWave</tabstop>
+  <tabstop>copyWaveStartingIndex</tabstop>
+  <tabstop>copyWaveEndingIndex</tabstop>
+  <tabstop>functionWaveLength</tabstop>
+  <tabstop>functionEquation</tabstop>
+  <tabstop>functionInsertWaveButton</tabstop>
+  <tabstop>functionInsertWave</tabstop>
+  <tabstop>createWaveButton</tabstop>
+  <tabstop>closeWindowButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

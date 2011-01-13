@@ -112,6 +112,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>figureSelector</tabstop>
+  <tabstop>addFigureButton</tabstop>
+  <tabstop>showFigureButton</tabstop>
+  <tabstop>deleteFigureButton</tabstop>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

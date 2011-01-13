@@ -278,6 +278,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>csvFileName</tabstop>
+  <tabstop>csvFileNameButton</tabstop>
+  <tabstop>commaRadio</tabstop>
+  <tabstop>tabRadio</tabstop>
+  <tabstop>otherRadio</tabstop>
+  <tabstop>otherDelimiter</tabstop>
+  <tabstop>firstRowWaveNames</tabstop>
+  <tabstop>defaultDataType</tabstop>
+  <tabstop>loadDataButton</tabstop>
+  <tabstop>data</tabstop>
+  <tabstop>importDataButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

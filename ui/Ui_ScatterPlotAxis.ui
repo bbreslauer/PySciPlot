@@ -657,6 +657,44 @@ tick and label</string>
    </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>visible</tabstop>
+  <tabstop>autoscale</tabstop>
+  <tabstop>label</tabstop>
+  <tabstop>labelFont</tabstop>
+  <tabstop>scaleType</tabstop>
+  <tabstop>minimum</tabstop>
+  <tabstop>maximum</tabstop>
+  <tabstop>majorTicksVisible</tabstop>
+  <tabstop>useMajorTicksSpacing</tabstop>
+  <tabstop>majorTicksSpacing</tabstop>
+  <tabstop>useMajorTicksNumber</tabstop>
+  <tabstop>majorTicksNumber</tabstop>
+  <tabstop>majorTicksLabelFormat</tabstop>
+  <tabstop>majorTicksLabelFont</tabstop>
+  <tabstop>majorTicksLabelPadding</tabstop>
+  <tabstop>majorTicksDirection</tabstop>
+  <tabstop>majorTicksColor</tabstop>
+  <tabstop>majorTicksLength</tabstop>
+  <tabstop>majorTicksWidth</tabstop>
+  <tabstop>majorTicksDisplayPrimary</tabstop>
+  <tabstop>majorTicksDisplaySecondary</tabstop>
+  <tabstop>majorTicksLabelDisplayPrimary</tabstop>
+  <tabstop>majorTicksLabelDisplaySecondary</tabstop>
+  <tabstop>minorTicksVisible</tabstop>
+  <tabstop>minorTicksNumber</tabstop>
+  <tabstop>minorTicksLabelFormat</tabstop>
+  <tabstop>minorTicksLabelFont</tabstop>
+  <tabstop>minorTicksLabelPadding</tabstop>
+  <tabstop>minorTicksDirection</tabstop>
+  <tabstop>minorTicksColor</tabstop>
+  <tabstop>minorTicksLength</tabstop>
+  <tabstop>minorTicksWidth</tabstop>
+  <tabstop>minorTicksDisplayPrimary</tabstop>
+  <tabstop>minorTicksDisplaySecondary</tabstop>
+  <tabstop>minorTicksLabelDisplayPrimary</tabstop>
+  <tabstop>minorTicksLabelDisplaySecondary</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -686,8 +724,8 @@ tick and label</string>
      <y>227</y>
     </hint>
     <hint type="destinationlabel">
-     <x>273</x>
-     <y>224</y>
+     <x>267</x>
+     <y>242</y>
     </hint>
    </hints>
   </connection>
@@ -698,12 +736,12 @@ tick and label</string>
    <slot>showTextOptionsDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>569</x>
-     <y>230</y>
+     <x>535</x>
+     <y>242</y>
     </hint>
     <hint type="destinationlabel">
-     <x>580</x>
-     <y>222</y>
+     <x>535</x>
+     <y>242</y>
     </hint>
    </hints>
   </connection>
@@ -730,12 +768,76 @@ tick and label</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>293</y>
+     <x>535</x>
+     <y>309</y>
     </hint>
     <hint type="destinationlabel">
-     <x>561</x>
-     <y>296</y>
+     <x>535</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useMajorTicksSpacing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>majorTicksSpacing</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>176</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useMajorTicksNumber</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>majorTicksNumber</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>124</x>
+     <y>201</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>minimum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>362</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>maximum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>105</y>
     </hint>
    </hints>
   </connection>

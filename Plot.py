@@ -7,7 +7,7 @@ from matplotlib import ticker
 from matplotlib.artist import setp
 import numpy
 
-import Util, Property
+import Util, Property, Type
 from Waves import Waves
 from Wave import Wave
 from Trace import Trace
@@ -24,11 +24,11 @@ class ScatterPlot(FigureObject):
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
                 'bottomAxis':       Property.GenericAxis({
-                                                    'majorTicksLabelFont':      Property.TextOptions({'verticalalignment': 'top'}),
-                                                    'labelFont':          Property.TextOptions({'verticalalignment': 'top'}),
+                                                    'majorTicksLabelFont':  Property.TextOptions({'verticalalignment': 'top'}),
+                                                    'labelFont':            Property.TextOptions({'verticalalignment': 'top'}),
                                                     }),
                 'leftAxis':         Property.GenericAxis({
-                                                    'majorTicksLabelFont':        Property.TextOptions({'horizontalalignment': 'right'}),
+                                                    'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'right'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
                     }),
                 }

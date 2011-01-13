@@ -434,6 +434,23 @@ background-color: rgb(255, 255, 255);</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>name</tabstop>
+  <tabstop>size</tabstop>
+  <tabstop>style</tabstop>
+  <tabstop>variant</tabstop>
+  <tabstop>stretch</tabstop>
+  <tabstop>weight</tabstop>
+  <tabstop>color</tabstop>
+  <tabstop>backgroundcolor</tabstop>
+  <tabstop>alpha</tabstop>
+  <tabstop>horizontalalignment</tabstop>
+  <tabstop>verticalalignment</tabstop>
+  <tabstop>linespacing</tabstop>
+  <tabstop>rotation</tabstop>
+  <tabstop>rotationCustom</tabstop>
+  <tabstop>buttons</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

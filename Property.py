@@ -46,6 +46,15 @@ class Property(QObject):
         """
         return tuple([self.__class__, tuple([self.get()])])
 
+    def __str__(self):
+        """
+        String representation of this property.
+        """
+        return "%s: default: %s, value: %s" % (self.__class__, self.getDefault(), self.get())
+
+    def __repr__(self):
+        return self.__str__()
+
     def get(self, variable='value'):
         """
         Return the value of this property in the form of castType.
@@ -116,6 +125,7 @@ class Property(QObject):
 
         # Cast newValue to the appropriate Python type
         if self.castType not in (None, ""):
+        #if self.castType not in (None, "") and not isinstance(newValue, self.castType):
             try:
                 newValue = self.castType(newValue)
             except (ValueError, TypeError):
@@ -144,6 +154,8 @@ class Property(QObject):
             if self.value != newValue:
                 self.value = newValue
                 self.modified.emit()
+            else:
+                return False
         elif variable == 'default':
             self.default = newValue
         else:
@@ -241,6 +253,7 @@ class Color(Property):
 
         return newValue
 
+
 class Options(Property):
     default = Type.Options()
     castType = Type.Options
@@ -266,13 +279,14 @@ class Options(Property):
         and so we will default back to the normal behavior.
         """
         if variable == 'value':
+            returnValue = True
             try:
-                self.value.setMultiple(newValue)
+                returnValue = self.value.setMultiple(newValue)
             except:
                 self.value = newValue
-            self.modified.emit()  # the return value of setMultiple does not tell us
-                                  # if at least one entry was changed, so let's assume
-                                  # one was and emit the modified signal anyway.
+            if returnValue != None:
+                self.modified.emit()  # if returnValue is not None, then at least one
+                                      # entry has been modified.
         elif variable == 'default':
             try:
                 self.value.setMultiple(newValue, 'default')
@@ -282,7 +296,6 @@ class Options(Property):
             return False
 
         return True
-
 
 class TextOptions(Options):
     default = Type.TextFormat()

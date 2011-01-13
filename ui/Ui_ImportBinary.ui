@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>438</width>
+    <width>479</width>
     <height>129</height>
    </rect>
   </property>
@@ -157,6 +157,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fileName</tabstop>
+  <tabstop>fileNameButton</tabstop>
+  <tabstop>waveName</tabstop>
+  <tabstop>dataType</tabstop>
+  <tabstop>byteOrder</tabstop>
+  <tabstop>importDataButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -1,4 +1,3 @@
-from PyQt4.QtCore import QObject, pyqtSignal
 from PyQt4.QtGui import QColor
 
 from numpy import nan

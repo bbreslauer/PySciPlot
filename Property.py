@@ -52,13 +52,13 @@ class Property(QObject):
         try:
             return self.get() == other.get()
         except:
-            return self.get() == other
+            return self.get() == self.castType(other)
 
     def __ne__(self, other):
         try:
             return self.get() != other.get()
         except:
-            return self.get() != other
+            return self.get() != self.castType(other)
 
     def __repr__(self):
         return self.__str__()
@@ -237,7 +237,6 @@ class Dictionary(Property):
                         if not isModified and value != self._value.get(key):
                             isModified = True
                         
-                        #self._value[key] = value
                         self._setValueDictEntry(key, value)
             
                     if isModified:

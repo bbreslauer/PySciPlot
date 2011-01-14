@@ -264,20 +264,6 @@ tick and label</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="minorTicksLabelFormat">
-        <property name="text">
-         <string>%.2g</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QTextOptionsButton" name="minorTicksLabelFont">
-        <property name="text">
-         <string>Font</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
@@ -376,6 +362,36 @@ tick and label</string>
         </property>
        </widget>
       </item>
+      <item row="3" column="2" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1">
+        <item>
+         <widget class="QLineEdit" name="minorTicksLabelFormat">
+          <property name="text">
+           <string>%.2g</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextOptionsButton" name="minorTicksLabelFont">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>5</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Font</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
@@ -388,6 +404,26 @@ tick and label</string>
       <bool>true</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0" colspan="2">
+       <widget class="QRadioButton" name="useMajorTicksSpacing">
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="text">
+         <string>Spacing between</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="QLineEdit" name="majorTicksSpacing">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>2.00</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0" colspan="2">
        <widget class="QRadioButton" name="useMajorTicksNumber">
         <property name="layoutDirection">
@@ -398,6 +434,53 @@ tick and label</string>
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QSpinBox" name="majorTicksNumber">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="value">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="label_41">
+        <property name="text">
+         <string>Tick Label Format</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Distance between
+tick and label</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" colspan="2">
+       <widget class="QSpinBox" name="majorTicksLabelPadding">
+        <property name="value">
+         <number>4</number>
         </property>
        </widget>
       </item>
@@ -423,6 +506,61 @@ tick and label</string>
           <string>out</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Color</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QColorButton" name="majorTicksColor">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string>(0,0,0,255)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Length</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QSpinBox" name="majorTicksLength">
+        <property name="value">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Width</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QSpinBox" name="majorTicksWidth">
+        <property name="value">
+         <number>1</number>
+        </property>
        </widget>
       </item>
       <item row="9" column="0" colspan="2">
@@ -463,121 +601,6 @@ tick and label</string>
         </layout>
        </widget>
       </item>
-      <item row="5" column="2">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Color</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QColorButton" name="majorTicksColor">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 0, 0);
-color: rgb(255, 255, 255);</string>
-        </property>
-        <property name="text">
-         <string>(0,0,0,255)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Distance between
-tick and label</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="label_41">
-        <property name="text">
-         <string>Tick Label Format</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="majorTicksLabelFormat">
-        <property name="text">
-         <string>%.2g</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QTextOptionsButton" name="majorTicksLabelFont">
-        <property name="text">
-         <string>Font</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QSpinBox" name="majorTicksNumber">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="QLineEdit" name="majorTicksSpacing">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>2.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QRadioButton" name="useMajorTicksSpacing">
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="text">
-         <string>Spacing between</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Length</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="2">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Width</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="9" column="2" colspan="2">
        <widget class="QGroupBox" name="groupBox_4">
         <property name="title">
@@ -613,26 +636,35 @@ tick and label</string>
         </layout>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QSpinBox" name="majorTicksLength">
-        <property name="value">
-         <number>4</number>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QSpinBox" name="majorTicksWidth">
-        <property name="value">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2" colspan="2">
-       <widget class="QSpinBox" name="majorTicksLabelPadding">
-        <property name="value">
-         <number>4</number>
-        </property>
-       </widget>
+      <item row="3" column="2" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+        <item>
+         <widget class="QLineEdit" name="majorTicksLabelFormat">
+          <property name="text">
+           <string>%.2g</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextOptionsButton" name="majorTicksLabelFont">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>5</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Font</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -670,8 +702,6 @@ tick and label</string>
   <tabstop>majorTicksSpacing</tabstop>
   <tabstop>useMajorTicksNumber</tabstop>
   <tabstop>majorTicksNumber</tabstop>
-  <tabstop>majorTicksLabelFormat</tabstop>
-  <tabstop>majorTicksLabelFont</tabstop>
   <tabstop>majorTicksLabelPadding</tabstop>
   <tabstop>majorTicksDirection</tabstop>
   <tabstop>majorTicksColor</tabstop>
@@ -683,8 +713,6 @@ tick and label</string>
   <tabstop>majorTicksLabelDisplaySecondary</tabstop>
   <tabstop>minorTicksVisible</tabstop>
   <tabstop>minorTicksNumber</tabstop>
-  <tabstop>minorTicksLabelFormat</tabstop>
-  <tabstop>minorTicksLabelFont</tabstop>
   <tabstop>minorTicksLabelPadding</tabstop>
   <tabstop>minorTicksDirection</tabstop>
   <tabstop>minorTicksColor</tabstop>
@@ -710,38 +738,6 @@ tick and label</string>
     <hint type="destinationlabel">
      <x>202</x>
      <y>97</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>majorTicksLabelFont</sender>
-   <signal>clicked()</signal>
-   <receiver>majorTicksLabelFont</receiver>
-   <slot>showTextOptionsDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>245</x>
-     <y>227</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>267</x>
-     <y>242</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>minorTicksLabelFont</sender>
-   <signal>clicked()</signal>
-   <receiver>minorTicksLabelFont</receiver>
-   <slot>showTextOptionsDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>535</x>
-     <y>242</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>535</x>
-     <y>242</y>
     </hint>
    </hints>
   </connection>
@@ -838,6 +834,22 @@ tick and label</string>
     <hint type="destinationlabel">
      <x>371</x>
      <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>majorTicksVisible</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>minorTicksVisible</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>354</x>
+     <y>153</y>
     </hint>
    </hints>
   </connection>

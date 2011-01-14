@@ -74,39 +74,84 @@ class ScatterPlot(FigureObject):
                 self.plot().axes().set_xlim(axisDict['minimum'], axisDict['maximum'])
             elif axisName == 'leftAxis':
                 self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
-            
-        # Should we show any ticks
+        
         if axisDict['majorTicksVisible']:
-
-            # Set major ticks
+            # Set the formatter and locator for the major ticks
             axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['majorTicksLabelFormat']))
-            
             if axisDict['useMajorTicksNumber']:
                 # User has defined the number of major tick marks to display
                 majorTicksNum = axisDict['majorTicksNumber']
                 axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
-                
-                # The minor ticks option defines how many ticks between each pair of major ticks
-                # Therefore, we need to calculate how many total minor ticks there will be
-                # There are majorTicksNum-1 sections between the major ticks, and we need to add 1 because of the endpoints
-                minorTicksNum = (axisDict['minorTicksNumber'] + 1) * (len(axis.get_major_ticks()) - 1) + 1
-                axis.set_minor_locator(ticker.LinearLocator(minorTicksNum))
-                axis.set_minor_formatter(ticker.NullFormatter())
             else:
                 # User has defined the spacing between major tick marks
                 majorTicks = list(numpy.arange(axisDict['minimum'], axisDict['maximum'], axisDict['majorTicksSpacing']))
                 if (axisDict['maximum'] - majorTicks[-1]) % axisDict['majorTicksSpacing'] == 0:
                     majorTicks.append(axisDict['maximum'])
                 axis.set_major_locator(ticker.FixedLocator(majorTicks))
-                
-                # We need to calculate the minor tick values
-                minorTicksSpacing = float(axisDict['majorTicksSpacing']) / float((axisDict['minorTicksNumber'] + 1))
-                minorTicks = list(numpy.arange(axisDict['minimum'], axisDict['maximum'], minorTicksSpacing))
-                axis.set_minor_locator(ticker.FixedLocator(minorTicks))
+                    
+            # Set the major tick params
+            majorTickParams = {
+                        'direction': axisDict['majorTicksDirection'],
+                        'length': axisDict['majorTicksLength'],
+                        'width': axisDict['majorTicksWidth'],
+                        'color': axisDict['majorTicksColor'],
+                        'pad': axisDict['majorTicksLabelPadding'],
+                    }
+            if axisName == 'bottomAxis':
+                majorTickParams.update({
+                        'bottom': axisDict['majorTicksDisplayPrimary'],
+                        'top': axisDict['majorTicksDisplaySecondary'],
+                        'labelbottom': axisDict['majorTicksLabelDisplayPrimary'],
+                        'labeltop': axisDict['majorTicksLabelDisplaySecondary'],
+                    })
+            elif axisName == 'leftAxis':
+                majorTickParams.update({
+                        'left': axisDict['majorTicksDisplayPrimary'],
+                        'right': axisDict['majorTicksDisplaySecondary'],
+                        'labelleft': axisDict['majorTicksLabelDisplayPrimary'],
+                        'labelright': axisDict['majorTicksLabelDisplaySecondary'],
+                    })
+            axis.set_tick_params(which='major', **majorTickParams)
+    
+            if axisDict['minorTicksVisible']:
+                # Set the formatter and locator for the minor ticks
                 axis.set_minor_formatter(ticker.NullFormatter())
+                majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
+                minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
+                axis.set_minor_locator(ticker.MultipleLocator(minorTicksBase))
+        
+                # Set the minor tick params
+                minorTickParams = {
+                            'direction': axisDict['minorTicksDirection'],
+                            'length': axisDict['minorTicksLength'],
+                            'width': axisDict['minorTicksWidth'],
+                            'color': axisDict['minorTicksColor'],
+                            'pad': axisDict['minorTicksLabelPadding'],
+                        }
+                if axisName == 'bottomAxis':
+                    minorTickParams.update({
+                            'bottom': axisDict['minorTicksDisplayPrimary'],
+                            'top': axisDict['minorTicksDisplaySecondary'],
+                            'labelbottom': axisDict['minorTicksLabelDisplayPrimary'],
+                            'labeltop': axisDict['minorTicksLabelDisplaySecondary'],
+                        })
+                elif axisName == 'leftAxis':
+                    minorTickParams.update({
+                            'left': axisDict['minorTicksDisplayPrimary'],
+                            'right': axisDict['minorTicksDisplaySecondary'],
+                            'labelleft': axisDict['minorTicksLabelDisplayPrimary'],
+                            'labelright': axisDict['minorTicksLabelDisplaySecondary'],
+                        })
+                axis.set_tick_params(which='minor', **minorTickParams)
+        
+            else:
+                # minor ticks have been disabled
+                axis.set_minor_locator(ticker.NullLocator())
         else:
+            # major ticks have been disabled, which implies that the minor ticks have also been disabled
             axis.set_major_locator(ticker.NullLocator())
             axis.set_minor_locator(ticker.NullLocator())
+
 
         # Set font for tick labels
         if axisDict['majorTicksLabelFont'] != {}:

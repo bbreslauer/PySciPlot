@@ -5,6 +5,9 @@ class TraceListEntry():
     def __init__(self, trace):
         self._columns = 2
         self._trace = trace
+
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self._trace])])
     
     def numColumns(self):
         return self._columns
@@ -25,7 +28,4 @@ class TraceListEntry():
 
     def getTrace(self):
         return self._trace
-
-    def getPlotNum(self):
-        return self._plotNum
 

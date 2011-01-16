@@ -48,6 +48,9 @@ class Figures(QObject):
             string += "\n"
         return string
 
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.figures()])])
+
     def figures(self):
         return self._figures
 

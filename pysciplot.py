@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-import sys, string, signal, os, re, time
+import sys, string, signal, os, re, time, pickle
 
 from optparse import OptionParser
 
@@ -172,6 +172,8 @@ class pysciplot(QMainWindow):
         self.ui.workspace.addSubWindow(tableViewSubWindow)
 
         tableViewSubWindow.setVisible(True)
+        self.tv = tableViewSubWindow
+
         return tableViewSubWindow
 
     def createModulesLoadingDialog(self):
@@ -422,7 +424,7 @@ class pysciplot(QMainWindow):
     ######################
 #    def createDefaultTable(self):
 #        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
-        
+
     def printAllWaves(self):
         print self._waves
 

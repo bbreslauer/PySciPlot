@@ -41,6 +41,11 @@ class FigureObject(object):
         except KeyError:
             return None
 
+    def setMultiple(self, properties):
 
+        for (key, value) in properties.items():
+            self.set(key, value)
+
+        return True
 
 

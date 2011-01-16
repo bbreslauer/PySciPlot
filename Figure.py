@@ -20,7 +20,7 @@ class Figure(FigureObject):
     plotNum is 0-based.
     """
 
-    def __init__(self, windowTitle):
+    def __init__(self, windowTitle=""):
         
         Util.debug(2, "Figure.init", "Creating figure")
 
@@ -63,6 +63,19 @@ class Figure(FigureObject):
     def __str__(self):
         return "name: %s, rows: %s, columns: %s" % (self.get('windowTitle'), self.get('rows'), self.get('columns'))
 
+    def __reduce__(self):
+        return tuple([self.__class__, tuple(), tuple([self.properties, self.plots()])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+        plots = state[1]
+
+        self.setMultiple(properties)
+        self._plots = []
+        
+        for plot in plots:
+            self.addPlot(plot)
+
     def mplFigure(self):
         return self._figure
     
@@ -76,6 +89,10 @@ class Figure(FigureObject):
         if plotNum < self.numPlots():
             return self.plots()[plotNum]
         return None
+
+    def addPlot(self, plot):
+        self.plots().append(plot)
+        self.refreshPlots()
 
     def extendPlots(self, maxPlotNum=-1):
         """

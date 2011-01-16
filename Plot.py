@@ -37,6 +37,24 @@ class ScatterPlot(FigureObject):
         self._plot = plot
         self._traces = []
 
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._traces])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+        traces = state[1]
+        
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
+
+        for trace in traces:
+            self.addTrace(trace)
+
     def plot(self):
         return self._plot
 
@@ -164,12 +182,11 @@ class ScatterPlot(FigureObject):
         self.plot().redraw()
 
     def refresh(self):
-        self.plot().axes().cla()
-        self.update_bottomAxis()
-        self.update_leftAxis()
-
         for trace in self.traces():
             trace.refresh()
+        
+        self.update_bottomAxis()
+        self.update_leftAxis()
 
 class PieChart(FigureObject):
 
@@ -183,6 +200,20 @@ class PieChart(FigureObject):
         FigureObject.__init__(self, properties)
 
         self._plot = plot
+    
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
 
     def refresh(self):
         pass
@@ -217,6 +248,7 @@ class Plot(FigureObject):
         self.plotTypeObject = ScatterPlot(self)
 
         self.set('name', plotName)
+        self._axes = None
 
         self.mplHandles = {}
 
@@ -224,6 +256,23 @@ class Plot(FigureObject):
 
     def __str__(self):
         return "Name: %s" % (self.get('name'))
+
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.get('name')]), tuple([self.properties, self.plotTypeObject])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+        self.plotTypeObject = state[1]
+        
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+        
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
+
+        self.refresh()
 
     def axes(self):
         """
@@ -240,12 +289,14 @@ class Plot(FigureObject):
         Util.debug(3, "Plot.update_name", "")
         try:
             self.axes().texts.remove(self.mplHandles['name'])
-            pass
         except:
             pass
-
-        self.mplHandles['name'] = self.axes().set_title(self.getMpl('name'), **(self.getMpl('nameFont')))
-        self.redraw()
+        
+        try:
+            self.mplHandles['name'] = self.axes().set_title(self.getMpl('name'), **(self.getMpl('nameFont')))
+            self.redraw()
+        except:
+            pass
 
     def update_nameFont(self):
         Util.debug(3, "Plot.update_nameFont", "")
@@ -255,31 +306,38 @@ class Plot(FigureObject):
     def update_backgroundColor(self):
         Util.debug(3, "Plot.update_backgroundColor", "")
         self.axes().set_axis_bgcolor(self.getMpl('backgroundColor'))
-        self.redraw()
 
+        self.redraw()
 
     def refresh(self):
-        # Clear the axes
-        self.axes().cla()
-
-        # Update the general plot options
-        self.update_name()
-        self.update_backgroundColor()
-
-        # Check if plot type has changed, and if it has, change the plot type object
-        if not isinstance(self.plotTypeObject, self.plotTypeClasses[self.get('plotType')]):
-            self.plotTypeObject = self.plotTypeClasses[self.get('plotType')](self)
-
-
-        # Refresh the plot type object
-        self.plotTypeObject.refresh()
-
-        # Finally, redraw the canvas
-        self.redraw()
+        try:
+            # Clear the axes
+            self.axes().cla()
+    
+            # Check if plot type has changed, and if it has, change the plot type object
+            if not isinstance(self.plotTypeObject, self.plotTypeClasses[self.get('plotType')]):
+                self.plotTypeObject = self.plotTypeClasses[self.get('plotType')](self)
+    
+            # Refresh the plot type object. We do this here first because it clears
+            # the axes. If we did this after updating the general plot options,
+            # then we would lose the update_name call.
+            self.plotTypeObject.refresh()
+    
+            # Update the general plot options
+            self.update_name()
+            self.update_backgroundColor()
+    
+            # Finally, redraw the canvas
+            self.redraw()
+        except:
+            pass
 
 
     def redraw(self):
-        self.axes().figure.canvas.draw()
+        try:
+            self.axes().figure.canvas.draw()
+        except:
+            pass
 
 
 

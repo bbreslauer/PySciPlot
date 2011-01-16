@@ -59,6 +59,9 @@ class Wave(QObject):
 
         return "%s (%s, %s): %s\n" % (self._name, self._dataType, len(self._data), self._data)
 
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.name(), self.dataType(), self.data()])])
+
     def data(self, start=None, end=None):
         """
         Return a slice of the wave's internal data. Defaults to returning all

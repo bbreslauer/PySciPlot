@@ -4,7 +4,7 @@ import Util
 
 from PyQt4.QtGui import QMdiArea
 
-import xml.dom.minidom, os.path
+import xml.dom.minidom, os.path, pickle
 
 
 def writeProjectToFile(app, fileName):
@@ -58,58 +58,8 @@ def getWaves(app, dom, waveNames=[]):
     # Create and add waves object
     waves = dom.createElement("waves")
     waves.setAttribute("uniqueNames", str(app.waves().uniqueNames()))
+    waves.appendChild(dom.createTextNode(str(pickle.dumps(app.waves()))))
     p.appendChild(waves)
-
-    # Now gather all the individual wave objects and add them to the waves object
-    wavesList = []
-    if len(waveNames) == 0:
-        wavesList = app.waves().waves()
-    else:
-        for waveName in waveNames:
-            wave = app.waves().getWaveByName(waveName)
-            if wave:
-                wavesList.append(wave)
-
-    for wave in wavesList:
-        getWave(app, dom, waves, wave)
-
-def getWave(app, dom, waves, waveObj):
-    """
-    Convert a wave object into xml.
-
-    app is the pysciplot application.
-
-    dom is the main dom object.
-
-    waves is the dom object for holding all the waves.
-
-    waveObj is the wave object that we are converting.
-    """
-
-    Util.debug(1, "Save", "Getting a wave")
-
-    wave = dom.createElement("wave")
-    dataType = waveObj.dataType()
-    wave.setAttribute("dataType", dataType)
-    waves.appendChild(wave)
-
-    name = dom.createElement("name")
-    name.appendChild(dom.createTextNode(str(waveObj.name())))
-    wave.appendChild(name)
-    
-    data = dom.createElement("data")
-    wave.appendChild(data)
-
-    dataList = waveObj.data()
-    dataString = ""
-    for element in dataList:
-        if dataType == "String":
-            dataString += str(element).encode('base64_codec')
-        else:
-            dataString += str(element)
-        dataString += " "
-
-    data.appendChild(dom.createTextNode(str(dataString)))
 
 def getTables(app, dom, appWindowList, tablesList=[]):
     """
@@ -211,22 +161,8 @@ def getFigures(app, dom, appWindowList, figuresList=[]):
     for figure in figuresList:
         getFigure(app, dom, appWindowList, figures, figure)
 
+
 def getFigure(app, dom, appWindowList, figures, figureObj):
-    """
-    Convert a figure object into xml.
-
-    app is the pysciplot application.
-
-    dom is the main dom object.
-
-    appWindowList is a list of the windows in the mdi area, so that we
-    can determine the order of the windows.
-    
-    figures is the dom object for holding all the figures.
-
-    figureObj is the figure object that we are converting.
-    """
-
     Util.debug(1, "Save", "Getting a figure")
 
     figure = dom.createElement("figure")
@@ -238,55 +174,8 @@ def getFigure(app, dom, appWindowList, figures, figureObj):
     figure.setAttribute("height", str(figureObj._figureSubWindow.height()))
     figure.setAttribute("xpos", str(figureObj._figureSubWindow.x()))
     figure.setAttribute("ypos", str(figureObj._figureSubWindow.y()))
-    
-    # Get all the figure properties
-    for propName in figureObj.properties.keys():
-        propValue = figureObj.get(propName)
-        prop = dom.createElement(str(propName))
-        prop.appendChild(dom.createTextNode(str(propValue)))
-        figure.appendChild(prop)
 
-    # Get the plots
-    plots = dom.createElement("plots")
-    figure.appendChild(plots)
-
-    for plotNum, plotObj in enumerate(figureObj.plots()):
-        plot = dom.createElement("plot")
-        plots.appendChild(plot)
-        
-        prop = dom.createElement("plotNum")
-        prop.appendChild(dom.createTextNode(str(plotNum)))
-        plot.appendChild(prop)
-
-        for propName in plotObj.properties.keys():
-            propValue = plotObj.get(propName)
-            prop = dom.createElement(str(propName))
-            prop.appendChild(dom.createTextNode(str(propValue)))
-            plot.appendChild(prop)
-
-        # Get the traces
-        traces = dom.createElement("traces")
-        plot.appendChild(traces)
-
-        for traceObj in plotObj.traces():
-            trace = dom.createElement("trace")
-            traces.appendChild(trace)
-
-            xWave = dom.createElement("xWave")
-            xWave.appendChild(dom.createTextNode(str(traceObj.xName())))
-            trace.appendChild(xWave)
-
-            yWave = dom.createElement("yWave")
-            yWave.appendChild(dom.createTextNode(str(traceObj.yName())))
-            trace.appendChild(yWave)
-
-            for propName in traceObj.properties.keys():
-                propValue = traceObj.get(propName)
-                prop = dom.createElement(str(propName))
-                prop.appendChild(dom.createTextNode(str(propValue)))
-                trace.appendChild(prop)
+    figure.appendChild(dom.createTextNode(str(pickle.dumps(figureObj))))
 
     figures.appendChild(figure)
-
-
 

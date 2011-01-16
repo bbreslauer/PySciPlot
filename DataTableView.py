@@ -10,12 +10,7 @@ from ui.Ui_RenameWaveDialog import Ui_RenameWaveDialog
 class DataTableView(QTableView):
     """
     This is the actual view for the DataTableModel.
-
-    Signals that are emitted from this class are:
     """
-
-    # Signals
-
 
     def __init__(self, model, parent, nameIn, *args):
         """

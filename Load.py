@@ -1,7 +1,7 @@
 # Functions for loading from files
 import Util
 
-import xml.dom.minidom, os.path
+import xml.dom.minidom, os.path, pickle
 
 from PyQt4.QtCore import Qt
 
@@ -72,33 +72,9 @@ def loadWaves(app, waves):
     """
     
     Util.debug(1, "Load", "Loading waves from file")
-
-    waveList = waves.getElementsByTagName("wave")
-    
-    for wave in waveList:
-        dataType = str(wave.attributes["dataType"].value.strip())
-
-        # Get wave from xml
-        child = wave.firstChild
-        while child is not None:
-            if child.nodeType is child.ELEMENT_NODE:
-                if child.nodeName == "name":
-                    name = str(child.firstChild.data.strip())
-                elif child.nodeName == "data":
-                    data = child.firstChild.data.strip()
-
-            # Move on to next child
-            child = child.nextSibling
-
-        if dataType == "Integer":
-            dataList = map(int, data.split())
-        elif dataType == "Decimal":
-            dataList = map(float, data.split())
-        elif dataType == "String":
-            dataList = map(lambda x: x.decode('base64_codec'), map(str, data.split()))
-        
-        # Load wave into application
-        app.waves().addWave(Wave(name, dataType, dataList))
+    wavesObj = pickle.loads(str(waves.firstChild.data.strip()))
+    for wave in wavesObj.waves():
+        app.waves().addWave(wave)
 
 def loadTables(app, tables, stackingOrder):
     """
@@ -155,36 +131,15 @@ def loadFigures(app, figures, stackingOrder):
 
     for figure in figureList:
         figureAttrs = {} # QT attributes
-        figureProps = {} # internal figure properties
-        plots = []
 
         # Get attributes for the figure
         for attrName in figure.attributes.keys():
             figureAttrs[attrName] = int(figure.attributes[attrName].value.strip())
 
         # Get figure from xml
-        child = figure.firstChild
-        while child is not None:
-            if child.nodeType is child.ELEMENT_NODE:
-                Util.debug(3, "Load.loadFigures", "Loading " + str(child.nodeName))
-                if child.nodeName == "plots":
-                    plots = loadPlots(app, child)
-                else:
-                    figureProps[child.nodeName] = str(child.firstChild.data.strip())
-
-            # Move on to next child
-            child = child.nextSibling
-
-        # Load figure into application
-        figureObj = Figure("NoName")
-        actualFigureProps = figureObj.properties.keys()
-        for (key, value) in figureProps.items():
-            if key in actualFigureProps:
-                figureObj.set_(key, value)
-
-        figureObj._plots = plots
-
-        figureWindow = app.figures().addFigure(figureObj).get("figureSubWindow")
+        pickledFigure = figure.firstChild.data.strip()
+        figureObj = pickle.loads(str(pickledFigure))
+        figureWindow = app.figures().addFigure(figureObj)._figureSubWindow
 
         # Reset QT widget values
         figureWindow.setWindowState(Qt.WindowState(figureAttrs["windowState"]))
@@ -195,99 +150,4 @@ def loadFigures(app, figures, stackingOrder):
         if figureAttrs["stackingOrder"] >= len(stackingOrder):
             stackingOrder.extend([None] * (figureAttrs["stackingOrder"] - len(stackingOrder) + 1))
         stackingOrder[figureAttrs["stackingOrder"]] = figureWindow
-
-        # Refresh figure
-        #figureObj.refresh()
-
-def loadPlots(app, plots):
-    """
-    Convert plots in xml to plot objects.
-    """
-
-    Util.debug(1, "Load", "Loading plots from file")
-
-    plotList = plots.getElementsByTagName("plot")
-    plotsObjList = [''] * len(plotList)
-
-    for plot in plotList:
-        plotProps = {} # internal plot properties
-        traces = []
-
-        # Get plot from xml
-        child = plot.firstChild
-        while child is not None:
-            if child.nodeType is child.ELEMENT_NODE:
-                try:
-                    Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName) + "=" + str(child.firstChild.data.strip()))
-                except:
-                    Util.debug(3, "Load.loadPlots", "Loading " + str(child.nodeName))
-                if child.nodeName == "traces":
-                    traces = loadTraces(app, child)
-                else:
-                    plotProps[child.nodeName] = str(child.firstChild.data.strip())
-
-            # Move on to next child
-            child = child.nextSibling
-
-        # Create plot
-        plotObj = Plot()
-        actualPlotProps = plotObj.properties.keys()
-        for (key, value) in plotProps.items():
-            if key in actualPlotProps:
-                plotObj.set_(key, value)
-
-        for trace in traces:
-            plotObj.addTrace(trace)
-
-        plotsObjList[plotProps["plotNum"]] = plotObj
-
-    return plotsObjList
-
-def loadTraces(app, traces):
-    """
-    Convert traces in xml to trace objects.
-    """
-
-    Util.debug(1, "Load", "Loading traces from file")
-
-    traceList = traces.getElementsByTagName("trace")
-    tracesObjList = []
-
-    for trace in traceList:
-        traceProps = {} # internal trace properties
-        xWave = ""
-        yWave = ""
-
-        # Get trace from xml
-        child = trace.firstChild
-        while child is not None:
-            if child.nodeType is child.ELEMENT_NODE:
-                Util.debug(3, "Load.loadTraces", "Loading " + str(child.nodeName))
-                if child.nodeName == "xWave":
-                    xWave = app.waves().getWaveByName(str(child.firstChild.data.strip()))
-                elif child.nodeName == "yWave":
-                    yWave = app.waves().getWaveByName(str(child.firstChild.data.strip()))
-                else:
-                    traceProps[child.nodeName] = str(child.firstChild.data.strip())
-
-            # Move on to next child
-            child = child.nextSibling
-
-        # Create trace
-        traceObj = Trace(xWave, yWave)
-        actualtraceProps = traceObj.properties.keys()
-        for (key, value) in traceProps.items():
-            if key in actualtraceProps:
-                traceObj.set_(key, value)
-
-        tracesObjList.append(traceObj)
-
-    return tracesObjList
-
-
-
-
-
-
-
 

@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QColor
+from PyQt4.QtGui import QColor, QApplication
 
 import Util, Property
 
@@ -19,8 +19,10 @@ class Trace(FigureObject):
             'pointMarkerSize':         'markersize',
             }
 
-    def __init__(self, x=None, y=None):
+    def __init__(self, x=None, y=None, plot=None):
         Util.debug(2, "Trace.init", "Creating trace")
+        
+        self._app = QApplication.instance().window
 
         properties = {
             'lineColor':               Property.Color(QColor(255,0,0,255)),
@@ -38,9 +40,38 @@ class Trace(FigureObject):
         self.initializeVariables()
         self.setX(x)
         self.setY(y)
-        self.setPlot(None)
+        self.setPlot(plot)
 
         self.getFormat()
+
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.x(), self.y(), self.plot()]), tuple([self.properties])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
+
+        # Connect the waves that were saved in this pickle to the application
+        appX = self._app.waves().getWaveByName(self.xName())
+        if appX:
+            self.setX(appX)
+        else:
+            self._app.waves().addWave(self.x())
+
+        appY = self._app.waves().getWaveByName(self.yName())
+        if appY:
+            self.setY(appY)
+        else:
+            self._app.waves().addWave(self.y())
+
+        self.plot().refresh()
 
     def initializeVariables(self):
         Util.debug(3, "Trace.initializeVariables", "Initializing variables")
@@ -121,13 +152,20 @@ class Trace(FigureObject):
         if self.plot() is None:
             return
 
+        # Remove the line if it exists
         try:
             self._line.remove()
         except:
             pass
+
+        # If the axes object does not yet exist in the plot object, then
+        # we cannot plot anything
+        try:
+            self._line = self.plot().axes().plot(x, y, **(self.getFormat()))[0]
+            self.plot().redraw()
+        except:
+            return
         
-        self._line = self.plot().axes().plot(x, y, **(self.getFormat()))[0]
-        self.plot().redraw()
 
 
         

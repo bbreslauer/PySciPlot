@@ -44,6 +44,9 @@ class Waves(QObject):
             string += str(wave)
         return string
 
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.waves(), self.uniqueNames()])])
+
     def waves(self):
         """Return the waves list."""
         return self._waves

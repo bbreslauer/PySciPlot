@@ -64,7 +64,7 @@ class ScatterPlot(FigureObject):
     def addTrace(self, trace):
         trace.setPlot(self.plot())
         self._traces.append(trace)
-        trace.refresh()
+        self.refresh()
 
     def removeTrace(self, trace):
         self._traces.remove(trace)
@@ -72,11 +72,17 @@ class ScatterPlot(FigureObject):
 
     def update_bottomAxis(self):
         Util.debug(3, "ScatterPlot.update_bottomAxis", "")
-        self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
+        try:
+            self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
+        except:
+            pass
 
     def update_leftAxis(self):
         Util.debug(3, "ScatterPlot.update_leftAxis", "")
-        self.update_axis('leftAxis', self.plot().axes().get_yaxis())
+        try:
+            self.update_axis('leftAxis', self.plot().axes().get_yaxis())
+        except:
+            pass
 
     def update_axis(self, axisName, axis):
         axisDict = self.getMpl(axisName)

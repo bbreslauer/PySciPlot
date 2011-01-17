@@ -5,7 +5,7 @@ import os, csv, array, struct
 import Util
 from Wave import Wave
 from Module import Module
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from ui.Ui_ImportBinary import Ui_ImportBinary
 
 class ImportBinary(Module):
@@ -114,7 +114,7 @@ class ImportBinary(Module):
 
 
     def load(self):
-        self.window = DialogSubWindow(self._app.ui.workspace)
+        self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionImportBinary")

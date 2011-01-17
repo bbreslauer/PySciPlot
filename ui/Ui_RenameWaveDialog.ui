@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>RenameWaveDialog</class>
- <widget class="QDialog" name="RenameWaveDialog">
+ <widget class="QWidget" name="RenameWaveDialog">
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>

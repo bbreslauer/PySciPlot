@@ -3,7 +3,7 @@ from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 import os, pickle
 
 import Util, Property
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from ui.Ui_Preferences import Ui_Preferences
 
 class Preferences():
@@ -44,7 +44,7 @@ class Preferences():
         self._ui.projectDirectoryButton.clicked.connect(self.projectDirectorySelector)
         self._ui.textOptions.clicked.connect(self._ui.textOptions.showTextOptionsDialog)
 
-        self._window = DialogSubWindow(self._app.ui.workspace)
+        self._window = SubWindow(self._app.ui.workspace)
         self._window.setWidget(self._widget)
         self._widget.setParent(self._window)
 

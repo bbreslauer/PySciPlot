@@ -21,7 +21,7 @@ class Module():
 
         Add a window with the following:
 
-        self.windowName = DialogSubWindow(self._app.ui.workspace)
+        self.windowName = SubWindow(self._app.ui.workspace)
         self.windowName.setWidget(self._widget)
         self._widget.setParent(self.windowName)
 

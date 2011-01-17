@@ -2,7 +2,7 @@ from PyQt4.QtGui import QPushButton, QDialog, QDialogButtonBox, QColor, QApplica
 
 import matplotlib.font_manager as fm
 
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from ui.Ui_TextOptionsDialog import *
 from gui.QTextOptionsDialog import *
 
@@ -29,7 +29,7 @@ class QTextOptionsButton(QPushButton):
         self._ui.setupUi(self._dialog)
         self._dialog.setUiObject(self._ui)
 
-        self._window = DialogSubWindow(self._app.ui.workspace)
+        self._window = SubWindow(self._app.ui.workspace)
         self._window.setWidget(self._dialog)
         self._dialog.setParent(self._window)
         

@@ -6,7 +6,7 @@ import os, csv
 import Util
 from Wave import Wave
 from Module import Module
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from ui.Ui_ImportCSV import Ui_ImportCSV
 
 class ImportCSV(Module):
@@ -212,7 +212,7 @@ class ImportCSV(Module):
 
 
     def load(self):
-        self.window = DialogSubWindow(self._app.ui.workspace)
+        self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionImportCSV")

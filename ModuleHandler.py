@@ -1,4 +1,4 @@
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 
 class ModuleHandler():
     """
@@ -10,7 +10,7 @@ class ModuleHandler():
 
     def addWidgetToWindow(self, widget, subWindow):
         """
-        Encapsulate a widget in a DialogSubWindow (basically a QMdiSubWindow) and
+        Encapsulate a widget in a SubWindow (basically a QMdiSubWindow) and
         then add it to the QMdiArea.
         """
 

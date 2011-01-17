@@ -4,7 +4,7 @@ from PyQt4.QtGui import QWidget, QAction, QMessageBox
 from Wave import *
 from Module import *
 from Figure import *
-from DialogSubWindow import *
+from gui.SubWindows import *
 from models.FigureListModel import *
 from gui.QFigureOptionsWidget import *
 from gui.QPlotOptionsWidget import *
@@ -151,7 +151,7 @@ class EditFigureDialog(Module):
         return menu
 
     def load(self):
-        self.window = DialogSubWindow(self._app.ui.workspace)
+        self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionEditFiguresDialog")

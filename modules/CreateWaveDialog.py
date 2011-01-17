@@ -7,7 +7,7 @@ from numpy import *
 
 import Util
 from Wave import Wave
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_CreateWaveDialog import Ui_CreateWaveDialog
@@ -183,7 +183,7 @@ class CreateWaveDialog(Module):
         return True
 
     def load(self):
-        self.window = DialogSubWindow(self._app.ui.workspace)
+        self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionCreateWaveDialog")

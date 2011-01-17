@@ -21,8 +21,8 @@ from Waves import Waves
 from Figure import Figure
 from Figures import Figures
 from TraceListEntry import TraceListEntry
-from DataTableView import DataTableView
-from DialogSubWindow import DialogSubWindow
+from gui.DataTableView import DataTableView
+from gui.SubWindows import SubWindow
 from gui.SubWindows import DataTableSubWindow
 from Preferences import Preferences
 from models.FigureListModel import FigureListModel
@@ -172,7 +172,6 @@ class pysciplot(QMainWindow):
         self.ui.workspace.addSubWindow(tableViewSubWindow)
 
         tableViewSubWindow.setVisible(True)
-        self.tv = tableViewSubWindow
 
         return tableViewSubWindow
 
@@ -195,7 +194,7 @@ class pysciplot(QMainWindow):
         ui.modulesList.setModel(model)
 
         # Create window for this dialog
-        self.modulesLoadingDialog = DialogSubWindow(self.ui.workspace)
+        self.modulesLoadingDialog = SubWindow(self.ui.workspace)
         self.ui.workspace.addSubWindow(self.modulesLoadingDialog)
         self.modulesLoadingDialog.setWidget(widget)
         widget.setParent(self.modulesLoadingDialog)

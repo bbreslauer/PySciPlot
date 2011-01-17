@@ -3,7 +3,7 @@ from PyQt4.QtCore import Qt
 
 import Util
 from Wave import Wave
-from DialogSubWindow import DialogSubWindow
+from gui.SubWindows import SubWindow
 from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_ManageWavesDialog import Ui_ManageWavesDialog
@@ -106,7 +106,7 @@ class ManageWavesDialog(Module):
 
 
     def load(self):
-        self.window = DialogSubWindow(self._app.ui.workspace)
+        self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionManageWavesDialog")

@@ -93,7 +93,7 @@
    <extends>QPushButton</extends>
    <header>gui/QTextOptionsButton</header>
    <slots>
-    <slot>showTextOptionsDialog()</slot>
+    <slot>showTextOptionsWidget()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -106,5 +106,22 @@
   <tabstop>buttons</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>textOptions</sender>
+   <signal>clicked()</signal>
+   <receiver>textOptions</receiver>
+   <slot>showTextOptionsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

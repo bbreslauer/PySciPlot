@@ -1,10 +1,10 @@
-from PyQt4.QtGui import QPushButton, QDialog, QDialogButtonBox, QColor, QApplication
+from PyQt4.QtGui import QPushButton, QDialogButtonBox, QColor, QApplication
 
 import matplotlib.font_manager as fm
 
 from gui.SubWindows import SubWindow
-from ui.Ui_TextOptionsDialog import *
-from gui.QTextOptionsDialog import *
+from ui.Ui_TextOptionsWidget import *
+from gui.QTextOptionsWidget import *
 
 import Util, Property
 
@@ -24,8 +24,8 @@ class QTextOptionsButton(QPushButton):
                 self.setTextOptions(preferenceTextOptions)
 
         # Create dialog
-        self._dialog = QTextOptionsDialog(self)
-        self._ui = Ui_TextOptionsDialog()
+        self._dialog = QTextOptionsWidget(self)
+        self._ui = Ui_TextOptionsWidget()
         self._ui.setupUi(self._dialog)
         self._dialog.setUiObject(self._ui)
 
@@ -33,7 +33,7 @@ class QTextOptionsButton(QPushButton):
         self._window.setWidget(self._dialog)
         self._dialog.setParent(self._window)
         
-        self.hideTextOptionsDialog()
+        self.hideTextOptionsWidget()
         
         # Create font list from matplotlib fonts
         fontPropList = fm.createFontList(fm.findSystemFonts())
@@ -52,7 +52,7 @@ class QTextOptionsButton(QPushButton):
         return self.textOptions.get()[option]
 
     def getTextOptions(self):
-        return self.textOptions
+        return Property.TextOptions(self.textOptions)
 
     def setTextOptions(self, textOptions={}):
         """
@@ -60,7 +60,7 @@ class QTextOptionsButton(QPushButton):
         """
         self.textOptions.set(textOptions)
 
-    def showTextOptionsDialog(self):
+    def showTextOptionsWidget(self):
         """
         Create a dialog box to select a font and text options.
         """
@@ -68,7 +68,7 @@ class QTextOptionsButton(QPushButton):
         self._dialog.resetUi()
         self._window.show()
     
-    def hideTextOptionsDialog(self):
+    def hideTextOptionsWidget(self):
         self._window.hide()
     
 

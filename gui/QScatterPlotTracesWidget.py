@@ -8,6 +8,8 @@ from QEditFigureSubWidget import *
 
 class QScatterPlotTracesWidget(QEditFigureSubWidget):
 
+    properties = Trace.mplNames.keys()
+
     def __init__(self, plotOptionsWidget, *args):
         QEditFigureSubWidget.__init__(self, *args)
 
@@ -108,8 +110,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self.refreshTraceList()
 
     def saveOptionsToTrace(self, trace):
-        for option in trace.properties.keys():
-            trace.set(option, Util.getWidgetValue(self.getChild(option)))
+        trace.setMultiple(self.getCurrentUi())
 
     def saveOptionsToSelectedTraces(self):
         indexes = self.getChild('traceTableView').selectedIndexes()
@@ -123,8 +124,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             self.saveOptionsToTrace(trace)
 
     def setUiToTrace(self, trace):
-        for option in trace.properties.keys():
-            Util.setWidgetValue(self.getChild(option), trace.get(option))
+        self.setCurrentUi(trace.properties)
 
     def selectedTraceChanged(self, newIndex, oldIndex):
         self.setUiToTrace(newIndex.internalPointer().getTrace())

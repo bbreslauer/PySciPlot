@@ -1,5 +1,6 @@
 from PyQt4.QtGui import QWidget, QApplication, QDialogButtonBox
 
+from Property import Property
 import Util
 
 class QEditFigureSubWidget(QWidget):
@@ -23,6 +24,28 @@ class QEditFigureSubWidget(QWidget):
     def setEditFigureDialogModule(self, module):
         self._editFigureDialogModule = module
 
+    def getCurrentUi(self):
+        """
+        Take the current UI values and return them.
+        """
+
+        currentProperties = {}
+        for property in self.properties:
+            currentProperties[property] = Util.getWidgetValue(self.getChild(property))
+
+        return currentProperties
+
+    def setCurrentUi(self, properties):
+        """
+        Set the current UI to the pass properties.
+        """
+
+        for (key, value) in properties.items():
+            if isinstance(value, Property):
+                Util.setWidgetValue(self.getChild(key), value.get())
+            else:
+                Util.setWidgetValue(self.getChild(key), value)
+
     def saveUi(self):
         """Save the UI data to the current internal object."""
         pass
@@ -37,6 +60,12 @@ class QEditFigureSubWidget(QWidget):
     def resetClicked(self):
         self.resetUi()
 
+    def okClikced(self):
+        pass
+
+    def cancelClicked(self):
+        pass
+
     def buttonClickHandler(self, button):
         standardButton = self.getChild('buttons').standardButton(button)
         if standardButton == QDialogButtonBox.Apply:
@@ -47,6 +76,20 @@ class QEditFigureSubWidget(QWidget):
             self.okClicked()
         elif standardButton == QDialogButtonBox.Cancel:
             self.cancelClicked()
+
+
+    def resizeEvent(self, event):
+        QWidget.resizeEvent(self, event)
+
+        # Resize the stored settings widget to the proper height
+        # since it is floating and not in a layout.
+        try:
+            self.getChild('storedSettingsButton').storedSettingsWidget.resetGeometry()
+        except AttributeError:
+            # this widget has not been created yet
+            pass
+        
+
 
 
 

@@ -57,6 +57,9 @@ class pysciplot(QMainWindow):
         self._loadedModules = {}
         self.projectDir = "" # current project directory
         self.setCurrentProject("")
+        self._storedSettings = {}   # this is a dict with widgetName: list pairs
+                                    # where each list has [setting-name, setting-value] pairs
+                                    # setting-value is a dict with (property-name: Property) pairs
 
         # Let the workspace resize when the main window is resized
         self.setCentralWidget(self.ui.workspace)
@@ -107,6 +110,12 @@ class pysciplot(QMainWindow):
         Return the app's Figures object.  NOT A LIST OF FIGURES.
         """
         return self._figures
+
+    def storedSettings(self):
+        """
+        Return the storedSettings dict.
+        """
+        return self._storedSettings
 
     def loadModule(self, moduleName):
         """
@@ -425,7 +434,8 @@ class pysciplot(QMainWindow):
 #        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
 
     def printAllWaves(self):
-        print self._waves
+        #print self._waves
+        print self.storedSettings()
 
     def printAllFigures(self):
         print self._figures

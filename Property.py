@@ -207,7 +207,7 @@ class Dictionary(Property):
     castType = dict
 
     def keys(self):
-        return self.get().keys()
+        return Property.get(self).keys()
 
     def _setValue(self, newValue):
         """

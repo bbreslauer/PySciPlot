@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>300</height>
+    <width>434</width>
+    <height>318</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -209,14 +209,14 @@ color: rgb(0, 0, 0);
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="4">
+   <item row="7" column="0" colspan="5">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="3" column="4">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -245,9 +245,50 @@ color: rgb(0, 0, 0);
      </property>
     </spacer>
    </item>
+   <item row="0" column="3" rowspan="7">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsWidget()</slot>
+   </slots>
+  </customwidget>
   <customwidget>
    <class>QColorButton</class>
    <extends>QPushButton</extends>
@@ -257,11 +298,11 @@ color: rgb(0, 0, 0);
    </slots>
   </customwidget>
   <customwidget>
-   <class>QTextOptionsButton</class>
-   <extends>QPushButton</extends>
-   <header>gui/QTextOptionsButton</header>
+   <class>QStoredSettingsButton</class>
+   <extends>QToolButton</extends>
+   <header>gui/QStoredSettingsButton</header>
    <slots>
-    <slot>showTextOptionsDialog()</slot>
+    <slot>toggleWidget()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -291,12 +332,12 @@ color: rgb(0, 0, 0);
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>149</y>
+     <x>257</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>197</x>
-     <y>146</y>
+     <x>257</x>
+     <y>194</y>
     </hint>
    </hints>
   </connection>
@@ -304,11 +345,11 @@ color: rgb(0, 0, 0);
    <sender>titleFont</sender>
    <signal>clicked()</signal>
    <receiver>titleFont</receiver>
-   <slot>showTextOptionsDialog()</slot>
+   <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>339</x>
-     <y>49</y>
+     <x>378</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>365</x>
@@ -323,12 +364,28 @@ color: rgb(0, 0, 0);
    <slot>buttonClickHandler(QAbstractButton*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>238</x>
-     <y>218</y>
+     <x>247</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
      <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>storedSettingsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>storedSettingsButton</receiver>
+   <slot>toggleWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>412</x>
+     <y>121</y>
     </hint>
    </hints>
   </connection>

@@ -4,8 +4,18 @@ from QEditFigureSubWidget import *
 from QScatterPlotTypeWidget import *
 from models.PlotListModel import *
 from ui.Ui_PlotTypeWidget import *
+from ui.Ui_StoredSettingsWidget import *
+from gui.QStoredSettingsWidget import *
+from gui.SubWindows import SubWindow
 
 class QPlotOptionsWidget(QEditFigureSubWidget):
+
+    properties = (
+                'name',
+                'nameFont',
+                'backgroundColor',
+                'plotType',
+            )
 
     def __init__(self, *args):
         QEditFigureSubWidget.__init__(self, *args)
@@ -33,6 +43,8 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         piePlotWidgetUi.setupUi(self.piePlotWidget)
         self.getChild('plotTypeStack').addWidget(self.piePlotWidget)
         self.getChild('plotType').addItem('Pie Chart')
+
+        self.getChild('plotType').setCurrentRow(0)
 
     def changeCurrentPlot(self, index):
         if index < 0:
@@ -66,9 +78,7 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
     def saveUi(self):
         """Save the UI data to the current Plot object."""
         
-        currentPlot = self.currentPlot()
-        for option in currentPlot.properties.keys():
-            currentPlot.set(option, Util.getWidgetValue(self.getChild(option)))
+        self.currentPlot().setMultiple(self.getCurrentUi())
 
     def resetUi(self):
         """
@@ -77,12 +87,7 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         Any unknown widget types will be discarded.
         """
         
-        currentPlot = self.currentPlot()
-        for option in currentPlot.properties.keys():
-            try:
-                Util.setWidgetValue(self.getChild(option), currentPlot.get(option))
-            except UnknownWidgetTypeError:
-                pass
+        self.setCurrentUi(self.currentPlot().properties)
 
         # Change the plot type widget that is shown based on the type of plot
         # that is currently selected (scatter, pie, etc)

@@ -25,7 +25,8 @@ class Figure(FigureObject):
         Util.debug(2, "Figure.init", "Creating figure")
 
         # Properties
-        self.properties = {  
+        #self.properties = {  
+        properties = {  
                             'windowTitle':        Property.String(''),
                             'title':              Property.String(''),
                             'titleFont':          Property.TextOptions({'size': 20, 'rotation': 'horizontal', 'verticalalignment': 'top'}),
@@ -47,7 +48,8 @@ class Figure(FigureObject):
         self._canvas.setParent(self._figureSubWindow)
         self.showFigure()
         
-        FigureObject.__init__(self, self.properties)
+        #FigureObject.__init__(self, self.properties)
+        FigureObject.__init__(self, properties)
 
         self.set('windowTitle', windowTitle)
 

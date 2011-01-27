@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
+    <width>469</width>
     <height>360</height>
    </rect>
   </property>
@@ -657,6 +657,39 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -666,6 +699,14 @@ color: rgb(255, 255, 255);</string>
    <header>gui/QColorButton</header>
    <slots>
     <slot>createColorDialog()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QStoredSettingsButton</class>
+   <extends>QToolButton</extends>
+   <header>gui/QStoredSettingsButton</header>
+   <slots>
+    <slot>toggleWidget()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -761,8 +802,8 @@ color: rgb(255, 255, 255);</string>
      <y>232</y>
     </hint>
     <hint type="destinationlabel">
-     <x>383</x>
-     <y>236</y>
+     <x>379</x>
+     <y>243</y>
     </hint>
    </hints>
   </connection>
@@ -779,6 +820,22 @@ color: rgb(255, 255, 255);</string>
     <hint type="destinationlabel">
      <x>378</x>
      <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>storedSettingsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>storedSettingsButton</receiver>
+   <slot>toggleWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>409</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>113</y>
     </hint>
    </hints>
   </connection>

@@ -42,7 +42,7 @@ class Preferences():
         self._ui.buttons.button(QDialogButtonBox.Cancel).clicked.connect(self.hideDialog)
         self._ui.defaultDirectoryButton.clicked.connect(self.defaultDirectorySelector)
         self._ui.projectDirectoryButton.clicked.connect(self.projectDirectorySelector)
-        self._ui.textOptions.clicked.connect(self._ui.textOptions.showTextOptionsDialog)
+        #self._ui.textOptions.clicked.connect(self._ui.textOptions.showTextOptionsDialog)
 
         self._window = SubWindow(self._app.ui.workspace)
         self._window.setWidget(self._widget)

@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>422</height>
+    <width>593</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="0" colspan="2">
+   <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="minimumSize">
       <size>
@@ -28,7 +28,7 @@
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0">
        <widget class="QCheckBox" name="visible">
         <property name="enabled">
@@ -73,7 +73,7 @@
        <widget class="QLineEdit" name="label"/>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_14">
+       <widget class="QLabel" name="label_19">
         <property name="text">
          <string>Label</string>
         </property>
@@ -90,21 +90,21 @@
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QLabel" name="label_17">
+       <widget class="QLabel" name="label_20">
         <property name="text">
          <string>Minimum</string>
         </property>
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QLabel" name="label_16">
+       <widget class="QLabel" name="label_21">
         <property name="text">
          <string>Type</string>
         </property>
        </widget>
       </item>
       <item row="2" column="4">
-       <widget class="QLabel" name="label_18">
+       <widget class="QLabel" name="label_22">
         <property name="text">
          <string>Maximum</string>
         </property>
@@ -140,7 +140,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="3" column="1">
     <widget class="QGroupBox" name="minorTicksVisible">
      <property name="title">
       <string>Minor Ticks</string>
@@ -148,9 +148,9 @@
      <property name="checkable">
       <bool>true</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,0,0,0">
       <item row="5" column="0">
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="label_23">
         <property name="text">
          <string>Direction</string>
         </property>
@@ -174,7 +174,7 @@
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QLabel" name="label_11">
+       <widget class="QLabel" name="label_24">
         <property name="text">
          <string>Color</string>
         </property>
@@ -195,7 +195,7 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="4" column="0" colspan="2">
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="label_25">
         <property name="text">
          <string>Distance between
 tick and label</string>
@@ -222,7 +222,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QLabel" name="label_12">
+       <widget class="QLabel" name="label_26">
         <property name="text">
          <string>Number</string>
         </property>
@@ -232,7 +232,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="6" column="0">
-       <widget class="QLabel" name="label_10">
+       <widget class="QLabel" name="label_27">
         <property name="text">
          <string>Length</string>
         </property>
@@ -242,7 +242,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="label_28">
         <property name="text">
          <string>Width</string>
         </property>
@@ -252,7 +252,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="label_42">
+       <widget class="QLabel" name="label_43">
         <property name="text">
          <string>Tick Label Format</string>
         </property>
@@ -265,18 +265,18 @@ tick and label</string>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_13">
+       <widget class="QLabel" name="label_29">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item row="11" column="0" colspan="2">
-       <widget class="QGroupBox" name="groupBox_5">
+       <widget class="QGroupBox" name="groupBox_7">
         <property name="title">
          <string>Ticks on (axis)</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -310,11 +310,11 @@ tick and label</string>
        </widget>
       </item>
       <item row="11" column="2" colspan="2">
-       <widget class="QGroupBox" name="groupBox_6">
+       <widget class="QGroupBox" name="groupBox_8">
         <property name="title">
          <string>Labels on (axis)</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_6">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -363,7 +363,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="3" column="2" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1">
         <item>
          <widget class="QLineEdit" name="minorTicksLabelFormat">
           <property name="text">
@@ -395,7 +395,7 @@ tick and label</string>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="3" column="0">
     <widget class="QGroupBox" name="majorTicksVisible">
      <property name="title">
       <string>Major Ticks</string>
@@ -403,7 +403,7 @@ tick and label</string>
      <property name="checkable">
       <bool>true</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout_7">
       <item row="0" column="0" colspan="2">
        <widget class="QRadioButton" name="useMajorTicksSpacing">
         <property name="layoutDirection">
@@ -451,7 +451,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="label_41">
+       <widget class="QLabel" name="label_44">
         <property name="text">
          <string>Tick Label Format</string>
         </property>
@@ -464,7 +464,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="4" column="0" colspan="2">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="label_30">
         <property name="text">
          <string>Distance between
 tick and label</string>
@@ -485,7 +485,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="label_31">
         <property name="text">
          <string>Direction</string>
         </property>
@@ -509,7 +509,7 @@ tick and label</string>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="label_32">
         <property name="text">
          <string>Color</string>
         </property>
@@ -530,7 +530,7 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="7" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="label_33">
         <property name="text">
          <string>Length</string>
         </property>
@@ -547,7 +547,7 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="7" column="2">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_34">
         <property name="text">
          <string>Width</string>
         </property>
@@ -564,11 +564,11 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="9" column="0" colspan="2">
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="groupBox_9">
         <property name="title">
          <string>Ticks on (axis)</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_7">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -602,11 +602,11 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="9" column="2" colspan="2">
-       <widget class="QGroupBox" name="groupBox_4">
+       <widget class="QGroupBox" name="groupBox_10">
         <property name="title">
          <string>Labels on (axis)</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout_8">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -637,7 +637,7 @@ color: rgb(255, 255, 255);</string>
        </widget>
       </item>
       <item row="3" column="2" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1">
         <item>
          <widget class="QLineEdit" name="majorTicksLabelFormat">
           <property name="text">
@@ -669,9 +669,54 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
+   <item row="2" column="2" rowspan="2">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
+  <zorder>groupBox</zorder>
+  <zorder>minorTicksVisible</zorder>
+  <zorder>majorTicksVisible</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsWidget()</slot>
+   </slots>
+  </customwidget>
   <customwidget>
    <class>QColorButton</class>
    <extends>QPushButton</extends>
@@ -681,175 +726,45 @@ color: rgb(255, 255, 255);</string>
    </slots>
   </customwidget>
   <customwidget>
-   <class>QTextOptionsButton</class>
-   <extends>QPushButton</extends>
-   <header>gui/QTextOptionsButton</header>
+   <class>QStoredSettingsButton</class>
+   <extends>QToolButton</extends>
+   <header>gui/QStoredSettingsButton</header>
    <slots>
-    <slot>showTextOptionsDialog()</slot>
+    <slot>toggleWidget()</slot>
    </slots>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>visible</tabstop>
-  <tabstop>autoscale</tabstop>
-  <tabstop>label</tabstop>
-  <tabstop>labelFont</tabstop>
-  <tabstop>scaleType</tabstop>
-  <tabstop>minimum</tabstop>
-  <tabstop>maximum</tabstop>
-  <tabstop>majorTicksVisible</tabstop>
-  <tabstop>useMajorTicksSpacing</tabstop>
-  <tabstop>majorTicksSpacing</tabstop>
-  <tabstop>useMajorTicksNumber</tabstop>
-  <tabstop>majorTicksNumber</tabstop>
-  <tabstop>majorTicksLabelPadding</tabstop>
-  <tabstop>majorTicksDirection</tabstop>
-  <tabstop>majorTicksColor</tabstop>
-  <tabstop>majorTicksLength</tabstop>
-  <tabstop>majorTicksWidth</tabstop>
-  <tabstop>majorTicksDisplayPrimary</tabstop>
-  <tabstop>majorTicksDisplaySecondary</tabstop>
-  <tabstop>majorTicksLabelDisplayPrimary</tabstop>
-  <tabstop>majorTicksLabelDisplaySecondary</tabstop>
-  <tabstop>minorTicksVisible</tabstop>
-  <tabstop>minorTicksNumber</tabstop>
-  <tabstop>minorTicksLabelPadding</tabstop>
-  <tabstop>minorTicksDirection</tabstop>
-  <tabstop>minorTicksColor</tabstop>
-  <tabstop>minorTicksLength</tabstop>
-  <tabstop>minorTicksWidth</tabstop>
-  <tabstop>minorTicksDisplayPrimary</tabstop>
-  <tabstop>minorTicksDisplaySecondary</tabstop>
-  <tabstop>minorTicksLabelDisplayPrimary</tabstop>
-  <tabstop>minorTicksLabelDisplaySecondary</tabstop>
- </tabstops>
  <resources/>
  <connections>
+  <connection>
+   <sender>storedSettingsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>storedSettingsButton</receiver>
+   <slot>toggleWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>583</x>
+     <y>18</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
    <sender>labelFont</sender>
    <signal>clicked()</signal>
    <receiver>labelFont</receiver>
-   <slot>showTextOptionsDialog()</slot>
+   <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>101</y>
+     <x>178</x>
+     <y>100</y>
     </hint>
     <hint type="destinationlabel">
-     <x>202</x>
-     <y>97</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>majorTicksColor</sender>
-   <signal>clicked()</signal>
-   <receiver>majorTicksColor</receiver>
-   <slot>createColorDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>246</x>
-     <y>295</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>295</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>minorTicksColor</sender>
-   <signal>clicked()</signal>
-   <receiver>minorTicksColor</receiver>
-   <slot>createColorDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>535</x>
-     <y>309</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>535</x>
-     <y>309</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>useMajorTicksSpacing</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>majorTicksSpacing</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>174</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>174</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>useMajorTicksNumber</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>majorTicksNumber</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>124</x>
-     <y>201</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>159</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>autoscale</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>minimum</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>173</x>
-     <y>46</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>362</x>
-     <y>72</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>autoscale</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>maximum</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>247</x>
-     <y>46</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>371</x>
-     <y>105</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>majorTicksVisible</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>minorTicksVisible</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>89</x>
-     <y>151</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>354</x>
-     <y>153</y>
+     <x>206</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>

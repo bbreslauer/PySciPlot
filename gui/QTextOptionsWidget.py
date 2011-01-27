@@ -1,27 +1,22 @@
-from PyQt4.QtGui import QDialog, QWidget, QDialogButtonBox
+from PyQt4.QtGui import QWidget, QDialogButtonBox
 
+from QEditFigureSubWidget import *
+from Property import *
 import Util
 
-class QTextOptionsDialog(QDialog):
+class QTextOptionsWidget(QEditFigureSubWidget):
+
+    properties = TextOptions.default.keys()
 
     def __init__(self, textOptionsButton, *args):
-        QDialog.__init__(self, *args)
+        QEditFigureSubWidget.__init__(self, *args)
         self.setTextOptionsButton(textOptionsButton)
         
-    def setUiObject(self, ui):
-        self._ui = ui
-
     def textOptionsButton(self):
         return self._textOptionsButton
 
     def setTextOptionsButton(self, button):
         self._textOptionsButton = button
-
-    def getChild(self, name):
-        try:
-            return vars(self._ui)[name]
-        except:
-            return self.findChild(QWidget, name)
 
     def saveUi(self):
         newOptions = {}
@@ -54,26 +49,16 @@ class QTextOptionsDialog(QDialog):
         except:
             pass
 
-
     def okClicked(self):
         self.saveUi()
-        self.textOptionsButton().hideTextOptionsDialog()
+        self.textOptionsButton().hideTextOptionsWidget()
     
     def cancelClicked(self):
         self.resetUi()
-        self.textOptionsButton().hideTextOptionsDialog()
+        self.textOptionsButton().hideTextOptionsWidget()
 
     def resetClicked(self):
         self.resetUi()
-
-    def buttonClickHandler(self, button):
-        standardButton = self.getChild('buttons').standardButton(button)
-        if standardButton == QDialogButtonBox.Ok:
-            self.okClicked()
-        elif standardButton == QDialogButtonBox.Cancel:
-            self.cancelClicked()
-        elif standardButton == QDialogButtonBox.Reset:
-            self.resetClicked()
 
     def rotationBoxHandler(self, text):
         """

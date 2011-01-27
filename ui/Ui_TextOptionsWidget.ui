@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TextOptionsDialog</class>
- <widget class="QTextOptionsDialog" name="TextOptionsDialog">
+ <class>TextOptionsWidget</class>
+ <widget class="QTextOptionsWidget" name="TextOptionsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>506</width>
+    <width>543</width>
     <height>477</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <string>Text Options</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="15" column="0" colspan="4">
+   <item row="15" column="1" colspan="4">
     <widget class="QDialogButtonBox" name="buttons">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -33,7 +33,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" rowspan="2">
+   <item row="5" column="1" rowspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Font</string>
@@ -52,7 +52,7 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="1" colspan="3">
+   <item row="6" column="2" colspan="3">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Display Properties</string>
@@ -285,7 +285,7 @@ background-color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
-   <item row="5" column="1" colspan="3">
+   <item row="5" column="2" colspan="3">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
       <string>Font Properties</string>
@@ -416,6 +416,39 @@ background-color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
+   <item row="5" column="5" rowspan="2">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -428,9 +461,17 @@ background-color: rgb(255, 255, 255);</string>
    </slots>
   </customwidget>
   <customwidget>
-   <class>QTextOptionsDialog</class>
-   <extends>QDialog</extends>
-   <header>gui/QTextOptionsDialog</header>
+   <class>QStoredSettingsButton</class>
+   <extends>QToolButton</extends>
+   <header>gui/QStoredSettingsButton</header>
+   <slots>
+    <slot>toggleWidget()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTextOptionsWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/QTextOptionsWidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -453,38 +494,6 @@ background-color: rgb(255, 255, 255);</string>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttons</sender>
-   <signal>accepted()</signal>
-   <receiver>TextOptionsDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>266</x>
-     <y>467</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttons</sender>
-   <signal>rejected()</signal>
-   <receiver>TextOptionsDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>334</x>
-     <y>467</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>color</sender>
    <signal>clicked()</signal>
@@ -520,7 +529,7 @@ background-color: rgb(255, 255, 255);</string>
   <connection>
    <sender>rotation</sender>
    <signal>currentIndexChanged(QString)</signal>
-   <receiver>TextOptionsDialog</receiver>
+   <receiver>TextOptionsWidget</receiver>
    <slot>rotationBoxHandler()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -536,7 +545,7 @@ background-color: rgb(255, 255, 255);</string>
   <connection>
    <sender>buttons</sender>
    <signal>clicked(QAbstractButton*)</signal>
-   <receiver>TextOptionsDialog</receiver>
+   <receiver>TextOptionsWidget</receiver>
    <slot>buttonClickHandler(QAbstractButton*)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -546,6 +555,22 @@ background-color: rgb(255, 255, 255);</string>
     <hint type="destinationlabel">
      <x>239</x>
      <y>430</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>storedSettingsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>storedSettingsButton</receiver>
+   <slot>toggleWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>518</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>517</x>
+     <y>90</y>
     </hint>
    </hints>
   </connection>

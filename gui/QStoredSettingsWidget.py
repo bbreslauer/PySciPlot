@@ -48,7 +48,11 @@ class QStoredSettingsWidget(QFrame):
         self._parentButton.toggleWidget(False)
 
     def deleteClicked(self):
-        self._app.storedSettings()[self._widgetName].remove(self.getChild('storedSettingsView').selectedIndexes()[0].internalPointer())
+        try:
+            self._app.storedSettings()[self._widgetName].remove(self.getChild('storedSettingsView').selectedIndexes()[0].internalPointer())
+        except IndexError:
+            pass
+
         self.storedSettingsModel.doReset()
 
     def resetGeometry(self):

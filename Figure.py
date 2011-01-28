@@ -74,7 +74,9 @@ class Figure(FigureObject):
         self._plots = []
         
         for plot in plots:
-            self.addPlot(plot)
+            self.plots().append(plot)
+
+        self.refreshPlots()
 
     def mplFigure(self):
         return self._figure
@@ -153,8 +155,6 @@ class Figure(FigureObject):
         self.mplFigure().set_facecolor(self.getMpl('backgroundColor'))
         self.redraw()
         
-
-
     def refreshPlots(self):
         Util.debug(3, "Figure.refreshPlots", "")
         # Remove old axes

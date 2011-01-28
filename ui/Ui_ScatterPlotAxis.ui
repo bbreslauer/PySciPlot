@@ -703,10 +703,6 @@ s</string>
     </widget>
    </item>
   </layout>
-  <zorder>groupBox</zorder>
-  <zorder>minorTicksVisible</zorder>
-  <zorder>majorTicksVisible</zorder>
-  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -765,6 +761,38 @@ s</string>
     <hint type="destinationlabel">
      <x>206</x>
      <y>104</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>minimum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>140</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>365</x>
+     <y>70</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoscale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>maximum</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>100</y>
     </hint>
    </hints>
   </connection>

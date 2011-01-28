@@ -26,6 +26,7 @@ def writeProjectToFile(app, fileName):
     p.setAttribute("version", str(app._version))
 
     appWindowList = app.ui.workspace.subWindowList(QMdiArea.StackingOrder)
+    getStoredSettings(app, dom)
     getWaves(app, dom)
     getTables(app, dom, appWindowList)
     getFigures(app, dom, appWindowList)
@@ -38,6 +39,23 @@ def writeProjectToFile(app, fileName):
 
 
 # Get specific sets of data
+
+def getStoredSettings(app, dom):
+    """
+    Get the stored settings dict.
+    
+    app is the pysciplot application.
+
+    dom is the main dom object.
+    """
+
+    Util.debug(1, "Save", "Getting waves")
+
+    p = dom.firstChild
+    
+    storedSettings = dom.createElement("storedSettings")
+    storedSettings.appendChild(dom.createTextNode(str(pickle.dumps(app.storedSettings()))))
+    p.appendChild(storedSettings)
 
 def getWaves(app, dom, waveNames=[]):
     """

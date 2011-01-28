@@ -38,8 +38,8 @@ def loadProjectFromFile(app, fileName):
         # Move on to next child
         child = child.nextSibling
 
-    # Now load tables and figures.  It doesn't matter which
-    # is loaded first.
+    # Now load tables, figures, and stored settings.
+    # It doesn't matter which is loaded first.
     stackingOrder = []
     child = p.firstChild
     while child is not None:
@@ -48,6 +48,8 @@ def loadProjectFromFile(app, fileName):
                 loadTables(app, child, stackingOrder)
             elif child.nodeName == "figures":
                 loadFigures(app, child, stackingOrder)
+            elif child.nodeName == "storedSettings":
+                loadStoredSettings(app, child)
 
         # Move on to next child
         child = child.nextSibling
@@ -75,6 +77,14 @@ def loadWaves(app, waves):
     wavesObj = pickle.loads(str(waves.firstChild.data.strip()))
     for wave in wavesObj.waves():
         app.waves().addWave(wave)
+
+def loadStoredSettings(app, storedSettings):
+    """
+    Load stored settings into the application.
+    """
+    Util.debug(1, "Load", "Loading stored settings from file")
+    storedSettingsObj = pickle.loads(str(storedSettings.firstChild.data.strip()))
+    app.storedSettings().update(storedSettingsObj)
 
 def loadTables(app, tables, stackingOrder):
     """

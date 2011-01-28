@@ -45,10 +45,18 @@ class Trace(FigureObject):
         self.getFormat()
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.x(), self.y(), self.plot()]), tuple([self.properties])])
+        #return tuple([self.__class__, tuple([self.x(), self.y(), self.plot()]), tuple([self.properties])])
+        return tuple([self.__class__, tuple(), tuple([self.properties, self.xName(), self.yName(), self.plot()])])
 
     def __setstate__(self, state):
         properties = state[0]
+        xName = state[1]
+        yName = state[2]
+        plot = state[3]
+
+        self.setX(self._app.waves().getWaveByName(xName))
+        self.setY(self._app.waves().getWaveByName(yName))
+        self.setPlot(plot)
 
         for (key, value) in properties.items():
             self.properties[key].blockSignals(True)
@@ -97,7 +105,10 @@ class Trace(FigureObject):
         self._x = x
 
         # Connect new wave's dataModified signal
-        self._x.dataModified.connect(self.refresh)
+        try:
+            self._x.dataModified.connect(self.refresh)
+        except:
+            pass
         
     def setY(self, y):
         Util.debug(2, "Trace.setY", "Setting y trace")
@@ -111,7 +122,10 @@ class Trace(FigureObject):
         self._y = y
 
         # Connect new wave's dataModified signal
-        self._y.dataModified.connect(self.refresh)
+        try:
+            self._y.dataModified.connect(self.refresh)
+        except:
+            pass
     
     def x(self):
         return self._x

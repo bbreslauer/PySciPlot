@@ -144,25 +144,6 @@ class DataTableModel(QAbstractTableModel):
                 wave.insert(position, "")
         return True
 
-    def moveColumn(self, fromIndex, toIndex):
-        """
-        Move a column for position fromIndex to position toIndex in the _waves object.  This method is intended to be called when columns are dragged around in the table view.  This is done in the underlying data instead of in the QT objects because of bugs in QT's renumbering of logical indices (or lack thereof!) when columns are dragged around.
-
-        Returns True if the column move was successful, False otherwise.
-        """
-
-        # Make sure indices are valid
-        if (fromIndex < 0 or fromIndex > len(self._waves.waves()) or toIndex < 0 or toIndex > len(self._waves.waves())):
-            return False
-
-        if fromIndex == toIndex:
-            return True
-
-        # This works regardless of whether fromIndex is > or < toIndex
-        tmpWave = self._waves.removeWave(self._waves.waves()[fromIndex].name())
-        self._waves.insertWave(toIndex, tmpWave)
-        return True
-
     def removeColumn(self, wave):
         """
         Remove the column (wave) given by wave.  Return True if the column is removed, False otherwise.
@@ -200,24 +181,4 @@ class DataTableModel(QAbstractTableModel):
     def doReset(self, *args):
         """Take any number of arguments and just reset the model."""
         self.reset()
-
-    
-    # Helper function for debugging purposes
-    def printColumns(self):
-        for wave in self.waves:
-            print wave.getName()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -104,7 +104,7 @@ class Waves(QObject):
             else:
                 counter += 1
 
-    def findGoodWaveNames(self, numWaves, baseName="Wave"):
+    def findGoodWaveNames(self, numWaves=1, baseName="Wave"):
         """
         Find numWaves unused wave names in this Waves object and return that name.  If baseName is provided, then it will be used as the beginning of the name.
         """

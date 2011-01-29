@@ -33,6 +33,7 @@ class ScatterPlot(FigureObject):
     This class is used for a scatter plot.
     """
 
+
     def __init__(self, plot):
         Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
 
@@ -84,6 +85,7 @@ class ScatterPlot(FigureObject):
 
     def removeTrace(self, trace):
         self._traces.remove(trace)
+        trace.removeFromPlot()
         self.refresh()
 
     def update_bottomAxis(self):

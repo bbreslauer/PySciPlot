@@ -50,7 +50,6 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         # Setup trace list
         traceListModel = TraceListModel()
         self.getChild('traceTableView').setModel(traceListModel)
-        self._app.waves().waveRemoved[Wave].connect(self.deleteTracesWithWave)
         self.setupTraceListMenu()
 
         self.getChild('traceTableView').selectionModel().currentChanged.connect(self.selectedTraceChanged)
@@ -90,6 +89,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             traceListModel.addEntry(TraceListEntry(trace))
 
         traceListModel.doReset()
+        print traceListModel._data
 
         self.getChild('traceTableView').selectRow(traceListModel.rowCount() - 1)
         
@@ -112,13 +112,6 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         # Disconnect actions, so that we don't have multiple connections when
         # the menu is opened again.
         self.deleteTraceFromTraceListAction.triggered.disconnect(deleteTraceHelper)
-
-    def deleteTracesWithWave(self, wave):
-        plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
-
-        for trace in plotTypeObject.traces():
-            if wave.name() in [trace.xName(), trace.yName()]:
-                self.deleteTraceFromPlot(trace)
 
     def deleteTraceFromPlot(self, trace):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject

@@ -37,7 +37,7 @@ from Waves import Waves
 from Figure import Figure
 from Figures import Figures
 from TraceListEntry import TraceListEntry
-from gui.DataTableView import DataTableView
+from gui.QDataTableView import QDataTableView
 from gui.SubWindows import SubWindow
 from gui.SubWindows import DataTableSubWindow
 from Preferences import Preferences
@@ -103,7 +103,7 @@ class pysciplot(QMainWindow):
 
         # create default waves
         self.setTestData()
-        #self.createDefaultTable()
+        self.createDefaultTable()
 
         Util.debug(2, "App", "Loading modules")
         self.loadModule("ManageWavesDialog")
@@ -189,8 +189,8 @@ class pysciplot(QMainWindow):
         Create a table view based on the given model.
         """
 
-        tableView = DataTableView(tableModel, self, tableName)
-        tableViewSubWindow = DataTableSubWindow()
+        tableViewSubWindow = DataTableSubWindow(self.ui.workspace)
+        tableView = QDataTableView(tableModel, tableName, tableViewSubWindow)
         tableViewSubWindow.setWidget(tableView)
         tableViewSubWindow.setAttribute(Qt.WA_DeleteOnClose)
         tableViewSubWindow.resize(600, 300)
@@ -446,12 +446,12 @@ class pysciplot(QMainWindow):
     ######################
     # temporary methods, for testing
     ######################
-#    def createDefaultTable(self):
-#        return self.createTable([self._waves.waves()[0], self._waves.waves()[1]])
+    def createDefaultTable(self):
+        return self.createTable(self._waves.waves())
 
     def printAllWaves(self):
-        #print self._waves
-        print self.storedSettings()
+        print self._waves
+        #print self.storedSettings()
 
     def printAllFigures(self):
         print self._figures

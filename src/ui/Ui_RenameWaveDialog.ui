@@ -2,15 +2,15 @@
 <ui version="4.0">
  <class>RenameWaveDialog</class>
  <widget class="QWidget" name="RenameWaveDialog">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+  <property name="modal" stdset="0">
+   <bool>false</bool>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>307</width>
-    <height>114</height>
+    <width>250</width>
+    <height>100</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,9 +21,6 @@
   </property>
   <property name="windowTitle">
    <string>Rename Wave</string>
-  </property>
-  <property name="modal">
-   <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -58,7 +55,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="buttons">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -73,38 +70,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>RenameWaveDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>RenameWaveDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

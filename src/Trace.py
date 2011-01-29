@@ -58,6 +58,9 @@ class Trace(FigureObject):
         self.setY(y)
         self.setPlot(plot)
 
+        # If a wave is removed from the app, see if this trace held it
+        self._app.waves().waveRemoved[Wave].connect(self.removeTraceIfContainsWave)
+
         self.getFormat()
 
     def __reduce__(self):
@@ -175,9 +178,7 @@ class Trace(FigureObject):
 
         return [xData, yData]
 
-    def refresh(self):
-        [x, y] = self.convertDataToFloat()
-        
+    def removeFromPlot(self):
         # If this trace is not associated with a plot, then don't do anything
         if self.plot() is None:
             return
@@ -188,6 +189,15 @@ class Trace(FigureObject):
         except:
             pass
 
+    def refresh(self):
+        [x, y] = self.convertDataToFloat()
+        
+        # If this trace is not associated with a plot, then don't do anything
+        if self.plot() is None:
+            return
+
+        self.removeFromPlot()
+
         # If the axes object does not yet exist in the plot object, then
         # we cannot plot anything
         try:
@@ -197,5 +207,7 @@ class Trace(FigureObject):
             return
         
 
-
+    def removeTraceIfContainsWave(self, wave):
+        if wave == self.x() or wave == self.y():
+            self.plot().plotTypeObject.removeTrace(self)
         

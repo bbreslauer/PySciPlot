@@ -73,7 +73,6 @@
     <addaction name="actionSave_Project_As"/>
     <addaction name="actionSave_Current_Figure"/>
     <addaction name="separator"/>
-    <addaction name="actionModules"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Figures"/>

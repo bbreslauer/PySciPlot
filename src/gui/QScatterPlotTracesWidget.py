@@ -89,7 +89,6 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             traceListModel.addEntry(TraceListEntry(trace))
 
         traceListModel.doReset()
-        print traceListModel._data
 
         self.getChild('traceTableView').selectRow(traceListModel.rowCount() - 1)
         

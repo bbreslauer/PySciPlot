@@ -1,19 +1,14 @@
 
 1) Create the spec file (only need to do once)
 
-python2 ~/usr/local/pyinstaller/Makespec.py -n psp pysciplot.py
+python2 ~/usr/local/pyinstaller/Makespec.py -n psp ../src/main.py
 
 --or--
 
-python2 ~/usr/local/pyinstaller/Makespec.py --onefile -n pspone pysciplot.py
+python2 ~/usr/local/pyinstaller/Makespec.py --onefile -n pspone ../src/main.py
 
 
-2) Edit the specfile and add the following hookspath line to the Analysis line (make sure to change the pathex ending from a paren to a comma)
-
-              hookspath=['/home/ben/programming/pysciplot/branches/mpl/pyinstaller'])
-
-
-3) Build the project
+2) Build the project
 
 python2 ~/usr/local/pyinstaller/Build.py psp.spec
 

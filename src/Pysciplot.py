@@ -27,7 +27,6 @@ import Util
 import Save
 import Load
 import config
-#import pyinstaller.hiddenmodules
 from Wave import Wave
 from Waves import Waves
 from Figure import Figure

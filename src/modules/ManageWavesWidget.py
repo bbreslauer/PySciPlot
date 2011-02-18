@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction
+from PyQt4.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox
 from PyQt4.QtCore import Qt
 
 import re
@@ -26,10 +26,10 @@ from Wave import Wave
 from gui.SubWindows import SubWindow
 from models.WavesListModel import WavesListModel
 from modules.Module import Module
-from ui.Ui_CreateWaveDialog import Ui_CreateWaveDialog
+from ui.Ui_ManageWavesWidget import Ui_ManageWavesWidget
 
-class CreateWaveDialog(Module):
-    """Module to display the Create Wave dialog window."""
+class ManageWavesWidget(Module):
+    """Module to display the Manage Waves dialog window."""
 
     def __init__(self):
         Module.__init__(self)
@@ -39,37 +39,63 @@ class CreateWaveDialog(Module):
 
         # Create enclosing widget and UI
         self._widget = QWidget()
-        self._ui = Ui_CreateWaveDialog()
+        self._ui = Ui_ManageWavesWidget()
         self._ui.setupUi(self._widget)
         
-        # Set up model and view
+        # Set up model and views
         self._wavesListModel = WavesListModel(self._app.waves())
         self._ui.copyWaveOriginalWave.setModel(self._wavesListModel)
         self._ui.functionInsertWave.setModel(self._wavesListModel)
+        self._ui.modifyWave_selectWave.setModel(self._wavesListModel)
 
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
+        #self._app.waves().waveRenamed.connect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
+
         self._ui.copyWaveOriginalWave.activated.connect(self.resetCopyWaveLimits)
         self._ui.createWaveButton.clicked.connect(self.createWave)
-        self._ui.closeWindowButton.clicked.connect(self.closeWindow)
         self._ui.functionInsertWaveButton.clicked.connect(self.insertWaveIntoFunction)
+
+        self._ui.modifyWave_selectWave.selectionModel().currentChanged.connect(self.updateModifyWaveUi)
+        self._ui.removeWaveButton.clicked.connect(self.removeWave)
+        self._ui.resetWaveButton.clicked.connect(self.updateModifyWaveUi)
+        self._ui.modifyWaveButton.clicked.connect(self.modifyWave)
+
+#        # Define handler functions
+#        def removeWave():
+#            """Remove waves from the list of all waves in the main window."""
+#            wavesToRemove = []
+#
+#            # Get all the waves first then remove them.  Otherwise the indices change as
+#            # we are removing waves.
+#            for index in self._ui.wavesListView.selectedIndexes():
+#                wavesToRemove.append(self._app.waves().waves()[index.row()])
+#            for wave in wavesToRemove:
+#                self._app.waves().removeWave(wave.name())
+#        def closeWindow():
+#            self._widget.parent().close()
+#            
+#        # Connect buttons to handler functions
+#        self._ui.removeWaveButton.clicked.connect(removeWave)
+#        self._ui.closeButton.clicked.connect(closeWindow)
 
         # Make sure selection list and stack are aligned
         self._ui.waveDataSelectionList.setCurrentRow(0)
         self._ui.waveDataStack.setCurrentIndex(0)
 
-    def closeWindow(self):
-        self._widget.parent().close()
+        return self._widget
 
-
+    ####
+    # Create Wave tab
+    ####
     def createWave(self):
         """
         Create the wave, using whatever starting point (basic, copy, function, etc) is necessary.
         """
 
         # Check if the wave is unique in the application
-        if not self._app.waves().goodWaveName(Util.getWidgetValue(self._ui.waveName)):
+        if not self._app.waves().goodWaveName(Util.getWidgetValue(self._ui.createWave_waveName)):
             warningMessage = QMessageBox()
             warningMessage.setWindowTitle("Error!")
             warningMessage.setText("The name you chose has already been used. Please enter a new name.")
@@ -79,7 +105,7 @@ class CreateWaveDialog(Module):
             result = warningMessage.exec_()
             return False
 
-        wave = Wave(Util.getWidgetValue(self._ui.waveName), Util.getWidgetValue(self._ui.dataType))
+        wave = Wave(Util.getWidgetValue(self._ui.createWave_waveName), Util.getWidgetValue(self._ui.createWave_dataType))
         
         # Check how the wave should be initially populated
         initialWaveDataTab = self._ui.waveDataStack.currentWidget().objectName()
@@ -126,7 +152,6 @@ class CreateWaveDialog(Module):
         self._ui.copyWaveStartingIndex.setMaximum(maxIndex)
         self._ui.copyWaveEndingIndex.setMaximum(maxIndex)
         Util.setWidgetValue(self._ui.copyWaveEndingIndex, maxIndex)
-        
 
     def parseFunction(self, waveLength, functionString):
         """
@@ -198,13 +223,101 @@ class CreateWaveDialog(Module):
         self._ui.functionEquation.insert("w_" + str(waveName))
         return True
 
+
+    ####
+    # Modify/Remove Wave tab
+    ####
+    def updateModifyWaveUi(self, *args):
+        """
+        Update the wave options based on the current wave.  This slot will be
+        called whenever the selection has changed.
+        """
+
+        if self._ui.modifyWave_selectWave.currentIndex():
+            wave = self._wavesListModel.waveByRow(self._ui.modifyWave_selectWave.currentIndex().row())
+
+            Util.setWidgetValue(self._ui.modifyWave_waveName, wave.name())
+            Util.setWidgetValue(self._ui.modifyWave_dataType, wave.dataType())
+
+    def modifyWave(self):
+        """
+        Set the selected wave to have the currently-selected options.
+        """
+
+        currentIndex = self._ui.modifyWave_selectWave.currentIndex()
+        if currentIndex:
+            wave = self._wavesListModel.waveByRow(self._ui.modifyWave_selectWave.currentIndex().row())
+            
+            # Make sure the user wants to change the wave's name
+            if wave.name() != Util.getWidgetValue(self._ui.modifyWave_waveName) and not self._app.waves().goodWaveName(Util.getWidgetValue(self._ui.modifyWave_waveName)):
+                warningMessage = QMessageBox()
+                warningMessage.setWindowTitle("Error!")
+                warningMessage.setText("You are trying to change the wave name, but the one you have chosen has already been used. Please enter a new name.")
+                warningMessage.setIcon(QMessageBox.Critical)
+                warningMessage.setStandardButtons(QMessageBox.Ok)
+                warningMessage.setDefaultButton(QMessageBox.Ok)
+                result = warningMessage.exec_()
+                return False
+
+            # Make sure the user wants to actually change the data type
+            if wave.dataType() != Util.getWidgetValue(self._ui.modifyWave_dataType):
+                warningMessage = QMessageBox()
+                warningMessage.setWindowTitle("Warning!")
+                warningMessage.setText("If you change the data type, then you may lose data if it cannot be properly converted.")
+                warningMessage.setInformativeText("Are you sure you want to continue?")
+                warningMessage.setIcon(QMessageBox.Warning)
+                warningMessage.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                warningMessage.setDefaultButton(QMessageBox.No)
+                result = warningMessage.exec_()
+
+                if result != QMessageBox.Yes:
+                    return False
+
+            # All warnings have been accepted, so we can continue with actually modifying the wave
+            wave.setName(Util.getWidgetValue(self._ui.modifyWave_waveName))
+            wave.setDataType(Util.getWidgetValue(self._ui.modifyWave_dataType))
+
+            self._ui.modifyWave_selectWave.setCurrentIndex(currentIndex)
+
+        return True
+
+    def removeWave(self):
+        """Remove wave from the list of all waves in the main window."""
+        wavesToRemove = []
+        
+        currentIndex = self._ui.modifyWave_selectWave.currentIndex()
+        row = currentIndex.row()
+        if currentIndex:
+            warningMessage = QMessageBox()
+            warningMessage.setWindowTitle("Warning!")
+            warningMessage.setText("You are about to delete a wave.")
+            warningMessage.setInformativeText("Are you sure you want to continue?")
+            warningMessage.setIcon(QMessageBox.Warning)
+            warningMessage.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            warningMessage.setDefaultButton(QMessageBox.No)
+            result = warningMessage.exec_()
+
+            if result != QMessageBox.Yes:
+                return False
+
+            self._app.waves().removeWave(self._app.waves().waves()[row].name())
+            
+            try:
+                self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(row))
+            except IndexError:
+                try:
+                    # We just deleted the bottommost entry
+                    self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(self._wavesListModel.rowCount() - 1))
+                except IndexError:
+                    # There are no more rows
+                    pass
     def load(self):
         self.window = SubWindow(self._app.ui.workspace)
 
         self.menuEntry = QAction(self._app)
-        self.menuEntry.setObjectName("actionCreateWaveDialog")
-        self.menuEntry.setShortcut("Ctrl+W")
-        self.menuEntry.setText("Create Waves")
+        self.menuEntry.setObjectName("actionManageWavesWidget")
+        self.menuEntry.setShortcut("Ctrl+V")
+        self.menuEntry.setText("Manage Waves")
         self.menuEntry.triggered.connect(self.window.show)
         self.menu = vars(self._app.ui)["menuData"]
         self.menu.addAction(self.menuEntry)
@@ -217,13 +330,14 @@ class CreateWaveDialog(Module):
 
     def unload(self):
         # Disconnect some slots
-        self._app.waves().waveAdded.disconnect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved[Wave].disconnect(self._wavesListModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
+
+
 
 
 

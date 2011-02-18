@@ -37,16 +37,19 @@ class WavesListModel(QStringListModel):
     def waves(self):
         return self._waves
 
+    def waveByRow(self, row):
+        return self.waves().waves()[row]
+
     def appendRow(self, wave):
         self._waves.addWave(wave)
 
     def rowCount(self, parent=QModelIndex()):
         return len(self._waves.waves())
 
-    def index(self, row, column, parent=QModelIndex()):
+    def index(self, row, column=0, parent=QModelIndex()):
         if row > self._waves.length():
             return self.createIndex(row, column, parent)
-        return self.createIndex(row, column, self._waves.waves()[row])
+        return self.createIndex(row, column, self.waves().waves()[row])
     
     def data(self, index, role = Qt.DisplayRole):
         if index.isValid() and role == Qt.DisplayRole:

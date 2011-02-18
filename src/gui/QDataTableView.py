@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import Qt, pyqtSignal
+from PyQt4.QtCore import Qt, QModelIndex, pyqtSignal
 from PyQt4.QtGui import QTableView, QAbstractItemView, QMenu, QAction, QDialog, QMessageBox, QApplication
 
 import Util
@@ -63,10 +63,16 @@ class QDataTableView(QTableView):
         self.setModel(model)
         self.setWindowTitle(title)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(QAbstractItemView.ContiguousSelection) # contiguous instead of extended so that we can easily insert/delete cells more easily.  See note below.
         self.setEditTriggers(QAbstractItemView.AnyKeyPressed | QAbstractItemView.SelectedClicked | QAbstractItemView.DoubleClicked)
         self.horizontalHeader().setMovable(True)
 
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.showCellContextMenu)
+        
+        self.verticalHeader().setContextMenuPolicy(Qt.CustomContextMenu)
+        self.verticalHeader().customContextMenuRequested.connect(self.showVerticalHeaderMenu)
+        
         self.setupHorizontalHeaderMenu()
 
     def name(self):
@@ -117,6 +123,88 @@ class QDataTableView(QTableView):
             # The wave was added (i.e. it did not already exist in the table)
             # We need to move the newly added column from the end to where the user clicked
             self.horizontalHeader().moveSection(self.model().columnCount() - 1, visualIndex + 1)
+
+    def insertCells(self):
+        """Insert cells into waves based on selected cells in this table."""
+
+        # Sort by rows, so that we start at the top of the waves
+        # This is the reason we only do contiguous selections, because
+        # tracking which cells to insert into is really difficult otherwise
+        selectedCells = self.selectedIndexes()
+        selectedCells.sort(None, QModelIndex.row, False)
+
+        for cell in selectedCells:
+            try:
+                cell.internalPointer().insert(cell.row(), "")
+            except:
+                # The cell did not exist (i.e. the wave does not extend this far)
+                # but another wave does, so do not fail completely
+                pass
+
+    def deleteCells(self):
+        """Delete cells from waves based on selected cells in this table."""
+
+        # Sort by rows, inverted, so that we start by deleting at the
+        # bottom of the waves, and don't screw up index values along
+        # the way
+        selectedCells = self.selectedIndexes()
+        selectedCells.sort(None, QModelIndex.row, True)
+
+        for cell in selectedCells:
+            try:
+                cell.internalPointer().pop(cell.row())
+            except:
+                # The cell did not exist (i.e. the wave does not extend this far)
+                # but another wave does, so do not fail completely
+                pass
+    
+    def showCellContextMenu(self, point):
+        """Display the menu that occurs when right clicking on a table cell."""
+        
+        clickedCell = self.indexAt(point)
+
+        if not clickedCell.isValid():
+            # User clicked on a part of the table without a cell
+            return False
+
+        cellMenu = QMenu(self)
+        insertCellAction = QAction("Insert Cells", cellMenu)
+        deleteCellAction = QAction("Delete Cells", cellMenu)
+        
+        cellMenu.addAction(insertCellAction)
+        cellMenu.addAction(deleteCellAction)
+
+        # Connect signals
+        insertCellAction.triggered.connect(self.insertCells)
+        deleteCellAction.triggered.connect(self.deleteCells)
+
+        # Display menu
+        cellMenu.exec_(self.mapToGlobal(point))
+
+        # Disconnect signals
+        insertCellAction.triggered.disconnect(self.insertCells)
+        deleteCellAction.triggered.disconnect(self.deleteCells)
+
+    def showVerticalHeaderMenu(self, point):
+        """Display the menu that occurs when right clicking on a vertical header."""
+
+        rowMenu = QMenu(self)
+        insertRowAction = QAction("Insert Rows", rowMenu)
+        deleteRowAction = QAction("Delete Rows", rowMenu)
+        
+        rowMenu.addAction(insertRowAction)
+        rowMenu.addAction(deleteRowAction)
+
+        # Connect signals
+        insertRowAction.triggered.connect(self.insertCells)
+        deleteRowAction.triggered.connect(self.deleteCells)
+
+        # Display menu
+        rowMenu.exec_(self.mapToGlobal(point))
+
+        # Disconnect signals
+        insertRowAction.triggered.disconnect(self.insertCells)
+        deleteRowAction.triggered.disconnect(self.deleteCells)
 
     def setupHorizontalHeaderMenu(self):
         self.horizontalHeader().setContextMenuPolicy(Qt.CustomContextMenu)

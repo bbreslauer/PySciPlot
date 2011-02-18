@@ -50,7 +50,6 @@ class ManageWavesWidget(Module):
 
         # Connect some slots
         self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
-        #self._app.waves().waveRenamed.connect(self._wavesListModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
 
         self._ui.copyWaveOriginalWave.activated.connect(self.resetCopyWaveLimits)
@@ -61,24 +60,6 @@ class ManageWavesWidget(Module):
         self._ui.removeWaveButton.clicked.connect(self.removeWave)
         self._ui.resetWaveButton.clicked.connect(self.updateModifyWaveUi)
         self._ui.modifyWaveButton.clicked.connect(self.modifyWave)
-
-#        # Define handler functions
-#        def removeWave():
-#            """Remove waves from the list of all waves in the main window."""
-#            wavesToRemove = []
-#
-#            # Get all the waves first then remove them.  Otherwise the indices change as
-#            # we are removing waves.
-#            for index in self._ui.wavesListView.selectedIndexes():
-#                wavesToRemove.append(self._app.waves().waves()[index.row()])
-#            for wave in wavesToRemove:
-#                self._app.waves().removeWave(wave.name())
-#        def closeWindow():
-#            self._widget.parent().close()
-#            
-#        # Connect buttons to handler functions
-#        self._ui.removeWaveButton.clicked.connect(removeWave)
-#        self._ui.closeButton.clicked.connect(closeWindow)
 
         # Make sure selection list and stack are aligned
         self._ui.waveDataSelectionList.setCurrentRow(0)
@@ -316,7 +297,6 @@ class ManageWavesWidget(Module):
 
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionManageWavesWidget")
-        self.menuEntry.setShortcut("Ctrl+V")
         self.menuEntry.setText("Manage Waves")
         self.menuEntry.triggered.connect(self.window.show)
         self.menu = vars(self._app.ui)["menuData"]

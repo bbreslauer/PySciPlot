@@ -71,6 +71,13 @@ class DataTableModel(QAbstractTableModel):
 
         return len(self._waves.waves())
 
+    def index(self, row, column, parent=QModelIndex()):
+        if column >= self.columnCount():
+            return self.createIndex(row, column, parent)
+        elif row >= self.waves().waves()[column].length():
+            return self.createIndex(row, column, parent)
+        return self.createIndex(row, column, self.waves().waves()[column])
+
     def data(self, index, role = Qt.DisplayRole):
         """Return the data at position index with the given role."""
 

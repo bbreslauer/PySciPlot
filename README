@@ -13,3 +13,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Introduction
+============
+
+
+
+
+Dependencies
+============
+
+The following are required dependencies in order to run PySciPlot.
+
+Python >= 2.7
+Qt >= 4.7
+PyQt4 >= 4.8.3
+numpy >= 1.5.1
+matplotlib >= 1.0.1
+
+
+
+
+
+
+
+
+

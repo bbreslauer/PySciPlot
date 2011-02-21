@@ -133,6 +133,15 @@ class QDataTableView(QTableView):
         selectedCells = self.selectedIndexes()
         selectedCells.sort(None, QModelIndex.row, False)
 
+        # Disconnect the dataModified signal before changing anything, then connect
+        # it after changing everything. This way, multiple calls are not emitted
+        # in the middle, for no reason.
+        # We create the waves list just in case the selectedCells indexes aren't valid
+        # aftewards.
+        waves = Util.uniqueList(map(lambda x: x.internalPointer(), selectedCells))
+        for wave in waves:
+            wave.blockSignals(True)
+
         for cell in selectedCells:
             try:
                 cell.internalPointer().insert(cell.row(), "")
@@ -140,6 +149,10 @@ class QDataTableView(QTableView):
                 # The cell did not exist (i.e. the wave does not extend this far)
                 # but another wave does, so do not fail completely
                 pass
+        
+        for wave in waves:
+            wave.blockSignals(False)
+            wave.dataModified.emit()
 
     def deleteCells(self):
         """Delete cells from waves based on selected cells in this table."""
@@ -150,6 +163,15 @@ class QDataTableView(QTableView):
         selectedCells = self.selectedIndexes()
         selectedCells.sort(None, QModelIndex.row, True)
 
+        # Disconnect the dataModified signal before changing anything, then connect
+        # it after changing everything. This way, multiple calls are not emitted
+        # in the middle, for no reason.
+        # We create the waves list just in case the selectedCells indexes aren't valid
+        # aftewards.
+        waves = Util.uniqueList(map(lambda x: x.internalPointer(), selectedCells))
+        for wave in waves:
+            wave.blockSignals(True)
+
         for cell in selectedCells:
             try:
                 cell.internalPointer().pop(cell.row())
@@ -158,6 +180,10 @@ class QDataTableView(QTableView):
                 # but another wave does, so do not fail completely
                 pass
     
+        for wave in waves:
+            wave.blockSignals(False)
+            wave.dataModified.emit()
+
     def showCellContextMenu(self, point):
         """Display the menu that occurs when right clicking on a table cell."""
         

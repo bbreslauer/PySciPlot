@@ -64,7 +64,6 @@ class Trace(FigureObject):
         self.getFormat()
 
     def __reduce__(self):
-        #return tuple([self.__class__, tuple([self.x(), self.y(), self.plot()]), tuple([self.properties])])
         return tuple([self.__class__, tuple(), tuple([self.properties, self.xName(), self.yName(), self.plot()])])
 
     def __setstate__(self, state):
@@ -116,7 +115,7 @@ class Trace(FigureObject):
         
         # Disconnect previous wave's dataModified signal
         try:
-            self._x.dataModified.disconnect(self.refresh)
+            self._x.dataModified.disconnect(self.updatePlotData)
         except:
             pass
 
@@ -125,7 +124,7 @@ class Trace(FigureObject):
 
         # Connect new wave's dataModified signal
         try:
-            self._x.dataModified.connect(self.refresh)
+            self._x.dataModified.connect(self.updatePlotData)
         except:
             pass
         
@@ -133,7 +132,7 @@ class Trace(FigureObject):
         Util.debug(2, "Trace.setY", "Setting y trace")
         # Disconnect previous wave's dataModified signal
         try:
-            self._y.dataModified.disconnect(self.refresh)
+            self._y.dataModified.disconnect(self.updatePlotData)
         except:
             pass
 
@@ -142,7 +141,7 @@ class Trace(FigureObject):
 
         # Connect new wave's dataModified signal
         try:
-            self._y.dataModified.connect(self.refresh)
+            self._y.dataModified.connect(self.updatePlotData)
         except:
             pass
     
@@ -206,6 +205,15 @@ class Trace(FigureObject):
         except:
             return
         
+    def updatePlotData(self):
+        """Only update the data on the plot. Do not change the format."""
+        
+        if self._line:
+            [x, y] = self.convertDataToFloat()
+            self._line.set_data(x, y)
+            self.plot().redraw()
+        else:
+            self.refresh()
 
     def removeTraceIfContainsWave(self, wave):
         if wave == self.x() or wave == self.y():

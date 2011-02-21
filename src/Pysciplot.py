@@ -31,7 +31,6 @@ from Wave import Wave
 from Waves import Waves
 from Figure import Figure
 from Figures import Figures
-from TraceListEntry import TraceListEntry
 from gui.QDataTableView import QDataTableView
 from gui.SubWindows import SubWindow
 from gui.SubWindows import DataTableSubWindow

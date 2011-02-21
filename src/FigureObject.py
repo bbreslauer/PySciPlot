@@ -14,14 +14,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from PyQt4.QtCore import QObject, pyqtSignal
+
 import Util
 
-class FigureObject(object):
+class FigureObject(QObject):
     """
     A part of the figure.
     """
 
     def __init__(self, properties={}):
+        QObject.__init__(self)
+
         self.properties = properties
 
         # Connect signals

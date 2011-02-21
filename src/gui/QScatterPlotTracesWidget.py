@@ -17,8 +17,8 @@
 from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 
 import Util
+from Wave import *
 from Trace import *
-from TraceListEntry import *
 from models.WavesListModel import *
 from models.TraceListModel import *
 from QEditFigureSubWidget import *
@@ -79,7 +79,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
 
         self.refreshTraceList()
 
-    def refreshTraceList(self):
+    def refreshTraceList(self, *args):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
 
         # Clear plot list model
@@ -87,14 +87,14 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         traceListModel.clearData()
             
         for trace in plotTypeObject.traces():
-            traceListModel.addEntry(TraceListEntry(trace))
+            traceListModel.addTrace(trace)
 
         traceListModel.doReset()
 
         self.getChild('traceTableView').selectRow(traceListModel.rowCount() - 1)
         
     def showTraceListMenu(self, point):
-        """Display the menu that occurs when right clicking on a plot list entry."""
+        """Display the menu that occurs when right clicking on a trace entry."""
 
         index = self.getChild('traceTableView').indexAt(point)
         
@@ -102,7 +102,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             return False
         
         def deleteTraceHelper():
-            self.deleteTraceFromPlot(index.internalPointer().getTrace())
+            self.deleteTraceFromPlot(index.internalPointer())
 
         # Connect actions
         self.deleteTraceFromTraceListAction.triggered.connect(deleteTraceHelper)
@@ -121,7 +121,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         # Get the traces corresponding to the indexes. However, each index
         # corresponds to a cell, not a row, so we need to remove duplicate trace
         # entries from the indexes list so as not to attempt to delete them multiple times.
-        traces = Util.uniqueList(map(lambda x: x.internalPointer().getTrace(), indexes))
+        traces = Util.uniqueList(map(lambda x: x.internalPointer(), indexes))
 
         for trace in traces:
             self.deleteTraceFromPlot(trace)
@@ -140,7 +140,7 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         traces = set()  # We use a set because each row has two selected indexes, and 
                         # we want to don't want to double-count rows
         for index in indexes:
-            traces.add(index.internalPointer().getTrace())
+            traces.add(index.internalPointer())
 
         for trace in traces:
             self.saveOptionsToTrace(trace)
@@ -149,12 +149,20 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self.setCurrentUi(trace.properties)
 
     def selectedTraceChanged(self, newIndex, oldIndex):
-        self.setUiToTrace(newIndex.internalPointer().getTrace())
+        self.setUiToTrace(newIndex.internalPointer())
 
     def saveUi(self):
         self.saveOptionsToSelectedTraces()
 
     def resetUi(self):
+        
+        # disconnect only if the signal is connected
+        try:
+            self._plotOptionsWidget.currentPlot().plotTypeObject.traceRemovedFromPlot.disconnect()
+        except:
+            pass
+        
+        self._plotOptionsWidget.currentPlot().plotTypeObject.traceRemovedFromPlot.connect(self.getChild('traceTableView').model().removeTrace)
 
         self.refreshTraceList()
 

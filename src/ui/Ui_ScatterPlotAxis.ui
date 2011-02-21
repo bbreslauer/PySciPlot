@@ -706,14 +706,6 @@ s</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QTextOptionsButton</class>
-   <extends>QPushButton</extends>
-   <header>gui/QTextOptionsButton</header>
-   <slots>
-    <slot>showTextOptionsWidget()</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
    <class>QColorButton</class>
    <extends>QPushButton</extends>
    <header>gui/QColorButton</header>
@@ -727,6 +719,14 @@ s</string>
    <header>gui/QStoredSettingsButton</header>
    <slots>
     <slot>toggleWidget()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsWidget()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -793,6 +793,70 @@ s</string>
     <hint type="destinationlabel">
      <x>364</x>
      <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>majorTicksLabelFont</sender>
+   <signal>clicked()</signal>
+   <receiver>majorTicksLabelFont</receiver>
+   <slot>showTextOptionsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minorTicksLabelFont</sender>
+   <signal>clicked()</signal>
+   <receiver>minorTicksLabelFont</receiver>
+   <slot>showTextOptionsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>223</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>525</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>majorTicksColor</sender>
+   <signal>clicked()</signal>
+   <receiver>majorTicksColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>240</x>
+     <y>287</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minorTicksColor</sender>
+   <signal>clicked()</signal>
+   <receiver>minorTicksColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>280</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>288</y>
     </hint>
    </hints>
   </connection>

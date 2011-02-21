@@ -31,7 +31,7 @@ def writeProjectToFile(app, fileName):
     each bit of data (waves, a wave, figures, a figure, etc)
     """
 
-    Util.debug(1, "Save", "Writing project to file")
+    Util.debug(1, "Save", "Starting to save project")
 
     # Create document
     dom = xml.dom.minidom.Document()
@@ -47,8 +47,9 @@ def writeProjectToFile(app, fileName):
     getTables(app, dom, appWindowList)
     getFigures(app, dom, appWindowList)
     
-    if os.path.isfile(fileName):
+    if os.path.isfile(fileName) or not os.path.exists(fileName):
         with open(fileName, "w") as fileHandle:
+            Util.debug(1, "Save", "Writing project to file")
             dom.writexml(fileHandle, indent='', addindent='  ', newl='\n')
 
     app.setCurrentProject(fileName)

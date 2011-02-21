@@ -133,7 +133,7 @@ class Pysciplot(QMainWindow):
         model = DataTableModel(waves, self)
 
         # Connect slots
-        self._waves.waveRemoved.connect(model.removeColumn)
+        self._waves.waveRemoved[Wave].connect(model.removeColumn)
 
         return self.createDataTableView(model, tableName)
 

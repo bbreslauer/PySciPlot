@@ -16,6 +16,7 @@
 
 from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 
+import Util
 from Trace import *
 from TraceListEntry import *
 from models.WavesListModel import *
@@ -111,6 +112,19 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         # Disconnect actions, so that we don't have multiple connections when
         # the menu is opened again.
         self.deleteTraceFromTraceListAction.triggered.disconnect(deleteTraceHelper)
+
+    def deleteSelectedTraces(self):
+        """Delete all the traces that are selected from the plot."""
+
+        indexes = self.getChild('traceTableView').selectedIndexes()
+
+        # Get the traces corresponding to the indexes. However, each index
+        # corresponds to a cell, not a row, so we need to remove duplicate trace
+        # entries from the indexes list so as not to attempt to delete them multiple times.
+        traces = Util.uniqueList(map(lambda x: x.internalPointer().getTrace(), indexes))
+
+        for trace in traces:
+            self.deleteTraceFromPlot(trace)
 
     def deleteTraceFromPlot(self, trace):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject

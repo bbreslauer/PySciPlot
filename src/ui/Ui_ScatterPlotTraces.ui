@@ -747,7 +747,7 @@ s</string>
    <sender>removeTraceButton</sender>
    <signal>clicked()</signal>
    <receiver>ScatterPlotTraces</receiver>
-   <slot>deleteTraceFromPlot()</slot>
+   <slot>deleteSelectedTraces()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>81</x>
@@ -830,19 +830,19 @@ s</string>
    <slot>toggleWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>409</x>
-     <y>98</y>
+     <x>459</x>
+     <y>107</y>
     </hint>
     <hint type="destinationlabel">
-     <x>410</x>
-     <y>113</y>
+     <x>459</x>
+     <y>122</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>addTracesToPlot()</slot>
-  <slot>deleteTraceFromPlot()</slot>
+  <slot>deleteSelectedTraces()</slot>
   <slot>showTraceListMenu()</slot>
  </slots>
 </ui>

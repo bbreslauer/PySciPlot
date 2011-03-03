@@ -372,6 +372,11 @@ class GenericAxis(Options):
         'minorTicksLabelDisplaySecondary':      Boolean(False),
     }
 
+class Legend(Options):
+    default = {
+        'loc':      String('none'),
+    }
+
 class SymbolString(String):
     default = ""
 

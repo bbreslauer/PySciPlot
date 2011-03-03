@@ -19,8 +19,10 @@ from PyQt4.QtGui import QWidget, QApplication
 from QEditFigureSubWidget import *
 from QScatterPlotAxisWidget import *
 from QScatterPlotTracesWidget import *
+from QScatterPlotLegendWidget import *
 from ui.Ui_ScatterPlotAxis import *
 from ui.Ui_ScatterPlotTraces import *
+from ui.Ui_ScatterPlotLegend import *
 
 class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
@@ -47,6 +49,11 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         self.traces.initSubWidgets()
         self.getChild('tabWidget').addTab(self.traces, 'Traces')
 
+        self.legend = QScatterPlotLegendWidget(self.getChild('tabWidget'))
+        legendUi = Ui_ScatterPlotLegend()
+        legendUi.setupUi(self.legend)
+        self.getChild('tabWidget').addTab(self.legend, 'Legend')
+
     def saveUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         
@@ -58,6 +65,9 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         leftAxisUiOptions = self.leftAxis.getCurrentUi()
         plotTypeObject.set('leftAxis', leftAxisUiOptions)
 
+        legendUiOptions = self.legend.getCurrentUi()
+        plotTypeObject.set('legend', legendUiOptions)
+
     def resetUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         
@@ -66,6 +76,9 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
         leftAxisOptions = plotTypeObject.get('leftAxis')
         self.leftAxis.setCurrentUi(leftAxisOptions)
+
+        legendOptions = plotTypeObject.get('legend')
+        self.legend.setCurrentUi(legendOptions)
 
         self.traces.resetUi()
 

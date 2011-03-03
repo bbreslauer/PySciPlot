@@ -171,12 +171,15 @@ class DataTableModel(QAbstractTableModel):
         if index.isValid() and role == Qt.EditRole:
             wave = self._waves.waves()[index.column()]
 
-            # Disregard if there is no change
-            if self.data(index) == value.toString():
-                return False
-
             # Convert from QVariant to QString to str
-            value = str(value.toString())
+            try:
+                value = str(value.toString())
+            except:
+                value = str(value)
+
+            # Disregard if there is no change
+            if str(self.data(index)) == value:
+                return False
 
             Util.debug(2, "DataTableModel.setData", "Setting " + str(wave.name()) + "[" + str(index.row()) + "] to " + str(wave.castToWaveType(value)))
             result = wave.setData(index.row(), wave.castToWaveType(value))

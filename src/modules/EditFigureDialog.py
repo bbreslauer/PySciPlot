@@ -188,10 +188,8 @@ class EditFigureDialog(Module):
         self._app.figures().figureAdded.disconnect(self._figureListModel.doReset)
         self._app.figures().figureRemoved.disconnect(self._figureListModel.doReset)
         self._ui.plotSelector.currentIndexChanged.disconnect(self.plotUi_refreshTraceList)
-        self._app.waves().waveAdded.disconnect(self._xListModel.doReset)
-        self._app.waves().waveRemoved[Wave].disconnect(self._xListModel.doReset)
-        self._app.waves().waveAdded.disconnect(self._yListModel.doReset)
-        self._app.waves().waveRemoved[Wave].disconnect(self._yListModel.doReset)
+        self._app.waves().waveAdded.disconnect(self._wavesModel.doReset)
+        self._app.waves().waveRemoved[Wave].disconnect(self._wavesModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

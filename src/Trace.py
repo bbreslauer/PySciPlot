@@ -57,6 +57,11 @@ class Trace(FigureObject):
         self.setX(x)
         self.setY(y)
         self.setPlot(plot)
+        try:
+            self.setLabel(str(self.xName()) + "-" + str(self.yName()))
+        except AttributeError:
+            # x or y is None, so xName() and yName() don't work.
+            self.setLabel("")
 
         # If a wave is removed from the app, see if this trace held it
         self._app.waves().waveRemoved[Wave].connect(self.removeTraceIfContainsWave)
@@ -109,6 +114,14 @@ class Trace(FigureObject):
 
     def plot(self):
         return self._plot
+
+    def setLabel(self, label):
+        self._label = str(label)
+        if self.plot() != None:
+            self.updatePlotTraceLabel()
+
+    def label(self):
+        return self._label
     
     def setX(self, x):
         Util.debug(2, "Trace.setX", "Setting x trace")
@@ -125,7 +138,9 @@ class Trace(FigureObject):
         # Connect new wave's dataModified signal
         try:
             self._x.dataModified.connect(self.updatePlotData)
+            self.updatePlotData()
         except:
+            # If self._x is Null, then the above will fail
             pass
         
     def setY(self, y):
@@ -142,9 +157,11 @@ class Trace(FigureObject):
         # Connect new wave's dataModified signal
         try:
             self._y.dataModified.connect(self.updatePlotData)
+            self.updatePlotData()
         except:
+            # If self._x is Null, then the above will fail
             pass
-    
+
     def x(self):
         return self._x
         
@@ -200,7 +217,8 @@ class Trace(FigureObject):
         # If the axes object does not yet exist in the plot object, then
         # we cannot plot anything
         try:
-            self._line = self.plot().axes().plot(x, y, **(self.getFormat()))[0]
+            self._line = self.plot().axes().plot(x, y, label=self.label(), **(self.getFormat()))[0]
+            self.plot().plotTypeObject.update_legend()
             self.plot().redraw()
         except:
             return
@@ -214,6 +232,11 @@ class Trace(FigureObject):
             self.plot().redraw()
         else:
             self.refresh()
+
+    def updatePlotTraceLabel(self):
+        if self._line:
+            self._line.set_label(self.label())
+            self.plot().plotTypeObject.update_legend()
 
     def removeTraceIfContainsWave(self, wave):
         if wave == self.x() or wave == self.y():

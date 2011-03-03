@@ -48,7 +48,8 @@ class ScatterPlot(FigureObject):
                 'leftAxis':         Property.GenericAxis({
                                                     'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'right'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
-                    }),
+                                                    }),
+                'legend':           Property.Legend(),
                 }
 
         FigureObject.__init__(self, properties)
@@ -104,6 +105,15 @@ class ScatterPlot(FigureObject):
             self.update_axis('leftAxis', self.plot().axes().get_yaxis())
         except:
             pass
+
+    def update_legend(self):
+        Util.debug(1, "ScatterPlot.update_legend", "")
+
+        if self.get('legend').get('loc') == 'none':
+            return
+        
+        self.plot().axes().legend(**(self.getMpl('legend')))
+        self.plot().redraw()
 
     def update_axis(self, axisName, axis):
         axisDict = self.getMpl(axisName)
@@ -214,6 +224,7 @@ class ScatterPlot(FigureObject):
         
         self.update_bottomAxis()
         self.update_leftAxis()
+        self.update_legend()
 
 class PieChart(FigureObject):
 

@@ -33,7 +33,7 @@ class TraceListModel(QAbstractTableModel):
         QAbstractTableModel.__init__(self, parent, *args)
         self._parent = parent
         self._data = []
-        self._columnNames = ['X', 'Y']
+        self._columnNames = ['X', 'Y', 'Label']
        
         # Connect signals
         self.traceAdded.connect(self.doReset)
@@ -68,6 +68,8 @@ class TraceListModel(QAbstractTableModel):
                 return QVariant(self._data[index.row()].xName())
             elif self._columnNames[index.column()] == 'Y':
                 return QVariant(self._data[index.row()].yName())
+            elif self._columnNames[index.column()] == 'Label':
+                return QVariant(self._data[index.row()].label())
         else:
             return QVariant()
             

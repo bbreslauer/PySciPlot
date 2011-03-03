@@ -19,6 +19,7 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 import Util
 from Wave import *
 from Trace import *
+from Delegates import TraceListDelegate
 from models.WavesListModel import *
 from models.TraceListModel import *
 from QEditFigureSubWidget import *
@@ -38,20 +39,22 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self.getChild('pointMarkerEdgeColor').initButtonColor()
 
         # Setup X and Y lists
-        self._xListModel = WavesListModel(self._app.waves())
-        self.getChild('xAxisListView').setModel(self._xListModel)
-        self._app.waves().waveAdded.connect(self._xListModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._xListModel.doReset)
+        self._wavesModel = WavesListModel(self._app.waves())
+        self.getChild('xAxisListView').setModel(self._wavesModel)
+        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
         
-        self._yListModel = WavesListModel(self._app.waves())
-        self.getChild('yAxisListView').setModel(self._yListModel)
-        self._app.waves().waveAdded.connect(self._yListModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._yListModel.doReset)
+        #self._wavesModel = WavesListModel(self._app.waves())
+        self.getChild('yAxisListView').setModel(self._wavesModel)
+        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
         
         # Setup trace list
         traceListModel = TraceListModel()
         self.getChild('traceTableView').setModel(traceListModel)
         self.setupTraceListMenu()
+        traceListDelegate = TraceListDelegate(self._wavesModel)
+        self.getChild('traceTableView').setItemDelegate(traceListDelegate)
 
         self.getChild('traceTableView').selectionModel().currentChanged.connect(self.selectedTraceChanged)
 
@@ -88,6 +91,9 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
             
         for trace in plotTypeObject.traces():
             traceListModel.addTrace(trace)
+
+        self.getChild('traceTableView').resizeRowsToContents()
+        self.getChild('traceTableView').resizeColumnsToContents()
 
         traceListModel.doReset()
 

@@ -40,6 +40,11 @@ class WavesListModel(QStringListModel):
     def waveByRow(self, row):
         return self.waves().waves()[row]
 
+    def getIndexByWaveName(self, name):
+        wave = self.waves().getWaveByName(name)
+        index = self.waves().waves().index(wave)
+        return index
+
     def appendRow(self, wave):
         self._waves.addWave(wave)
 

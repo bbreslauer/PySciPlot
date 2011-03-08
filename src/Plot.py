@@ -94,17 +94,15 @@ class ScatterPlot(FigureObject):
 
     def update_bottomAxis(self):
         Util.debug(3, "ScatterPlot.update_bottomAxis", "")
-        try:
+
+        if self.plot().axes() != None:
             self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
-        except:
-            pass
 
     def update_leftAxis(self):
         Util.debug(3, "ScatterPlot.update_leftAxis", "")
-        try:
+
+        if self.plot().axes() != None:
             self.update_axis('leftAxis', self.plot().axes().get_yaxis())
-        except:
-            pass
 
     def update_legend(self):
         Util.debug(1, "ScatterPlot.update_legend", "")
@@ -129,20 +127,48 @@ class ScatterPlot(FigureObject):
                 self.plot().axes().set_xlim(axisDict['minimum'], axisDict['maximum'])
             elif axisName == 'leftAxis':
                 self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
+                
+        minimum, maximum = axis.get_view_interval()
         
         if axisDict['majorTicksVisible']:
             # Set the formatter and locator for the major ticks
             axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['majorTicksLabelFormat']))
+
+            majorTickPositions = []
+
             if axisDict['useMajorTicksNumber']:
-                # User has defined the number of major tick marks to display
-                majorTicksNum = axisDict['majorTicksNumber']
-                axis.set_major_locator(ticker.LinearLocator(majorTicksNum))
+                if axisDict['useMajorTicksAnchor']:
+                    # spacing = (max - min) / (num - 1) if both max and min have tick marks
+                    # spacing = (max - min) / (num)     if exactly one of max and min has tick marks
+                    # spacing = (max - min) / (num)     if neither max nor min have tick marks
+
+                    majorTicksNumber = axisDict['majorTicksNumber']
+                    anchor = axisDict['majorTicksAnchor']
+                    if ((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0 and ((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0:
+                        majorTickPositions = list(numpy.linspace(minimum, maximum, majorTicksNumber, True))
+                    elif (((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0) ^ (((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0):
+                        spacing = (float(maximum) - float(minimum)) / majorTicksNumber
+                        firstTick = anchor + int((float(minimum) - float(anchor)) / float(spacing) - 1) * float(spacing)
+                        majorTickPositions = list(numpy.arange(firstTick, maximum, spacing))
+                        majorTickPositions.append(majorTickPositions[-1] + spacing)
+                    else:
+                        spacing = (float(maximum) - float(minimum)) / (majorTicksNumber)
+                        firstTick = anchor + int((float(minimum) - float(anchor)) / float(spacing) - 1) * float(spacing)
+                        majorTickPositions = list(numpy.arange(firstTick, maximum, spacing))
+                        majorTickPositions.append(majorTickPositions[-1] + spacing)
+                else:
+                    majorTickPositions = list(numpy.linspace(minimum, maximum, axisDict['majorTicksNumber'], True))
             else:
-                # User has defined the spacing between major tick marks
-                majorTicks = list(numpy.arange(axisDict['minimum'], axisDict['maximum'], axisDict['majorTicksSpacing']))
-                if (axisDict['maximum'] - majorTicks[-1]) % axisDict['majorTicksSpacing'] == 0:
-                    majorTicks.append(axisDict['maximum'])
-                axis.set_major_locator(ticker.FixedLocator(majorTicks))
+                if axisDict['useMajorTicksAnchor']:
+                    firstTick = axisDict['majorTicksAnchor'] + int((float(minimum) - float(axisDict['majorTicksAnchor'])) / float(axisDict['majorTicksSpacing']) - 1) * float(axisDict['majorTicksSpacing'])
+                else:
+                    firstTick = minimum
+                
+                majorTickPositions = list(numpy.arange(firstTick, maximum, axisDict['majorTicksSpacing']))
+                majorTickPositions.append(majorTickPositions[-1] + axisDict['majorTicksSpacing'])
+                
+            # Now place the ticks on the plot
+            axis.set_major_locator(ticker.FixedLocator(majorTickPositions))
                     
             # Set the major tick params
             majorTickParams = {
@@ -171,7 +197,7 @@ class ScatterPlot(FigureObject):
             if axisDict['minorTicksVisible']:
                 # Set the formatter and locator for the minor ticks
                 axis.set_minor_formatter(ticker.NullFormatter())
-                #majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
+                majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
                 minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
                 minorTicks = [float(axis.get_majorticklocs()[0])]
                 while minorTicks[-1] <= axis.get_view_interval()[1]:

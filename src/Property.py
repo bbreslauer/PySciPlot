@@ -341,8 +341,10 @@ class GenericAxis(Options):
         'visible':            Boolean(True),
 
         'majorTicksVisible':                    Boolean(True),
+        'useMajorTicksAnchor':                  Boolean(False),
         'useMajorTicksSpacing':                 Boolean(False),
         'useMajorTicksNumber':                  Boolean(True),
+        'majorTicksAnchor':                     Float(0),
         'majorTicksSpacing':                    Float(2),
         'majorTicksNumber':                     Integer(5),
         'majorTicksLabelFormat':                String('%.2g'),

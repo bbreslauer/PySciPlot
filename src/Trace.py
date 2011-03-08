@@ -69,16 +69,18 @@ class Trace(FigureObject):
         self.getFormat()
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple(), tuple([self.properties, self.xName(), self.yName(), self.plot()])])
+        return tuple([self.__class__, tuple(), tuple([self.properties, self.xName(), self.yName(), self.label(), self.plot()])])
 
     def __setstate__(self, state):
         properties = state[0]
         xName = state[1]
         yName = state[2]
-        plot = state[3]
+        label = state[3]
+        plot = state[4]
 
         self.setX(self._app.waves().getWaveByName(xName))
         self.setY(self._app.waves().getWaveByName(yName))
+        self.setLabel(label)
         self.setPlot(plot)
 
         for (key, value) in properties.items():

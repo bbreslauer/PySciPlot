@@ -109,7 +109,7 @@ class ScatterPlot(FigureObject):
     def update_legend(self):
         Util.debug(1, "ScatterPlot.update_legend", "")
 
-        if self.get('legend').get('loc') == 'none':
+        if self.get('legend').get('loc') == 'none' or self.plot() == None or self.plot().axes() == None:
             return
         
         self.plot().axes().legend(**(self.getMpl('legend')))

@@ -56,14 +56,14 @@ class TraceListModel(QAbstractTableModel):
         return QVariant()
 
     def index(self, row, column, parent=QModelIndex()):
-        if row > len(self._data):
+        if row >= len(self._data):
             return self.createIndex(row, column, parent)
         return self.createIndex(row, column, self._data[row])
     
     def data(self, index, role):
         """Return the data for the given index."""
 
-        if index.isValid() and role == Qt.DisplayRole:
+        if self.indexIsValid(index) and role == Qt.DisplayRole:
             if self._columnNames[index.column()] == 'X':
                 return QVariant(self._data[index.row()].xName())
             elif self._columnNames[index.column()] == 'Y':
@@ -72,7 +72,12 @@ class TraceListModel(QAbstractTableModel):
                 return QVariant(self._data[index.row()].label())
         else:
             return QVariant()
-            
+    
+    def indexIsValid(self, index):
+        if index.isValid() and index.column() < self.columnCount() and index.row() < self.rowCount():
+            return True
+        return False
+
     def clearData(self):
         """Reset data array to a blank list."""
         self._data = []
@@ -80,7 +85,7 @@ class TraceListModel(QAbstractTableModel):
     def flags(self, index):
         """Return the flags for the given index."""
 
-        if not index.isValid():
+        if not self.indexIsValid(index):
             return Qt.ItemIsEnabled
         return Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable
     

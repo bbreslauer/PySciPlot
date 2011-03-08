@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScatterPlotLegend</class>
+ <widget class="QWidget" name="ScatterPlotLegend">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>357</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Location</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="loc">
+     <item>
+      <property name="text">
+       <string>none</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>best</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>upper right</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>upper left</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>lower left</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>lower right</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>right</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>center left</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>center right</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>lower center</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>upper center</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>center</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Title</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="title"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Border</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="frameon">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Rounded Corners</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="fancybox">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Shadow</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="shadow">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Number of Columns</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QSpinBox" name="ncol">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Spacing between Columns</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QDoubleSpinBox" name="columnspacing">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Border-Axis spacing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QDoubleSpinBox" name="borderaxespad">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.500000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>Handle-Text padding</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QDoubleSpinBox" name="handletextpad">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.500000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>Handle size</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QDoubleSpinBox" name="handlelength">
+     <property name="maximum">
+      <double>20.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>2.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>Border padding</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QDoubleSpinBox" name="borderpad">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.300000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="label_12">
+     <property name="text">
+      <string>Label line spacing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QDoubleSpinBox" name="labelspacing">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.500000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="label_13">
+     <property name="text">
+      <string>Marker scale</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QDoubleSpinBox" name="markerscale">
+     <property name="maximum">
+      <double>10.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>frameon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fancybox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>339</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

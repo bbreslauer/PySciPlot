@@ -373,8 +373,22 @@ class GenericAxis(Options):
     }
 
 class Legend(Options):
+    # a font is not so simple to add, because it uses the matplotlib FontProperties class
+    # instead of just a dict of values
     default = {
-        'loc':      String('none'),
+        'loc':              String('none'),
+        'title':            String(''),
+        'frameon':          Boolean(True),
+        'fancybox':         Boolean(False),
+        'shadow':           Boolean(False),
+        'ncol':             Integer(1),
+        'borderpad':        Float(0.3),
+        'labelspacing':     Float(0.5),
+        'handlelength':     Float(2.0),
+        'handletextpad':    Float(0.5),
+        'borderaxespad':    Float(0.5),
+        'columnspacing':    Float(1.0),
+        'markerscale':      Float(1.0),
     }
 
 class SymbolString(String):

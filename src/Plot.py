@@ -205,15 +205,15 @@ class ScatterPlot(FigureObject):
     
             if axisDict['minorTicksVisible']:
                 # Set the formatter and locator for the minor ticks
-                axis.set_minor_formatter(ticker.NullFormatter())
-                majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
-                minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
-                minorTicks = [float(axis.get_majorticklocs()[0])]
-                while minorTicks[-1] <= axis.get_view_interval()[1]:
-                    # this creates the minor tick locations starting at the lowest major tick
-                    # and increasing to the end of the view interval
-                    minorTicks.append(float(minorTicks[-1]) + float(minorTicksBase))
                 if axisDict['scaleType'] == 'linear':
+                    axis.set_minor_formatter(ticker.NullFormatter())
+                    majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
+                    minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
+                    minorTicks = [float(axis.get_majorticklocs()[0])]
+                    while minorTicks[-1] <= axis.get_view_interval()[1]:
+                        # this creates the minor tick locations starting at the lowest major tick
+                        # and increasing to the end of the view interval
+                        minorTicks.append(float(minorTicks[-1]) + float(minorTicksBase))
                     axis.set_minor_locator(ticker.FixedLocator(minorTicks))
                 else:
                     # this needs to be worked on

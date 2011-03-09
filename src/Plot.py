@@ -146,13 +146,9 @@ class ScatterPlot(FigureObject):
                     anchor = axisDict['majorTicksAnchor']
                     if ((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0 and ((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0:
                         majorTickPositions = list(numpy.linspace(minimum, maximum, majorTicksNumber, True))
-                    elif (((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0) ^ (((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0):
-                        spacing = (float(maximum) - float(minimum)) / majorTicksNumber
-                        firstTick = anchor + int((float(minimum) - float(anchor)) / float(spacing) - 1) * float(spacing)
-                        majorTickPositions = list(numpy.arange(firstTick, maximum, spacing))
-                        majorTickPositions.append(majorTickPositions[-1] + spacing)
+                    #elif (((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0) ^ (((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber))) == 0):
                     else:
-                        spacing = (float(maximum) - float(minimum)) / (majorTicksNumber)
+                        spacing = (float(maximum) - float(minimum)) / majorTicksNumber
                         firstTick = anchor + int((float(minimum) - float(anchor)) / float(spacing) - 1) * float(spacing)
                         majorTickPositions = list(numpy.arange(firstTick, maximum, spacing))
                         majorTickPositions.append(majorTickPositions[-1] + spacing)

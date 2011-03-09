@@ -294,6 +294,23 @@ class Color(Property):
 
         return newValue
 
+class SymbolString(String):
+    default = ""
+
+    symbols = {}
+
+    def getMpl(self):
+        """Convert from a word to a character representation of the line style."""
+        return self.symbols[self.get()]
+
+class AxisScaleType(SymbolString):
+    default = "Linear"
+
+    symbols = {
+            'Linear': 'linear',
+            'Logarithmic': 'log',
+            'Symmetric Log': 'symlog',
+        }
 
 class Options(Dictionary):
     """
@@ -335,7 +352,7 @@ class GenericAxis(Options):
         'autoscale':          Boolean(True),
         'minimum':            Float(-10),
         'maximum':            Float(10),
-        'scaleType':          String('Linear'),
+        'scaleType':          AxisScaleType('Linear'),
         'label':              String(''),
         'labelFont':          TextOptions({'verticalalignment': 'top'}),
         'visible':            Boolean(True),
@@ -392,15 +409,6 @@ class Legend(Options):
         'columnspacing':    Float(1.0),
         'markerscale':      Float(1.0),
     }
-
-class SymbolString(String):
-    default = ""
-
-    symbols = {}
-
-    def getMpl(self):
-        """Convert from a word to a character representation of the line style."""
-        return self.symbols[self.get()]
 
 
 class LineStyle(SymbolString):

@@ -127,30 +127,21 @@ class ScatterPlot(FigureObject):
                 self.plot().axes().set_xlim(axisDict['minimum'], axisDict['maximum'])
             elif axisName == 'leftAxis':
                 self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
-                
+        
         # Set linear or logarithmic scaling
-        print axisDict['scaleType']
-        if axisDict['scaleType'] == 'Logarithmic':
-            if axisName == 'bottomAxis':
-                self.plot().axes().set_xscale('log')
-            elif axisName == 'leftAxis':
-                self.plot().axes().set_yscale('log')
-        elif axisDict['scaleType'] == 'Symmetric Log':
-            if axisName == 'bottomAxis':
-                self.plot().axes().set_xscale('symlog')
-            elif axisName == 'leftAxis':
-                self.plot().axes().set_yscale('symlog')
-        else:
-            if axisName == 'bottomAxis':
-                self.plot().axes().set_xscale('linear')
-            elif axisName == 'leftAxis':
-                self.plot().axes().set_yscale('linear')
+        if axisName == 'bottomAxis':
+            self.plot().axes().set_xscale(axisDict['scaleType'])
+        elif axisName == 'leftAxis':
+            self.plot().axes().set_yscale(axisDict['scaleType'])
 
         minimum, maximum = axis.get_view_interval()
         
         if axisDict['majorTicksVisible']:
             # Set the formatter and locator for the major ticks
-            axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['majorTicksLabelFormat']))
+            if axisDict['scaleType'] == 'linear':
+                axis.set_major_formatter(ticker.FormatStrFormatter(axisDict['majorTicksLabelFormat']))
+            else:
+                axis.set_major_formatter(ticker.LogFormatter(10.0, False))
 
             majorTickPositions = []
 
@@ -182,7 +173,11 @@ class ScatterPlot(FigureObject):
                 majorTickPositions.append(majorTickPositions[-1] + axisDict['majorTicksSpacing'])
                 
             # Now place the ticks on the plot
-            axis.set_major_locator(ticker.FixedLocator(majorTickPositions))
+            if axisDict['scaleType'] == 'linear':
+                axis.set_major_locator(ticker.FixedLocator(majorTickPositions))
+            else:
+                axis.set_major_locator(ticker.LogLocator())
+
                     
             # Set the major tick params
             majorTickParams = {
@@ -218,7 +213,11 @@ class ScatterPlot(FigureObject):
                     # this creates the minor tick locations starting at the lowest major tick
                     # and increasing to the end of the view interval
                     minorTicks.append(float(minorTicks[-1]) + float(minorTicksBase))
-                axis.set_minor_locator(ticker.FixedLocator(minorTicks))
+                if axisDict['scaleType'] == 'linear':
+                    axis.set_minor_locator(ticker.FixedLocator(minorTicks))
+                else:
+                    # this needs to be worked on
+                    axis.set_minor_locator(ticker.LogLocator(subs=[1.0,2.0,5.0,8.0]))
         
                 # Set the minor tick params
                 minorTickParams = {

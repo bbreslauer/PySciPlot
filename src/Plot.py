@@ -128,6 +128,24 @@ class ScatterPlot(FigureObject):
             elif axisName == 'leftAxis':
                 self.plot().axes().set_ylim(axisDict['minimum'], axisDict['maximum'])
                 
+        # Set linear or logarithmic scaling
+        print axisDict['scaleType']
+        if axisDict['scaleType'] == 'Logarithmic':
+            if axisName == 'bottomAxis':
+                self.plot().axes().set_xscale('log')
+            elif axisName == 'leftAxis':
+                self.plot().axes().set_yscale('log')
+        elif axisDict['scaleType'] == 'Symmetric Log':
+            if axisName == 'bottomAxis':
+                self.plot().axes().set_xscale('symlog')
+            elif axisName == 'leftAxis':
+                self.plot().axes().set_yscale('symlog')
+        else:
+            if axisName == 'bottomAxis':
+                self.plot().axes().set_xscale('linear')
+            elif axisName == 'leftAxis':
+                self.plot().axes().set_yscale('linear')
+
         minimum, maximum = axis.get_view_interval()
         
         if axisDict['majorTicksVisible']:

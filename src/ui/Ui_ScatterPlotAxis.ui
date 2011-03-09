@@ -66,6 +66,11 @@
           <string>Logarithmic</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Symmetric Log</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="0" column="2" rowspan="3" colspan="2">

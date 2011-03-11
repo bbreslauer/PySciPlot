@@ -15,6 +15,7 @@
 
 
 from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt4.QtGui import QApplication
 
 import Util
 
@@ -25,6 +26,8 @@ class FigureObject(QObject):
 
     def __init__(self, properties={}):
         QObject.__init__(self)
+        
+        self._app = QApplication.instance().window
 
         self.properties = properties
 

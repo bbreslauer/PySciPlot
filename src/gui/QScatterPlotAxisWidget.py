@@ -14,10 +14,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from Wave import *
+from models.WavesListModel import WavesListModel
 from QEditFigureSubWidget import *
 from Property import GenericAxis
 
 class QScatterPlotAxisWidget(QEditFigureSubWidget):
 
     properties = GenericAxis.default.keys()
+
+    def initSubWidgets(self):
+        self._wavesModel = WavesListModel(self._app.waves())
+        self.getChild('majorTicksLabelWave').setModel(self._wavesModel)
+        self.getChild('majorTicksWaveValues').setModel(self._wavesModel)
+        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
+        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
 

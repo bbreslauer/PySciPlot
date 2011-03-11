@@ -44,7 +44,6 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self._app.waves().waveAdded.connect(self._wavesModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
         
-        #self._wavesModel = WavesListModel(self._app.waves())
         self.getChild('yAxisListView').setModel(self._wavesModel)
         self._app.waves().waveAdded.connect(self._wavesModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)

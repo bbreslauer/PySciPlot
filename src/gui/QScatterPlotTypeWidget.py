@@ -36,11 +36,13 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         self.bottomAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
         bottomAxisUi = Ui_ScatterPlotAxis()
         bottomAxisUi.setupUi(self.bottomAxis)
+        self.bottomAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.bottomAxis, 'Bottom Axis')
 
         self.leftAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
         leftAxisUi = Ui_ScatterPlotAxis()
         leftAxisUi.setupUi(self.leftAxis)
+        self.leftAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.leftAxis, 'Left Axis')
 
         self.traces = QScatterPlotTracesWidget(self._plotOptionsWidget, self.getChild('tabWidget'))

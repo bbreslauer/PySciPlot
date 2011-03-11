@@ -248,7 +248,13 @@ class Dictionary(Property):
             else:
                 isModified = False
                 try:
+                    currentKeys = self._value.keys()
                     for (key, value) in newValue.items():
+                        # If there is an entry in newValue that does not exist in the current
+                        # dictionary, then we throw it away
+                        if key not in currentKeys:
+                            continue
+
                         # Check if the value is going to be changed
                         if not isModified and value != self._value.get(key):
                             isModified = True
@@ -361,10 +367,15 @@ class GenericAxis(Options):
         'useMajorTicksAnchor':                  Boolean(False),
         'useMajorTicksSpacing':                 Boolean(False),
         'useMajorTicksNumber':                  Boolean(True),
+        'useMajorTicksWaveValues':              Boolean(False),
         'majorTicksAnchor':                     Float(0),
         'majorTicksSpacing':                    Float(2),
         'majorTicksNumber':                     Integer(5),
-        'majorTicksLabelFormat':                String('%.2g'),
+        'majorTicksWaveValues':                 String(''),
+        'majorTicksLabelUseNumeric':            Boolean(True),
+        'majorTicksLabelUseWave':               Boolean(False),
+        'majorTicksLabelNumericFormat':         String('%.2g'),
+        'majorTicksLabelWave':                  String(''),
         'majorTicksLabelFont':                  TextOptions({'verticalalignment': 'top'}),
         'majorTicksLabelPadding':               Integer(4),
         'majorTicksDirection':                  String('in'),
@@ -378,17 +389,12 @@ class GenericAxis(Options):
         
         'minorTicksVisible':                    Boolean(True),
         'minorTicksNumber':                     Integer(5),
-        'minorTicksLabelFormat':                String('%.2g'),
-        'minorTicksLabelFont':                  TextOptions({'verticalalignment': 'top'}),
-        'minorTicksLabelPadding':               Integer(4),
         'minorTicksDirection':                  String('in'),
         'minorTicksColor':                      Color(QColor(0,0,0,255)),
         'minorTicksLength':                     Integer(2),
         'minorTicksWidth':                      Integer(1),
         'minorTicksDisplayPrimary':             Boolean(True),
         'minorTicksDisplaySecondary':           Boolean(True),
-        'minorTicksLabelDisplayPrimary':        Boolean(False),
-        'minorTicksLabelDisplaySecondary':      Boolean(False),
     }
 
 class Legend(Options):

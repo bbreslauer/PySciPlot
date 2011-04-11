@@ -6,17 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>357</height>
+    <width>312</width>
+    <height>329</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <property name="fieldGrowthPolicy">
-    <enum>QFormLayout::ExpandingFieldsGrow</enum>
-   </property>
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -245,14 +242,14 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
+   <item row="11" column="0">
     <widget class="QLabel" name="label_12">
      <property name="text">
       <string>Label line spacing</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="11" column="1">
     <widget class="QDoubleSpinBox" name="labelspacing">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -262,14 +259,14 @@
      </property>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="12" column="0">
     <widget class="QLabel" name="label_13">
      <property name="text">
       <string>Marker scale</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="12" column="1">
     <widget class="QDoubleSpinBox" name="markerscale">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -279,7 +276,7 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="1">
+   <item row="0" column="2" rowspan="13">
     <widget class="QStoredSettingsButton" name="storedSettingsButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">

@@ -15,9 +15,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# convert all ui files to py source code
-for file in `ls *.ui`
+# Get list of files to convert
+if [ $# -gt 0 ]
+then
+    files=$@
+else
+    files=`ls *.ui`
+fi
+
+# convert ui files to py source code
+#for file in `ls *.ui`
+for file in $files
 do
+    echo ${file}
     pyuic4 -o ${file}.py ${file}
     
     # remove all connectSlotsByName entries in py files

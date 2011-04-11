@@ -90,10 +90,11 @@ class Figures(QObject):
         try:
             removedFigure = self._figures.remove(figure)
             figure.properties['windowTitle'].modified.disconnect(self.emitFigureRenamed)
+            self.figureRemoved.emit()
+            Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('windowTitle') + " from figures object")
+            del figure
         except IndexError:
             return False
-        self.figureRemoved.emit()
-        Util.debug(2, "Figures.removeFigure", "Removed figure " + figure.get('windowTitle') + " from figures object")
         return removedFigure
 
     def removeAllFigures(self):

@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QAction, QColor, QApplication
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -75,6 +76,10 @@ class Figure(FigureObject):
         self.refresh()
 
         Util.debug(1, "Figure.init", "Created figure " + self.get('windowTitle'))
+
+    def __del__(self):
+        self._figureSubWindow.setAttribute(Qt.WA_DeleteOnClose)
+        self._figureSubWindow.close()
 
     def __str__(self):
         return "name: %s, rows: %s, columns: %s" % (self.get('windowTitle'), self.get('rows'), self.get('columns'))

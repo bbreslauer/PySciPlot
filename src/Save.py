@@ -96,7 +96,7 @@ def getWaves(app, dom, waveNames=[]):
     waves.appendChild(dom.createTextNode(str(pickle.dumps(app.waves()))))
     p.appendChild(waves)
 
-def getTables(app, dom, appWindowList, tablesList=[]):
+def getTables(app, dom, appWindowList):
     """
     Get tables and put them into the xml document.  We only store
     the names of the waves in the table.
@@ -107,26 +107,24 @@ def getTables(app, dom, appWindowList, tablesList=[]):
 
     appWindowList is a list of the windows in the mdi area, so that we
     can determine the order of the windows.
-    
-    tablesList is a list of table objects to export.  If tablesList is
-    empty, then get all the tables.
     """
     
     Util.debug(1, "Save", "Getting tables")
 
     p = dom.firstChild
 
+    tablesList = []
+
     # Create and add tables object to dom
     tables = dom.createElement("tables")
     p.appendChild(tables)
 
-    if len(tablesList) == 0:
-        # Look for tables in all the windows in the app's mdi area
-        windows = app.ui.workspace.subWindowList()
+    # Look for tables in all the windows in the app's mdi area
+    windows = app.ui.workspace.subWindowList()
 
-        for window in windows:
-            if type(window).__name__ == "DataTableSubWindow":
-                tablesList.append(window)
+    for window in windows:
+        if type(window).__name__ == "DataTableSubWindow":
+            tablesList.append(window)
 
     for table in tablesList:
         getTable(app, dom, appWindowList, tables, table)
@@ -165,7 +163,7 @@ def getTable(app, dom, appWindowList, tables, tableObj):
         table.appendChild(wave)
     tables.appendChild(table)
 
-def getFigures(app, dom, appWindowList, figuresList=[]):
+def getFigures(app, dom, appWindowList):
     """
     Get figures and put them into the xml document.
 
@@ -184,14 +182,15 @@ def getFigures(app, dom, appWindowList, figuresList=[]):
 
     p = dom.firstChild
 
+    figuresList = []
+
     # Create and add figures object
     figures = dom.createElement("figures")
     p.appendChild(figures)
 
     # Now gather all the individual figure objects and add them
-    if len(figuresList) == 0:
-        # Gather all the figures in the app's Figures object
-        figuresList = app.figures().figures()
+    # Gather all the figures in the app's Figures object
+    figuresList = app.figures().figures()
 
     for figure in figuresList:
         getFigure(app, dom, appWindowList, figures, figure)

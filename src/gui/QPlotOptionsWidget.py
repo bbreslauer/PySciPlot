@@ -75,6 +75,10 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         """
         Set the figure whose plots should be displayed.
         """
+
+        if not figure:
+            return
+
         self._plotListModel.setFigure(figure)
         self._plotListModel.doReset()
 

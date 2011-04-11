@@ -177,3 +177,7 @@ def loadFigures(app, figures, stackingOrder):
             stackingOrder.extend([None] * (figureAttrs["stackingOrder"] - len(stackingOrder) + 1))
         stackingOrder[figureAttrs["stackingOrder"]] = figureWindow
 
+        # Set the figure dialog selected to the first figure
+        app._loadedModules['EditFigureDialog'].changeCurrentFigure(0)
+        app._loadedModules['EditFigureDialog'].updateFigureSelectorIndex(0)
+

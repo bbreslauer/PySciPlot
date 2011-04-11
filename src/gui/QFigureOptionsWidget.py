@@ -39,6 +39,10 @@ class QFigureOptionsWidget(QEditFigureSubWidget):
 
     def resetUi(self):
         """Set the UI to the current Figure's settings."""
-        
-        self.setCurrentUi(self._editFigureDialogModule.currentFigure().properties)
+        try:
+            self.setCurrentUi(self._editFigureDialogModule.currentFigure().properties)
+        except:
+            # There were probably no figures available (the last one was deleted) and so properties doesn't exist.
+            # In this case, just leave the current options alone.
+            pass
 

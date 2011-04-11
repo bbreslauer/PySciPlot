@@ -124,6 +124,8 @@ class EditFigureDialog(Module):
         if answer == QMessageBox.Yes:
             figure.hideFigure()
             self._app.figures().removeFigure(figure)
+            self.changeCurrentFigure(0)
+            self.updateFigureSelectorIndex(0)
 
     #
     # Get current items
@@ -153,7 +155,17 @@ class EditFigureDialog(Module):
         self._ui.figureSelector.setCurrentIndex(currentFigureIndex)
         
         self._ui.figureSelector.currentIndexChanged[int].connect(self.changeCurrentFigure)
+    
+    def updateFigureSelectorIndex(self, index):
+        """
+        Programmatically change the selected entry in the figure selector box.
+        This is useful for deleting figures and also for loading a project.
+        """
 
+        if index < 0:
+            return
+
+        self._ui.figureSelector.setCurrentIndex(index)
 
 
     """Module-required methods"""

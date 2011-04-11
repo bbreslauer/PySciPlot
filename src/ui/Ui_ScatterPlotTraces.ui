@@ -665,6 +665,12 @@ color: rgb(255, 255, 255);</string>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
       <string>S
 t

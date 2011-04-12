@@ -57,7 +57,7 @@ class WavesListModel(QStringListModel):
         return self.createIndex(row, column, self.waves().waves()[row])
     
     def data(self, index, role = Qt.DisplayRole):
-        if index.isValid() and role == Qt.DisplayRole:
+        if index.isValid() and index.row() < self.rowCount() and role == Qt.DisplayRole:
             return QVariant(QString(self._waves.waves()[index.row()].name()))
         else:
             return QVariant()

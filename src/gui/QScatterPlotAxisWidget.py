@@ -30,3 +30,12 @@ class QScatterPlotAxisWidget(QEditFigureSubWidget):
         self._app.waves().waveAdded.connect(self._wavesModel.doReset)
         self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
 
+    def changeScaleType(self, scaleType):
+        if scaleType == 'Linear':
+            self.getChild('majorTicksLocationsStackedWidget').setCurrentIndex(0)
+            self.getChild('minorTicksNumber').setEnabled(True)
+        else:
+            self.getChild('majorTicksLocationsStackedWidget').setCurrentIndex(1)
+            self.getChild('minorTicksNumber').setEnabled(False)
+
+

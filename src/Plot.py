@@ -187,7 +187,7 @@ class ScatterPlot(FigureObject):
         if axisDict['scaleType'] == 'linear':
             axis.set_major_locator(ticker.FixedLocator(majorTickPositions))
         else:
-            axis.set_major_locator(ticker.LogLocator())
+            axis.set_major_locator(ticker.LogLocator(base=axisDict['majorTicksLogBase']))
 
                 
         # Set the major tick params
@@ -236,7 +236,9 @@ class ScatterPlot(FigureObject):
             axis.set_minor_locator(ticker.FixedLocator(minorTicks))
         else:
             # this needs to be worked on
-            axis.set_minor_locator(ticker.LogLocator(subs=[1,2,3,4,5,6,7,8,9]))
+            subs = axisDict['minorTicksLogLocations'].split(',')
+            subs = map(int, subs)
+            axis.set_minor_locator(ticker.LogLocator(base=axisDict['majorTicksLogBase'], subs=subs))
 
         # Set the minor tick params
         minorTickParams = {

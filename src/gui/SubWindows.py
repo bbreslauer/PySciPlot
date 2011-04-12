@@ -32,6 +32,8 @@ class SubWindow(QMdiSubWindow):
     def show(self):
         QMdiSubWindow.show(self)
         self.widget().setVisible(True)
+        self.raise_()
+        self.widget().activateWindow() # Needs to be called in addition to raise for some X11 WMs (see docs).
 
 
 class DataTableSubWindow(SubWindow):

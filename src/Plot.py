@@ -49,6 +49,14 @@ class ScatterPlot(FigureObject):
                                                     'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'right'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
                                                     }),
+                'topAxis':          Property.GenericAxis({
+                                                    'majorTicksLabelFont':  Property.TextOptions({'verticalalignment': 'bottom'}),
+                                                    'labelFont':            Property.TextOptions({'verticalalignment': 'top'}),
+                                                    }),
+                'rightAxis':        Property.GenericAxis({
+                                                    'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'left'}),
+                                                    'labelFont':            Property.TextOptions({'horizontalalignment': 'left', 'rotation': 'vertical'}),
+                                                    }),
                 'legend':           Property.Legend(),
                 }
 
@@ -200,17 +208,17 @@ class ScatterPlot(FigureObject):
                 }
         if axisName == 'bottomAxis':
             majorTickParams.update({
-                    'bottom': axisDict['majorTicksDisplayPrimary'],
-                    'top': axisDict['majorTicksDisplaySecondary'],
-                    'labelbottom': axisDict['majorTicksLabelDisplayPrimary'],
-                    'labeltop': axisDict['majorTicksLabelDisplaySecondary'],
+                    'bottom': axisDict['majorTicksVisible'],
+                    'top': axisDict['majorTicksVisible'],
+                    'labelbottom': axisDict['majorTicksLabelVisible'],
+                    'labeltop': False,
                 })
         elif axisName == 'leftAxis':
             majorTickParams.update({
-                    'left': axisDict['majorTicksDisplayPrimary'],
-                    'right': axisDict['majorTicksDisplaySecondary'],
-                    'labelleft': axisDict['majorTicksLabelDisplayPrimary'],
-                    'labelright': axisDict['majorTicksLabelDisplaySecondary'],
+                    'left': axisDict['majorTicksVisible'],
+                    'right': axisDict['majorTicksVisible'],
+                    'labelleft': axisDict['majorTicksLabelVisible'],
+                    'labelright': False,
                 })
         axis.set_tick_params(which='major', **majorTickParams)
 
@@ -249,13 +257,13 @@ class ScatterPlot(FigureObject):
                 }
         if axisName == 'bottomAxis':
             minorTickParams.update({
-                    'bottom': axisDict['minorTicksDisplayPrimary'],
-                    'top': axisDict['minorTicksDisplaySecondary'],
+                    'bottom': axisDict['minorTicksVisible'],
+                    'top': axisDict['minorTicksVisible'],
                 })
         elif axisName == 'leftAxis':
             minorTickParams.update({
-                    'left': axisDict['minorTicksDisplayPrimary'],
-                    'right': axisDict['minorTicksDisplaySecondary'],
+                    'left': axisDict['minorTicksVisible'],
+                    'right': axisDict['minorTicksVisible'],
                 })
         axis.set_tick_params(which='minor', **minorTickParams)
 

@@ -112,6 +112,12 @@ class ScatterPlot(FigureObject):
         if self.plot().axes() != None:
             self.update_axis('leftAxis', self.plot().axes().get_yaxis())
 
+    def update_topAxis(self):
+        pass
+
+    def update_rightAxis(self):
+        pass
+
     def update_legend(self):
         Util.debug(1, "ScatterPlot.update_legend", "")
 

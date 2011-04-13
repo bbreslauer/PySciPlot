@@ -372,6 +372,7 @@ class GenericAxis(Options):
         'majorTicksSpacing':                    Float(2),
         'majorTicksNumber':                     Integer(5),
         'majorTicksWaveValues':                 String(''),
+        'majorTicksLabelVisible':               Boolean(True),
         'majorTicksLabelUseNumeric':            Boolean(True),
         'majorTicksLabelUseWave':               Boolean(False),
         'majorTicksLabelNumericFormat':         String('%.2g'),
@@ -382,10 +383,10 @@ class GenericAxis(Options):
         'majorTicksColor':                      Color(QColor(0,0,0,255)),
         'majorTicksLength':                     Integer(4),
         'majorTicksWidth':                      Integer(1),
-        'majorTicksDisplayPrimary':             Boolean(True),
-        'majorTicksDisplaySecondary':           Boolean(True),
-        'majorTicksLabelDisplayPrimary':        Boolean(True),
-        'majorTicksLabelDisplaySecondary':      Boolean(False),
+        #'majorTicksDisplayPrimary':             Boolean(True),
+        #'majorTicksDisplaySecondary':           Boolean(True),
+        #'majorTicksLabelDisplayPrimary':        Boolean(True),
+        #'majorTicksLabelDisplaySecondary':      Boolean(False),
         'majorTicksLogBase':                    Float(10),
         
         'minorTicksVisible':                    Boolean(True),
@@ -394,8 +395,8 @@ class GenericAxis(Options):
         'minorTicksColor':                      Color(QColor(0,0,0,255)),
         'minorTicksLength':                     Integer(2),
         'minorTicksWidth':                      Integer(1),
-        'minorTicksDisplayPrimary':             Boolean(True),
-        'minorTicksDisplaySecondary':           Boolean(True),
+        #'minorTicksDisplayPrimary':             Boolean(True),
+        #'minorTicksDisplaySecondary':           Boolean(True),
         'minorTicksLogLocations':               String('0,1,2,3,4,5,6,7,8,9'),
     }
 

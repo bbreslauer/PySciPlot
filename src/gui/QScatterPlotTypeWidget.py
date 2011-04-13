@@ -45,6 +45,18 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         self.leftAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.leftAxis, 'Left Axis')
 
+        self.topAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
+        topAxisUi = Ui_ScatterPlotAxis()
+        topAxisUi.setupUi(self.topAxis)
+        self.topAxis.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.topAxis, 'Top Axis')
+
+        self.rightAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
+        rightAxisUi = Ui_ScatterPlotAxis()
+        rightAxisUi.setupUi(self.rightAxis)
+        self.rightAxis.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.rightAxis, 'Right Axis')
+
         self.traces = QScatterPlotTracesWidget(self._plotOptionsWidget, self.getChild('tabWidget'))
         tracesUi = Ui_ScatterPlotTraces()
         tracesUi.setupUi(self.traces)
@@ -56,6 +68,9 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         legendUi.setupUi(self.legend)
         self.getChild('tabWidget').addTab(self.legend, 'Legend')
 
+        # Some axis options will always be linked together (such as the bottom and top scale types), and so 
+        # we should link them in the UI so that the user knows that they are the same.
+
     def saveUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         
@@ -66,6 +81,12 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
         leftAxisUiOptions = self.leftAxis.getCurrentUi()
         plotTypeObject.set('leftAxis', leftAxisUiOptions)
+        
+        topAxisUiOptions = self.topAxis.getCurrentUi()
+        plotTypeObject.set('topAxis', topAxisUiOptions)
+
+        rightAxisUiOptions = self.rightAxis.getCurrentUi()
+        plotTypeObject.set('rightAxis', rightAxisUiOptions)
 
         legendUiOptions = self.legend.getCurrentUi()
         plotTypeObject.set('legend', legendUiOptions)
@@ -78,6 +99,12 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
         leftAxisOptions = plotTypeObject.get('leftAxis')
         self.leftAxis.setCurrentUi(leftAxisOptions)
+
+        topAxisOptions = plotTypeObject.get('topAxis')
+        self.topAxis.setCurrentUi(topAxisOptions)
+
+        rightAxisOptions = plotTypeObject.get('rightAxis')
+        self.rightAxis.setCurrentUi(rightAxisOptions)
 
         legendOptions = plotTypeObject.get('legend')
         self.legend.setCurrentUi(legendOptions)

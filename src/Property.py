@@ -388,6 +388,7 @@ class GenericAxis(Options):
         #'majorTicksLabelDisplayPrimary':        Boolean(True),
         #'majorTicksLabelDisplaySecondary':      Boolean(False),
         'majorTicksLogBase':                    Float(10),
+        'majorTicksLogLocations':               String('1'),
         
         'minorTicksVisible':                    Boolean(True),
         'minorTicksNumber':                     Integer(5),
@@ -397,7 +398,7 @@ class GenericAxis(Options):
         'minorTicksWidth':                      Integer(1),
         #'minorTicksDisplayPrimary':             Boolean(True),
         #'minorTicksDisplaySecondary':           Boolean(True),
-        'minorTicksLogLocations':               String('0,1,2,3,4,5,6,7,8,9'),
+        'minorTicksLogLocations':               String('1,2,3,4,5,6,7,8,9'),
     }
 
 class Legend(Options):

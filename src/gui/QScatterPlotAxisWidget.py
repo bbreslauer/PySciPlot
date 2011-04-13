@@ -33,9 +33,9 @@ class QScatterPlotAxisWidget(QEditFigureSubWidget):
     def changeScaleType(self, scaleType):
         if scaleType == 'Linear':
             self.getChild('majorTicksLocationsStackedWidget').setCurrentIndex(0)
-            self.getChild('minorTicksNumber').setEnabled(True)
+            self.getChild('minorTicksLocationsStackedWidget').setCurrentIndex(0)
         else:
             self.getChild('majorTicksLocationsStackedWidget').setCurrentIndex(1)
-            self.getChild('minorTicksNumber').setEnabled(False)
+            self.getChild('minorTicksLocationsStackedWidget').setCurrentIndex(1)
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>604</width>
-    <height>442</height>
+    <width>596</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -595,7 +595,7 @@ s</string>
      <property name="checkable">
       <bool>true</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout_3" columnstretch="2,1,2,1,1">
       <property name="verticalSpacing">
        <number>0</number>
       </property>
@@ -606,11 +606,20 @@ s</string>
         </property>
         <widget class="QWidget" name="page_3">
          <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="margin">
            <number>0</number>
           </property>
           <item>
            <widget class="QLabel" name="label_26">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Number</string>
             </property>
@@ -645,6 +654,9 @@ s</string>
         </widget>
         <widget class="QWidget" name="page_4">
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="margin">
            <number>0</number>
           </property>
@@ -657,6 +669,12 @@ s</string>
           </item>
           <item>
            <widget class="QLineEdit" name="minorTicksLogLocations">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>1,2,3,4,5,6,7,8,9</string>
             </property>
@@ -900,11 +918,11 @@ color: rgb(255, 255, 255);</string>
    <hints>
     <hint type="sourcelabel">
      <x>434</x>
-     <y>414</y>
+     <y>412</y>
     </hint>
     <hint type="destinationlabel">
      <x>434</x>
-     <y>414</y>
+     <y>412</y>
     </hint>
    </hints>
   </connection>
@@ -951,8 +969,8 @@ color: rgb(255, 255, 255);</string>
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>274</x>
-     <y>425</y>
+     <x>283</x>
+     <y>423</y>
     </hint>
    </hints>
   </connection>

@@ -20,7 +20,7 @@ import Util
 from Wave import *
 from Trace import *
 from Delegates import TraceListDelegate
-from models.WavesListModel import *
+#from models.WavesListModel import *
 from models.TraceListModel import *
 from QEditFigureSubWidget import *
 
@@ -39,14 +39,10 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self.getChild('pointMarkerEdgeColor').initButtonColor()
 
         # Setup X and Y lists
-        self._wavesModel = WavesListModel(self._app.waves())
+        self._wavesModel = self._app.model('appWaves')
         self.getChild('xAxisListView').setModel(self._wavesModel)
-        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
         
         self.getChild('yAxisListView').setModel(self._wavesModel)
-        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
         
         # Setup trace list
         traceListModel = TraceListModel()
@@ -73,8 +69,8 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
 
         for x in xAxisList:
             for y in yAxisList:
-                xWave = self._app.waves().waves()[x.row()]
-                yWave = self._app.waves().waves()[y.row()]
+                xWave = self._wavesModel.waveByRow(x.row())
+                yWave = self._wavesModel.waveByRow(y.row())
                 trace = Trace(xWave, yWave)
                 self.saveOptionsToTrace(trace)
                 plotTypeObject.addTrace(trace)

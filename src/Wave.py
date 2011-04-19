@@ -20,6 +20,10 @@ from PyQt4.QtCore import QObject, pyqtSignal
 from numpy import nan
 
 class Wave(QObject):
+    # Initialized solely for the signal definition below.
+    pass
+
+class Wave(QObject):
     """
     Store the name, type of data, and all data for one wave.
 
@@ -31,12 +35,12 @@ class Wave(QObject):
         String  (str)
 
     Signals that are defined in this class are:
-        nameChanged  - emitted when the name of the wave is changed
+        nameChanged  - emitted when the name of the wave is changed. Args are old name, current wave (self).
         dataModified - emitted when any data in the wave is changed
     """
 
     # Signals
-    nameChanged = pyqtSignal()
+    nameChanged = pyqtSignal(str, Wave)
     dataModified = pyqtSignal()
 
     def __init__(self, waveName, dataType="Decimal", dataIn=[]):
@@ -186,9 +190,10 @@ class Wave(QObject):
 
         validName = Wave.validateWaveName(name)
         if validName != self.name():
+            oldName = self.name()
             self._name = validName
-            Util.debug(2, "Wave.setName", "Changed wave name from " + str(self.name()) + " to " + str(validName))
-            self.nameChanged.emit()
+            Util.debug(2, "Wave.setName", "Changed wave name from " + str(oldName) + " to " + str(validName))
+            self.nameChanged.emit(oldName, self)
         return self.name()
 
     def setData(self, position, value):

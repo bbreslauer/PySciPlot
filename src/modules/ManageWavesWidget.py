@@ -24,7 +24,7 @@ from numpy import *
 import Util
 from Wave import Wave
 from gui.SubWindows import SubWindow
-from models.WavesListModel import WavesListModel
+#from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_ManageWavesWidget import Ui_ManageWavesWidget
 
@@ -43,15 +43,12 @@ class ManageWavesWidget(Module):
         self._ui.setupUi(self._widget)
         
         # Set up model and views
-        self._wavesListModel = WavesListModel(self._app.waves())
+        self._wavesListModel = self._app.model('appWaves')
         self._ui.copyWaveOriginalWave.setModel(self._wavesListModel)
         self._ui.functionInsertWave.setModel(self._wavesListModel)
         self._ui.modifyWave_selectWave.setModel(self._wavesListModel)
 
         # Connect some slots
-        self._app.waves().waveAdded.connect(self._wavesListModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._wavesListModel.doReset)
-
         self._ui.copyWaveOriginalWave.activated.connect(self.resetCopyWaveLimits)
         self._ui.createWaveButton.clicked.connect(self.createWave)
         self._ui.functionInsertWaveButton.clicked.connect(self.insertWaveIntoFunction)
@@ -174,7 +171,7 @@ class ManageWavesWidget(Module):
             waveLengths.append(waveLength)
         for waveName in wavesList:
             waveNameNoPrefix = waveName[2:]
-            waveLengths.append(len(self._app.waves().getWaveByName(waveNameNoPrefix).data()))
+            waveLengths.append(len(self._app.waves().wave(waveNameNoPrefix).data()))
         
         if len(waveLengths) == 0:
             waveLength = 0
@@ -188,7 +185,7 @@ class ManageWavesWidget(Module):
         # Define waves that are used in the function
         for waveName in wavesList:
             waveNameNoPrefix = waveName[2:]
-            exec(str(waveName) + ' = ' + str(self._app.waves().getWaveByName(waveNameNoPrefix).data()[:waveLength]))
+            exec(str(waveName) + ' = ' + str(self._app.waves().wave(waveNameNoPrefix).data()[:waveLength]))
 
         # Apply the function
         data = eval('map(function, ' + specialValuesAndWavesString + ')')
@@ -281,7 +278,7 @@ class ManageWavesWidget(Module):
             if result != QMessageBox.Yes:
                 return False
 
-            self._app.waves().removeWave(self._app.waves().waves()[row].name())
+            self._app.waves().removeWave(self._wavesListModel.waveNameByRow(row))
             
             try:
                 self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(row))
@@ -292,6 +289,7 @@ class ManageWavesWidget(Module):
                 except IndexError:
                     # There are no more rows
                     pass
+
     def load(self):
         self.window = SubWindow(self._app.ui.workspace)
 
@@ -310,7 +308,6 @@ class ManageWavesWidget(Module):
 
     def unload(self):
         # Disconnect some slots
-        self._app.waves().waveRemoved[Wave].disconnect(self._wavesListModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

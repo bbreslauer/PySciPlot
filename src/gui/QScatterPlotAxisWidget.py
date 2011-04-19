@@ -24,11 +24,9 @@ class QScatterPlotAxisWidget(QEditFigureSubWidget):
     properties = GenericAxis.default.keys()
 
     def initSubWidgets(self):
-        self._wavesModel = WavesListModel(self._app.waves())
+        self._wavesModel = self._app.model('appWaves')
         self.getChild('majorTicksLabelWave').setModel(self._wavesModel)
         self.getChild('majorTicksWaveValues').setModel(self._wavesModel)
-        self._app.waves().waveAdded.connect(self._wavesModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._wavesModel.doReset)
 
     def changeScaleType(self, scaleType):
         if scaleType == 'Linear':

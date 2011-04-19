@@ -92,7 +92,6 @@ def getWaves(app, dom, waveNames=[]):
 
     # Create and add waves object
     waves = dom.createElement("waves")
-    waves.setAttribute("uniqueNames", str(app.waves().uniqueNames()))
     waves.appendChild(dom.createTextNode(str(pickle.dumps(app.waves()))))
     p.appendChild(waves)
 
@@ -157,7 +156,7 @@ def getTable(app, dom, appWindowList, tables, tableObj):
     table.setAttribute("xpos", str(tableObj.x()))
     table.setAttribute("ypos", str(tableObj.y()))
 
-    for waveObj in tableObj.widget().model().waves().waves():
+    for waveObj in tableObj.widget().model().waves():
         wave = dom.createElement("wave")
         wave.appendChild(dom.createTextNode(str(waveObj.name())))
         table.appendChild(wave)

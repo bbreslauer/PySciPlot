@@ -19,6 +19,7 @@ from PyQt4.QtCore import Qt
 
 import Util
 from Wave import Wave
+from Waves import Waves
 from gui.SubWindows import SubWindow
 from models.WavesListModel import WavesListModel
 from modules.Module import Module
@@ -39,14 +40,12 @@ class CreateTableDialog(Module):
         self._ui.setupUi(self._widget)
         
         # Set up model and view
-        self._allWavesListModel = WavesListModel(self._app.waves())
+        self._allWavesListModel = self._app.model('appWaves')
         self._ui.allWavesListView.setModel(self._allWavesListModel)
-        self._tableWavesListModel = WavesListModel()
+        self._tableWavesListModel = WavesListModel([])
         self._ui.tableWavesListView.setModel(self._tableWavesListModel)
 
         # Connect some slots
-        self._app.waves().waveAdded.connect(self._allWavesListModel.doReset)
-        self._app.waves().waveRemoved[Wave].connect(self._allWavesListModel.doReset)
         self._ui.createTableButton.clicked.connect(self.createTable)
         self._ui.closeWindowButton.clicked.connect(self.closeWindow)
         self._ui.addWaveButton.clicked.connect(self.addWaveToTable)
@@ -60,7 +59,7 @@ class CreateTableDialog(Module):
     def addWaveToTable(self):
         selectedIndexes = self._ui.allWavesListView.selectedIndexes()
         for index in selectedIndexes:
-            self._tableWavesListModel.appendRow(self._allWavesListModel.waves().waves()[index.row()])
+            self._tableWavesListModel.appendRow(self._allWavesListModel.waveNameByRow(index.row()))
 
     def removeWaveFromTable(self):
         selectedIndexes = self._ui.tableWavesListView.selectedIndexes()
@@ -76,7 +75,7 @@ class CreateTableDialog(Module):
         """
 
         tableName = Util.getWidgetValue(self._ui.tableName)
-        waves = self._tableWavesListModel.waves().waves()
+        waves = self._tableWavesListModel.waves()
         if len(waves) == 0:
             warningMessage = QMessageBox()
             warningMessage.setWindowTitle("Problem!")
@@ -117,8 +116,6 @@ class CreateTableDialog(Module):
 
     def unload(self):
         # Disconnect some slots
-        self._app.waves().waveAdded.disconnect(self._wavesListModel.doReset)
-        self._app.waves().waveRemoved[Wave].disconnect(self._wavesListModel.doReset)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

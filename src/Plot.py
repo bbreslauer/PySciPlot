@@ -155,7 +155,7 @@ class ScatterPlot(FigureObject):
 
         # Set the formatter and locator for the major ticks
         if axisDict['majorTicksLabelUseWave'] == True:
-            wave = self._app.waves().getWaveByName(str(axisDict['majorTicksLabelWave']))
+            wave = self._app.waves().wave(str(axisDict['majorTicksLabelWave']))
             data = wave.data()
             majorFormatter = ticker.FixedFormatter(data)
         elif axisDict['scaleType'] in ('log', 'symlog'):
@@ -169,7 +169,7 @@ class ScatterPlot(FigureObject):
         majorTickPositions = []
         
         if axisDict['useMajorTicksWaveValues']:
-            wave = self._app.waves().getWaveByName(str(axisDict['majorTicksWaveValues']))
+            wave = self._app.waves().wave(str(axisDict['majorTicksWaveValues']))
             majorTickPositions = wave.data()
         elif axisDict['useMajorTicksNumber']:
             if axisDict['useMajorTicksAnchor']:

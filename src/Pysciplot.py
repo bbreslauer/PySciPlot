@@ -65,6 +65,7 @@ class Pysciplot(QMainWindow):
         self._version = 1
         self._waves = Waves()
         self._figures = Figures()
+        self._models = {}
         self._loadedModules = {}
         self.projectDir = "" # current project directory
         self.setCurrentProject("")
@@ -79,6 +80,9 @@ class Pysciplot(QMainWindow):
         Util.debug(2, "App", "Loading Preferences from file")
         self.preferences = Preferences("~/.pysciplotrc")
         
+        # Create application-wide models
+        self._models['appWaves'] = WavesListModel(self.waves().waves())
+
         # Make signal/slot connections
         Util.debug(2, "App", "Connecting signals and slots")
         self.ui.actionQuit.triggered.connect(self.close)
@@ -89,7 +93,10 @@ class Pysciplot(QMainWindow):
         self.ui.actionSave_Project_As.triggered.connect(self.saveProjectAs)
         self.ui.actionSave_Current_Figure.triggered.connect(self.saveCurrentFigure)
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
-        
+
+        self.waves().waveAdded.connect(self.model('appWaves').appendRow)
+        self.waves().allWavesRemoved.connect(self.model('appWaves').removeAllWaves)
+
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
 
@@ -122,6 +129,18 @@ class Pysciplot(QMainWindow):
         Return the storedSettings dict.
         """
         return self._storedSettings
+    
+    def models(self):
+        """
+        Return the models dict.
+        """
+        return self._models
+
+    def model(self, name):
+        """
+        Return a specific model from the models dict.
+        """
+        return self._models[name]
 
     def createTable(self, waves=[], tableName="Table"):
         """
@@ -132,7 +151,8 @@ class Pysciplot(QMainWindow):
         model = DataTableModel(waves, self)
 
         # Connect slots
-        self._waves.waveRemoved[Wave].connect(model.removeColumn)
+        self.waves().waveRemoved[Wave].connect(model.removeWave)
+        self.waves().allWavesRemoved.connect(model.removeAllWaves)
 
         return self.createDataTableView(model, tableName)
 
@@ -318,7 +338,7 @@ class Pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
-        return self.createTable(self._waves.waves())
+        return self.createTable(self._waves.waves().values())
 
     def printAllWaves(self):
         print self._waves

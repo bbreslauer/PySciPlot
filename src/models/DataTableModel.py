@@ -15,10 +15,10 @@
 
 
 from PyQt4.QtCore import QAbstractTableModel, QVariant, Qt, QModelIndex, QString, pyqtSignal
+from PyQt4.QtGui import QApplication
 
 import Util
 from Wave import Wave
-from Waves import Waves
 
 class DataTableModel(QAbstractTableModel):
     """
@@ -43,40 +43,40 @@ class DataTableModel(QAbstractTableModel):
 
         QAbstractTableModel.__init__(self, parent, *args)
 
-        self._waves = Waves()
+        self._app = QApplication.instance().window
+
+        self._waves = []
 
         for wave in wavesIn:
             self.addColumn(wave)
 
-        # Connect signals from waves object
-        self._waves.waveAdded.connect(self.doReset)
-        self._waves.waveRemoved[Wave].connect(self.doReset)
-        if parent:
-            parent.waves().waveRemoved[Wave].connect(self.removeColumn)
+    def waves(self):
+        return self._waves
         
     def rowCount(self, parent = QModelIndex()):
         """Return the number of rows."""
 
-        if (len(self._waves.waves()) == 0):
+        if len(self.waves()) == 0:
             return 0
 
         rows = 0
-        for wave in self._waves.waves():
-            if (len(wave.data()) > rows):
-                rows = len(wave.data())
+        for wave in self.waves():
+            thisWaveRows = wave.length()
+            if thisWaveRows > rows:
+                rows = thisWaveRows
         return rows + 1 # Want the extra row for adding more rows of data
 
     def columnCount(self, parent = QModelIndex()):
         """Return the number of columns."""
 
-        return len(self._waves.waves())
+        return len(self.waves())
 
     def index(self, row, column, parent=QModelIndex()):
         if column >= self.columnCount():
             return self.createIndex(row, column, parent)
-        elif row >= self.waves().waves()[column].length():
+        elif row >= self.waves()[column].length():
             return self.createIndex(row, column, parent)
-        return self.createIndex(row, column, self.waves().waves()[column])
+        return self.createIndex(row, column, self.waves()[column])
 
     def data(self, index, role = Qt.DisplayRole):
         """Return the data at position index with the given role."""
@@ -85,21 +85,21 @@ class DataTableModel(QAbstractTableModel):
             return QVariant()
         elif role != Qt.DisplayRole and role != Qt.EditRole:
             return QVariant()
-        elif index.column() >= len(self._waves.waves()):
+        elif index.column() >= self.columnCount():
             return QVariant()
-        elif index.row() >= len(self._waves.waves()[index.column()].data()):
+        elif index.row() >= self.waves()[index.column()].length():
             return QVariant()
-        elif self._waves.waves()[index.column()].data()[index.row()] == "":
+        elif self.waves()[index.column()].data()[index.row()] == "":
             return QVariant()
         #
         # If we return long() or float() instead of str(), then the view uses a spinbox
         # and we cannot easily return to a blank entry
-        elif 'Integer' == self._waves.waves()[index.column()].dataType():
-            return str(self._waves.waves()[index.column()].data()[index.row()])
-        elif 'Decimal' == self._waves.waves()[index.column()].dataType():
-            return str(self._waves.waves()[index.column()].data()[index.row()])
-        elif 'String' == self._waves.waves()[index.column()].dataType():
-            return str(self._waves.waves()[index.column()].data()[index.row()])
+        elif 'Integer' == self.waves()[index.column()].dataType():
+            return str(self.waves()[index.column()].data()[index.row()])
+        elif 'Decimal' == self.waves()[index.column()].dataType():
+            return str(self.waves()[index.column()].data()[index.row()])
+        elif 'String' == self.waves()[index.column()].dataType():
+            return str(self.waves()[index.column()].data()[index.row()])
         return QVariant()
 
     def headerData(self, section, orientation, role):
@@ -109,8 +109,8 @@ class DataTableModel(QAbstractTableModel):
         orientation is either horizontal (column headers) or vertical (row headers).
         """
 
-        if orientation == Qt.Horizontal and section < len(self._waves.waves()) and role == Qt.DisplayRole:
-            return QVariant(QString(self._waves.waves()[section].name()))
+        if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
+            return QVariant(QString(self.waves()[section].name()))
         elif orientation == Qt.Vertical and role == Qt.DisplayRole:
             return QVariant(section)
         return QVariant()
@@ -122,40 +122,60 @@ class DataTableModel(QAbstractTableModel):
             return Qt.ItemIsEnabled
         return Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable
     
-    def waves(self):
-        return self._waves
-
 
     # Modifying methods
     def addColumn(self, wave):
         """Add a column (wave) to the end of the table.  Return True if the column is added, False otherwise."""
 
-        return self.insertColumn(len(self._waves.waves()), wave)
+        if self.insertColumn(self.columnCount(), wave):
+            self.doReset()
+            return True
+        return False
 
     def insertColumn(self, position, wave):
         """Insert a column (wave) after the column described by position.  Return True if the column is added, False otherwise."""
         
-        if self._waves.insertWave(position, wave):
+        if isinstance(wave, Wave):
+            self.waves().insert(position, wave)
             wave.nameChanged.connect(self.doReset)
             wave.dataModified.connect(self.doReset)
             return True
         return False
 
-    def insertRows(self, position, rows, index):
+    def insertRows(self, row, count, parent=QModelIndex()):
         """
         Insert blank rows in all waves in the table.  Return True.
         """
 
-        for wave in self._waves.waves():
-            for i in range(rows):
-                wave.insert(position, "")
+        for wave in self.waves():
+            for i in range(count):
+                wave.insert(row, "")
         return True
 
-    def removeColumn(self, wave):
+    def removeColumn(self, position):
         """
-        Remove the column (wave) given by wave.  Return True if the column is removed, False otherwise.
+        Remove the column in the given position.  Return True if the column is removed, False otherwise.
         """
-        return self._waves.removeWave(wave.name())
+        self.waves().pop(position)
+        self.doReset()
+
+    def removeWave(self, wave):
+        """
+        Remove the column(s) given by wave.  Return True if the column(s) is(are) removed, False otherwise.
+        """
+        while True:
+            try:
+                self.waves().remove(wave)
+            except:
+                break
+        self.doReset()
+
+    def removeAllWaves(self):
+        """
+        Remove all columns.
+        """
+        self._waves = []
+        self.doReset()
 
     def setData(self, index, value, role):
         """
@@ -169,7 +189,7 @@ class DataTableModel(QAbstractTableModel):
         Util.debug(2, "DataTableModel.setData", "Setting data")
 
         if index.isValid() and role == Qt.EditRole:
-            wave = self._waves.waves()[index.column()]
+            wave = self.waves()[index.column()]
 
             # Convert from QVariant to QString to str
             try:

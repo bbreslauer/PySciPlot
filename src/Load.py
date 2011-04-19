@@ -91,7 +91,7 @@ def loadWaves(app, waves):
     
     Util.debug(1, "Load", "Loading waves from file")
     wavesObj = pickle.loads(str(waves.firstChild.data.strip()))
-    for wave in wavesObj.waves():
+    for wave in wavesObj.waves().values():
         app.waves().addWave(wave)
 
 def loadStoredSettings(app, storedSettings):
@@ -131,7 +131,7 @@ def loadTables(app, tables, stackingOrder):
             # Move on to next child
             child = child.nextSibling
 
-        waves = map(app.waves().getWaveByName, waveNames)
+        waves = map(app.waves().wave, waveNames)
         
         # Load table into application
         tableWindow = app.createTable(waves, name)

@@ -78,8 +78,8 @@ class Trace(FigureObject):
         label = state[3]
         plot = state[4]
 
-        self.setX(self._app.waves().getWaveByName(xName))
-        self.setY(self._app.waves().getWaveByName(yName))
+        self.setX(self._app.waves().wave(xName))
+        self.setY(self._app.waves().wave(yName))
         self.setLabel(label)
         self.setPlot(plot)
 
@@ -92,13 +92,13 @@ class Trace(FigureObject):
             self.properties[key].blockSignals(False)
 
         # Connect the waves that were saved in this pickle to the application
-        appX = self._app.waves().getWaveByName(self.xName())
+        appX = self._app.waves().wave(self.xName())
         if appX:
             self.setX(appX)
         else:
             self._app.waves().addWave(self.x())
 
-        appY = self._app.waves().getWaveByName(self.yName())
+        appY = self._app.waves().wave(self.yName())
         if appY:
             self.setY(appY)
         else:

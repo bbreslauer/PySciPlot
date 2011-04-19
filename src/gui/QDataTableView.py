@@ -114,10 +114,10 @@ class QDataTableView(QTableView):
         # connect actions
         renameWaveUi.buttons.accepted.connect(saveRename)
         renameWaveUi.buttons.rejected.connect(cancelRename)
-
-    def removeWave(self, wave):
-        self.model().removeColumn(wave)
         
+    def removeWave(self, visualIndex):
+        self.model().removeColumn(visualIndex)
+
     def addWave(self, wave, visualIndex):
         if self.model().addColumn(wave):
             # The wave was added (i.e. it did not already exist in the table)
@@ -259,13 +259,14 @@ class QDataTableView(QTableView):
 
         #print "l: " + str(logicalIndex)
         #print "v: " + str(visualIndex)
-        selectedWave = self.model().waves().waves()[logicalIndex]
+        selectedWave = self.model().waves()[logicalIndex]
         
         # Create helper functions, defined for this specific menu location
         def renameWaveHelper():
             self.renameWave(selectedWave)
         def removeWaveHelper():
-            self.removeWave(selectedWave)
+            #self.removeWave(selectedWave)
+            self.removeWave(visualIndex)
         def addWaveHelper(wave):
             self.addWave(wave, visualIndex)
         def addNewWaveHelper():
@@ -282,7 +283,7 @@ class QDataTableView(QTableView):
         newWaveAction.triggered.connect(addNewWaveHelper)
         
         # Get current list of waves for "add wave to table" menu
-        for wave in self._app.waves().waves():
+        for wave in self._app.waves().waves().values():
             waveAction = AddWaveAction(wave, self.addWaveMenu)
             self.addWaveMenu.addAction(waveAction)
             waveAction.addWaveClicked.connect(addWaveHelper)

@@ -107,6 +107,15 @@
        </item>
        <item>
         <widget class="QListView" name="tableWavesListView">
+         <property name="dragEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::InternalMove</enum>
+         </property>
+         <property name="defaultDropAction">
+          <enum>Qt::MoveAction</enum>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>
          </property>

@@ -14,70 +14,144 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QModelIndex, Qt, QVariant, QString
-from PyQt4.QtGui import QStringListModel
+from PyQt4.QtCore import QModelIndex, Qt, QVariant, QString, QMimeData, QDataStream, QIODevice, QAbstractListModel
+from PyQt4.QtGui import QStringListModel, QApplication, QStandardItemModel
 
 from Wave import Wave
-from Waves import Waves
 
-class WavesListModel(QStringListModel):
+class WavesListModel(QAbstractListModel):
     """
     A model for a list of waves.
     """
     
-    def __init__(self, wavesIn=Waves(), parent=None, *args):
-        QStringListModel.__init__(self, parent, *args)
-        self._waves = wavesIn
+    def __init__(self, waveNames=[], parent=None, *args):
+        QAbstractListModel.__init__(self, parent, *args)
+        self._app = QApplication.instance().window
+
+        self._orderedWaves = []
+        for w in waveNames:
+            self.appendRow(w)
 
         # Connect signals
-        self._waves.waveAdded.connect(self.doReset)
-        self._waves.waveRenamed.connect(self.doReset)
-        self._waves.waveRemoved[Wave].connect(self.doReset)
+        self.appWaves().waveRemoved[Wave].connect(self.removeWave)
 
+    def appWaves(self):
+        """All the waves in the application. NOT limited to the waves in this model."""
+        return self._app.waves()
+    
     def waves(self):
-        return self._waves
+        """The application waves that are referenced in this model, in order."""
+        waves = []
+        for waveName in self.orderedWaves():
+            wave = self.appWaves().wave(waveName)
+            if wave:  # If the wave cannot be found, do not add it
+                waves.append(wave)
+        return waves
 
     def waveByRow(self, row):
-        return self.waves().waves()[row]
+        return self.appWaves().wave(self.waveNameByRow(row))
+
+    def waveNameByRow(self, row):
+        return self.orderedWaves()[row]
+
+    def orderedWaves(self):
+        """Return the list of waves (in order) in this model."""
+        return self._orderedWaves
 
     def getIndexByWaveName(self, name):
-        wave = self.waves().getWaveByName(name)
-        index = self.waves().waves().index(wave)
-        return index
+        try:
+            return self.orderedWaves().index(name)
+        except:
+            return -1
 
-    def appendRow(self, wave):
-        self._waves.addWave(wave)
+    def updateOrderedWaves(self, oldName, wave):
+        index = self.getIndexByWaveName(oldName)
+        if index >= 0:
+            self.orderedWaves()[index] = wave.name()
+
+    def appendRow(self, entry):
+        if isinstance(entry, Wave):
+            wave = entry
+            name = entry.name()
+        else:
+            wave = self.appWaves().wave(entry)
+            name = entry
+        self.orderedWaves().append(name)
+        wave.nameChanged.connect(self.updateOrderedWaves)
+        
+        self.reset()
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self._waves.waves())
+        return len(self.orderedWaves())
 
     def index(self, row, column=0, parent=QModelIndex()):
-        if row > self._waves.length():
+        if row > self.rowCount():
             return self.createIndex(row, column, parent)
-        return self.createIndex(row, column, self.waves().waves()[row])
-    
-    def data(self, index, role = Qt.DisplayRole):
+        return self.createIndex(row, column, self.waveByRow(row))
+
+    def data(self, index, role=Qt.DisplayRole):
         if index.isValid() and index.row() < self.rowCount() and role == Qt.DisplayRole:
-            return QVariant(QString(self._waves.waves()[index.row()].name()))
+            return QVariant(self.waveNameByRow(index.row()))
         else:
             return QVariant()
 
-    def setData(self, index, value, role):
-        """Change the name for the wave at index."""
-        newName = str(value.toString())
-        if index.isValid() and role == Qt.EditRole and self._waves.waves()[index.row()]:
-            # Do not allow for blank wave names
-            if Wave.validateWaveName(newName) == "":
-                return False
-            self._waves.waves()[index.row()].setName(newName)
+    def flags(self, index):
+        defaultFlags = Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled
+        if index.isValid():
+            return Qt.ItemIsDragEnabled | defaultFlags
+        else:
+            return Qt.ItemIsDropEnabled | defaultFlags
+
+    def setData(self, index, value, role=Qt.EditRole):
+
+        if index.isValid() and role == Qt.DisplayRole and index.row() < self.rowCount():
+            waveName = str(value.toString())
+            self.orderedWaves()[index.row()] = waveName
+            self.dataChanged.emit(index, index)
             return True
         return False
 
-    def removeWave(self, name):
-        self._waves.removeWave(name)
+    def insertRows(self, row, count, parent=QModelIndex()):
+        self.beginInsertRows(parent, row, row + count - 1)
+        for i in range(count):
+            self.orderedWaves().insert(row, "")
+        self.endInsertRows()
+        return True
+
+    def removeRows(self, row, count, parent=QModelIndex()):
+        self.beginRemoveRows(parent, row, row + count - 1)
+        numRowsRemoved = 0
+        for i in range(count):
+            if self.orderedWaves().pop(row):
+                numRowsRemoved += 1
+        self.endRemoveRows()
+        return numRowsRemoved == count
+
+    def supportedDropActions(self):
+        return Qt.MoveAction
+
+    def removeWave(self, entry):
+        if isinstance(entry, Wave):
+            wave = entry
+            name = entry.name()
+        else:
+            wave = self.appWaves().wave(entry)
+            name = entry
+
+        if self.getIndexByWaveName(name) < 0:
+            # wave does not exist in this model
+            return
+        
+        wave.nameChanged.disconnect(self.updateOrderedWaves)
+        self.orderedWaves().remove(name)
 
     def removeAllWaves(self):
-        self._waves.removeAllWaves()
+        for waveName in self.orderedWaves():
+            try:
+                self.appWaves().wave(waveName).nameChanged.disconnect(self.updateOrderedWaves)
+            except:
+                pass
+        self._orderedWaves = []
 
     def doReset(self, *args):
         self.reset()

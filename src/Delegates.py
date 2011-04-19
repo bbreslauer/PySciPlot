@@ -76,10 +76,10 @@ class TraceListDelegate(QItemDelegate):
 
     def setModelData(self, editor, model, index):
         if index.column() == 0:
-            wave = editor.model().waves().waves()[editor.currentIndex()]
+            wave = editor.model().waveByRow(editor.currentIndex())
             index.internalPointer().setX(wave)
         elif index.column() == 1:
-            wave = editor.model().waves().waves()[editor.currentIndex()]
+            wave = editor.model().waveByRow(editor.currentIndex())
             index.internalPointer().setY(wave)
         elif index.column() == 2:
             label = editor.text()

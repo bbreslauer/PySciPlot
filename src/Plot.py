@@ -20,6 +20,7 @@ from numpy import nan
 from matplotlib.axes import Axes
 from matplotlib import ticker
 from matplotlib.artist import setp
+from matplotlib.font_manager import FontProperties
 import numpy
 
 import Util, Property
@@ -124,10 +125,20 @@ class ScatterPlot(FigureObject):
         if self.get('legend').get('loc') == 'none' or self.plot() == None or self.plot().axes() == None:
             return
         
-        self.plot().axes().legend(**(self.getMpl('legend')))
+        # We need to apply the font dict to the Text instances themselves, since
+        # Legend only accepts a FontProperties object
+        legendOptions = self.getMpl('legend')
+        font = legendOptions['font']
+        titleFont = legendOptions['titleFont']
+        del legendOptions['font']
+        del legendOptions['titleFont']
+
+        self.plot().axes().legend(**legendOptions)
+
+        setp(self.plot().axes().get_legend().get_texts(), **font)
+        setp(self.plot().axes().get_legend().get_title(), **titleFont)
+
         self.plot().redraw()
-
-
 
     def update_axisLimits(self, axisName, axisDict):
         # Set minimum and maximum for axes

@@ -418,6 +418,8 @@ class Legend(Options):
         'borderaxespad':    Float(0.5),
         'columnspacing':    Float(1.0),
         'markerscale':      Float(1.0),
+        'font':             TextOptions({'size': 12, 'verticalalignment': 'baseline', 'horizontalalignment': 'left'}),
+        'titleFont':        TextOptions({'size': 18, 'verticalalignment': 'baseline', 'horizontalalignment': 'left'}),
     }
 
 

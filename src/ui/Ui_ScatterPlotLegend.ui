@@ -6,22 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>329</height>
+    <width>595</width>
+    <height>462</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="0" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Location</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="2">
     <widget class="QComboBox" name="loc">
      <item>
       <property name="text">
@@ -85,24 +85,24 @@
      </item>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="1">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Title</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="2">
     <widget class="QLineEdit" name="title"/>
    </item>
-   <item row="2" column="0">
+   <item row="4" column="1">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Border</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="4" column="2">
     <widget class="QCheckBox" name="frameon">
      <property name="text">
       <string/>
@@ -112,42 +112,42 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="5" column="1">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Rounded Corners</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="5" column="2">
     <widget class="QCheckBox" name="fancybox">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="6" column="1">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Shadow</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="6" column="2">
     <widget class="QCheckBox" name="shadow">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="7" column="1">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Number of Columns</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="7" column="2">
     <widget class="QSpinBox" name="ncol">
      <property name="minimum">
       <number>1</number>
@@ -157,14 +157,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="8" column="1">
     <widget class="QLabel" name="label_7">
      <property name="text">
       <string>Spacing between Columns</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="8" column="2">
     <widget class="QDoubleSpinBox" name="columnspacing">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -174,14 +174,14 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="9" column="1">
     <widget class="QLabel" name="label_8">
      <property name="text">
       <string>Border-Axis spacing</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="9" column="2">
     <widget class="QDoubleSpinBox" name="borderaxespad">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -191,14 +191,14 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
+   <item row="10" column="1">
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>Handle-Text padding</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="10" column="2">
     <widget class="QDoubleSpinBox" name="handletextpad">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -208,14 +208,14 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0">
+   <item row="11" column="1">
     <widget class="QLabel" name="label_10">
      <property name="text">
       <string>Handle size</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="11" column="2">
     <widget class="QDoubleSpinBox" name="handlelength">
      <property name="maximum">
       <double>20.000000000000000</double>
@@ -225,14 +225,14 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="12" column="1">
     <widget class="QLabel" name="label_11">
      <property name="text">
       <string>Border padding</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="12" column="2">
     <widget class="QDoubleSpinBox" name="borderpad">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -242,14 +242,14 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
+   <item row="13" column="1">
     <widget class="QLabel" name="label_12">
      <property name="text">
       <string>Label line spacing</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="13" column="2">
     <widget class="QDoubleSpinBox" name="labelspacing">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -259,14 +259,14 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
+   <item row="14" column="1">
     <widget class="QLabel" name="label_13">
      <property name="text">
       <string>Marker scale</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="14" column="2">
     <widget class="QDoubleSpinBox" name="markerscale">
      <property name="maximum">
       <double>10.000000000000000</double>
@@ -276,7 +276,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2" rowspan="13">
+   <item row="0" column="3" rowspan="15">
     <widget class="QStoredSettingsButton" name="storedSettingsButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -315,6 +315,46 @@ s</string>
      </property>
     </widget>
    </item>
+   <item row="0" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="15" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2">
+    <widget class="QTextOptionsButton" name="font">
+     <property name="text">
+      <string>Trace Font</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QTextOptionsButton" name="titleFont">
+     <property name="text">
+      <string>Title Font</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -324,6 +364,14 @@ s</string>
    <header>gui/QStoredSettingsButton</header>
    <slots>
     <slot>toggleWidget()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsWidget()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -336,12 +384,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>177</x>
-     <y>73</y>
+     <x>347</x>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel">
-     <x>177</x>
-     <y>91</y>
+     <x>347</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -352,12 +400,44 @@ s</string>
    <slot>toggleWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>187</x>
-     <y>342</y>
+     <x>392</x>
+     <y>351</y>
     </hint>
     <hint type="destinationlabel">
-     <x>190</x>
-     <y>340</y>
+     <x>392</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>font</sender>
+   <signal>clicked()</signal>
+   <receiver>font</receiver>
+   <slot>showTextOptionsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>261</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>55</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleFont</sender>
+   <signal>clicked()</signal>
+   <receiver>titleFont</receiver>
+   <slot>showTextOptionsWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>254</x>
+     <y>116</y>
     </hint>
    </hints>
   </connection>

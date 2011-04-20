@@ -255,7 +255,7 @@ class QDataTableView(QTableView):
         logicalIndex = self.horizontalHeader().logicalIndexAt(point)
         visualIndex = self.horizontalHeader().visualIndex(logicalIndex)
         
-        self.selectColumn(visualIndex)
+        self.selectColumn(logicalIndex)
 
         #print "l: " + str(logicalIndex)
         #print "v: " + str(visualIndex)

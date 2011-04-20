@@ -199,7 +199,6 @@ class EditFigureDialog(Module):
         # Disconnect some slots
         self._app.figures().figureAdded.disconnect(self._figureListModel.doReset)
         self._app.figures().figureRemoved.disconnect(self._figureListModel.doReset)
-        self._ui.plotSelector.currentIndexChanged.disconnect(self.plotUi_refreshTraceList)
         self.menuEntry.triggered.disconnect()
 
         self._widget.deleteLater()

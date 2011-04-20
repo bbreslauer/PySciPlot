@@ -255,13 +255,9 @@ class ImportCSV(Module):
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
 
-
-
-
-
-
-
-
-
-
+    def setDefaults(self):
+        for child in self._widget.children():
+            print child
+            del child
+        self._ui.setupUi(self._widget)
 

@@ -52,7 +52,10 @@ class WavesListModel(QAbstractListModel):
         return self.appWaves().wave(self.waveNameByRow(row))
 
     def waveNameByRow(self, row):
-        return self.orderedWaves()[row]
+        try:
+            return self.orderedWaves()[row]
+        except IndexError:
+            return None
 
     def orderedWaves(self):
         """Return the list of waves (in order) in this model."""

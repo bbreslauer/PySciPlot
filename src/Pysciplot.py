@@ -63,25 +63,12 @@ class Pysciplot(QMainWindow):
         # Variables
         Util.debug(2, "App", "Initializing variables")
         self._version = 1
-        self._waves = Waves()
-        self._figures = Figures()
-        self._models = {}
         self._loadedModules = {}
-        self.projectDir = "" # current project directory
-        self.setCurrentProject("")
-        self._storedSettings = {}   # this is a dict with widgetName: list pairs
-                                    # where each list has [setting-name, setting-value] pairs
-                                    # setting-value is a dict with (property-name: Property) pairs
+
+        self.setDefaults()
 
         # Let the workspace resize when the main window is resized
         self.setCentralWidget(self.ui.workspace)
-
-        # Load Preferences
-        Util.debug(2, "App", "Loading Preferences from file")
-        self.preferences = Preferences("~/.pysciplotrc")
-        
-        # Create application-wide models
-        self._models['appWaves'] = WavesListModel(self.waves().waves())
 
         # Make signal/slot connections
         Util.debug(2, "App", "Connecting signals and slots")
@@ -112,6 +99,48 @@ class Pysciplot(QMainWindow):
 
         #Load.loadProjectFromFile(self, "/home/ben/test.psp")
         
+    def setDefaults(self):
+        """
+        Setup parts of the application that have some sort of default.
+        Intended to be used when creating a new project to reset the application
+        to a blank slate.
+        """
+        
+        # Remove or hide any windows
+        subWindows = self.ui.workspace.subWindowList()
+
+        for window in subWindows:
+            if type(window).__name__ in ["DataTableSubWindow", "FigureSubWindow"]:
+                window.setAttribute(Qt.WA_DeleteOnClose)
+                window.close()
+            else:
+                window.setVisible(False)
+
+        # Unload modules
+        for module in self._loadedModules.values():
+            module.unload()
+
+        # Set variables
+        self._waves = Waves()
+        self._figures = Figures()
+        self._models = {}
+        self.projectDir = "" # current project directory
+        self.setCurrentProject("")
+        self._storedSettings = {}   # this is a dict with widgetName: list pairs
+                                    # where each list has [setting-name, setting-value] pairs
+                                    # setting-value is a dict with (property-name: Property) pairs
+
+        # Load Preferences
+        Util.debug(2, "App", "Loading Preferences from file")
+        self.preferences = Preferences("~/.pysciplotrc")
+
+        # Create application-wide models
+        self._models['appWaves'] = WavesListModel(self.waves().waves())
+
+        # Reload modules
+        for module in self._loadedModules.values():
+            module.load()
+
     def waves(self):
         """
         Return the app's Waves object.  NOT A LIST OF WAVES.
@@ -263,18 +292,7 @@ class Pysciplot(QMainWindow):
                 return
 
         # Now reset to a clean slate
-        subWindows = self.ui.workspace.subWindowList()
-
-        for window in subWindows:
-            if type(window).__name__ in ["DataTableSubWindow", "FigureSubWindow"]:
-                window.setAttribute(Qt.WA_DeleteOnClose)
-                window.close()
-            else:
-                window.setVisible(False)
-
-        self._waves.removeAllWaves()
-        self._figures.removeAllFigures()
-        self.setCurrentProject("")
+        self.setDefaults()
 
     def setCurrentProject(self, fileName):
         Util.debug(3, "App.setCurrentProject", "Setting current project title")

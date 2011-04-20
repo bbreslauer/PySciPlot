@@ -24,7 +24,6 @@ from numpy import *
 import Util
 from Wave import Wave
 from gui.SubWindows import SubWindow
-#from models.WavesListModel import WavesListModel
 from modules.Module import Module
 from ui.Ui_ManageWavesWidget import Ui_ManageWavesWidget
 

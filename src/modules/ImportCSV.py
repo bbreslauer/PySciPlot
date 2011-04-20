@@ -42,9 +42,6 @@ class ImportCSV(Module):
         self._ui.importDataButton.clicked.connect(self.importData)
         self._ui.data.cellChanged.connect(self.handleDataChange)
 
-
-        
-
     def csvFileSelector(self):
         """Button-lineedit link"""
         directory = os.path.dirname(Util.getWidgetValue(self._ui.csvFileName))

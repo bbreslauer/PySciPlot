@@ -5,5 +5,6 @@ __all__ = [
             "ImportBinary",
             "ImportCSV",
             "ManageWavesWidget",
+            "ExportData",
         ]
 

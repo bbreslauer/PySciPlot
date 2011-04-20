@@ -77,7 +77,7 @@ class WavesListModel(QAbstractListModel):
             wave = self.appWaves().wave(entry)
             name = entry
         self.orderedWaves().append(name)
-        wave.nameChanged.connect(self.updateOrderedWaves)
+        wave.nameChanged.connect(self.updateOrderedWaves, Qt.UniqueConnection)
         
         self.reset()
 
@@ -118,6 +118,9 @@ class WavesListModel(QAbstractListModel):
         self.endInsertRows()
         return True
 
+    def removeRow(self, row, parent=QModelIndex()):
+        return self.removeRows(row, 1, parent)
+
     def removeRows(self, row, count, parent=QModelIndex()):
         self.beginRemoveRows(parent, row, row + count - 1)
         numRowsRemoved = 0
@@ -131,19 +134,31 @@ class WavesListModel(QAbstractListModel):
         return Qt.MoveAction
 
     def removeWave(self, entry):
+        """
+        Remove all instances of entry from the model.
+        """
+
         if isinstance(entry, Wave):
             wave = entry
             name = entry.name()
+        elif isinstance(entry, QVariant):
+            name = str(entry.toString())
+            wave = self.appWaves().wave(name)
         else:
-            wave = self.appWaves().wave(entry)
             name = entry
+            wave = self.appWaves().wave(name)
 
-        if self.getIndexByWaveName(name) < 0:
-            # wave does not exist in this model
-            return
-        
+        #if self.getIndexByWaveName(name) < 0:
+        #    # wave does not exist in this model
+        #    return
+
         wave.nameChanged.disconnect(self.updateOrderedWaves)
-        self.orderedWaves().remove(name)
+        while True:
+            try:
+                self.orderedWaves().remove(name)
+            except:
+                break
+        self.doReset()
 
     def removeAllWaves(self):
         for waveName in self.orderedWaves():

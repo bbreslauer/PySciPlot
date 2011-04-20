@@ -63,11 +63,11 @@ class CreateTableDialog(Module):
 
     def removeWaveFromTable(self):
         selectedIndexes = self._ui.tableWavesListView.selectedIndexes()
-        names = []
-        for index in selectedIndexes:
-            names.append(self._tableWavesListModel.data(index))
-        for name in names:
-            self._tableWavesListModel.removeWave(name)
+        selectedRows = map(lambda x:x.row(), selectedIndexes)
+        selectedRows.sort()
+        selectedRows.reverse()
+        for row in selectedRows:
+            self._tableWavesListModel.removeRow(row)
 
     def createTable(self):
         """

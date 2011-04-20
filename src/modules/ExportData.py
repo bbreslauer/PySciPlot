@@ -132,7 +132,15 @@ class ExportData(Module):
         self.menuEntry.setShortcut("Ctrl+E")
         self.menuEntry.setText("Export Data")
         self.menuEntry.triggered.connect(self.window.show)
-        self.menu = vars(self._app.ui)["menuFile"]
+
+        # Check if menu already exists
+        if "menuExport" not in vars(self._app.ui).keys():
+            self._app.ui.menuExport = QMenu(self._app.ui.menuFile)
+            self._app.ui.menuExport.setObjectName("menuExport")
+            self._app.ui.menuExport.setTitle(QApplication.translate("MainWindow", "Export", None, QApplication.UnicodeUTF8))
+            self._app.ui.menuFile.addAction(self._app.ui.menuExport.menuAction())
+        
+        self.menu = vars(self._app.ui)["menuExport"]
         self.menu.addAction(self.menuEntry)
         
         self.buildWidget()

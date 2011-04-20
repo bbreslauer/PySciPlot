@@ -62,8 +62,6 @@
      <property name="title">
       <string>Export</string>
      </property>
-     <addaction name="actionData"/>
-     <addaction name="actionPlot"/>
     </widget>
     <addaction name="menuNew"/>
     <addaction name="menuImport"/>

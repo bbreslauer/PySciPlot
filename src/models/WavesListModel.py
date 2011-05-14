@@ -151,11 +151,12 @@ class WavesListModel(QAbstractListModel):
             name = entry
             wave = self.appWaves().wave(name)
 
-        #if self.getIndexByWaveName(name) < 0:
-        #    # wave does not exist in this model
-        #    return
-
+        if name not in self.orderedWaves():
+            # wave does not exist in this model
+            return
+        
         wave.nameChanged.disconnect(self.updateOrderedWaves)
+
         while True:
             try:
                 self.orderedWaves().remove(name)

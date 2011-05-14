@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox
+from PyQt4.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox, QItemSelectionModel
 from PyQt4.QtCore import Qt
 
 import re
@@ -213,8 +213,9 @@ class ManageWavesWidget(Module):
         if self._ui.modifyWave_selectWave.currentIndex():
             wave = self._wavesListModel.waveByRow(self._ui.modifyWave_selectWave.currentIndex().row())
 
-            Util.setWidgetValue(self._ui.modifyWave_waveName, wave.name())
-            Util.setWidgetValue(self._ui.modifyWave_dataType, wave.dataType())
+            if wave:
+                Util.setWidgetValue(self._ui.modifyWave_waveName, wave.name())
+                Util.setWidgetValue(self._ui.modifyWave_dataType, wave.dataType())
 
     def modifyWave(self):
         """
@@ -277,17 +278,14 @@ class ManageWavesWidget(Module):
             if result != QMessageBox.Yes:
                 return False
 
-            self._app.waves().removeWave(self._wavesListModel.waveNameByRow(row))
+            # Determine the next row to select
+            newRow = row
+            if row >= self._wavesListModel.rowCount() - 1:
+                newRow = row - 1
             
-            try:
-                self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(row))
-            except IndexError:
-                try:
-                    # We just deleted the bottommost entry
-                    self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(self._wavesListModel.rowCount() - 1))
-                except IndexError:
-                    # There are no more rows
-                    pass
+            self._app.waves().removeWave(self._wavesListModel.waveNameByRow(row))
+            self._ui.modifyWave_selectWave.setCurrentIndex(self._wavesListModel.index(newRow))
+            self._ui.modifyWave_selectWave.selectionModel().select(self._wavesListModel.index(newRow), QItemSelectionModel.ClearAndSelect)
 
     def load(self):
         self.window = SubWindow(self._app.ui.workspace)

@@ -37,7 +37,6 @@ class Waves(QObject):
     allWavesRemoved = pyqtSignal()
     waveRenamed = pyqtSignal(Wave)
 
-    #def __init__(self, wavesIn=[], uniqueNames=True):
     def __init__(self, wavesIn=[]):
         """
         Initialize a waves.  Add the initial set of wave(s) to the list.
@@ -58,11 +57,11 @@ class Waves(QObject):
         for wave in wavesIn:
             self.addWave(wave)
 
-#    def __str__(self):
-#        string = "Waves:\n"
-#        for waveName in self.waveNames():
-#            string += str(self.wave(waveName))
-#        return string
+    def __str__(self):
+        string = "Waves:\n"
+        for waveName in self.waveNames():
+            string += str(self.wave(waveName))
+        return string
 
     def __reduce__(self):
         return tuple([self.__class__, tuple([self.waves()])])
@@ -153,7 +152,6 @@ class Waves(QObject):
         if self.uniqueWaveName(wave.name()):
             Util.debug(2, "Waves.addWave", "Adding wave " + str(wave.name()) + ".")
             self.waves()[wave.name()] = wave
-            #wave.nameChanged.connect(self.emitWaveRenamed)
             wave.nameChanged.connect(self.moveWave)
             self.waveAdded.emit(wave)
             return wave

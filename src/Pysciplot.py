@@ -103,8 +103,6 @@ class Pysciplot(QMainWindow):
         to a blank slate.
         """
         
-        print "resetting to defaults"
-
         # Remove or hide any windows
         subWindows = self.ui.workspace.subWindowList()
 
@@ -124,10 +122,6 @@ class Pysciplot(QMainWindow):
             self.waves().allWavesRemoved.disconnect(self.model('appWaves').removeAllWaves)
         except:
             pass
-
-#        # Unload modules
-#        for module in self._loadedModules.values():
-#            module.unload()
 
         # Set variables
         self._waves = Waves()
@@ -158,7 +152,6 @@ class Pysciplot(QMainWindow):
         """
         Return the app's Waves object.  NOT A LIST OF WAVES.
         """
-        #print self._waves
         return self._waves
 
     def figures(self):

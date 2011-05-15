@@ -50,7 +50,6 @@ class CreateTableDialog(Module):
     def setModels(self):
         # Set up model and view
         self._allWavesListModel = self._app.model('appWaves')
-        print self._allWavesListModel
         self._ui.allWavesListView.setModel(self._allWavesListModel)
         self._tableWavesListModel = WavesListModel([])
         self._ui.tableWavesListView.setModel(self._tableWavesListModel)

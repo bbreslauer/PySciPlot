@@ -48,7 +48,7 @@ class ImportCSV(Module):
         if not os.path.isdir(directory):
             directory = self._app.preferences.getInternal('projectDirectory')
 
-        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Comma Separated Values (*.csv);;All Files(*.*)"))
+        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Comma Separated Values (*.csv);;All Files(*)"))
 
         if csvFile != "":
             return Util.setWidgetValue(self._ui.csvFileName, csvFile)

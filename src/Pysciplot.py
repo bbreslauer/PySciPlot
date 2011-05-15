@@ -222,7 +222,7 @@ class Pysciplot(QMainWindow):
 
         Util.debug(2, "App.saveProjectAs", "Saving project as")
         
-        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", self.projectDirectory(), "PySciPlot Project (*.psp);;All Files (*.*)"))
+        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", self.projectDirectory(), "PySciPlot Project (*.psp);;All Files (*)"))
 
         Save.writeProjectToFile(self, fileName)
 
@@ -258,7 +258,7 @@ class Pysciplot(QMainWindow):
         # Now load the project
         if fileName == "":
             fileDialog = QFileDialog(self.ui.workspace, "Load Project")
-            fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*.*)")
+            fileDialog.setNameFilter("PySciPlot Project (*.psp);;All Files (*)")
             fileDialog.setDefaultSuffix("psp")
             fileDialog.setConfirmOverwrite(False)
             fileDialog.setDirectory(self.projectDirectory())

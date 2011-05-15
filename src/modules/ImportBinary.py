@@ -63,7 +63,7 @@ class ImportBinary(Module):
         if not os.path.isdir(directory):
             directory = self._app.preferences.getInternal('projectDirectory')
 
-        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Binary (*.bin *.dat);;All Files(*.*)"))
+        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Binary (*.bin *.dat);;All Files(*)"))
 
         if fileName != "":
             return Util.setWidgetValue(self._ui.fileName, fileName)

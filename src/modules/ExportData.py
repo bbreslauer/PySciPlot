@@ -35,17 +35,20 @@ class ExportData(Module):
         self._ui = Ui_ExportData()
         self._ui.setupUi(self._widget)
 
-        # Set up model and view
-        self._allWavesListModel = self._app.model('appWaves')
-        self._ui.allWavesListView.setModel(self._allWavesListModel)
-        self._fileWavesListModel = WavesListModel([])
-        self._ui.fileWavesListView.setModel(self._fileWavesListModel)
+        self.setModels()
 
         # Connect button signals
         self._ui.fileNameButton.clicked.connect(self.fileSelector)
         self._ui.addWaveButton.clicked.connect(self.addWave)
         self._ui.removeWaveButton.clicked.connect(self.removeWave)
         self._ui.exportDataButton.clicked.connect(self.exportData)
+
+    def setModels(self):
+        # Set up model and view
+        self._allWavesListModel = self._app.model('appWaves')
+        self._ui.allWavesListView.setModel(self._allWavesListModel)
+        self._fileWavesListModel = WavesListModel([])
+        self._ui.fileWavesListView.setModel(self._fileWavesListModel)
 
     def fileSelector(self):
         """Button-lineedit link"""
@@ -154,4 +157,7 @@ class ExportData(Module):
         self._widget.deleteLater()
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
+
+    def reload(self):
+        self.setModels()
 

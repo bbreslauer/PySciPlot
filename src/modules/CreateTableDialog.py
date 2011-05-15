@@ -39,17 +39,21 @@ class CreateTableDialog(Module):
         self._ui = Ui_CreateTableDialog()
         self._ui.setupUi(self._widget)
         
-        # Set up model and view
-        self._allWavesListModel = self._app.model('appWaves')
-        self._ui.allWavesListView.setModel(self._allWavesListModel)
-        self._tableWavesListModel = WavesListModel([])
-        self._ui.tableWavesListView.setModel(self._tableWavesListModel)
+        self.setModels()
 
         # Connect some slots
         self._ui.createTableButton.clicked.connect(self.createTable)
         self._ui.closeWindowButton.clicked.connect(self.closeWindow)
         self._ui.addWaveButton.clicked.connect(self.addWaveToTable)
         self._ui.removeWaveButton.clicked.connect(self.removeWaveFromTable)
+
+    def setModels(self):
+        # Set up model and view
+        self._allWavesListModel = self._app.model('appWaves')
+        print self._allWavesListModel
+        self._ui.allWavesListView.setModel(self._allWavesListModel)
+        self._tableWavesListModel = WavesListModel([])
+        self._ui.tableWavesListView.setModel(self._tableWavesListModel)
 
     def closeWindow(self):
         self.resetForm()
@@ -121,4 +125,8 @@ class CreateTableDialog(Module):
         self._widget.deleteLater()
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
+
+    def reload(self):
+        self.setModels()
+        self.resetForm()
 

@@ -322,10 +322,40 @@ class ScatterPlot(FigureObject):
         self.update_leftAxis()
         self.update_legend()
 
+class BarChart(FigureObject):
+
+    def __init__(self, plot):
+        Util.debug(2, "BarChart.init", "Creating Bar Chart")
+
+        # Add additional properties without deleting the ones defined in Plot()
+        properties = {
+                }
+
+        FigureObject.__init__(self, properties)
+
+        self._plot = plot
+    
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
+
+    def refresh(self):
+        pass
+
 class PieChart(FigureObject):
 
     def __init__(self, plot):
-        Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
+        Util.debug(2, "PieChart.init", "Creating Pie Chart")
 
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
@@ -363,6 +393,7 @@ class Plot(FigureObject):
     plotTypeClasses = {
             'Scatter Plot': ScatterPlot,
             'Pie Chart':    PieChart,
+            'Bar Chart':    BarChart,
             }
 
     def __init__(self, plotName=""):

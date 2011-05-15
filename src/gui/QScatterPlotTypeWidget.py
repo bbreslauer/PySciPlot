@@ -113,3 +113,10 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
         self.traces.resetUi()
 
+    def reload(self):
+        self.bottomAxis.initSubWidgets()
+        self.leftAxis.initSubWidgets()
+        self.topAxis.initSubWidgets()
+        self.rightAxis.initSubWidgets()
+        self.traces.initSubWidgets()
+

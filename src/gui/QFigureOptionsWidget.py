@@ -46,3 +46,5 @@ class QFigureOptionsWidget(QEditFigureSubWidget):
             # In this case, just leave the current options alone.
             pass
 
+    def reload(self):
+        pass

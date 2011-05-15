@@ -61,3 +61,9 @@ class Module():
         """
         raise NotImplementedError
 
+    def reload(self):
+        """
+        Perform all actions required to reset this module to its original state.
+        """
+        pass
+

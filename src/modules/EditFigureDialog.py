@@ -45,13 +45,7 @@ class EditFigureDialog(Module):
         self._ui = Ui_EditFigureDialog()
         self._ui.setupUi(self._widget)
         
-        # Setup figure list
-        self._figureListModel = FigureListModel(self._app.figures())
-        self._ui.figureSelector.setModel(self._figureListModel)
-        self._ui.figureSelector.currentIndexChanged[int].connect(self.changeCurrentFigure)
-        self._app.figures().figureAdded.connect(self._figureListModel.doReset)
-        self._app.figures().figureRemoved.connect(self._figureListModel.doReset)
-        self._app.figures().figureRenamed.connect(self.updateFigureSelectorBox)
+        self.setModels()
 
         # Connect signals for buttons at top of widget
         self._ui.addFigureButton.clicked.connect(self.createFigure)
@@ -83,6 +77,15 @@ class EditFigureDialog(Module):
 
         # Make sure that the figure tab is initially displayed
         self._ui.tabWidget.setCurrentIndex(0)
+
+    def setModels(self):
+        # Setup figure list
+        self._figureListModel = FigureListModel(self._app.figures())
+        self._ui.figureSelector.setModel(self._figureListModel)
+        self._ui.figureSelector.currentIndexChanged[int].connect(self.changeCurrentFigure)
+        self._app.figures().figureAdded.connect(self._figureListModel.doReset)
+        self._app.figures().figureRemoved.connect(self._figureListModel.doReset)
+        self._app.figures().figureRenamed.connect(self.updateFigureSelectorBox)
 
     #
     # Handlers for the three buttons at the top of the widget
@@ -205,4 +208,8 @@ class EditFigureDialog(Module):
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
 
+    def reload(self):
+        self.setModels()
+        self._plotTab.reload()
+        self._figureTab.reload()
 

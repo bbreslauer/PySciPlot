@@ -81,9 +81,6 @@ class Pysciplot(QMainWindow):
         self.ui.actionSave_Current_Figure.triggered.connect(self.saveCurrentFigure)
         self.ui.actionPreferences.triggered.connect(self.preferences.showDialog)
 
-        self.waves().waveAdded.connect(self.model('appWaves').appendRow)
-        self.waves().allWavesRemoved.connect(self.model('appWaves').removeAllWaves)
-
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
 
@@ -106,6 +103,8 @@ class Pysciplot(QMainWindow):
         to a blank slate.
         """
         
+        print "resetting to defaults"
+
         # Remove or hide any windows
         subWindows = self.ui.workspace.subWindowList()
 
@@ -116,9 +115,19 @@ class Pysciplot(QMainWindow):
             else:
                 window.setVisible(False)
 
-        # Unload modules
-        for module in self._loadedModules.values():
-            module.unload()
+        # Remove signals
+        try:
+            self.waves().waveAdded.disconnect(self.model('appWaves').appendRow)
+        except:
+            pass
+        try:
+            self.waves().allWavesRemoved.disconnect(self.model('appWaves').removeAllWaves)
+        except:
+            pass
+
+#        # Unload modules
+#        for module in self._loadedModules.values():
+#            module.unload()
 
         # Set variables
         self._waves = Waves()
@@ -137,14 +146,19 @@ class Pysciplot(QMainWindow):
         # Create application-wide models
         self._models['appWaves'] = WavesListModel(self.waves().waves())
 
+        # Signals
+        self.waves().waveAdded.connect(self.model('appWaves').appendRow)
+        self.waves().allWavesRemoved.connect(self.model('appWaves').removeAllWaves)
+
         # Reload modules
         for module in self._loadedModules.values():
-            module.load()
+            module.reload()
 
     def waves(self):
         """
         Return the app's Waves object.  NOT A LIST OF WAVES.
         """
+        #print self._waves
         return self._waves
 
     def figures(self):

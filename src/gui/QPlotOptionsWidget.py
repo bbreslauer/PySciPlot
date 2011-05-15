@@ -54,6 +54,12 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         self.getChild('plotTypeStack').addWidget(self.scatterPlotWidget)
         self.getChild('plotType').addItem('Scatter Plot')
 
+        self.barPlotWidget = QEditFigureSubWidget(self.getChild('plotTypeStack'))
+        barPlotWidgetUi = Ui_PlotTypeWidget()
+        barPlotWidgetUi.setupUi(self.barPlotWidget)
+        self.getChild('plotTypeStack').addWidget(self.barPlotWidget)
+        self.getChild('plotType').addItem('Bar Chart')
+
         self.piePlotWidget = QEditFigureSubWidget(self.getChild('plotTypeStack'))
         piePlotWidgetUi = Ui_PlotTypeWidget()
         piePlotWidgetUi.setupUi(self.piePlotWidget)
@@ -117,4 +123,8 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
     def applyClicked(self):
         self.saveUi()
         self.refreshPlotSelector()
+
+    def reload(self):
+        self.scatterPlotWidget.reload()
+
 

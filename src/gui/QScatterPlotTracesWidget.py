@@ -38,6 +38,9 @@ class QScatterPlotTracesWidget(QEditFigureSubWidget):
         self.getChild('pointMarkerFaceColor').initButtonColor()
         self.getChild('pointMarkerEdgeColor').initButtonColor()
 
+        self.setModels()
+
+    def setModels(self):
         # Setup X and Y lists
         self._wavesModel = self._app.model('appWaves')
         self.getChild('xAxisListView').setModel(self._wavesModel)

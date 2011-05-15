@@ -41,11 +41,7 @@ class ManageWavesWidget(Module):
         self._ui = Ui_ManageWavesWidget()
         self._ui.setupUi(self._widget)
         
-        # Set up model and views
-        self._wavesListModel = self._app.model('appWaves')
-        self._ui.copyWaveOriginalWave.setModel(self._wavesListModel)
-        self._ui.functionInsertWave.setModel(self._wavesListModel)
-        self._ui.modifyWave_selectWave.setModel(self._wavesListModel)
+        self.setModels()
 
         # Connect some slots
         self._ui.copyWaveOriginalWave.activated.connect(self.resetCopyWaveLimits)
@@ -62,6 +58,13 @@ class ManageWavesWidget(Module):
         self._ui.waveDataStack.setCurrentIndex(0)
 
         return self._widget
+
+    def setModels(self):
+        # Set up model and views
+        self._wavesListModel = self._app.model('appWaves')
+        self._ui.copyWaveOriginalWave.setModel(self._wavesListModel)
+        self._ui.functionInsertWave.setModel(self._wavesListModel)
+        self._ui.modifyWave_selectWave.setModel(self._wavesListModel)
 
     ####
     # Create Wave tab
@@ -311,7 +314,8 @@ class ManageWavesWidget(Module):
         self.window.deleteLater()
         self.menu.removeAction(self.menuEntry)
 
-
+    def reload(self):
+        self.setModels()
 
 
 

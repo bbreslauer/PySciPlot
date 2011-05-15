@@ -58,11 +58,11 @@ class Waves(QObject):
         for wave in wavesIn:
             self.addWave(wave)
 
-    def __str__(self):
-        string = "Waves:\n"
-        for waveName in self.waveNames():
-            string += str(self.wave(waveName))
-        return string
+#    def __str__(self):
+#        string = "Waves:\n"
+#        for waveName in self.waveNames():
+#            string += str(self.wave(waveName))
+#        return string
 
     def __reduce__(self):
         return tuple([self.__class__, tuple([self.waves()])])

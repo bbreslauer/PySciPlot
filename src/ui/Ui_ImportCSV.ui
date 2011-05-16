@@ -36,7 +36,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
+      <item row="0" column="1" colspan="3">
        <widget class="QLineEdit" name="csvFileName">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -62,36 +62,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="4">
+      <item row="6" column="0" colspan="5">
        <widget class="QPushButton" name="loadDataButton">
         <property name="text">
          <string>Load Data</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Use first row for wave names</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::AutoText</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="3">
+      <item row="1" column="1" colspan="4">
        <widget class="QGroupBox" name="groupBox_4">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -202,14 +180,14 @@
         </layout>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="firstRowWaveNames">
+      <item row="0" column="4">
+       <widget class="QPushButton" name="csvFileNameButton">
         <property name="text">
-         <string/>
+         <string>Select...</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Default Data Type</string>
@@ -219,7 +197,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="4" column="1">
        <widget class="QComboBox" name="defaultDataType">
         <item>
          <property name="text">
@@ -238,12 +216,52 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="csvFileNameButton">
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="firstRowWaveNames">
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
         <property name="text">
-         <string>Select...</string>
+         <string>Use first row for
+wave names</string>
         </property>
        </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QLineEdit" name="waveNamePrefix">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="useWaveNamePrefix">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="text">
+         <string>Prefix names</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -285,8 +303,6 @@
   <tabstop>tabRadio</tabstop>
   <tabstop>otherRadio</tabstop>
   <tabstop>otherDelimiter</tabstop>
-  <tabstop>firstRowWaveNames</tabstop>
-  <tabstop>defaultDataType</tabstop>
   <tabstop>loadDataButton</tabstop>
   <tabstop>data</tabstop>
   <tabstop>importDataButton</tabstop>
@@ -300,12 +316,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>362</x>
-     <y>78</y>
+     <x>451</x>
+     <y>87</y>
     </hint>
     <hint type="destinationlabel">
-     <x>406</x>
-     <y>78</y>
+     <x>477</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useWaveNamePrefix</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>waveNamePrefix</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>318</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>351</x>
+     <y>111</y>
     </hint>
    </hints>
   </connection>

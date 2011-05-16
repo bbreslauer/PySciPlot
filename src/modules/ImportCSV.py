@@ -93,9 +93,6 @@ class ImportCSV(Module):
         # Hide the QT default column header, since we cannot edit it easily
         dataTable.horizontalHeader().hide()
 
-        # Potential wave names
-        tempWaveNames = self._app.waves().findGoodWaveNames(dataTable.columnCount())
-
         # Add a row for setting the data type of each wave
         dataTable.insertRow(0)
         defaultType = Util.getWidgetValue(self._ui.defaultDataType)
@@ -106,6 +103,14 @@ class ImportCSV(Module):
             typeBox.addItem("String")
             Util.setWidgetValue(typeBox, defaultType)
             dataTable.setCellWidget(0, col, typeBox)
+
+        # Potential wave names
+        waveNamePrefix = Util.getWidgetValue(self._ui.waveNamePrefix)
+        tempWaveNames = []
+        if Util.getWidgetValue(self._ui.useWaveNamePrefix):
+            tempWaveNames = self._app.waves().findGoodWaveNames(dataTable.columnCount(), waveNamePrefix)
+        else:
+            tempWaveNames = self._app.waves().findGoodWaveNames(dataTable.columnCount())
 
         # Wave names can either be generated or taken from the first row in the file
         if not Util.getWidgetValue(self._ui.firstRowWaveNames):
@@ -121,6 +126,11 @@ class ImportCSV(Module):
             for col in range(dataTable.columnCount()):
                 if not dataTable.item(1, col) or str(dataTable.item(1, col).text()).strip() == "":
                     dataTable.setItem(1, col, QTableWidgetItem(tempWaveNames.pop(0)))
+                else:
+                    # For the names that came from the file, add the prefix specified by the user
+                    if Util.getWidgetValue(self._ui.useWaveNamePrefix):
+                        dataTable.item(1, col).setText(str(waveNamePrefix) + dataTable.item(1, col).text())
+
 
         # Edit the name so that it could be valid (no spaces, etc). But it might
         # still be a duplicate.

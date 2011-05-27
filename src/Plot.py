@@ -185,23 +185,34 @@ class ScatterPlot(FigureObject):
             data.sort()
             majorTickPositions = data
         elif axisDict['useMajorTicksNumber']:
-            if axisDict['useMajorTicksAnchor']:
-                # spacing = (max - min) / (num - 1) if both max and min have tick marks
-                # spacing = (max - min) / (num)     if exactly one of max and min has tick marks
-                # spacing = (max - min) / (num)     if neither max nor min have tick marks
+            majorTicksNumber = axisDict['majorTicksNumber']
 
-                majorTicksNumber = axisDict['majorTicksNumber']
+            if axisDict['useMajorTicksAnchor']:
                 anchor = axisDict['majorTicksAnchor']
-                if ((float(minimum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0 and ((float(maximum) - float(anchor)) % ((float(maximum) - float(minimum)) / (majorTicksNumber - 1))) == 0:
-                    majorTickPositions = list(numpy.linspace(minimum, maximum, majorTicksNumber, True))
+                spacing = (float(maximum) - float(minimum)) / (majorTicksNumber - 1)
+
+                # firstTick is the closest would-be tick to the smallest tick which is off the visible axis
+                # lastTick  is the closest would-be tick to the largest  tick which is off the visible axis
+                firstTick = float(minimum) - float(spacing) + ((float(anchor) - float(minimum)) % float(spacing))
+                lastTick  = float(maximum) + float(spacing) - ((float(maximum) - float(anchor)) % float(spacing))
+                
+                if (float(minimum) - float(anchor)) % float(spacing) == 0 or \
+                   (float(maximum) - float(anchor)) % float(spacing) == 0:
+                    # The anchor is located at the min or max of the viewing window (or a spacing multiple thereof)
+                    # and so the number of major ticks visible will be equal to majorTicksNumber, since firstTick
+                    # and lastTick are not within the viewing window
+                    majorTickPositions = Util.subdivideList([firstTick, lastTick], majorTicksNumber)
                 else:
-                    spacing = (float(maximum) - float(minimum)) / majorTicksNumber
-                    firstTick = anchor + int((float(minimum) - float(anchor)) / float(spacing) - 1) * float(spacing)
-                    majorTickPositions = list(numpy.arange(firstTick, maximum, spacing))
-                    majorTickPositions.append(majorTickPositions[-1] + spacing)
+                    # FIXME
+                    # This produces 1 less than the user's desired number of ticks. However, if we do not subtract 1,
+                    # then the spacing gets screwed up and the anchor no longer has a tick mark. See issue #37.
+                    majorTickPositions = Util.subdivideList([firstTick, lastTick], majorTicksNumber-1)
             else:
-                majorTickPositions = list(numpy.linspace(minimum, maximum, axisDict['majorTicksNumber'], True))
+                # no anchor
+                # We need to account for the two endpoints, which is why we subtract 2 from the majorTicksNumber
+                majorTickPositions = Util.subdivideList([minimum, maximum], majorTicksNumber-2)
         else:
+            # Using spacing
             if axisDict['useMajorTicksAnchor']:
                 firstTick = axisDict['majorTicksAnchor'] + int((float(minimum) - float(axisDict['majorTicksAnchor'])) / float(axisDict['majorTicksSpacing']) - 1) * float(axisDict['majorTicksSpacing'])
             else:
@@ -253,13 +264,7 @@ class ScatterPlot(FigureObject):
             axis.set_minor_formatter(ticker.NullFormatter())
             sortedMajorTickLocs = axis.get_majorticklocs()
             sortedMajorTickLocs.sort()
-            majorTicksSpacing = float(sortedMajorTickLocs[1]) - float(sortedMajorTickLocs[0])
-            minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
-            minorTicks = [float(sortedMajorTickLocs[0])]
-            while minorTicks[-1] < sortedMajorTickLocs[-1]:
-                # this creates the minor tick locations starting at the lowest major tick
-                # and increasing to the end of the view interval
-                minorTicks.append(float(minorTicks[-1]) + float(minorTicksBase))
+            minorTicks = Util.subdivideList(sortedMajorTickLocs, float(axisDict['minorTicksNumber']))
             axis.set_minor_locator(ticker.FixedLocator(minorTicks))
         else:
             # this needs to be worked on

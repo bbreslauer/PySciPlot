@@ -16,7 +16,7 @@
 
 # Utility functions
 
-import config
+import config, numpy
 
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QColor, QApplication
@@ -136,9 +136,23 @@ def uniqueList(l):
     return list(s)
 
 
+def subdivideList(l, subDivider):
+    """
+    Create a new list with subDivider equally-spaced entries between 
+    every two consecutive entries in l.
 
+    l - must be a list of numbers
+    subDivider - float or int
+    """
 
+    newList = []
 
+    # We don't want to loop for the last entry in the list
+    for index in range(len(l) - 1):
+        newList.extend(list(numpy.linspace(l[index], l[index+1], num=subDivider+1, endpoint=False)))
+    
+    newList.append(float(l[-1]))
 
+    return newList
 
 

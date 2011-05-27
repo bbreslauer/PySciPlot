@@ -17,7 +17,7 @@
 from PyQt4.QtGui import QWidget, QApplication, QDialogButtonBox
 
 from QEditFigureSubWidget import *
-from QScatterPlotTypeWidget import *
+from QCartesianPlotTypeWidget import *
 from models.PlotListModel import *
 from ui.Ui_PlotTypeWidget import *
 from ui.Ui_StoredSettingsWidget import *
@@ -47,16 +47,18 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
 
     def initSubWidgets(self):
         # Add all the plot widgets to the stack
-        self.scatterPlotWidget = QScatterPlotTypeWidget(self, self.getChild('plotTypeStack'))
+        self.scatterPlotWidget = QCartesianPlotTypeWidget(self, self.getChild('plotTypeStack'))
         scatterPlotWidgetUi = Ui_PlotTypeWidget()
         scatterPlotWidgetUi.setupUi(self.scatterPlotWidget)
         self.scatterPlotWidget.initSubWidgets()
         self.getChild('plotTypeStack').addWidget(self.scatterPlotWidget)
         self.getChild('plotType').addItem('Scatter Plot')
 
-        self.barPlotWidget = QEditFigureSubWidget(self.getChild('plotTypeStack'))
+        #self.barPlotWidget = QEditFigureSubWidget(self.getChild('plotTypeStack'))
+        self.barPlotWidget = QCartesianPlotTypeWidget(self, self.getChild('plotTypeStack'))
         barPlotWidgetUi = Ui_PlotTypeWidget()
         barPlotWidgetUi.setupUi(self.barPlotWidget)
+        self.barPlotWidget.initSubWidgets()
         self.getChild('plotTypeStack').addWidget(self.barPlotWidget)
         self.getChild('plotType').addItem('Bar Chart')
 

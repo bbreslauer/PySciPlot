@@ -26,19 +26,16 @@ import numpy
 import Util, Property
 from Waves import Waves
 from Wave import Wave
-from Trace import Trace
+from WavePair import *
 from FigureObject import *
 
-class ScatterPlot(FigureObject):
+class CartesianPlot(FigureObject):
     """
-    This class is used for a scatter plot.
+    A generic Cartesian plot, to be used for scatter, bar, and other types.
     """
-
-    # Signals
-    traceRemovedFromPlot = pyqtSignal(Trace)
 
     def __init__(self, plot):
-        Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
+        Util.debug(2, "CartesianPlot.init", "Creating Cartesian Plot")
 
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
@@ -64,14 +61,12 @@ class ScatterPlot(FigureObject):
         FigureObject.__init__(self, properties)
 
         self._plot = plot
-        self._traces = []
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._traces])])
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties])])
 
     def __setstate__(self, state):
         properties = state[0]
-        traces = state[1]
         
         for (key, value) in properties.items():
             self.properties[key].blockSignals(True)
@@ -81,25 +76,8 @@ class ScatterPlot(FigureObject):
         for (key, value) in properties.items():
             self.properties[key].blockSignals(False)
 
-        for trace in traces:
-            self.addTrace(trace)
-
     def plot(self):
         return self._plot
-
-    def traces(self):
-        return self._traces
-
-    def addTrace(self, trace):
-        trace.setPlot(self.plot())
-        self._traces.append(trace)
-        self.refresh()
-
-    def removeTrace(self, trace):
-        self._traces.remove(trace)
-        trace.removeFromPlot()
-        self.traceRemovedFromPlot.emit(trace)
-        self.refresh()
 
     def update_bottomAxis(self):
         Util.debug(3, "ScatterPlot.update_bottomAxis", "")
@@ -320,31 +298,103 @@ class ScatterPlot(FigureObject):
         self.plot().redraw()
 
     def refresh(self):
-        for trace in self.traces():
-            trace.refresh()
-        
         self.update_bottomAxis()
         self.update_leftAxis()
         self.update_legend()
 
-class BarChart(FigureObject):
+class ScatterPlot(CartesianPlot):
+    
+    # Signals
+    traceRemovedFromPlot = pyqtSignal(Trace)
+
+    def __init__(self, plot):
+        Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
+
+        CartesianPlot.__init__(self, plot)
+
+        self._traces = []
+
+    def __reduce__(self):
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._traces])])
+
+    def __setstate__(self, state):
+        properties = state[0]
+        traces = state[1]
+        
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(True)
+
+        self.setMultiple(properties)
+
+        for (key, value) in properties.items():
+            self.properties[key].blockSignals(False)
+
+        for trace in traces:
+            self.addTrace(trace)
+
+    def traces(self):
+        return self._traces
+    
+    def addTrace(self, trace):
+        self.addWavePair(trace)
+
+    def addWavePair(self, trace):
+        trace.setPlot(self.plot())
+        self._traces.append(trace)
+        self.refresh()
+
+    def removeTrace(self, trace):
+        self.removeWavePair(trace)
+
+    def removeWavePair(self, trace):
+        self._traces.remove(trace)
+        trace.removeFromPlot()
+        self.traceRemovedFromPlot.emit(trace)
+        self.refresh()
+
+    def refresh(self):
+        for trace in self.traces():
+            trace.refresh()
+
+        CartesianPlot.refresh(self)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class BarPlot(CartesianPlot):
+
+    # Signals
+    barRemovedFromPlot = pyqtSignal(Bar)
 
     def __init__(self, plot):
         Util.debug(2, "BarChart.init", "Creating Bar Chart")
 
-        # Add additional properties without deleting the ones defined in Plot()
-        properties = {
-                }
+#        # Add additional properties without deleting the ones defined in Plot()
+#        properties = {
+#                }
 
-        FigureObject.__init__(self, properties)
+        ScatterPlot.__init__(self, plot)
 
-        self._plot = plot
+#        self._plot = plot
+        self._bars = []
     
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties])])
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._bars])])
 
     def __setstate__(self, state):
         properties = state[0]
+        bars = state[1]
 
         for (key, value) in properties.items():
             self.properties[key].blockSignals(True)
@@ -354,8 +404,30 @@ class BarChart(FigureObject):
         for (key, value) in properties.items():
             self.properties[key].blockSignals(False)
 
+        for bar in bars:
+            self.addBar(bar)
+
+    def bars(self):
+        return self._bars
+
+    def addBar(self, bar):
+        bar.setPlot(self.plot())
+        self._bars.append(bar)
+        self.refresh()
+
+    def removeBar(self, bar):
+        self._bars.remove(bar)
+        bar.removeFromPlot()
+        self.barRemovedFromPlot.emit(bar)
+        self.refresh()
+
     def refresh(self):
-        pass
+        for bar in self.bars():
+            bar.refresh()
+
+        self.update_bottomAxis()
+        self.update_leftAxis()
+        self.update_legend()
 
 class PieChart(FigureObject):
 
@@ -398,7 +470,7 @@ class Plot(FigureObject):
     plotTypeClasses = {
             'Scatter Plot': ScatterPlot,
             'Pie Chart':    PieChart,
-            'Bar Chart':    BarChart,
+            'Bar Chart':    BarPlot,
             }
 
     def __init__(self, plotName=""):

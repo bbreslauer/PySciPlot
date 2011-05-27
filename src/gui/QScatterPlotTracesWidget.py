@@ -18,9 +18,8 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 
 import Util
 from Wave import *
-from Trace import *
+from WavePair import *
 from Delegates import TraceListDelegate
-#from models.WavesListModel import *
 from models.TraceListModel import *
 from QEditFigureSubWidget import *
 

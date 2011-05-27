@@ -19,7 +19,7 @@ from models.WavesListModel import WavesListModel
 from QEditFigureSubWidget import *
 from Property import GenericAxis
 
-class QScatterPlotAxisWidget(QEditFigureSubWidget):
+class QCartesianPlotAxisWidget(QEditFigureSubWidget):
 
     properties = GenericAxis.default.keys()
 

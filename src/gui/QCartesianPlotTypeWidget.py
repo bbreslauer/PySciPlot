@@ -17,14 +17,14 @@
 from PyQt4.QtGui import QWidget, QApplication
 
 from QEditFigureSubWidget import *
-from QScatterPlotAxisWidget import *
+from QCartesianPlotAxisWidget import *
 from QScatterPlotTracesWidget import *
-from QScatterPlotLegendWidget import *
-from ui.Ui_ScatterPlotAxis import *
+from QPlotLegendWidget import *
+from ui.Ui_CartesianPlotAxis import *
 from ui.Ui_ScatterPlotTraces import *
-from ui.Ui_ScatterPlotLegend import *
+from ui.Ui_PlotLegend import *
 
-class QScatterPlotTypeWidget(QEditFigureSubWidget):
+class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
     def __init__(self, plotOptionsWidget, *args):
         QEditFigureSubWidget.__init__(self, *args)
@@ -33,27 +33,27 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
 
     def initSubWidgets(self):
         # Add the various tabs to this widget
-        self.bottomAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
-        bottomAxisUi = Ui_ScatterPlotAxis()
+        self.bottomAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        bottomAxisUi = Ui_CartesianPlotAxis()
         bottomAxisUi.setupUi(self.bottomAxis)
         self.bottomAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.bottomAxis, 'Bottom Axis')
 
-        self.leftAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
-        leftAxisUi = Ui_ScatterPlotAxis()
+        self.leftAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        leftAxisUi = Ui_CartesianPlotAxis()
         leftAxisUi.setupUi(self.leftAxis)
         self.leftAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.leftAxis, 'Left Axis')
 
-        self.topAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
-        topAxisUi = Ui_ScatterPlotAxis()
+        self.topAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        topAxisUi = Ui_CartesianPlotAxis()
         topAxisUi.setupUi(self.topAxis)
         self.topAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.topAxis, 'Top Axis')
         self.getChild('tabWidget').setTabEnabled(2, False)
 
-        self.rightAxis = QScatterPlotAxisWidget(self.getChild('tabWidget'))
-        rightAxisUi = Ui_ScatterPlotAxis()
+        self.rightAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        rightAxisUi = Ui_CartesianPlotAxis()
         rightAxisUi.setupUi(self.rightAxis)
         self.rightAxis.initSubWidgets()
         self.getChild('tabWidget').addTab(self.rightAxis, 'Right Axis')
@@ -65,8 +65,8 @@ class QScatterPlotTypeWidget(QEditFigureSubWidget):
         self.traces.initSubWidgets()
         self.getChild('tabWidget').addTab(self.traces, 'Traces')
 
-        self.legend = QScatterPlotLegendWidget(self.getChild('tabWidget'))
-        legendUi = Ui_ScatterPlotLegend()
+        self.legend = QPlotLegendWidget(self.getChild('tabWidget'))
+        legendUi = Ui_PlotLegend()
         legendUi.setupUi(self.legend)
         self.getChild('tabWidget').addTab(self.legend, 'Legend')
 

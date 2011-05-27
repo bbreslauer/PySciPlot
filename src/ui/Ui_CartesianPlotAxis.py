@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Ui_ScatterPlotAxis.ui'
+# Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Sat May 14 21:36:05 2011
-#      by: PyQt4 UI code generator 4.8.3
+# Created: Fri May 27 16:40:07 2011
+#      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -14,13 +14,13 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-class Ui_ScatterPlotAxis(object):
-    def setupUi(self, ScatterPlotAxis):
-        ScatterPlotAxis.setObjectName(_fromUtf8("ScatterPlotAxis"))
-        ScatterPlotAxis.resize(596, 439)
-        self.gridLayout_4 = QtGui.QGridLayout(ScatterPlotAxis)
+class Ui_CartesianPlotAxis(object):
+    def setupUi(self, CartesianPlotAxis):
+        CartesianPlotAxis.setObjectName(_fromUtf8("CartesianPlotAxis"))
+        CartesianPlotAxis.resize(596, 439)
+        self.gridLayout_4 = QtGui.QGridLayout(CartesianPlotAxis)
         self.gridLayout_4.setObjectName(_fromUtf8("gridLayout_4"))
-        self.groupBox = QtGui.QGroupBox(ScatterPlotAxis)
+        self.groupBox = QtGui.QGroupBox(CartesianPlotAxis)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -83,7 +83,7 @@ class Ui_ScatterPlotAxis(object):
         self.autoscale.setObjectName(_fromUtf8("autoscale"))
         self.gridLayout_5.addWidget(self.autoscale, 0, 1, 1, 1)
         self.gridLayout_4.addWidget(self.groupBox, 0, 0, 1, 1)
-        self.majorTicksVisible = QtGui.QGroupBox(ScatterPlotAxis)
+        self.majorTicksVisible = QtGui.QGroupBox(CartesianPlotAxis)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -259,7 +259,7 @@ class Ui_ScatterPlotAxis(object):
         self.gridLayout_7.addWidget(self.majorTicksLabelVisible, 0, 5, 1, 1)
         self.gridLayout_7.setRowStretch(0, 1)
         self.gridLayout_4.addWidget(self.majorTicksVisible, 1, 0, 1, 1)
-        self.storedSettingsButton = QStoredSettingsButton(ScatterPlotAxis)
+        self.storedSettingsButton = QStoredSettingsButton(CartesianPlotAxis)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -270,7 +270,7 @@ class Ui_ScatterPlotAxis(object):
         self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
         self.storedSettingsButton.setObjectName(_fromUtf8("storedSettingsButton"))
         self.gridLayout_4.addWidget(self.storedSettingsButton, 0, 1, 4, 1)
-        self.minorTicksVisible = QtGui.QGroupBox(ScatterPlotAxis)
+        self.minorTicksVisible = QtGui.QGroupBox(CartesianPlotAxis)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -373,7 +373,7 @@ class Ui_ScatterPlotAxis(object):
         self.gridLayout_3.setColumnStretch(4, 1)
         self.gridLayout_4.addWidget(self.minorTicksVisible, 2, 0, 1, 1)
 
-        self.retranslateUi(ScatterPlotAxis)
+        self.retranslateUi(CartesianPlotAxis)
         self.majorTicksLocationsStackedWidget.setCurrentIndex(0)
         self.minorTicksLocationsStackedWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.storedSettingsButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.storedSettingsButton.toggleWidget)
@@ -390,51 +390,51 @@ class Ui_ScatterPlotAxis(object):
         QtCore.QObject.connect(self.majorTicksLabelUseNumeric, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksLabelNumericFormat.setEnabled)
         QtCore.QObject.connect(self.majorTicksLabelUseWave, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksLabelWave.setEnabled)
         QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksWaveValues.setEnabled)
-        QtCore.QObject.connect(self.scaleType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), ScatterPlotAxis.changeScaleType)
+        QtCore.QObject.connect(self.scaleType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), CartesianPlotAxis.changeScaleType)
 
-    def retranslateUi(self, ScatterPlotAxis):
-        ScatterPlotAxis.setWindowTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox.setTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Axis", None, QtGui.QApplication.UnicodeUTF8))
-        self.visible.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Visible?", None, QtGui.QApplication.UnicodeUTF8))
-        self.scaleType.setItemText(0, QtGui.QApplication.translate("ScatterPlotAxis", "Linear", None, QtGui.QApplication.UnicodeUTF8))
-        self.scaleType.setItemText(1, QtGui.QApplication.translate("ScatterPlotAxis", "Logarithmic", None, QtGui.QApplication.UnicodeUTF8))
-        self.scaleType.setItemText(2, QtGui.QApplication.translate("ScatterPlotAxis", "Symmetric Log", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_19.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Label", None, QtGui.QApplication.UnicodeUTF8))
-        self.minimum.setText(QtGui.QApplication.translate("ScatterPlotAxis", "-10.00", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_20.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Minimum", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_21.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Type", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_22.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Maximum", None, QtGui.QApplication.UnicodeUTF8))
-        self.maximum.setText(QtGui.QApplication.translate("ScatterPlotAxis", "10.00", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelFont.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Label Font", None, QtGui.QApplication.UnicodeUTF8))
-        self.autoscale.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Autoscale?", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksVisible.setTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Major Ticks", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_2.setTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Locations", None, QtGui.QApplication.UnicodeUTF8))
-        self.useMajorTicksAnchor.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Anchor to value", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksAnchor.setText(QtGui.QApplication.translate("ScatterPlotAxis", "0.00", None, QtGui.QApplication.UnicodeUTF8))
-        self.useMajorTicksSpacing.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Spacing between", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksSpacing.setText(QtGui.QApplication.translate("ScatterPlotAxis", "2.00", None, QtGui.QApplication.UnicodeUTF8))
-        self.useMajorTicksNumber.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Number of", None, QtGui.QApplication.UnicodeUTF8))
-        self.useMajorTicksWaveValues.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Wave values", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Base", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLogBase.setText(QtGui.QApplication.translate("ScatterPlotAxis", "10", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLogLocations.setText(QtGui.QApplication.translate("ScatterPlotAxis", "1", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelVisible.setTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Labels", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_30.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Distance between\n"
+    def retranslateUi(self, CartesianPlotAxis):
+        CartesianPlotAxis.setWindowTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Axis", None, QtGui.QApplication.UnicodeUTF8))
+        self.visible.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Visible?", None, QtGui.QApplication.UnicodeUTF8))
+        self.scaleType.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "Linear", None, QtGui.QApplication.UnicodeUTF8))
+        self.scaleType.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "Logarithmic", None, QtGui.QApplication.UnicodeUTF8))
+        self.scaleType.setItemText(2, QtGui.QApplication.translate("CartesianPlotAxis", "Symmetric Log", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_19.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Label", None, QtGui.QApplication.UnicodeUTF8))
+        self.minimum.setText(QtGui.QApplication.translate("CartesianPlotAxis", "-10.00", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_20.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Minimum", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_21.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Type", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_22.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Maximum", None, QtGui.QApplication.UnicodeUTF8))
+        self.maximum.setText(QtGui.QApplication.translate("CartesianPlotAxis", "10.00", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Label Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.autoscale.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Autoscale?", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Major Ticks", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_2.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Locations", None, QtGui.QApplication.UnicodeUTF8))
+        self.useMajorTicksAnchor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Anchor to value", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksAnchor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "0.00", None, QtGui.QApplication.UnicodeUTF8))
+        self.useMajorTicksSpacing.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Spacing between", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksSpacing.setText(QtGui.QApplication.translate("CartesianPlotAxis", "2.00", None, QtGui.QApplication.UnicodeUTF8))
+        self.useMajorTicksNumber.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Number of", None, QtGui.QApplication.UnicodeUTF8))
+        self.useMajorTicksWaveValues.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Wave values", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Base", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLogBase.setText(QtGui.QApplication.translate("CartesianPlotAxis", "10", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLogLocations.setText(QtGui.QApplication.translate("CartesianPlotAxis", "1", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Labels", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_30.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Distance between\n"
 "tick and label", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Tick Label", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_31.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelUseNumeric.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Numeric Labels", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelUseWave.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Wave-based Labels", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksDirection.setItemText(0, QtGui.QApplication.translate("ScatterPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksDirection.setItemText(1, QtGui.QApplication.translate("ScatterPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_33.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_34.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksColor.setText(QtGui.QApplication.translate("ScatterPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelNumericFormat.setText(QtGui.QApplication.translate("ScatterPlotAxis", "%.2g", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_32.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelFont.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Font", None, QtGui.QApplication.UnicodeUTF8))
-        self.storedSettingsButton.setText(QtGui.QApplication.translate("ScatterPlotAxis", "S\n"
+        self.label_5.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Label", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_31.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelUseNumeric.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Numeric Labels", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelUseWave.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Wave-based Labels", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksDirection.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksDirection.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_33.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_34.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksColor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelNumericFormat.setText(QtGui.QApplication.translate("CartesianPlotAxis", "%.2g", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_32.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.storedSettingsButton.setText(QtGui.QApplication.translate("CartesianPlotAxis", "S\n"
 "t\n"
 "o\n"
 "r\n"
@@ -449,17 +449,17 @@ class Ui_ScatterPlotAxis(object):
 "n\n"
 "g\n"
 "s", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksVisible.setTitle(QtGui.QApplication.translate("ScatterPlotAxis", "Minor Ticks", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_26.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Number", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksLogLocations.setText(QtGui.QApplication.translate("ScatterPlotAxis", "1,2,3,4,5,6,7,8,9", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_24.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_27.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_28.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksDirection.setItemText(0, QtGui.QApplication.translate("ScatterPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksDirection.setItemText(1, QtGui.QApplication.translate("ScatterPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksColor.setText(QtGui.QApplication.translate("ScatterPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_23.setText(QtGui.QApplication.translate("ScatterPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Minor Ticks", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_26.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Number", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksLogLocations.setText(QtGui.QApplication.translate("CartesianPlotAxis", "1,2,3,4,5,6,7,8,9", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_27.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_28.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksDirection.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksDirection.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksColor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_23.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QColorButton import QColorButton

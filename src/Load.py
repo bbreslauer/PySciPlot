@@ -24,7 +24,7 @@ from PyQt4.QtCore import Qt
 from Wave import Wave
 from Figure import Figure
 from Plot import Plot
-from Trace import Trace
+from WavePair import *
 
 def loadProjectFromFile(app, fileName):
     """

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ScatterPlotAxis</class>
- <widget class="QWidget" name="ScatterPlotAxis">
+ <class>CartesianPlotAxis</class>
+ <widget class="QWidget" name="CartesianPlotAxis">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -1041,7 +1041,7 @@ color: rgb(255, 255, 255);</string>
   <connection>
    <sender>scaleType</sender>
    <signal>currentIndexChanged(QString)</signal>
-   <receiver>ScatterPlotAxis</receiver>
+   <receiver>CartesianPlotAxis</receiver>
    <slot>changeScaleType(QString)</slot>
    <hints>
     <hint type="sourcelabel">

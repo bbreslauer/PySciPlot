@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'Ui_ImportCSV.ui'
 #
-# Created: Mon May 16 19:02:41 2011
-#      by: PyQt4 UI code generator 4.8.3
+# Created: Fri May 27 16:40:08 2011
+#      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
 

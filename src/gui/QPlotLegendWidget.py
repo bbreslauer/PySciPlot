@@ -18,13 +18,12 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 
 import Util
 from Wave import *
-from Trace import *
-#from models.WavesListModel import *
+from WavePair import *
 from models.TraceListModel import *
 from QEditFigureSubWidget import *
 from Property import Legend
 
-class QScatterPlotLegendWidget(QEditFigureSubWidget):
+class QPlotLegendWidget(QEditFigureSubWidget):
 
     properties = Legend.default.keys()
 

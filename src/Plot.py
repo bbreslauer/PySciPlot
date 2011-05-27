@@ -181,7 +181,9 @@ class ScatterPlot(FigureObject):
         
         if axisDict['useMajorTicksWaveValues']:
             wave = self._app.waves().wave(str(axisDict['majorTicksWaveValues']))
-            majorTickPositions = wave.data()
+            data = Util.uniqueList(wave.data())
+            data.sort()
+            majorTickPositions = data
         elif axisDict['useMajorTicksNumber']:
             if axisDict['useMajorTicksAnchor']:
                 # spacing = (max - min) / (num - 1) if both max and min have tick marks
@@ -251,11 +253,9 @@ class ScatterPlot(FigureObject):
             axis.set_minor_formatter(ticker.NullFormatter())
             sortedMajorTickLocs = axis.get_majorticklocs()
             sortedMajorTickLocs.sort()
-            #majorTicksSpacing = float(axis.get_majorticklocs()[1]) - float(axis.get_majorticklocs()[0])
             majorTicksSpacing = float(sortedMajorTickLocs[1]) - float(sortedMajorTickLocs[0])
             minorTicksBase = float(majorTicksSpacing) / float(axisDict['minorTicksNumber'] + 1)
             minorTicks = [float(sortedMajorTickLocs[0])]
-            #while minorTicks[-1] <= axis.get_view_interval()[1]:
             while minorTicks[-1] < sortedMajorTickLocs[-1]:
                 # this creates the minor tick locations starting at the lowest major tick
                 # and increasing to the end of the view interval

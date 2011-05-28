@@ -885,11 +885,11 @@ color: rgb(255, 255, 255);</string>
    <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>551</x>
+     <x>543</x>
      <y>242</y>
     </hint>
     <hint type="destinationlabel">
-     <x>551</x>
+     <x>543</x>
      <y>242</y>
     </hint>
    </hints>
@@ -901,11 +901,11 @@ color: rgb(255, 255, 255);</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>551</x>
+     <x>543</x>
      <y>307</y>
     </hint>
     <hint type="destinationlabel">
-     <x>551</x>
+     <x>543</x>
      <y>307</y>
     </hint>
    </hints>
@@ -917,11 +917,11 @@ color: rgb(255, 255, 255);</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>434</x>
+     <x>426</x>
      <y>412</y>
     </hint>
     <hint type="destinationlabel">
-     <x>434</x>
+     <x>426</x>
      <y>412</y>
     </hint>
    </hints>
@@ -937,7 +937,7 @@ color: rgb(255, 255, 255);</string>
      <y>213</y>
     </hint>
     <hint type="destinationlabel">
-     <x>263</x>
+     <x>259</x>
      <y>214</y>
     </hint>
    </hints>
@@ -953,7 +953,7 @@ color: rgb(255, 255, 255);</string>
      <y>240</y>
     </hint>
     <hint type="destinationlabel">
-     <x>263</x>
+     <x>259</x>
      <y>240</y>
     </hint>
    </hints>
@@ -985,7 +985,7 @@ color: rgb(255, 255, 255);</string>
      <y>186</y>
     </hint>
     <hint type="destinationlabel">
-     <x>263</x>
+     <x>259</x>
      <y>187</y>
     </hint>
    </hints>
@@ -997,11 +997,11 @@ color: rgb(255, 255, 255);</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>428</x>
+     <x>420</x>
      <y>184</y>
     </hint>
     <hint type="destinationlabel">
-     <x>551</x>
+     <x>543</x>
      <y>185</y>
     </hint>
    </hints>
@@ -1013,11 +1013,11 @@ color: rgb(255, 255, 255);</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>428</x>
+     <x>420</x>
      <y>211</y>
     </hint>
     <hint type="destinationlabel">
-     <x>551</x>
+     <x>543</x>
      <y>212</y>
     </hint>
    </hints>
@@ -1051,6 +1051,38 @@ color: rgb(255, 255, 255);</string>
     <hint type="destinationlabel">
      <x>428</x>
      <y>6</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useMajorTicksWaveValues</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>useMajorTicksAnchor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useMajorTicksWaveValues</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>majorTicksAnchor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>52</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>197</x>
+     <y>174</y>
     </hint>
    </hints>
   </connection>

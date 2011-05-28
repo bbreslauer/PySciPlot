@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Sat May 28 00:16:57 2011
+# Created: Sat May 28 00:18:25 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -391,6 +391,8 @@ class Ui_CartesianPlotAxis(object):
         QtCore.QObject.connect(self.majorTicksLabelUseWave, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksLabelWave.setEnabled)
         QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksWaveValues.setEnabled)
         QtCore.QObject.connect(self.scaleType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), CartesianPlotAxis.changeScaleType)
+        QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.useMajorTicksAnchor.setDisabled)
+        QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksAnchor.setDisabled)
 
     def retranslateUi(self, CartesianPlotAxis):
         CartesianPlotAxis.setWindowTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Form", None, QtGui.QApplication.UnicodeUTF8))

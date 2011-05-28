@@ -14,10 +14,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QFrame, QApplication
+from PyQt4.QtGui import QWidget, QDialog, QMessageBox, QFrame, QApplication
 from PyQt4.QtCore import Qt
 
 from models.StoredSettingsModel import *
+from ui.Ui_StoredSettingsName import *
+
+import Util
 
 class QStoredSettingsWidget(QFrame):
 
@@ -51,7 +54,31 @@ class QStoredSettingsWidget(QFrame):
         properties = self.propertyWidget().getCurrentUi()
         if self._widgetName not in self._app.storedSettings().keys():
             self._app.storedSettings()[self._widgetName] = []
-        self._app.storedSettings()[self._widgetName].append(['New Setting', properties])
+
+        # Get the name the user wants to use
+        nameDialog = QDialog(self)
+        nameUi = Ui_StoredSettingsName()
+        nameUi.setupUi(nameDialog)
+
+        def saveSettings():
+            name = Util.getWidgetValue(nameUi.name)
+            name = name.strip()
+            if name == "":
+                failedMessage = QMessageBox(nameDialog)
+                failedMessage.setText("Cannot use a blank name.")
+                failedMessage.exec_()
+            else:
+                self._app.storedSettings()[self._widgetName].append([name, properties])
+                nameDialog.close()
+
+        def cancelSettings():
+            nameDialog.close()
+
+        nameUi.buttons.accepted.connect(saveSettings)
+        nameUi.buttons.rejected.connect(cancelSettings)
+
+        nameDialog.exec_()
+
         self.storedSettingsModel.doReset()
         
     def loadClicked(self):

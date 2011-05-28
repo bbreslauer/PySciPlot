@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BarPlotBars</class>
+ <widget class="QWidget" name="BarPlotBars">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>469</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QGroupBox" name="wavePairGroupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>225</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Add/Select Bars</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="xAxisLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>X Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QListView" name="xAxisListView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="textElideMode">
+         <enum>Qt::ElideRight</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QListView" name="yAxisListView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectItems</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QTableView" name="wavePairTableView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::DoubleClicked</set>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="textElideMode">
+         <enum>Qt::ElideRight</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>75</number>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="yAxisLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Y Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="addwavePairButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Add Bar(s)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="removewavePairButton">
+        <property name="text">
+         <string>Remove Bar(s)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="wavePairOptionsGroupBox">
+     <property name="title">
+      <string>Bar Options</string>
+     </property>
+     <layout class="QFormLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Width</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="barWidth">
+        <property name="maximum">
+         <double>999999.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.500000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Bottom</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="barBottom">
+        <property name="maximum">
+         <double>999999.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Fill Color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QColorButton" name="fillColor">
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string>(0,0,0,255)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Edge Color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QColorButton" name="edgeColor">
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string>(0,0,0,255)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Edge Width</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QDoubleSpinBox" name="edgeWidth"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Align</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="align">
+        <item>
+         <property name="text">
+          <string>edge</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>center</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QColorButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QColorButton</header>
+   <slots>
+    <slot>createColorDialog()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QStoredSettingsButton</class>
+   <extends>QToolButton</extends>
+   <header>gui/QStoredSettingsButton</header>
+   <slots>
+    <slot>toggleWidget()</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>xAxisListView</tabstop>
+  <tabstop>yAxisListView</tabstop>
+  <tabstop>addwavePairButton</tabstop>
+  <tabstop>wavePairTableView</tabstop>
+  <tabstop>removewavePairButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>addwavePairButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BarPlotBars</receiver>
+   <slot>addWavePairsToPlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>233</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removewavePairButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BarPlotBars</receiver>
+   <slot>deleteSelectedWavePairs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>wavePairTableView</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>BarPlotBars</receiver>
+   <slot>showWavePairListMenu()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>259</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>238</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>storedSettingsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>storedSettingsButton</receiver>
+   <slot>toggleWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edgeColor</sender>
+   <signal>clicked()</signal>
+   <receiver>edgeColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>345</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fillColor</sender>
+   <signal>clicked()</signal>
+   <receiver>fillColor</receiver>
+   <slot>createColorDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addWavePairsToPlot()</slot>
+  <slot>deleteSelectedWavePairs()</slot>
+  <slot>showWavePairListMenu()</slot>
+ </slots>
+</ui>

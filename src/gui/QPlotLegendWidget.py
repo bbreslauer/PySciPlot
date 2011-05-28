@@ -19,7 +19,7 @@ from PyQt4.QtGui import QWidget, QMenu, QAction, QApplication
 import Util
 from Wave import *
 from WavePair import *
-from models.TraceListModel import *
+from models.WavePairListModel import *
 from QEditFigureSubWidget import *
 from Property import Legend
 

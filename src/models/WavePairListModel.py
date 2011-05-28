@@ -16,17 +16,17 @@
 
 from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt, QVariant, QString, pyqtSignal
 
-class TraceListModel(QAbstractTableModel):
+class WavePairListModel(QAbstractTableModel):
     """
-    All the data that corresponds to traces in a figure are displayed based on this model.
+    All the data that corresponds to wave pairs in a figure are displayed based on this model.
     
     Signals that are emitted from this class are:
-        traceAdded   - emitted when a trace is added to the list
-        traceRemoved - emitted when a trace is removed from the list
+        WavePairAdded   - emitted when a WavePair is added to the list
+        WavePairRemoved - emitted when a WavePair is removed from the list
     """
 
-    traceAdded   = pyqtSignal()
-    traceRemoved = pyqtSignal()
+    wavePairAdded   = pyqtSignal()
+    wavePairRemoved = pyqtSignal()
 
 
     def __init__(self, parent=None, *args):
@@ -36,12 +36,12 @@ class TraceListModel(QAbstractTableModel):
         self._columnNames = ['X', 'Y', 'Label']
        
         # Connect signals
-        self.traceAdded.connect(self.doReset)
-        self.traceRemoved.connect(self.doReset)
+        self.wavePairAdded.connect(self.doReset)
+        self.wavePairRemoved.connect(self.doReset)
         self.dataChanged.connect(self.doReset)
 
     def rowCount(self, parent=QModelIndex()):
-        """Return the number of traces in all the plots in the figure."""
+        """Return the number of WavePairs in all the plots in the figure."""
         return len(self._data)
 
     def columnCount(self, parent=QModelIndex()):
@@ -92,19 +92,19 @@ class TraceListModel(QAbstractTableModel):
     def doReset(self, *args):
         self.reset()
 
-    def addTrace(self, trace):
-        self._data.append(trace)
+    def addWavePair(self, wavePair):
+        self._data.append(wavePair)
         self.dataChanged.emit(self.index(len(self._data)-1, 0), self.index(len(self._data)-1, 2))
         return True
 
-    def removeTrace(self, trace):
+    def removeWavePair(self, wavePair):
         try:
-            self._data.remove(trace)
+            self._data.remove(wavePair)
             self.doReset()
         except:
             pass
 
-    def getTraceByRow(self, row):
+    def getWavePairByRow(self, row):
         if row >= 0 and row < self.rowCount():
             return self._data[row]
         return None

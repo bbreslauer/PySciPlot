@@ -47,7 +47,7 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
 
     def initSubWidgets(self):
         # Add all the plot widgets to the stack
-        self.scatterPlotWidget = QCartesianPlotTypeWidget(self, self.getChild('plotTypeStack'))
+        self.scatterPlotWidget = QScatterPlotTypeWidget(self, self.getChild('plotTypeStack'))
         scatterPlotWidgetUi = Ui_PlotTypeWidget()
         scatterPlotWidgetUi.setupUi(self.scatterPlotWidget)
         self.scatterPlotWidget.initSubWidgets()
@@ -55,7 +55,7 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         self.getChild('plotType').addItem('Scatter Plot')
 
         #self.barPlotWidget = QEditFigureSubWidget(self.getChild('plotTypeStack'))
-        self.barPlotWidget = QCartesianPlotTypeWidget(self, self.getChild('plotTypeStack'))
+        self.barPlotWidget = QBarPlotTypeWidget(self, self.getChild('plotTypeStack'))
         barPlotWidgetUi = Ui_PlotTypeWidget()
         barPlotWidgetUi.setupUi(self.barPlotWidget)
         self.barPlotWidget.initSubWidgets()

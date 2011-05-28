@@ -32,7 +32,11 @@ from FigureObject import *
 class CartesianPlot(FigureObject):
     """
     A generic Cartesian plot, to be used for scatter, bar, and other types.
+    Basically any type that plots two series against one another.
     """
+    
+    # Signals
+    wavePairRemovedFromPlot = pyqtSignal(WavePair)
 
     def __init__(self, plot):
         Util.debug(2, "CartesianPlot.init", "Creating Cartesian Plot")
@@ -61,12 +65,14 @@ class CartesianPlot(FigureObject):
         FigureObject.__init__(self, properties)
 
         self._plot = plot
+        self._wavePairs = []
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties])])
+        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._wavePairs])])
 
     def __setstate__(self, state):
         properties = state[0]
+        wavePairs = state[1]
         
         for (key, value) in properties.items():
             self.properties[key].blockSignals(True)
@@ -76,8 +82,25 @@ class CartesianPlot(FigureObject):
         for (key, value) in properties.items():
             self.properties[key].blockSignals(False)
 
+        for wavePair in wavePairs:
+            self.addWavePair(wavePair)
+
     def plot(self):
         return self._plot
+
+    def wavePairs(self):
+        return self._wavePairs
+
+    def addWavePair(self, wp):
+        wp.setPlot(self.plot())
+        self._wavePairs.append(wp)
+        self.refresh()
+
+    def removeWavePair(self, wp):
+        self._wavePairs.remove(wp)
+        wp.removeFromPlot()
+        self.wavePairRemovedFromPlot.emit(wp)
+        self.refresh()
 
     def update_bottomAxis(self):
         Util.debug(3, "ScatterPlot.update_bottomAxis", "")
@@ -298,136 +321,26 @@ class CartesianPlot(FigureObject):
         self.plot().redraw()
 
     def refresh(self):
+        for wavePair in self.wavePairs():
+            wavePair.refresh()
+
         self.update_bottomAxis()
         self.update_leftAxis()
         self.update_legend()
 
 class ScatterPlot(CartesianPlot):
     
-    # Signals
-    traceRemovedFromPlot = pyqtSignal(Trace)
-
     def __init__(self, plot):
         Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
 
         CartesianPlot.__init__(self, plot)
 
-        self._traces = []
-
-    def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._traces])])
-
-    def __setstate__(self, state):
-        properties = state[0]
-        traces = state[1]
-        
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(True)
-
-        self.setMultiple(properties)
-
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(False)
-
-        for trace in traces:
-            self.addTrace(trace)
-
-    def traces(self):
-        return self._traces
-    
-    def addTrace(self, trace):
-        self.addWavePair(trace)
-
-    def addWavePair(self, trace):
-        trace.setPlot(self.plot())
-        self._traces.append(trace)
-        self.refresh()
-
-    def removeTrace(self, trace):
-        self.removeWavePair(trace)
-
-    def removeWavePair(self, trace):
-        self._traces.remove(trace)
-        trace.removeFromPlot()
-        self.traceRemovedFromPlot.emit(trace)
-        self.refresh()
-
-    def refresh(self):
-        for trace in self.traces():
-            trace.refresh()
-
-        CartesianPlot.refresh(self)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class BarPlot(CartesianPlot):
 
-    # Signals
-    barRemovedFromPlot = pyqtSignal(Bar)
-
     def __init__(self, plot):
-        Util.debug(2, "BarChart.init", "Creating Bar Chart")
+        Util.debug(2, "BarPlot.init", "Creating Bar Plot")
 
-#        # Add additional properties without deleting the ones defined in Plot()
-#        properties = {
-#                }
-
-        ScatterPlot.__init__(self, plot)
-
-#        self._plot = plot
-        self._bars = []
-    
-    def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._bars])])
-
-    def __setstate__(self, state):
-        properties = state[0]
-        bars = state[1]
-
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(True)
-
-        self.setMultiple(properties)
-
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(False)
-
-        for bar in bars:
-            self.addBar(bar)
-
-    def bars(self):
-        return self._bars
-
-    def addBar(self, bar):
-        bar.setPlot(self.plot())
-        self._bars.append(bar)
-        self.refresh()
-
-    def removeBar(self, bar):
-        self._bars.remove(bar)
-        bar.removeFromPlot()
-        self.barRemovedFromPlot.emit(bar)
-        self.refresh()
-
-    def refresh(self):
-        for bar in self.bars():
-            bar.refresh()
-
-        self.update_bottomAxis()
-        self.update_leftAxis()
-        self.update_legend()
+        CartesianPlot.__init__(self, plot)
 
 class PieChart(FigureObject):
 

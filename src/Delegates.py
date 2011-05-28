@@ -45,7 +45,7 @@ class SpinBoxDelegate(QItemDelegate):
         editor.setGeometry(option.rect)
 
 
-class TraceListDelegate(QItemDelegate):
+class WavePairListDelegate(QItemDelegate):
 
     def __init__(self, model, *args):
         """

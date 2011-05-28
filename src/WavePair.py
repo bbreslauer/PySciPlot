@@ -26,6 +26,8 @@ class WavePair(FigureObject):
     A pair of waves that are plotted against one another in some manner.
     This could be used for a scatter plot, a bar plot, or something else.
     """
+    
+    mplNames = {}
 
     def __init__(self, x=None, y=None, plot=None, properties={}):
         Util.debug(2, "WavePair.init", "Creating a wave pair")
@@ -101,7 +103,7 @@ class WavePair(FigureObject):
     def setLabel(self, label):
         self._label = str(label)
         if self.plot() != None:
-            self.updatePlotTraceLabel()
+            self.refreshLabel()
 
     def label(self):
         return self._label
@@ -276,162 +278,75 @@ class Trace(WavePair):
 
 
 class Bar(WavePair):
-    pass
+    """A bar plot worth of data. NOT a single bar on a plot."""
 
-#class Bar(WavePair):
-#    """A bar plot worth of data. NOT a single bar on a plot."""
-#
-#    mplNames = {
-#            }
-#
-#    def __init__(self, leftWave=None, heightWave=None, plot=None):
-#        Util.debug(2, "Bar.init", "Creating bar")
-#
-#        properties = {
-#            'width':        Property.Float(1.0),
-#            'bottom':       Property.Float(0.0),
-#                }
-#
-#        FigureObject.__init__(self, properties)
-#        
-#        self.initializeVariables()
-#        self.setLeft(left)
-#        self.setHeight(height)
-#        self.setPlot(plot)
-#
-#        try:
-#            self.setLabel(str(self.leftName()) + "-" + str(self.heightName()))
-#        except AttributeError:
-#            # x or y is None, so xName() and yName() don't work.
-#            self.setLabel("")
-#
-#        # If a wave is removed from the app, see if this trace held it
-#        self._app.waves().waveRemoved[Wave].connect(self.removeBarIfContainsWave)
-#
-#        self.getFormat()
-#
-#    def __reduce__(self):
-#        pass
-#
-#    def __setstate__(self, state):
-#        pass
-#
-#    def initializeVariables(self):
-#        Util.debug(3, "Bar.initializeVariables", "Initializing variables")
-#        self._left = None
-#        self._height = None
-#        
-#    def setPlot(self, plot):
-#        self._plot = plot
-#
-#    def plot(self):
-#        return self._plot
-#
-#    def setLabel(self, label):
-#        self._label = str(label)
-#        if self.plot() != None:
-#            self.updatePlotBarLabel()
-#
-#    def label(self):
-#        return self._label
-#
-#    def setLeft(self, left):
-#        Util.debug(2, "Bar.setLeft", "Setting left")
-#        
-#        # Disconnect previous wave's dataModified signal
-#        try:
-#            self._left.dataModified.disconnect(self.updatePlotData)
-#        except:
-#            pass
-#
-#        # Set new wave
-#        self._left = left
-#
-#        # Connect new wave's dataModified signal
-#        try:
-#            self._left.dataModified.connect(self.updatePlotData)
-#            self.updatePlotData()
-#        except:
-#            # If self._left is Null, then the above will fail
-#            pass
-#
-#    def setHeight(self, height):
-#        Util.debug(2, "Bar.setHeight", "Setting height")
-#        
-#        # Disconnect previous wave's dataModified signal
-#        try:
-#            self._height.dataModified.disconnect(self.updatePlotData)
-#        except:
-#            pass
-#
-#        # Set new wave
-#        self._height = height
-#
-#        # Connect new wave's dataModified signal
-#        try:
-#            self._height.dataModified.connect(self.updatePlotData)
-#            self.updatePlotData()
-#        except:
-#            # If self._height is Null, then the above will fail
-#            pass
-#
-#    def left(self):
-#        return self._left
-#
-#    def height(self):
-#        return self._height
-#
-#    def leftName(self):
-#        return self._left.name()
-#
-#    def heightName(self):
-#        return self._height.name()
-#
-#    def getFormat(self):
-#        formatDict = {}
-#        
-#        for prop in self.properties.keys():
-#            formatDict[prop] = self.getMpl(prop)
-#        return formatDict
-#
-#    def convertDataToBars(self):
-#        leftData = Wave.convertToFloatList(self.left())
-#        heightData = Wave.convertToFloatList(self.height())
-#
-#        # Make sure waves are the same length, or else matplotlib will complain and not plot them
-#        diffLength = len(leftData) - len(heightData)
-#        if diffLength < 0:
-#            leftData.extend([nan] * (- diffLength))
-#        elif diffLength > 0:
-#            heightData.extend([nan] * diffLength)
-#
-#        return [leftData, heightData]
-#
-#    def removeFromPlot(self):
-#        pass
-#
-#    def refresh(self):
-#        [left, height] = self.convertDataToBars()
-#
-#        if self.plot() is None:
-#            return
-#
-#        self.removeFromPlot()
-#
-#        try:
-#            self._rects = self.plot().axes().bar(left, height, **(self.getFormat()))
-#            self.plot().plotTypeObject.update_legend()
-#            self.plot().redraw()
-#        except:
-#            return
-#
-#    def updatePlotData(self):
-#        self.refresh()
-#
-#    def updatePlotBarLabel(self):
-#        pass
-#
-#    def removeBarIfContainsWave(self, wave):
-#        pass
-#
-#
+    mplNames = {
+            'barWidth':         'width',
+            'barBottom':        'bottom',
+            'fillColor':        'color',
+            'edgeColor':        'edgecolor',
+            'edgeWidth':        'linewidth',
+            'align':            'align',
+            }
+
+    def __init__(self, x=None, y=None, plot=None):
+        Util.debug(2, "Bar.init", "Creating bar")
+
+        properties = {
+            'barWidth':         Property.Float(1.0),
+            'barBottom':        Property.Float(0.0),
+            'fillColor':        Property.Color(QColor(0,0,0,255)),
+            'edgeColor':        Property.Color(QColor(0,0,0,255)),
+            'edgeWidth':        Property.Float(0.0),
+            'align':            Property.String('edge'),
+                }
+
+        WavePair.__init__(self, x, y, plot, properties)
+
+    def getFormat(self):
+        formatDict = {}
+        
+        for prop in self.properties.keys():
+            formatDict[self.mplNames[prop]] = self.getMpl(prop)
+        return formatDict
+
+    def refreshLabel(self):
+        if self._rects:
+            self._rects[0].set_label(self.label())
+            self.plot().plotTypeObject.update_legend()
+
+    def removeFromPlot(self):
+        # If this trace is not associated with a plot, then don't do anything
+        if self.plot() is None:
+            return
+
+        # Remove the line if it exists
+        try:
+            for rect in self._rects:
+                rect.remove()
+        except:
+            pass
+
+    def refresh(self):
+        [left, height] = self.dataSet()
+
+        if self.plot() is None:
+            return
+
+        self.removeFromPlot()
+
+        try:
+            self._rects = self.plot().axes().bar(left, height, label=self.label(), **(self.getFormat()))
+            self.plot().plotTypeObject.update_legend()
+            self.plot().redraw()
+        except:
+            return
+
+    def updatePlotData(self):
+        # FIXME
+        self.refresh()
+
+
+
+
+

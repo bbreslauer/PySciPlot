@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QGroupBox" name="tracesGroupBox">
+    <widget class="QGroupBox" name="wavePairGroupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -111,7 +111,7 @@
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QTableView" name="traceTableView">
+       <widget class="QTableView" name="wavePairTableView">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -167,7 +167,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QPushButton" name="addTraceButton">
+       <widget class="QPushButton" name="addwavePairButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -186,7 +186,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QPushButton" name="removeTraceButton">
+       <widget class="QPushButton" name="removewavePairButton">
         <property name="text">
          <string>Remove Trace(s)</string>
         </property>
@@ -196,7 +196,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="traceOptionsGroupBox">
+    <widget class="QGroupBox" name="wavePairOptionsGroupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -719,9 +719,9 @@ s</string>
  <tabstops>
   <tabstop>xAxisListView</tabstop>
   <tabstop>yAxisListView</tabstop>
-  <tabstop>addTraceButton</tabstop>
-  <tabstop>traceTableView</tabstop>
-  <tabstop>removeTraceButton</tabstop>
+  <tabstop>addwavePairButton</tabstop>
+  <tabstop>wavePairTableView</tabstop>
+  <tabstop>removewavePairButton</tabstop>
   <tabstop>lineStyle</tabstop>
   <tabstop>lineWidth</tabstop>
   <tabstop>lineColor</tabstop>
@@ -734,10 +734,10 @@ s</string>
  <resources/>
  <connections>
   <connection>
-   <sender>addTraceButton</sender>
+   <sender>addwavePairButton</sender>
    <signal>clicked()</signal>
    <receiver>ScatterPlotTraces</receiver>
-   <slot>addTracesToPlot()</slot>
+   <slot>addWavePairsToPlot()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>158</x>
@@ -750,10 +750,10 @@ s</string>
    </hints>
   </connection>
   <connection>
-   <sender>removeTraceButton</sender>
+   <sender>removewavePairButton</sender>
    <signal>clicked()</signal>
    <receiver>ScatterPlotTraces</receiver>
-   <slot>deleteSelectedTraces()</slot>
+   <slot>deleteSelectedWavePairs()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>81</x>
@@ -766,10 +766,10 @@ s</string>
    </hints>
   </connection>
   <connection>
-   <sender>traceTableView</sender>
+   <sender>wavePairTableView</sender>
    <signal>customContextMenuRequested(QPoint)</signal>
    <receiver>ScatterPlotTraces</receiver>
-   <slot>showTraceListMenu()</slot>
+   <slot>showWavePairListMenu()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>116</x>
@@ -847,8 +847,8 @@ s</string>
   </connection>
  </connections>
  <slots>
-  <slot>addTracesToPlot()</slot>
-  <slot>deleteSelectedTraces()</slot>
-  <slot>showTraceListMenu()</slot>
+  <slot>addWavePairsToPlot()</slot>
+  <slot>deleteSelectedWavePairs()</slot>
+  <slot>showWavePairListMenu()</slot>
  </slots>
 </ui>

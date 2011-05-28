@@ -18,11 +18,13 @@ from PyQt4.QtGui import QWidget, QApplication
 
 from QEditFigureSubWidget import *
 from QCartesianPlotAxisWidget import *
-from QScatterPlotTracesWidget import *
+from QCartesianPlotWavePairsWidget import *
 from QPlotLegendWidget import *
 from ui.Ui_CartesianPlotAxis import *
 from ui.Ui_ScatterPlotTraces import *
+from ui.Ui_BarPlotBars import *
 from ui.Ui_PlotLegend import *
+
 
 class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
@@ -59,12 +61,6 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
         self.getChild('tabWidget').addTab(self.rightAxis, 'Right Axis')
         self.getChild('tabWidget').setTabEnabled(3, False)
 
-        self.traces = QScatterPlotTracesWidget(self._plotOptionsWidget, self.getChild('tabWidget'))
-        tracesUi = Ui_ScatterPlotTraces()
-        tracesUi.setupUi(self.traces)
-        self.traces.initSubWidgets()
-        self.getChild('tabWidget').addTab(self.traces, 'Traces')
-
         self.legend = QPlotLegendWidget(self.getChild('tabWidget'))
         legendUi = Ui_PlotLegend()
         legendUi.setupUi(self.legend)
@@ -75,8 +71,6 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
     def saveUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
-        
-        self.traces.saveOptionsToSelectedTraces()
         
         bottomAxisUiOptions = self.bottomAxis.getCurrentUi()
         plotTypeObject.set('bottomAxis', bottomAxisUiOptions)
@@ -92,6 +86,8 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
         legendUiOptions = self.legend.getCurrentUi()
         plotTypeObject.set('legend', legendUiOptions)
+
+        self.wavePairs.saveOptionsToSelectedWavePairs()
 
     def resetUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
@@ -111,12 +107,45 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
         legendOptions = plotTypeObject.get('legend')
         self.legend.setCurrentUi(legendOptions)
 
-        self.traces.resetUi()
+        self.wavePairs.resetUi()
 
     def reload(self):
         self.bottomAxis.initSubWidgets()
         self.leftAxis.initSubWidgets()
         self.topAxis.initSubWidgets()
         self.rightAxis.initSubWidgets()
-        self.traces.initSubWidgets()
+
+        self.wavePairs.initSubWidgets()
+
+
+
+class QScatterPlotTypeWidget(QCartesianPlotTypeWidget):
+
+    def __init__(self, plotOptionsWidget, *args):
+        QCartesianPlotTypeWidget.__init__(self, plotOptionsWidget, *args)
+
+    def initSubWidgets(self):
+        QCartesianPlotTypeWidget.initSubWidgets(self)
+
+        self.wavePairs = QScatterPlotTracesWidget(self._plotOptionsWidget, self.getChild('tabWidget'))
+        tracesUi = Ui_ScatterPlotTraces()
+        tracesUi.setupUi(self.wavePairs)
+        self.wavePairs.initSubWidgets()
+        self.getChild('tabWidget').insertTab(4, self.wavePairs, 'Traces')
+
+class QBarPlotTypeWidget(QCartesianPlotTypeWidget):
+
+    def __init__(self, plotOptionsWidget, *args):
+        QCartesianPlotTypeWidget.__init__(self, plotOptionsWidget, *args)
+
+    def initSubWidgets(self):
+        QCartesianPlotTypeWidget.initSubWidgets(self)
+
+        self.wavePairs = QBarPlotBarsWidget(self._plotOptionsWidget, self.getChild('tabWidget'))
+        barsUi = Ui_BarPlotBars()
+        barsUi.setupUi(self.wavePairs)
+        self.wavePairs.initSubWidgets()
+        self.getChild('tabWidget').insertTab(4, self.wavePairs, 'Bars')
+
+
 

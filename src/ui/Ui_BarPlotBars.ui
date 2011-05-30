@@ -418,6 +418,9 @@ s</string>
     </widget>
    </item>
   </layout>
+  <zorder>wavePairGroupBox</zorder>
+  <zorder>verticalLayoutWidget</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -443,6 +446,14 @@ s</string>
   <tabstop>addwavePairButton</tabstop>
   <tabstop>wavePairTableView</tabstop>
   <tabstop>removewavePairButton</tabstop>
+  <tabstop>orientation</tabstop>
+  <tabstop>barThickness</tabstop>
+  <tabstop>barOffset</tabstop>
+  <tabstop>fillColor</tabstop>
+  <tabstop>edgeColor</tabstop>
+  <tabstop>edgeWidth</tabstop>
+  <tabstop>align</tabstop>
+  <tabstop>storedSettingsButton</tabstop>
  </tabstops>
  <resources/>
  <connections>

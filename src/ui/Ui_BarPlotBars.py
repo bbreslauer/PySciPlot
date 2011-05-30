@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_BarPlotBars.ui'
 #
-# Created: Mon May 30 14:24:56 2011
+# Created: Mon May 30 17:08:44 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -208,6 +208,14 @@ class Ui_BarPlotBars(object):
         BarPlotBars.setTabOrder(self.yAxisListView, self.addwavePairButton)
         BarPlotBars.setTabOrder(self.addwavePairButton, self.wavePairTableView)
         BarPlotBars.setTabOrder(self.wavePairTableView, self.removewavePairButton)
+        BarPlotBars.setTabOrder(self.removewavePairButton, self.orientation)
+        BarPlotBars.setTabOrder(self.orientation, self.barThickness)
+        BarPlotBars.setTabOrder(self.barThickness, self.barOffset)
+        BarPlotBars.setTabOrder(self.barOffset, self.fillColor)
+        BarPlotBars.setTabOrder(self.fillColor, self.edgeColor)
+        BarPlotBars.setTabOrder(self.edgeColor, self.edgeWidth)
+        BarPlotBars.setTabOrder(self.edgeWidth, self.align)
+        BarPlotBars.setTabOrder(self.align, self.storedSettingsButton)
 
     def retranslateUi(self, BarPlotBars):
         BarPlotBars.setWindowTitle(QtGui.QApplication.translate("BarPlotBars", "Form", None, QtGui.QApplication.UnicodeUTF8))

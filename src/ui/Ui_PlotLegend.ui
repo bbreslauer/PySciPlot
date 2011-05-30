@@ -276,45 +276,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3" rowspan="15">
-    <widget class="QStoredSettingsButton" name="storedSettingsButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>26</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>S
-t
-o
-r
-e
-d
-
-S
-e
-t
-t
-i
-n
-g
-s</string>
-     </property>
-     <property name="toolButtonStyle">
-      <enum>Qt::ToolButtonTextUnderIcon</enum>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::LeftArrow</enum>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="4">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -355,7 +316,75 @@ s</string>
      </property>
     </widget>
    </item>
+   <item row="0" column="3" rowspan="15">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
+  <zorder>label</zorder>
+  <zorder>loc</zorder>
+  <zorder>label_2</zorder>
+  <zorder>title</zorder>
+  <zorder>label_3</zorder>
+  <zorder>frameon</zorder>
+  <zorder>label_5</zorder>
+  <zorder>fancybox</zorder>
+  <zorder>label_4</zorder>
+  <zorder>shadow</zorder>
+  <zorder>label_6</zorder>
+  <zorder>ncol</zorder>
+  <zorder>label_7</zorder>
+  <zorder>columnspacing</zorder>
+  <zorder>label_8</zorder>
+  <zorder>borderaxespad</zorder>
+  <zorder>label_9</zorder>
+  <zorder>handletextpad</zorder>
+  <zorder>label_10</zorder>
+  <zorder>handlelength</zorder>
+  <zorder>label_11</zorder>
+  <zorder>borderpad</zorder>
+  <zorder>label_12</zorder>
+  <zorder>labelspacing</zorder>
+  <zorder>label_13</zorder>
+  <zorder>markerscale</zorder>
+  <zorder>font</zorder>
+  <zorder>titleFont</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -375,6 +404,24 @@ s</string>
    </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>loc</tabstop>
+  <tabstop>font</tabstop>
+  <tabstop>title</tabstop>
+  <tabstop>titleFont</tabstop>
+  <tabstop>frameon</tabstop>
+  <tabstop>fancybox</tabstop>
+  <tabstop>shadow</tabstop>
+  <tabstop>ncol</tabstop>
+  <tabstop>columnspacing</tabstop>
+  <tabstop>borderaxespad</tabstop>
+  <tabstop>handletextpad</tabstop>
+  <tabstop>handlelength</tabstop>
+  <tabstop>borderpad</tabstop>
+  <tabstop>labelspacing</tabstop>
+  <tabstop>markerscale</tabstop>
+  <tabstop>storedSettingsButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

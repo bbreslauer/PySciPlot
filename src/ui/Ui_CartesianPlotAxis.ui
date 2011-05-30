@@ -542,45 +542,6 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" rowspan="4">
-    <widget class="QStoredSettingsButton" name="storedSettingsButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>26</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>S
-t
-o
-r
-e
-d
-
-S
-e
-t
-t
-i
-n
-g
-s</string>
-     </property>
-     <property name="toolButtonStyle">
-      <enum>Qt::ToolButtonTextUnderIcon</enum>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::LeftArrow</enum>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QGroupBox" name="minorTicksVisible">
      <property name="sizePolicy">
@@ -784,7 +745,50 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
+   <item row="0" column="1" rowspan="4">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
+  <zorder>groupBox</zorder>
+  <zorder>majorTicksVisible</zorder>
+  <zorder>minorTicksVisible</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -812,6 +816,45 @@ color: rgb(255, 255, 255);</string>
    </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>visible</tabstop>
+  <tabstop>autoscale</tabstop>
+  <tabstop>label</tabstop>
+  <tabstop>labelFont</tabstop>
+  <tabstop>scaleType</tabstop>
+  <tabstop>minimum</tabstop>
+  <tabstop>maximum</tabstop>
+  <tabstop>majorTicksVisible</tabstop>
+  <tabstop>useMajorTicksAnchor</tabstop>
+  <tabstop>majorTicksAnchor</tabstop>
+  <tabstop>useMajorTicksSpacing</tabstop>
+  <tabstop>majorTicksSpacing</tabstop>
+  <tabstop>useMajorTicksNumber</tabstop>
+  <tabstop>majorTicksNumber</tabstop>
+  <tabstop>useMajorTicksWaveValues</tabstop>
+  <tabstop>majorTicksWaveValues</tabstop>
+  <tabstop>majorTicksLabelVisible</tabstop>
+  <tabstop>majorTicksLabelUseNumeric</tabstop>
+  <tabstop>majorTicksLabelNumericFormat</tabstop>
+  <tabstop>majorTicksLabelUseWave</tabstop>
+  <tabstop>majorTicksLabelWave</tabstop>
+  <tabstop>majorTicksLabelFont</tabstop>
+  <tabstop>majorTicksLabelPadding</tabstop>
+  <tabstop>majorTicksDirection</tabstop>
+  <tabstop>majorTicksColor</tabstop>
+  <tabstop>majorTicksLength</tabstop>
+  <tabstop>majorTicksWidth</tabstop>
+  <tabstop>minorTicksVisible</tabstop>
+  <tabstop>minorTicksNumber</tabstop>
+  <tabstop>minorTicksDirection</tabstop>
+  <tabstop>minorTicksColor</tabstop>
+  <tabstop>minorTicksLength</tabstop>
+  <tabstop>minorTicksWidth</tabstop>
+  <tabstop>storedSettingsButton</tabstop>
+  <tabstop>majorTicksLogLocations</tabstop>
+  <tabstop>majorTicksLogBase</tabstop>
+  <tabstop>minorTicksLogLocations</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

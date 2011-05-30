@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Sat May 28 00:18:25 2011
+# Created: Mon May 30 17:08:44 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -259,17 +259,6 @@ class Ui_CartesianPlotAxis(object):
         self.gridLayout_7.addWidget(self.majorTicksLabelVisible, 0, 5, 1, 1)
         self.gridLayout_7.setRowStretch(0, 1)
         self.gridLayout_4.addWidget(self.majorTicksVisible, 1, 0, 1, 1)
-        self.storedSettingsButton = QStoredSettingsButton(CartesianPlotAxis)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.storedSettingsButton.sizePolicy().hasHeightForWidth())
-        self.storedSettingsButton.setSizePolicy(sizePolicy)
-        self.storedSettingsButton.setMaximumSize(QtCore.QSize(26, 16777215))
-        self.storedSettingsButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-        self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
-        self.storedSettingsButton.setObjectName(_fromUtf8("storedSettingsButton"))
-        self.gridLayout_4.addWidget(self.storedSettingsButton, 0, 1, 4, 1)
         self.minorTicksVisible = QtGui.QGroupBox(CartesianPlotAxis)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -372,6 +361,17 @@ class Ui_CartesianPlotAxis(object):
         self.gridLayout_3.setColumnStretch(3, 1)
         self.gridLayout_3.setColumnStretch(4, 1)
         self.gridLayout_4.addWidget(self.minorTicksVisible, 2, 0, 1, 1)
+        self.storedSettingsButton = QStoredSettingsButton(CartesianPlotAxis)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.storedSettingsButton.sizePolicy().hasHeightForWidth())
+        self.storedSettingsButton.setSizePolicy(sizePolicy)
+        self.storedSettingsButton.setMaximumSize(QtCore.QSize(26, 16777215))
+        self.storedSettingsButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
+        self.storedSettingsButton.setObjectName(_fromUtf8("storedSettingsButton"))
+        self.gridLayout_4.addWidget(self.storedSettingsButton, 0, 1, 4, 1)
 
         self.retranslateUi(CartesianPlotAxis)
         self.majorTicksLocationsStackedWidget.setCurrentIndex(0)
@@ -393,6 +393,42 @@ class Ui_CartesianPlotAxis(object):
         QtCore.QObject.connect(self.scaleType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), CartesianPlotAxis.changeScaleType)
         QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.useMajorTicksAnchor.setDisabled)
         QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.majorTicksAnchor.setDisabled)
+        CartesianPlotAxis.setTabOrder(self.visible, self.autoscale)
+        CartesianPlotAxis.setTabOrder(self.autoscale, self.label)
+        CartesianPlotAxis.setTabOrder(self.label, self.labelFont)
+        CartesianPlotAxis.setTabOrder(self.labelFont, self.scaleType)
+        CartesianPlotAxis.setTabOrder(self.scaleType, self.minimum)
+        CartesianPlotAxis.setTabOrder(self.minimum, self.maximum)
+        CartesianPlotAxis.setTabOrder(self.maximum, self.majorTicksVisible)
+        CartesianPlotAxis.setTabOrder(self.majorTicksVisible, self.useMajorTicksAnchor)
+        CartesianPlotAxis.setTabOrder(self.useMajorTicksAnchor, self.majorTicksAnchor)
+        CartesianPlotAxis.setTabOrder(self.majorTicksAnchor, self.useMajorTicksSpacing)
+        CartesianPlotAxis.setTabOrder(self.useMajorTicksSpacing, self.majorTicksSpacing)
+        CartesianPlotAxis.setTabOrder(self.majorTicksSpacing, self.useMajorTicksNumber)
+        CartesianPlotAxis.setTabOrder(self.useMajorTicksNumber, self.majorTicksNumber)
+        CartesianPlotAxis.setTabOrder(self.majorTicksNumber, self.useMajorTicksWaveValues)
+        CartesianPlotAxis.setTabOrder(self.useMajorTicksWaveValues, self.majorTicksWaveValues)
+        CartesianPlotAxis.setTabOrder(self.majorTicksWaveValues, self.majorTicksLabelVisible)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelVisible, self.majorTicksLabelUseNumeric)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelUseNumeric, self.majorTicksLabelNumericFormat)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelNumericFormat, self.majorTicksLabelUseWave)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelUseWave, self.majorTicksLabelWave)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelWave, self.majorTicksLabelFont)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelFont, self.majorTicksLabelPadding)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLabelPadding, self.majorTicksDirection)
+        CartesianPlotAxis.setTabOrder(self.majorTicksDirection, self.majorTicksColor)
+        CartesianPlotAxis.setTabOrder(self.majorTicksColor, self.majorTicksLength)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLength, self.majorTicksWidth)
+        CartesianPlotAxis.setTabOrder(self.majorTicksWidth, self.minorTicksVisible)
+        CartesianPlotAxis.setTabOrder(self.minorTicksVisible, self.minorTicksNumber)
+        CartesianPlotAxis.setTabOrder(self.minorTicksNumber, self.minorTicksDirection)
+        CartesianPlotAxis.setTabOrder(self.minorTicksDirection, self.minorTicksColor)
+        CartesianPlotAxis.setTabOrder(self.minorTicksColor, self.minorTicksLength)
+        CartesianPlotAxis.setTabOrder(self.minorTicksLength, self.minorTicksWidth)
+        CartesianPlotAxis.setTabOrder(self.minorTicksWidth, self.storedSettingsButton)
+        CartesianPlotAxis.setTabOrder(self.storedSettingsButton, self.majorTicksLogLocations)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLogLocations, self.majorTicksLogBase)
+        CartesianPlotAxis.setTabOrder(self.majorTicksLogBase, self.minorTicksLogLocations)
 
     def retranslateUi(self, CartesianPlotAxis):
         CartesianPlotAxis.setWindowTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Form", None, QtGui.QApplication.UnicodeUTF8))
@@ -436,6 +472,17 @@ class Ui_CartesianPlotAxis(object):
         self.majorTicksLabelNumericFormat.setText(QtGui.QApplication.translate("CartesianPlotAxis", "%.2g", None, QtGui.QApplication.UnicodeUTF8))
         self.label_32.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
         self.majorTicksLabelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Minor Ticks", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_26.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Number", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksLogLocations.setText(QtGui.QApplication.translate("CartesianPlotAxis", "1,2,3,4,5,6,7,8,9", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_27.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_28.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksDirection.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksDirection.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
+        self.minorTicksColor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_23.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
         self.storedSettingsButton.setText(QtGui.QApplication.translate("CartesianPlotAxis", "S\n"
 "t\n"
 "o\n"
@@ -451,17 +498,6 @@ class Ui_CartesianPlotAxis(object):
 "n\n"
 "g\n"
 "s", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Minor Ticks", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_26.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Number", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksLogLocations.setText(QtGui.QApplication.translate("CartesianPlotAxis", "1,2,3,4,5,6,7,8,9", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_24.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_27.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Length", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_28.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Width", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksDirection.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "in", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksDirection.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "out", None, QtGui.QApplication.UnicodeUTF8))
-        self.minorTicksColor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_23.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Direction", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QColorButton import QColorButton

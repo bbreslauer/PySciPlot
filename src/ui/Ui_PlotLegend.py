@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_PlotLegend.ui'
 #
-# Created: Sat May 28 00:16:58 2011
+# Created: Mon May 30 17:08:45 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -130,6 +130,16 @@ class Ui_PlotLegend(object):
         self.markerscale.setProperty(_fromUtf8("value"), 1.0)
         self.markerscale.setObjectName(_fromUtf8("markerscale"))
         self.gridLayout.addWidget(self.markerscale, 14, 2, 1, 1)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem1, 15, 2, 1, 1)
+        self.font = QTextOptionsButton(PlotLegend)
+        self.font.setObjectName(_fromUtf8("font"))
+        self.gridLayout.addWidget(self.font, 1, 2, 1, 1)
+        self.titleFont = QTextOptionsButton(PlotLegend)
+        self.titleFont.setObjectName(_fromUtf8("titleFont"))
+        self.gridLayout.addWidget(self.titleFont, 3, 2, 1, 1)
         self.storedSettingsButton = QStoredSettingsButton(PlotLegend)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -141,22 +151,27 @@ class Ui_PlotLegend(object):
         self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
         self.storedSettingsButton.setObjectName(_fromUtf8("storedSettingsButton"))
         self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 15, 1)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 15, 2, 1, 1)
-        self.font = QTextOptionsButton(PlotLegend)
-        self.font.setObjectName(_fromUtf8("font"))
-        self.gridLayout.addWidget(self.font, 1, 2, 1, 1)
-        self.titleFont = QTextOptionsButton(PlotLegend)
-        self.titleFont.setObjectName(_fromUtf8("titleFont"))
-        self.gridLayout.addWidget(self.titleFont, 3, 2, 1, 1)
 
         self.retranslateUi(PlotLegend)
         QtCore.QObject.connect(self.frameon, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.fancybox.setEnabled)
         QtCore.QObject.connect(self.storedSettingsButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.storedSettingsButton.toggleWidget)
         QtCore.QObject.connect(self.font, QtCore.SIGNAL(_fromUtf8("clicked()")), self.font.showTextOptionsWidget)
         QtCore.QObject.connect(self.titleFont, QtCore.SIGNAL(_fromUtf8("clicked()")), self.titleFont.showTextOptionsWidget)
+        PlotLegend.setTabOrder(self.loc, self.font)
+        PlotLegend.setTabOrder(self.font, self.title)
+        PlotLegend.setTabOrder(self.title, self.titleFont)
+        PlotLegend.setTabOrder(self.titleFont, self.frameon)
+        PlotLegend.setTabOrder(self.frameon, self.fancybox)
+        PlotLegend.setTabOrder(self.fancybox, self.shadow)
+        PlotLegend.setTabOrder(self.shadow, self.ncol)
+        PlotLegend.setTabOrder(self.ncol, self.columnspacing)
+        PlotLegend.setTabOrder(self.columnspacing, self.borderaxespad)
+        PlotLegend.setTabOrder(self.borderaxespad, self.handletextpad)
+        PlotLegend.setTabOrder(self.handletextpad, self.handlelength)
+        PlotLegend.setTabOrder(self.handlelength, self.borderpad)
+        PlotLegend.setTabOrder(self.borderpad, self.labelspacing)
+        PlotLegend.setTabOrder(self.labelspacing, self.markerscale)
+        PlotLegend.setTabOrder(self.markerscale, self.storedSettingsButton)
 
     def retranslateUi(self, PlotLegend):
         PlotLegend.setWindowTitle(QtGui.QApplication.translate("PlotLegend", "Form", None, QtGui.QApplication.UnicodeUTF8))
@@ -185,6 +200,8 @@ class Ui_PlotLegend(object):
         self.label_11.setText(QtGui.QApplication.translate("PlotLegend", "Border padding", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("PlotLegend", "Label line spacing", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("PlotLegend", "Marker scale", None, QtGui.QApplication.UnicodeUTF8))
+        self.font.setText(QtGui.QApplication.translate("PlotLegend", "Trace Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.titleFont.setText(QtGui.QApplication.translate("PlotLegend", "Title Font", None, QtGui.QApplication.UnicodeUTF8))
         self.storedSettingsButton.setText(QtGui.QApplication.translate("PlotLegend", "S\n"
 "t\n"
 "o\n"
@@ -200,8 +217,6 @@ class Ui_PlotLegend(object):
 "n\n"
 "g\n"
 "s", None, QtGui.QApplication.UnicodeUTF8))
-        self.font.setText(QtGui.QApplication.translate("PlotLegend", "Trace Font", None, QtGui.QApplication.UnicodeUTF8))
-        self.titleFont.setText(QtGui.QApplication.translate("PlotLegend", "Title Font", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QStoredSettingsButton import QStoredSettingsButton

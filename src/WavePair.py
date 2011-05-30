@@ -280,9 +280,18 @@ class Trace(WavePair):
 class Bar(WavePair):
     """A bar plot worth of data. NOT a single bar on a plot."""
 
-    mplNames = {
-            'barWidth':         'width',
-            'barBottom':        'bottom',
+    verticalMplNames = {
+            'barThickness':     'width',
+            'barOffset':        'bottom',
+            'fillColor':        'color',
+            'edgeColor':        'edgecolor',
+            'edgeWidth':        'linewidth',
+            'align':            'align',
+            }
+
+    horizontalMplNames = {
+            'barThickness':     'height',
+            'barOffset':        'left',
             'fillColor':        'color',
             'edgeColor':        'edgecolor',
             'edgeWidth':        'linewidth',
@@ -293,9 +302,9 @@ class Bar(WavePair):
         Util.debug(2, "Bar.init", "Creating bar")
 
         properties = {
-            'barWidth':         Property.Float(1.0),
-            'barBottom':        Property.Float(0.0),
-            'fillColor':        Property.Color(QColor(0,0,0,255)),
+            'barThickness':     Property.Float(1.0),
+            'barOffset':        Property.Float(0.0),
+            'fillColor':        Property.Color(QColor(0,0,255,255)),
             'edgeColor':        Property.Color(QColor(0,0,0,255)),
             'edgeWidth':        Property.Float(0.0),
             'align':            Property.String('edge'),
@@ -306,8 +315,12 @@ class Bar(WavePair):
     def getFormat(self):
         formatDict = {}
         
-        for prop in self.properties.keys():
-            formatDict[self.mplNames[prop]] = self.getMpl(prop)
+        if self.plot().plotTypeObject.get('orientation') == 'vertical':
+            for prop in self.properties.keys():
+                formatDict[self.verticalMplNames[prop]] = self.getMpl(prop)
+        elif self.plot().plotTypeObject.get('orientation') == 'horizontal':
+            for prop in self.properties.keys():
+                formatDict[self.horizontalMplNames[prop]] = self.getMpl(prop)
         return formatDict
 
     def refreshLabel(self):
@@ -328,7 +341,7 @@ class Bar(WavePair):
             pass
 
     def refresh(self):
-        [left, height] = self.dataSet()
+        [base, extent] = self.dataSet()
 
         if self.plot() is None:
             return
@@ -336,7 +349,10 @@ class Bar(WavePair):
         self.removeFromPlot()
 
         try:
-            self._rects = self.plot().axes().bar(left, height, label=self.label(), **(self.getFormat()))
+            if self.plot().plotTypeObject.get('orientation') == 'vertical':
+                self._rects = self.plot().axes().bar(base, extent, label=self.label(), **(self.getFormat()))
+            elif self.plot().plotTypeObject.get('orientation') == 'horizontal':
+                self._rects = self.plot().axes().barh(base, extent, label=self.label(), **(self.getFormat()))
             self.plot().plotTypeObject.update_legend()
             self.plot().redraw()
         except:

@@ -76,7 +76,7 @@ class QEditFigureSubWidget(QWidget):
     def resetClicked(self):
         self.resetUi()
 
-    def okClikced(self):
+    def okClicked(self):
         pass
 
     def cancelClicked(self):

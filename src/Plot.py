@@ -38,7 +38,7 @@ class CartesianPlot(FigureObject):
     # Signals
     wavePairRemovedFromPlot = pyqtSignal(WavePair)
 
-    def __init__(self, plot):
+    def __init__(self, plot, moreProperties={}):
         Util.debug(2, "CartesianPlot.init", "Creating Cartesian Plot")
 
         # Add additional properties without deleting the ones defined in Plot()
@@ -61,6 +61,8 @@ class CartesianPlot(FigureObject):
                                                     }),
                 'legend':           Property.Legend(),
                 }
+
+        properties.update(moreProperties)
 
         FigureObject.__init__(self, properties)
 
@@ -330,28 +332,34 @@ class CartesianPlot(FigureObject):
 
 class ScatterPlot(CartesianPlot):
     
-    def __init__(self, plot):
+    def __init__(self, plot, moreProperties={}):
         Util.debug(2, "ScatterPlot.init", "Creating Scatter Plot")
 
-        CartesianPlot.__init__(self, plot)
+        CartesianPlot.__init__(self, plot, moreProperties)
 
 class BarPlot(CartesianPlot):
 
-    def __init__(self, plot):
+    def __init__(self, plot, moreProperties={}):
         Util.debug(2, "BarPlot.init", "Creating Bar Plot")
 
-        CartesianPlot.__init__(self, plot)
+        properties = {
+                'orientation': Property.String('vertical'),
+                }
+
+        properties.update(moreProperties)
+
+        CartesianPlot.__init__(self, plot, properties)
 
 class PieChart(FigureObject):
 
-    def __init__(self, plot):
+    def __init__(self, plot, moreProperties={}):
         Util.debug(2, "PieChart.init", "Creating Pie Chart")
 
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
                 }
 
-        FigureObject.__init__(self, properties)
+        FigureObject.__init__(self, properties, moreProperties)
 
         self._plot = plot
     

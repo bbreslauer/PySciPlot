@@ -34,6 +34,9 @@ def setWidgetValue(widget, value):
     dictionary = {
                     'QLineEdit':      'widget.setText(str(value))',
                     'QSpinBox':       'widget.setValue(int(value))',
+                    'QWaveLimitSpinBox':       'widget.setValue(int(value))',
+                    'QWaveStartSpinBox':       'widget.setValue(int(value))',
+                    'QWaveEndSpinBox':       'widget.setValue(int(value))',
                     'QDoubleSpinBox': 'widget.setValue(float(value))',
                     'QColorButton':   'widget.setColor(value)',
                     'QTextOptionsButton':    'widget.setTextOptions(value)',
@@ -64,6 +67,9 @@ def getWidgetValue(widget):
     dictionary = {
                     'QLineEdit':      'str(widget.text())',
                     'QSpinBox':       'int(widget.value())',
+                    'QWaveLimitSpinBox':       'int(widget.value())',
+                    'QWaveStartSpinBox':       'int(widget.value())',
+                    'QWaveEndSpinBox':       'int(widget.value())',
                     'QDoubleSpinBox': 'float(widget.value())',
                     'QColorButton':   'widget.getQColor()',
                     'QTextOptionsButton':    'widget.getTextOptions()',

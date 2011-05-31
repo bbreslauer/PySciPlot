@@ -42,6 +42,7 @@ class Wave(QObject):
     # Signals
     nameChanged = pyqtSignal(str, Wave)
     dataModified = pyqtSignal()
+    lengthChanged = pyqtSignal()
 
     def __init__(self, waveName, dataType="Decimal", dataIn=[]):
         """
@@ -232,6 +233,7 @@ class Wave(QObject):
             # Extend the list enough so that we can modify the value at position
             # +1 because list[len(list)] doesn't exist, due to zero-indexing
             self._data.extend([''] * (position - self.length() + 1))
+            self.lengthChanged.emit()
 
         self._data[position] = value
         Util.debug(3, "Wave.setData", "Set " + str(self.name()) + "[" + str(position) + "] = " + str(value))
@@ -281,7 +283,7 @@ class Wave(QObject):
         
         if position < 0:
             return False
-
+        
         value = self.castToWaveType(value)
         if value == None:
             return False
@@ -289,17 +291,18 @@ class Wave(QObject):
         self._data.insert(position, value)
         Util.debug(2, "Wave.insert", "Inserted data into wave " + str(self.name()))
         self.dataModified.emit()
+        self.lengthChanged.emit()
         return True
 
     def extend(self, values):
         """
         Extend the wave data by appending all values to the wave. Equivalent to
-        running Wave.push() for each entry in values. If a non-dataType value is
-        encountered, skip it and continue through values.
+        running Wave.push() for each entry in values. If a non-(list, dataType)
+        value is encountered, skip it and continue through values.
 
         Arguments:
         values (list-of-(list-of*)-dataType) -- List of data to be pushed onto the wave.
-                Can contain recursive lists, which will be flattened.
+                Can contain nested lists, which will be flattened.
 
         Returns:
         True -- If at least one entry in values is added to the wave.
@@ -354,6 +357,7 @@ class Wave(QObject):
         value = self._data.pop(position)
         Util.debug(2, "Wave.pop", "Popped value at position " + str(position) + " from " + str(self.name()))
         self.dataModified.emit()
+        self.lengthChanged.emit()
         return value
 
     def shift(self):
@@ -428,6 +432,7 @@ class Wave(QObject):
         self.recastData()
         
         self.dataModified.emit()
+        self.lengthChanged.emit()
 
 
 

@@ -6,5 +6,6 @@ __all__ = [
             "ImportCSV",
             "ManageWavesWidget",
             "ExportData",
+            "CurveFitting",
         ]
 

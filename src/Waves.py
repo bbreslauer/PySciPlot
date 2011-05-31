@@ -92,6 +92,9 @@ class Waves(QObject):
         """
         
         Util.debug(3, "Waves.findGoodWaveName", "Finding acceptable wave name with base " + str(baseName))
+        
+        if self.uniqueWaveName(baseName):
+            return baseName
 
         counter = 1
         while True:

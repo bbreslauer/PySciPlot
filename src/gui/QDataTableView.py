@@ -153,6 +153,7 @@ class QDataTableView(QTableView):
         for wave in waves:
             wave.blockSignals(False)
             wave.dataModified.emit()
+            wave.lengthChanged.emit()
 
     def deleteCells(self):
         """Delete cells from waves based on selected cells in this table."""
@@ -183,6 +184,7 @@ class QDataTableView(QTableView):
         for wave in waves:
             wave.blockSignals(False)
             wave.dataModified.emit()
+            wave.lengthChanged.emit()
 
     def showCellContextMenu(self, point):
         """Display the menu that occurs when right clicking on a table cell."""

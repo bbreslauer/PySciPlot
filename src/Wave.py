@@ -294,10 +294,12 @@ class Wave(QObject):
     def extend(self, values):
         """
         Extend the wave data by appending all values to the wave. Equivalent to
-        running Wave.push() for each entry in values.
+        running Wave.push() for each entry in values. If a non-dataType value is
+        encountered, skip it and continue through values.
 
         Arguments:
-        values (list-of-dataType) -- List of data to be pushed onto the wave.
+        values (list-of-(list-of*)-dataType) -- List of data to be pushed onto the wave.
+                Can contain recursive lists, which will be flattened.
 
         Returns:
         True -- If at least one entry in values is added to the wave.
@@ -309,7 +311,10 @@ class Wave(QObject):
 
         result = True
         for value in values:
-            result = result and self.push(value)
+            if isinstance(value, list):
+                result = self.extend(value) and result
+            else:
+                result = self.push(value) and result
         Util.debug(2, "Wave.extend", "Extended wave " + str(self.name()) + " with " + str(len(values)) + " entries")
         return result
 

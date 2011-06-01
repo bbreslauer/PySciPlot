@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Tue May 31 23:53:28 2011
+# Created: Wed Jun  1 01:45:33 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,9 +48,15 @@ class Ui_CurveFitting(object):
         self.polynomialDegree.setProperty(_fromUtf8("value"), 2)
         self.polynomialDegree.setObjectName(_fromUtf8("polynomialDegree"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.polynomialDegree)
+        self.label_10 = QtGui.QLabel(self.page)
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.label_10)
         self.functionStackedWidget.addWidget(self.page)
         self.page_2 = QtGui.QWidget()
         self.page_2.setObjectName(_fromUtf8("page_2"))
+        self.label_9 = QtGui.QLabel(self.page_2)
+        self.label_9.setGeometry(QtCore.QRect(170, 90, 221, 41))
+        self.label_9.setObjectName(_fromUtf8("label_9"))
         self.functionStackedWidget.addWidget(self.page_2)
         self.gridLayout.addWidget(self.functionStackedWidget, 1, 0, 1, 2)
         self.coefficientTable = QtGui.QTableWidget(self.tabFunction)
@@ -60,10 +66,7 @@ class Ui_CurveFitting(object):
         self.coefficientTable.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         self.coefficientTable.setHorizontalHeaderItem(0, item)
-        self.gridLayout.addWidget(self.coefficientTable, 3, 0, 1, 2)
-        self.label_14 = QtGui.QLabel(self.tabFunction)
-        self.label_14.setObjectName(_fromUtf8("label_14"))
-        self.gridLayout.addWidget(self.label_14, 2, 0, 1, 2)
+        self.gridLayout.addWidget(self.coefficientTable, 2, 0, 1, 2)
         self.tabWidget.addTab(self.tabFunction, _fromUtf8(""))
         self.tabData = QtGui.QWidget()
         self.tabData.setObjectName(_fromUtf8("tabData"))
@@ -193,10 +196,11 @@ class Ui_CurveFitting(object):
         CurveFitting.setWindowTitle(QtGui.QApplication.translate("CurveFitting", "Curve Fitting", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(0, QtGui.QApplication.translate("CurveFitting", "Polynomial", None, QtGui.QApplication.UnicodeUTF8))
-        self.function.setItemText(1, QtGui.QApplication.translate("CurveFitting", "test", None, QtGui.QApplication.UnicodeUTF8))
+        self.function.setItemText(1, QtGui.QApplication.translate("CurveFitting", "Sinusoid", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Number of Terms", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * x + p2 * x^2 + ...", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * Cos(2 * pi * x / p2 + p3)", None, QtGui.QApplication.UnicodeUTF8))
         self.coefficientTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("CurveFitting", "Coefficients", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_14.setText(QtGui.QApplication.translate("CurveFitting", "Display the function equation here", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("CurveFitting", "X Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CurveFitting", "Y Wave", None, QtGui.QApplication.UnicodeUTF8))

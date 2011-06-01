@@ -16,7 +16,7 @@
 
 from PyQt4.QtGui import QWidget, QAction
 
-import Util, numpy
+import Util, math, numpy, scipy.optimize
 from Wave import Wave
 from Module import Module
 from gui.SubWindows import SubWindow
@@ -144,6 +144,8 @@ class CurveFitting(Module):
 
         if functionName == 'Polynomial':
             self.fitPolynomial(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'Sinusoid':
+            self.fitSinusoid(xData, yData, outputWaves, outputOptions)
 
 
 
@@ -191,6 +193,65 @@ class CurveFitting(Module):
 
         # Create table
         self.createTable(tableWaves, 'Polynomial Fit')
+
+    def fitSinusoid(self, xData, yData, outputWaves={}, outputOptions={}):
+        # Can also include initial guesses for the parameters, as well as sigma's for weighting of the ydata
+
+        # Need to fail with error message if the leastsq call does not succeed
+
+        sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * math.pi + p[3])
+        p0 = [.6, 11.8, .8, -1] # these are specific to the example I am testing, and need to be changed
+
+        # Do the fit
+        result = self.fitFunctionLeastSquares(sinusoidFunction, p0, xData, yData)
+        coefficients = result[0]
+
+        tableWaves = []
+
+        # Deal with the coefficient-related waves
+        if outputOptions['outputCoefficients']:
+            # save coefficient labels
+            if outputOptions['saveLabels']:
+                tableWaves.append(outputWaves['saveLabelsWave'])
+
+                outputWaves['saveLabelsWave'].extend(['p0', 'p1', 'p2', 'p3'])
+
+            tableWaves.append(outputWaves['coefficientWave'])
+
+            # save coefficients to a wave
+            outputWaves['coefficientWave'].extend(coefficients)
+
+        # Do the interpolation
+        if outputOptions['outputInterpolation']:
+            domain = outputOptions['interpolationDomainWaveData']
+            
+            determinedFunction = lambda x: sinusoidFunction(coefficients, x)
+            for val in domain:
+                outputWaves['interpolationDestinationWave'].push(determinedFunction(val))
+
+            tableWaves.append(outputWaves['interpolationDomainWave'])
+            tableWaves.append(outputWaves['interpolationDestinationWave'])
+
+        # Create table
+        self.createTable(tableWaves, 'Sinusoid Fit')
+
+    def fitFunctionLeastSquares(self, func, guess, xData, yData):
+        """
+        Do a least squares fit for a generic function.
+
+        func must have the signature (p, x) where p is a list of parameters
+        and x is a float.
+
+        guess is the user's guess of the parameters, and must be a list of 
+        length len(p).
+
+        xData and yData are the data to fit.
+        """
+
+        errorFunc = lambda p, x, y: func(p, x) - y
+
+        return scipy.optimize.leastsq(errorFunc, guess[:], args=(xData, yData), full_output=True)
+
 
     def createTable(self, waves=[], title='Fit'):
         if len(waves) == 0:

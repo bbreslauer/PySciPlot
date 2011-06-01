@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabFunction">
       <attribute name="title">
@@ -48,6 +48,23 @@
          </item>
         </widget>
        </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QTableWidget" name="parameterTable">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>Parameter</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Initial Value</string>
+          </property>
+         </column>
+        </widget>
+       </item>
        <item row="1" column="0" colspan="2">
         <widget class="QStackedWidget" name="functionStackedWidget">
          <property name="currentIndex">
@@ -72,21 +89,37 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>y = p0 + p1 * x + p2 * x^2 + ...</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_2">
+         <widget class="QWidget" name="page_2"/>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QStackedWidget" name="equationStackedWidget">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page_3">
+          <widget class="QLabel" name="label_10">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>20</y>
+             <width>184</width>
+             <height>13</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y = p0 + p1 * x + p2 * x^2 + ...</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_4">
           <widget class="QLabel" name="label_9">
            <property name="geometry">
             <rect>
-             <x>170</x>
-             <y>90</y>
+             <x>140</x>
+             <y>30</y>
              <width>221</width>
              <height>41</height>
             </rect>
@@ -96,23 +129,6 @@
            </property>
           </widget>
          </widget>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QTableWidget" name="parameterTable">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Coefficient</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Initial Value</string>
-          </property>
-         </column>
         </widget>
        </item>
       </layout>
@@ -392,6 +408,22 @@
     <hint type="destinationlabel">
      <x>342</x>
      <y>83</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>function</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>equationStackedWidget</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>175</y>
     </hint>
    </hints>
   </connection>

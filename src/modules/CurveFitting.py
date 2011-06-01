@@ -97,10 +97,10 @@ class CurveFitting(Module):
 
         outputOptions['createTable'] = Util.getWidgetValue(self._ui.createTable)
 
-        outputOptions['outputCoefficients'] = Util.getWidgetValue(self._ui.outputCoefficients)
-        if outputOptions['outputCoefficients']:
+        outputOptions['outputParameters'] = Util.getWidgetValue(self._ui.outputParameters)
+        if outputOptions['outputParameters']:
             outputOptions['saveLabels'] = Util.getWidgetValue(self._ui.saveLabels)
-            outputOptions['saveFitParameters'] = Util.getWidgetValue(self._ui.saveFitParameters)
+            outputOptions['saveFitGoodness'] = Util.getWidgetValue(self._ui.saveFitGoodness)
 
             # Create saveLabels wave
             if outputOptions['saveLabels']:
@@ -108,10 +108,10 @@ class CurveFitting(Module):
                 outputWaves['saveLabelsWave'] = Wave(saveLabelsDestination, 'String')
                 self._app.waves().addWave(outputWaves['saveLabelsWave'])
 
-            # Create coefficient wave
-            coefficientDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.coefficientDestination))
-            outputWaves['coefficientWave'] = Wave(coefficientDestination, 'Decimal')
-            self._app.waves().addWave(outputWaves['coefficientWave'])
+            # Create parameter wave
+            parameterDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.parameterDestination))
+            outputWaves['parameterWave'] = Wave(parameterDestination, 'Decimal')
+            self._app.waves().addWave(outputWaves['parameterWave'])
 
         outputOptions['outputInterpolation'] = Util.getWidgetValue(self._ui.outputInterpolation)
         if outputOptions['outputInterpolation']:
@@ -159,28 +159,28 @@ class CurveFitting(Module):
 
         tableWaves = []
 
-        # Deal with the coefficient-related waves
-        if outputOptions['outputCoefficients']:
-            # save coefficient labels
+        # Deal with the parameter-related waves
+        if outputOptions['outputParameters']:
+            # save parameter labels
             if outputOptions['saveLabels']:
                 tableWaves.append(outputWaves['saveLabelsWave'])
 
                 for deg in range(degree + 1):
                     outputWaves['saveLabelsWave'].insert(0, 'Deg ' + str(deg))
 
-                if outputOptions['saveFitParameters']:
+                if outputOptions['saveFitGoodness']:
                     outputWaves['saveLabelsWave'].push('Residuals')
                     outputWaves['saveLabelsWave'].push('Rank')
                     outputWaves['saveLabelsWave'].extend(['Singular Values'] * (deg + 1))
                     outputWaves['saveLabelsWave'].push('RCond')
 
-            tableWaves.append(outputWaves['coefficientWave'])
+            tableWaves.append(outputWaves['parameterWave'])
 
-            # save coefficients to a wave
-            outputWaves['coefficientWave'].extend(coeffs)
+            # save parameters to a wave
+            outputWaves['parameterWave'].extend(coeffs)
 
-            if outputOptions['saveFitParameters']:
-                outputWaves['coefficientWave'].extend([list(residuals), rank, list(singular_values), rcond])
+            if outputOptions['saveFitGoodness']:
+                outputWaves['parameterWave'].extend([list(residuals), rank, list(singular_values), rcond])
 
         # Do the interpolation
         if outputOptions['outputInterpolation']:
@@ -204,28 +204,28 @@ class CurveFitting(Module):
 
         # Do the fit
         result = self.fitFunctionLeastSquares(sinusoidFunction, p0, xData, yData)
-        coefficients = result[0]
+        parameters = result[0]
 
         tableWaves = []
 
-        # Deal with the coefficient-related waves
-        if outputOptions['outputCoefficients']:
-            # save coefficient labels
+        # Deal with the parameter-related waves
+        if outputOptions['outputParameters']:
+            # save parameter labels
             if outputOptions['saveLabels']:
                 tableWaves.append(outputWaves['saveLabelsWave'])
 
                 outputWaves['saveLabelsWave'].extend(['p0', 'p1', 'p2', 'p3'])
 
-            tableWaves.append(outputWaves['coefficientWave'])
+            tableWaves.append(outputWaves['parameterWave'])
 
-            # save coefficients to a wave
-            outputWaves['coefficientWave'].extend(coefficients)
+            # save parameters to a wave
+            outputWaves['parameterWave'].extend(parameters)
 
         # Do the interpolation
         if outputOptions['outputInterpolation']:
             domain = outputOptions['interpolationDomainWaveData']
             
-            determinedFunction = lambda x: sinusoidFunction(coefficients, x)
+            determinedFunction = lambda x: sinusoidFunction(parameters, x)
             for val in domain:
                 outputWaves['interpolationDestinationWave'].push(determinedFunction(val))
 

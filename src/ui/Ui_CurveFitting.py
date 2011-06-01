@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Tue May 31 02:40:06 2011
+# Created: Tue May 31 23:53:28 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,10 +75,10 @@ class Ui_CurveFitting(object):
         self.label_4 = QtGui.QLabel(self.tabData)
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.gridLayout_2.addWidget(self.label_4, 0, 1, 1, 1)
-        self.xWave = QtGui.QComboBox(self.tabData)
+        self.xWave = QWaveComboBox(self.tabData)
         self.xWave.setObjectName(_fromUtf8("xWave"))
         self.gridLayout_2.addWidget(self.xWave, 1, 0, 1, 1)
-        self.yWave = QtGui.QComboBox(self.tabData)
+        self.yWave = QWaveComboBox(self.tabData)
         self.yWave.setObjectName(_fromUtf8("yWave"))
         self.gridLayout_2.addWidget(self.yWave, 1, 1, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -137,7 +137,7 @@ class Ui_CurveFitting(object):
         self.label_8 = QtGui.QLabel(self.outputInterpolation)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.formLayout_3.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_8)
-        self.interpolationDomain = QtGui.QComboBox(self.outputInterpolation)
+        self.interpolationDomain = QWaveComboBox(self.outputInterpolation)
         self.interpolationDomain.setObjectName(_fromUtf8("interpolationDomain"))
         self.formLayout_3.setWidget(1, QtGui.QFormLayout.FieldRole, self.interpolationDomain)
         self.groupBox_4 = QtGui.QGroupBox(self.outputInterpolation)
@@ -220,3 +220,4 @@ class Ui_CurveFitting(object):
         self.closeButton.setText(QtGui.QApplication.translate("CurveFitting", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QWaveLimitSpinBox import QWaveEndSpinBox, QWaveStartSpinBox
+from gui.QWaveComboBox import QWaveComboBox

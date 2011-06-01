@@ -40,7 +40,6 @@ class CurveFitting(Module):
         self._ui.doFitButton.clicked.connect(self.doFit)
         self._ui.closeButton.clicked.connect(self.closeWindow)
 
-
     def setModels(self):
         # Set up model and view
         self._allWavesListModel = self._app.model('appWaves')
@@ -65,9 +64,16 @@ class CurveFitting(Module):
 
 
     def doFit(self):
-        # Get data tab
+        
+        # Get all waves that are selected before doing anything else
+        # If any waves are created, as they are in the output tab section,
+        # then the wave combo boxes are refreshed, and the previous selection
+        # is lost
         xWaveName = Util.getWidgetValue(self._ui.xWave)
         yWaveName = Util.getWidgetValue(self._ui.yWave)
+        interpolationDomainWaveName = Util.getWidgetValue(self._ui.interpolationDomain)
+
+        # Get data tab
         dataRangeStart = Util.getWidgetValue(self._ui.dataRangeStart)
         dataRangeEnd = Util.getWidgetValue(self._ui.dataRangeEnd)
         
@@ -87,93 +93,101 @@ class CurveFitting(Module):
 
         # Get output tab
         outputOptions = {}
+        outputWaves = {}
+
         outputOptions['createTable'] = Util.getWidgetValue(self._ui.createTable)
+
         outputOptions['outputCoefficients'] = Util.getWidgetValue(self._ui.outputCoefficients)
         if outputOptions['outputCoefficients']:
-            outputOptions['coefficientDestination'] = Util.getWidgetValue(self._ui.coefficientDestination)
             outputOptions['saveLabels'] = Util.getWidgetValue(self._ui.saveLabels)
-            if outputOptions['saveLabels']:
-                outputOptions['saveLabelsDestination'] = Util.getWidgetValue(self._ui.saveLabelsDestination)
             outputOptions['saveFitParameters'] = Util.getWidgetValue(self._ui.saveFitParameters)
+
+            # Create saveLabels wave
+            if outputOptions['saveLabels']:
+                saveLabelsDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.saveLabelsDestination))
+                outputWaves['saveLabelsWave'] = Wave(saveLabelsDestination, 'String')
+                self._app.waves().addWave(outputWaves['saveLabelsWave'])
+
+            # Create coefficient wave
+            coefficientDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.coefficientDestination))
+            outputWaves['coefficientWave'] = Wave(coefficientDestination, 'Decimal')
+            self._app.waves().addWave(outputWaves['coefficientWave'])
 
         outputOptions['outputInterpolation'] = Util.getWidgetValue(self._ui.outputInterpolation)
         if outputOptions['outputInterpolation']:
-            outputOptions['interpolationDestination'] = Util.getWidgetValue(self._ui.interpolationDestination)
-
-            interpolationDomainWaveName = Util.getWidgetValue(self._ui.interpolationDomain)
-            interpolationWave = self._app.waves().wave(interpolationDomainWaveName)
+            # Create interpolation wave
+            interpolationDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.interpolationDestination))
+            outputWaves['interpolationDestinationWave'] = Wave(interpolationDestination, 'Decimal')
+            self._app.waves().addWave(outputWaves['interpolationDestinationWave'])
+            
+            interpolationDomainWave = self._app.waves().wave(interpolationDomainWaveName)
             interpolationRangeStart = Util.getWidgetValue(self._ui.interpolationRangeStart)
             interpolationRangeEnd = Util.getWidgetValue(self._ui.interpolationRangeEnd)
             
-            interpolationDomainLength = interpolationWave.length()
+            outputWaves['interpolationDomainWave'] = interpolationDomainWave
+
+            # Start the wave with as many blanks as necessary in order to get the destination wave
+            # to line up correctly with the domain wave, for easy plotting.
+            outputWaves['interpolationDestinationWave'].extend([''] * interpolationRangeStart)
+            
+            # Verify data range limits are valid
+            interpolationDomainLength = interpolationDomainWave.length()
             if interpolationRangeStart > interpolationDomainLength:
                 interpolationRangeStart = 0
             if interpolationRangeEnd > interpolationDomainLength:
                 interpolationRangeEnd  = interpolationDomainLength - 1
 
-            outputOptions['interpolationWave'] = interpolationWave
-            outputOptions['interpolationWaveData'] = interpolationWave.data(interpolationRangeStart, interpolationRangeEnd + 1)
-            outputOptions['interpolationRangeStart'] = interpolationRangeStart
+            outputOptions['interpolationDomainWaveData'] = interpolationDomainWave.data(interpolationRangeStart, interpolationRangeEnd + 1)
 
         # Determine the function and call the appropriate method
         functionName = Util.getWidgetValue(self._ui.function)
 
         if functionName == 'Polynomial':
-            self.fitPolynomial(xData, yData, outputOptions)
+            self.fitPolynomial(xData, yData, outputWaves, outputOptions)
 
 
 
 
-    def fitPolynomial(self, xData, yData, outputOptions={}):
+    def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
+        # Get the degree of the polynomial the user wants to use
         degree = Util.getWidgetValue(self._ui.polynomialDegree)
+
+        # Do the polynomial fit
         coeffs, residuals, rank, singular_values, rcond = numpy.polyfit(xData, yData, degree, full=True)
 
         tableWaves = []
 
+        # Deal with the coefficient-related waves
         if outputOptions['outputCoefficients']:
             # save coefficient labels
             if outputOptions['saveLabels']:
-                saveLabelsDestination = self._app.waves().findGoodWaveName(outputOptions['saveLabelsDestination'])
-                saveLabelsWave = Wave(saveLabelsDestination, 'String')
-                self._app.waves().addWave(saveLabelsWave)
-
-                tableWaves.append(saveLabelsWave)
+                tableWaves.append(outputWaves['saveLabelsWave'])
 
                 for deg in range(degree + 1):
-                    saveLabelsWave.insert(0, 'Deg ' + str(deg))
+                    outputWaves['saveLabelsWave'].insert(0, 'Deg ' + str(deg))
 
                 if outputOptions['saveFitParameters']:
-                    saveLabelsWave.push('Residuals')
-                    saveLabelsWave.push('Rank')
-                    saveLabelsWave.extend(['Singular Values'] * (deg + 1))
-                    saveLabelsWave.push('RCond')
+                    outputWaves['saveLabelsWave'].push('Residuals')
+                    outputWaves['saveLabelsWave'].push('Rank')
+                    outputWaves['saveLabelsWave'].extend(['Singular Values'] * (deg + 1))
+                    outputWaves['saveLabelsWave'].push('RCond')
+
+            tableWaves.append(outputWaves['coefficientWave'])
 
             # save coefficients to a wave
-            coefficientDestination = self._app.waves().findGoodWaveName(outputOptions['coefficientDestination'])
-            coefficientWave = Wave(coefficientDestination, 'Decimal')
-            self._app.waves().addWave(coefficientWave)
-
-            tableWaves.append(coefficientWave)
-
-            coefficientWave.extend(coeffs)
+            outputWaves['coefficientWave'].extend(coeffs)
 
             if outputOptions['saveFitParameters']:
-                coefficientWave.extend([list(residuals), rank, list(singular_values), rcond])
+                outputWaves['coefficientWave'].extend([list(residuals), rank, list(singular_values), rcond])
 
+        # Do the interpolation
         if outputOptions['outputInterpolation']:
-            domain = outputOptions['interpolationWaveData']
-            interpolationDestination = self._app.waves().findGoodWaveName(outputOptions['interpolationDestination'])
-            interpolationDestinationWave = Wave(interpolationDestination, 'Decimal')
-            self._app.waves().addWave(interpolationDestinationWave)
+            domain = outputOptions['interpolationDomainWaveData']
             
-            tableWaves.append(outputOptions['interpolationWave'])
-            tableWaves.append(interpolationDestinationWave)
+            outputWaves['interpolationDestinationWave'].extend(list(numpy.polyval(coeffs, domain)))
 
-            # Start the wave with as many blanks as necessary in order to get the destination wave
-            # to line up correctly with the domain wave, for easy plotting.
-            interpolationDestinationWave.extend([''] * outputOptions['interpolationRangeStart'])
-
-            interpolationDestinationWave.extend(list(numpy.polyval(coeffs, domain)))
+            tableWaves.append(outputWaves['interpolationDomainWave'])
+            tableWaves.append(outputWaves['interpolationDestinationWave'])
 
         # Create table
         self.createTable(tableWaves, 'Polynomial Fit')

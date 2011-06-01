@@ -51,7 +51,10 @@ class QWaveLimitSpinBox(QSpinBox):
 
     def changeWave(self, view, waveName):
         if view in self._waveViews.keys():
-            self._waveViews[view].lengthChanged.disconnect(self.updateLimits)
+            try:
+                self._waveViews[view].lengthChanged.disconnect(self.updateLimits)
+            except:
+                pass
         newWave = self._app.waves().wave(str(waveName))
         if newWave:
             self._waveViews[view] = newWave

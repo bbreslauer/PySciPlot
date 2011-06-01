@@ -50,9 +50,13 @@ class CurveFitting(Module):
 
     def setupSpinBoxes(self):
         self._ui.dataRangeStart.addWaveView(self._ui.xWave)
-        self._ui.dataRangeStart.addWaveView(self._ui.yWave)
         self._ui.dataRangeEnd.addWaveView(self._ui.xWave)
+
+        self._ui.dataRangeStart.addWaveView(self._ui.yWave)
         self._ui.dataRangeEnd.addWaveView(self._ui.yWave)
+
+        self._ui.interpolationRangeStart.addWaveView(self._ui.interpolationDomain)
+        self._ui.interpolationRangeEnd.addWaveView(self._ui.interpolationDomain)
 
 
     def closeWindow(self):
@@ -78,8 +82,8 @@ class CurveFitting(Module):
         if dataRangeEnd > xLength or dataRangeEnd > yLength:
             dataRangeEnd = min(xLength, yLength) - 1
 
-        xData = xWave.data(dataRangeStart, dataRangeEnd)
-        yData = yWave.data(dataRangeStart, dataRangeEnd)
+        xData = xWave.data(dataRangeStart, dataRangeEnd + 1)
+        yData = yWave.data(dataRangeStart, dataRangeEnd + 1)
 
         # Get output tab
         outputOptions = {}
@@ -107,7 +111,9 @@ class CurveFitting(Module):
             if interpolationRangeEnd > interpolationDomainLength:
                 interpolationRangeEnd  = interpolationDomainLength - 1
 
-            outputOptions['interpolationWaveData'] = interpolationWave.data(interpolationRangeStart, interpolationRangeEnd)
+            outputOptions['interpolationWave'] = interpolationWave
+            outputOptions['interpolationWaveData'] = interpolationWave.data(interpolationRangeStart, interpolationRangeEnd + 1)
+            outputOptions['interpolationRangeStart'] = interpolationRangeStart
 
         # Determine the function and call the appropriate method
         functionName = Util.getWidgetValue(self._ui.function)
@@ -122,12 +128,16 @@ class CurveFitting(Module):
         degree = Util.getWidgetValue(self._ui.polynomialDegree)
         coeffs, residuals, rank, singular_values, rcond = numpy.polyfit(xData, yData, degree, full=True)
 
+        tableWaves = []
+
         if outputOptions['outputCoefficients']:
             # save coefficient labels
             if outputOptions['saveLabels']:
                 saveLabelsDestination = self._app.waves().findGoodWaveName(outputOptions['saveLabelsDestination'])
                 saveLabelsWave = Wave(saveLabelsDestination, 'String')
                 self._app.waves().addWave(saveLabelsWave)
+
+                tableWaves.append(saveLabelsWave)
 
                 for deg in range(degree + 1):
                     saveLabelsWave.insert(0, 'Deg ' + str(deg))
@@ -142,6 +152,9 @@ class CurveFitting(Module):
             coefficientDestination = self._app.waves().findGoodWaveName(outputOptions['coefficientDestination'])
             coefficientWave = Wave(coefficientDestination, 'Decimal')
             self._app.waves().addWave(coefficientWave)
+
+            tableWaves.append(coefficientWave)
+
             coefficientWave.extend(coeffs)
 
             if outputOptions['saveFitParameters']:
@@ -152,11 +165,25 @@ class CurveFitting(Module):
             interpolationDestination = self._app.waves().findGoodWaveName(outputOptions['interpolationDestination'])
             interpolationDestinationWave = Wave(interpolationDestination, 'Decimal')
             self._app.waves().addWave(interpolationDestinationWave)
+            
+            tableWaves.append(outputOptions['interpolationWave'])
+            tableWaves.append(interpolationDestinationWave)
+
+            # Start the wave with as many blanks as necessary in order to get the destination wave
+            # to line up correctly with the domain wave, for easy plotting.
+            interpolationDestinationWave.extend([''] * outputOptions['interpolationRangeStart'])
 
             interpolationDestinationWave.extend(list(numpy.polyval(coeffs, domain)))
 
+        # Create table
+        self.createTable(tableWaves, 'Polynomial Fit')
 
-        # TODO add createTable logic
+    def createTable(self, waves=[], title='Fit'):
+        if len(waves) == 0:
+            return
+
+        self._app.createTable(waves, title)
+
 
 
     def load(self):

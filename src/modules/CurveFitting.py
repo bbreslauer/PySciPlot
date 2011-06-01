@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction
+from PyQt4.QtGui import QWidget, QAction, QTableWidgetItem
 
 import Util, math, numpy, scipy.optimize
 from Wave import Wave
@@ -35,10 +35,15 @@ class CurveFitting(Module):
 
         self.setModels()
         self.setupSpinBoxes()
+        self.setupParameterTableData()
 
         # Connect button signals
         self._ui.doFitButton.clicked.connect(self.doFit)
         self._ui.closeButton.clicked.connect(self.closeWindow)
+        self._ui.function.currentIndexChanged[str].connect(self.saveAndLoadParameterTable)
+        self._ui.function.currentIndexChanged[str].connect(self.connectSlotsOnFunctionChange)
+        
+        self.connectSlotsOnFunctionChange('')
 
     def setModels(self):
         # Set up model and view
@@ -57,14 +62,140 @@ class CurveFitting(Module):
         self._ui.interpolationRangeStart.addWaveView(self._ui.interpolationDomain)
         self._ui.interpolationRangeEnd.addWaveView(self._ui.interpolationDomain)
 
+    def setupParameterTableData(self):
+        self._parameterTableData = {}
+        
+        self._currentFunction = Util.getWidgetValue(self._ui.function)
+        self.loadParameterTable()
 
     def closeWindow(self):
         self._widget.parent().close()
 
+    def connectSlotsOnFunctionChange(self, newFunctionName):
+        """
+        Disconnect slots dependent on which function is chosen.
 
+        If polynomial function is chosen, connect slot to update parameter table
+        on degree change.
+        """
+
+        # Disconnect slots
+        try:
+            self._ui.polynomialDegree.valueChanged[int].disconnect(self.parameterTablePolynomialRows)
+        except:
+            pass
+
+        # Connect polynomial degree change
+        if Util.getWidgetValue(self._ui.function) == 'Polynomial':
+            self._ui.polynomialDegree.valueChanged[int].connect(self.parameterTablePolynomialRows)
+
+
+    # Deal with parameter table
+    def saveAndLoadParameterTable(self, newFunctionName):
+        # These cannot be connected to currentIndexChanged individually
+        # because they need to be called in order.
+        self.saveParameterTable()
+        self.loadParameterTable()
+
+    def saveParameterTable(self):
+        self._parameterTableData[self._currentFunction] = []
+
+        # Save data to a 2-d array mimicking the table.
+        # FIXME only works with text right now. Need to add in support for check boxes
+        # Maybe do this by creating a QTableWidgetItem option in Util.getWidgetValue
+        # and using QTableWidget.cellWidget to get the indiv. cells
+        row = []
+        for rowIndex in range(self._ui.parameterTable.rowCount()):
+            for colIndex in range(self._ui.parameterTable.columnCount()):
+                try:
+                    row.append(str(self._ui.parameterTable.item(rowIndex, colIndex).text()))
+                except AttributeError:
+                    row.append('')
+            self._parameterTableData[self._currentFunction].append(row)
+            row = []
+        
+        # Now update _currentFunction to the function that is currently selected.
+        # If this method was called because the user selected a different function,
+        # then this will be modified. If it was called because the fit curve button
+        # was pressed, then its value will not be changed.
+        self._currentFunction = Util.getWidgetValue(self._ui.function)
+
+    def loadParameterTable(self):
+        # Clear the table, but leave all the column headers
+        for rowIndex in range(self._ui.parameterTable.rowCount()):
+            self._ui.parameterTable.removeRow(0)
+
+        # If there is saved data, use it
+        # FIXME same as in saveParameterTable, needs to accept checkmarks
+        if self._currentFunction in self._parameterTableData:
+            for rowIndex, row in enumerate(self._parameterTableData[self._currentFunction]):
+                self._ui.parameterTable.insertRow(rowIndex)
+                for colIndex, data in enumerate(row):
+                    self._ui.parameterTable.setItem(rowIndex, colIndex, QTableWidgetItem(data))
+        else:
+            # If there is no saved data, create defaults here
+            if self._currentFunction == 'Polynomial':
+                #self.setupParameterTableRows(['p0'])
+                self.parameterTablePolynomialRows()
+            elif self._currentFunction == 'Sinusoid':
+                self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'])
+
+    def parameterTablePolynomialRows(self, *args):
+        """
+        If the polynomial degree the user selected is larger than the number
+        of rows in the parameter table, then add extra rows here. If smaller,
+        then remove rows.
+        """
+
+        degree = Util.getWidgetValue(self._ui.polynomialDegree)
+        rowNames = []
+        for d in range(degree + 1):
+            rowNames.append('p' + str(d))
+
+        self.setupParameterTableRows(rowNames)
+
+    def setupParameterTableRows(self, rowNames=[]):
+        """
+        rowNames should contain all the parameter names required in the table.
+        """
+
+        desiredNumRows = len(rowNames)
+        rowCount = self._ui.parameterTable.rowCount()
+        
+        # Add or remove rows as necessary
+        if desiredNumRows == rowCount:
+            # Correct number of rows. Do nothing.
+            pass 
+        elif desiredNumRows < rowCount:
+            # There are more rows than there should be. Remove some.
+            self._ui.parameterTable.setRowCount(desiredNumRows)
+        else:
+            # There are fewer rows than there should be. Add some.
+            self._ui.parameterTable.setRowCount(desiredNumRows)
+
+            for d in range(rowCount, desiredNumRows):
+                for colIndex in range(1, self._ui.parameterTable.columnCount()):
+                    self._ui.parameterTable.setItem(d, colIndex, QTableWidgetItem())
+        
+        # Set parameter names
+        for rowIndex, name in enumerate(rowNames):
+            self._ui.parameterTable.setItem(rowIndex, 0, QTableWidgetItem(name))
+
+    def parameterInitialValues(self, functionName):
+        if functionName not in self._parameterTableData:
+            return None
+
+        tableData = self._parameterTableData[functionName]
+
+        # Default empty values to 1 so that we don't get trivial divide-by-0 errors
+        # (but more specific checking should be done in the individual fit functions)
+        initialValues = [str(row[1]) or 1 for row in tableData]
+        return map(float, initialValues)
 
     def doFit(self):
-        
+        # save user-defined parameters
+        self.saveParameterTable()
+
         # Get all waves that are selected before doing anything else
         # If any waves are created, as they are in the output tab section,
         # then the wave combo boxes are refreshed, and the previous selection
@@ -200,7 +331,9 @@ class CurveFitting(Module):
         # Need to fail with error message if the leastsq call does not succeed
 
         sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * math.pi + p[3])
-        p0 = [.6, 11.8, .8, -1] # these are specific to the example I am testing, and need to be changed
+        p0 = self.parameterInitialValues('Sinusoid')
+        if p0 is None:
+            p0 = [1, 1, 1, 1]
 
         # Do the fit
         result = self.fitFunctionLeastSquares(sinusoidFunction, p0, xData, yData)
@@ -287,4 +420,5 @@ class CurveFitting(Module):
     def reload(self):
         self.setModels()
         self.setupSpinBoxes()
+        self.setupParameterTableData()
 

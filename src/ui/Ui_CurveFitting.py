@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Wed Jun  1 17:23:10 2011
+# Created: Wed Jun  1 18:32:07 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -213,7 +213,7 @@ class Ui_CurveFitting(object):
         self.function.setItemText(1, QtGui.QApplication.translate("CurveFitting", "Sinusoid", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("CurveFitting", "Parameter", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("CurveFitting", "Initial Value", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Number of Terms", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Polynomial Degree", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * x + p2 * x^2 + ...", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * Cos(2 * pi * x / p2 + p3)", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))

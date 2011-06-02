@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Wed Jun  1 18:32:07 2011
+# Created: Thu Jun  2 00:48:04 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -123,22 +123,19 @@ class Ui_CurveFitting(object):
         self.outputParameters.setCheckable(True)
         self.outputParameters.setObjectName(_fromUtf8("outputParameters"))
         self.formLayout_2 = QtGui.QFormLayout(self.outputParameters)
+        self.formLayout_2.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
         self.formLayout_2.setObjectName(_fromUtf8("formLayout_2"))
         self.label_7 = QtGui.QLabel(self.outputParameters)
         self.label_7.setObjectName(_fromUtf8("label_7"))
         self.formLayout_2.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_7)
+        self.parameterDestination = QtGui.QLineEdit(self.outputParameters)
+        self.parameterDestination.setObjectName(_fromUtf8("parameterDestination"))
+        self.formLayout_2.setWidget(0, QtGui.QFormLayout.FieldRole, self.parameterDestination)
         self.saveLabels = QtGui.QCheckBox(self.outputParameters)
         self.saveLabels.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.saveLabels.setChecked(True)
         self.saveLabels.setObjectName(_fromUtf8("saveLabels"))
         self.formLayout_2.setWidget(1, QtGui.QFormLayout.LabelRole, self.saveLabels)
-        self.saveFitGoodness = QtGui.QCheckBox(self.outputParameters)
-        self.saveFitGoodness.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.saveFitGoodness.setObjectName(_fromUtf8("saveFitGoodness"))
-        self.formLayout_2.setWidget(2, QtGui.QFormLayout.LabelRole, self.saveFitGoodness)
-        self.parameterDestination = QtGui.QLineEdit(self.outputParameters)
-        self.parameterDestination.setObjectName(_fromUtf8("parameterDestination"))
-        self.formLayout_2.setWidget(0, QtGui.QFormLayout.FieldRole, self.parameterDestination)
         self.saveLabelsDestination = QtGui.QLineEdit(self.outputParameters)
         self.saveLabelsDestination.setObjectName(_fromUtf8("saveLabelsDestination"))
         self.formLayout_2.setWidget(1, QtGui.QFormLayout.FieldRole, self.saveLabelsDestination)
@@ -226,7 +223,6 @@ class Ui_CurveFitting(object):
         self.outputParameters.setTitle(QtGui.QApplication.translate("CurveFitting", "Output Parameters?", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("CurveFitting", "Destination Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.saveLabels.setText(QtGui.QApplication.translate("CurveFitting", "Save Labels to Wave", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveFitGoodness.setText(QtGui.QApplication.translate("CurveFitting", "Include goodness of fit", None, QtGui.QApplication.UnicodeUTF8))
         self.outputInterpolation.setTitle(QtGui.QApplication.translate("CurveFitting", "Apply fit to domain?", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("CurveFitting", "Wave to Interpolate Over", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_4.setTitle(QtGui.QApplication.translate("CurveFitting", "Interpolation Range", None, QtGui.QApplication.UnicodeUTF8))

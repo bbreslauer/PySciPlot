@@ -192,6 +192,15 @@ class CurveFitting(Module):
         initialValues = [str(row[1]) or 1 for row in tableData]
         return map(float, initialValues)
 
+    def parameterNames(self, functionName):
+        if functionName not in self._parameterTableData:
+            return None
+
+        tableData = self._parameterTableData[functionName]
+
+        names = [str(row[0]) for row in tableData]
+        return names
+
     def doFit(self):
         # save user-defined parameters
         self.saveParameterTable()
@@ -231,7 +240,6 @@ class CurveFitting(Module):
         outputOptions['outputParameters'] = Util.getWidgetValue(self._ui.outputParameters)
         if outputOptions['outputParameters']:
             outputOptions['saveLabels'] = Util.getWidgetValue(self._ui.saveLabels)
-            outputOptions['saveFitGoodness'] = Util.getWidgetValue(self._ui.saveFitGoodness)
 
             # Create saveLabels wave
             if outputOptions['saveLabels']:
@@ -278,65 +286,47 @@ class CurveFitting(Module):
         elif functionName == 'Sinusoid':
             self.fitSinusoid(xData, yData, outputWaves, outputOptions)
 
-
-
-
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
         degree = Util.getWidgetValue(self._ui.polynomialDegree)
 
-        # Do the polynomial fit
-        coeffs, residuals, rank, singular_values, rcond = numpy.polyfit(xData, yData, degree, full=True)
+        def polynomialFunction(p, x):
+            # If x is a list, then val needs to be a list
+            # If x is a number, then val needs to be a number
+            if isinstance(x, list):
+                val = numpy.array([p[0]] * len(x))
+            else:
+                val = p[0]
 
-        tableWaves = []
+            # Add x, x^2, x^3, etc entries
+            for d in range(1, degree + 1):
+                val += numpy.multiply(p[d], numpy.power(x, d))
+            return val
 
-        # Deal with the parameter-related waves
-        if outputOptions['outputParameters']:
-            # save parameter labels
-            if outputOptions['saveLabels']:
-                tableWaves.append(outputWaves['saveLabelsWave'])
+        parameterNames = self.parameterNames('Polynomial')
+        initialValues = self.parameterInitialValues('Polynomial')
+        if initialValues is None:
+            initialValues = [1] * degree
 
-                for deg in range(degree + 1):
-                    outputWaves['saveLabelsWave'].insert(0, 'Deg ' + str(deg))
-
-                if outputOptions['saveFitGoodness']:
-                    outputWaves['saveLabelsWave'].push('Residuals')
-                    outputWaves['saveLabelsWave'].push('Rank')
-                    outputWaves['saveLabelsWave'].extend(['Singular Values'] * (deg + 1))
-                    outputWaves['saveLabelsWave'].push('RCond')
-
-            tableWaves.append(outputWaves['parameterWave'])
-
-            # save parameters to a wave
-            outputWaves['parameterWave'].extend(coeffs)
-
-            if outputOptions['saveFitGoodness']:
-                outputWaves['parameterWave'].extend([list(residuals), rank, list(singular_values), rcond])
-
-        # Do the interpolation
-        if outputOptions['outputInterpolation']:
-            domain = outputOptions['interpolationDomainWaveData']
-            
-            outputWaves['interpolationDestinationWave'].extend(list(numpy.polyval(coeffs, domain)))
-
-            tableWaves.append(outputWaves['interpolationDomainWave'])
-            tableWaves.append(outputWaves['interpolationDestinationWave'])
-
-        # Create table
-        self.createTable(tableWaves, 'Polynomial Fit')
+        self.fitFunction(polynomialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Polynomial Fit')
 
     def fitSinusoid(self, xData, yData, outputWaves={}, outputOptions={}):
+        sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * math.pi + p[3])
+        
+        parameterNames = self.parameterNames('Sinusoid')
+        initialValues = self.parameterInitialValues('Sinusoid')
+        if initialValues is None:
+            initialValues = [1, 1, 1, 1]
+
+        self.fitFunction(sinusoidFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Sinusoid Fit')
+
+    def fitFunction(self, function, parameterNames, initialValues, xData, yData, outputWaves={}, outputOptions={}, tableName='Fit'):
         # Can also include initial guesses for the parameters, as well as sigma's for weighting of the ydata
 
         # Need to fail with error message if the leastsq call does not succeed
 
-        sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * math.pi + p[3])
-        p0 = self.parameterInitialValues('Sinusoid')
-        if p0 is None:
-            p0 = [1, 1, 1, 1]
-
         # Do the fit
-        result = self.fitFunctionLeastSquares(sinusoidFunction, p0, xData, yData)
+        result = self.fitFunctionLeastSquares(function, initialValues, xData, yData)
         parameters = result[0]
 
         tableWaves = []
@@ -347,7 +337,7 @@ class CurveFitting(Module):
             if outputOptions['saveLabels']:
                 tableWaves.append(outputWaves['saveLabelsWave'])
 
-                outputWaves['saveLabelsWave'].extend(['p0', 'p1', 'p2', 'p3'])
+                outputWaves['saveLabelsWave'].extend(parameterNames)
 
             tableWaves.append(outputWaves['parameterWave'])
 
@@ -358,7 +348,7 @@ class CurveFitting(Module):
         if outputOptions['outputInterpolation']:
             domain = outputOptions['interpolationDomainWaveData']
             
-            determinedFunction = lambda x: sinusoidFunction(parameters, x)
+            determinedFunction = lambda x: function(parameters, x)
             for val in domain:
                 outputWaves['interpolationDestinationWave'].push(determinedFunction(val))
 
@@ -366,7 +356,8 @@ class CurveFitting(Module):
             tableWaves.append(outputWaves['interpolationDestinationWave'])
 
         # Create table
-        self.createTable(tableWaves, 'Sinusoid Fit')
+        if outputOptions['createTable']:
+            self.createTable(tableWaves, tableName)
 
     def fitFunctionLeastSquares(self, func, guess, xData, yData):
         """

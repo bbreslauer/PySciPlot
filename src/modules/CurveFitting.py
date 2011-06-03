@@ -15,6 +15,7 @@
 
 
 from PyQt4.QtGui import QWidget, QAction, QTableWidgetItem
+from PyQt4.QtCore import Qt
 
 import Util, math, numpy, scipy.optimize
 from Wave import Wave
@@ -144,8 +145,10 @@ class CurveFitting(Module):
                 self.parameterTablePolynomialRows()
             elif self._currentFunction == 'Sinusoid':
                 self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'])
-            elif self._currentFunction == 'PowerLaw':
-                self.setupParameterTableRows(['a', 'k'])
+            elif self._currentFunction == 'Power Law':
+                self.setupParameterTableRows(['y0', 'a', 'k'])
+            elif self._currentFunction == 'Exponential':
+                self.setupParameterTableRows(['y0', 'A', 'b'])
 
     def parameterTablePolynomialRows(self, *args):
         """
@@ -186,7 +189,9 @@ class CurveFitting(Module):
         
         # Set parameter names
         for rowIndex, name in enumerate(rowNames):
-            self._ui.parameterTable.setItem(rowIndex, 0, QTableWidgetItem(name))
+            item = QTableWidgetItem(name)
+            item.setFlags(Qt.ItemIsEnabled)
+            self._ui.parameterTable.setItem(rowIndex, 0, item)
 
     def parameterInitialValues(self, functionName):
         if functionName not in self._parameterTableData:
@@ -292,8 +297,10 @@ class CurveFitting(Module):
             self.fitPolynomial(xData, yData, outputWaves, outputOptions)
         elif functionName == 'Sinusoid':
             self.fitSinusoid(xData, yData, outputWaves, outputOptions)
-        elif functionName == 'PowerLaw':
+        elif functionName == 'Power Law':
             self.fitPowerLaw(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'Exponential':
+            self.fitExponential(xData, yData, outputWaves, outputOptions)
 
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
@@ -320,7 +327,7 @@ class CurveFitting(Module):
         self.fitFunction(polynomialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Polynomial Fit')
 
     def fitSinusoid(self, xData, yData, outputWaves={}, outputOptions={}):
-        sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * math.pi + p[3])
+        sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * numpy.pi + p[3])
         
         parameterNames = self.parameterNames('Sinusoid')
         initialValues = self.parameterInitialValues('Sinusoid')
@@ -330,14 +337,25 @@ class CurveFitting(Module):
         self.fitFunction(sinusoidFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Sinusoid Fit')
 
     def fitPowerLaw(self, xData, yData, outputWaves={}, outputOptions={}):
-        powerLawFunction = lambda p, x: numpy.multiply(p[0], numpy.power(x, p[1]))
+        powerLawFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], numpy.power(x, p[2])))
 
-        parameterNames = self.parameterNames('PowerLaw')
-        initialValues = self.parameterInitialValues('PowerLaw')
+        parameterNames = self.parameterNames('Power Law')
+        initialValues = self.parameterInitialValues('Power Law')
         if initialValues is None:
-            initialValues = [1, 1]
+            initialValues = [0, 1, 1]
 
         self.fitFunction(powerLawFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Power Law Fit')
+
+
+    def fitExponential(self, xData, yData, outputWaves={}, outputOptions={}):
+        exponentialFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], numpy.power(numpy.e, numpy.multiply(p[2], x))))
+
+        parameterNames = self.parameterNames('Exponential')
+        initialValues = self.parameterInitialValues('Exponential')
+        if initialValues is None:
+            initialValues = [0, 1, 1]
+
+        self.fitFunction(exponentialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Exponential Fit')
 
 
 

@@ -48,7 +48,12 @@
          </item>
          <item>
           <property name="text">
-           <string>PowerLaw</string>
+           <string>Power Law</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Exponential</string>
           </property>
          </item>
         </widget>
@@ -98,6 +103,7 @@
          </widget>
          <widget class="QWidget" name="page_2"/>
          <widget class="QWidget" name="page_5"/>
+         <widget class="QWidget" name="page_7"/>
         </widget>
        </item>
        <item row="2" column="0" colspan="2">
@@ -146,7 +152,22 @@
             </rect>
            </property>
            <property name="text">
-            <string>y = a * x^k</string>
+            <string>y = y0 + a * x^k</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_8">
+          <widget class="QLabel" name="label_15">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>30</y>
+             <width>211</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y = y0 + A * e^(b * x)</string>
            </property>
           </widget>
          </widget>

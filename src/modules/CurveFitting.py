@@ -18,7 +18,7 @@ from PyQt4.QtGui import QWidget, QAction, QTableWidgetItem
 from PyQt4.QtCore import Qt
 
 import Util, math, numpy, scipy.optimize
-from numpy import e
+from numpy import pi, e
 from Wave import Wave
 from Module import Module
 from gui.SubWindows import SubWindow
@@ -152,6 +152,8 @@ class CurveFitting(Module):
                 self.setupParameterTableRows(['y0', 'A', 'b'], [0, 1, 1])
             elif self._currentFunction == 'Logarithm':
                 self.setupParameterTableRows(['y0', 'a', 'base'], [0, 1, 10])
+            elif self._currentFunction == 'Gaussian':
+                self.setupParameterTableRows(['amp', 'mean', 'width'], [1, 0, 1])
 
     def parameterTablePolynomialRows(self, *args):
         """
@@ -210,7 +212,7 @@ class CurveFitting(Module):
 
         # Default non-number values to 1 so that we don't get trivial divide-by-0 errors
         # (but more specific checking should be done in the individual fit functions)
-        initialValues = [float(row) if Util.isNumber(x) else 1 for row in tableData]
+        initialValues = [float(row[1]) if Util.isNumber(row[1]) else 1 for row in tableData]
         return initialValues
 
     def parameterNames(self, functionName):
@@ -312,6 +314,8 @@ class CurveFitting(Module):
             self.fitExponential(xData, yData, outputWaves, outputOptions)
         elif functionName == 'Logarithm':
             self.fitLogarithm(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'Gaussian':
+            self.fitGaussian(xData, yData, outputWaves, outputOptions)
 
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
@@ -378,6 +382,16 @@ class CurveFitting(Module):
             initialValues = [0, 1, 10]
 
         self.fitFunction(logarithmFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Logarithm Fit')
+
+    def fitGaussian(self, xData, yData, outputWaves={}, outputOptions={}):
+        gaussianFunction = lambda p, x: numpy.multiply(p[0], numpy.power(numpy.e, numpy.divide(-1 * numpy.power((x - p[1]), 2), 2 * numpy.power(p[2], 2))))
+
+        parameterNames = self.parameterNames('Gaussian')
+        initialValues = self.parameterInitialValues('Gaussian')
+        if initialValues is None:
+            initialValues = [1, 0, 1]
+
+        self.fitFunction(gaussianFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Gaussian Fit')
 
 
 

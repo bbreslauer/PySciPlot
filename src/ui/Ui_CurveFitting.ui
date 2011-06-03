@@ -61,6 +61,11 @@
            <string>Logarithm</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Gaussian</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="3" column="0" colspan="2">
@@ -110,6 +115,7 @@
          <widget class="QWidget" name="page_5"/>
          <widget class="QWidget" name="page_7"/>
          <widget class="QWidget" name="page_9"/>
+         <widget class="QWidget" name="page_11"/>
         </widget>
        </item>
        <item row="2" column="0" colspan="2">
@@ -189,6 +195,21 @@
            </property>
            <property name="text">
             <string>y = y0 + a * log(base, x)</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_12">
+          <widget class="QLabel" name="label_17">
+           <property name="geometry">
+            <rect>
+             <x>70</x>
+             <y>30</y>
+             <width>391</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y = amp * e^(-(x - mean)^2/(2 * width^2))</string>
            </property>
           </widget>
          </widget>

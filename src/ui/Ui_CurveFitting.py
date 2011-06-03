@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Fri Jun  3 18:20:22 2011
+# Created: Fri Jun  3 18:53:21 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,6 +31,7 @@ class Ui_CurveFitting(object):
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.function = QtGui.QComboBox(self.tabFunction)
         self.function.setObjectName(_fromUtf8("function"))
+        self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
@@ -74,6 +75,9 @@ class Ui_CurveFitting(object):
         self.page_9 = QtGui.QWidget()
         self.page_9.setObjectName(_fromUtf8("page_9"))
         self.functionStackedWidget.addWidget(self.page_9)
+        self.page_11 = QtGui.QWidget()
+        self.page_11.setObjectName(_fromUtf8("page_11"))
+        self.functionStackedWidget.addWidget(self.page_11)
         self.gridLayout.addWidget(self.functionStackedWidget, 1, 0, 1, 2)
         self.equationStackedWidget = QtGui.QStackedWidget(self.tabFunction)
         self.equationStackedWidget.setObjectName(_fromUtf8("equationStackedWidget"))
@@ -107,6 +111,12 @@ class Ui_CurveFitting(object):
         self.label_16.setGeometry(QtCore.QRect(110, 30, 261, 31))
         self.label_16.setObjectName(_fromUtf8("label_16"))
         self.equationStackedWidget.addWidget(self.page_10)
+        self.page_12 = QtGui.QWidget()
+        self.page_12.setObjectName(_fromUtf8("page_12"))
+        self.label_17 = QtGui.QLabel(self.page_12)
+        self.label_17.setGeometry(QtCore.QRect(70, 30, 391, 41))
+        self.label_17.setObjectName(_fromUtf8("label_17"))
+        self.equationStackedWidget.addWidget(self.page_12)
         self.gridLayout.addWidget(self.equationStackedWidget, 2, 0, 1, 2)
         self.tabWidget.addTab(self.tabFunction, _fromUtf8(""))
         self.tabData = QtGui.QWidget()
@@ -241,6 +251,7 @@ class Ui_CurveFitting(object):
         self.function.setItemText(2, QtGui.QApplication.translate("CurveFitting", "Power Law", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(3, QtGui.QApplication.translate("CurveFitting", "Exponential", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(4, QtGui.QApplication.translate("CurveFitting", "Logarithm", None, QtGui.QApplication.UnicodeUTF8))
+        self.function.setItemText(5, QtGui.QApplication.translate("CurveFitting", "Gaussian", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("CurveFitting", "Parameter", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("CurveFitting", "Initial Value", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Polynomial Degree", None, QtGui.QApplication.UnicodeUTF8))
@@ -249,6 +260,7 @@ class Ui_CurveFitting(object):
         self.label_14.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * x^k", None, QtGui.QApplication.UnicodeUTF8))
         self.label_15.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + A * e^(b * x)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_16.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * log(base, x)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_17.setText(QtGui.QApplication.translate("CurveFitting", "y = amp * e^(-(x - mean)^2/(2 * width^2))", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("CurveFitting", "X Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CurveFitting", "Y Wave", None, QtGui.QApplication.UnicodeUTF8))

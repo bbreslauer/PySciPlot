@@ -66,6 +66,11 @@
            <string>Gaussian</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Lorentzian</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="3" column="0" colspan="2">
@@ -116,6 +121,7 @@
          <widget class="QWidget" name="page_7"/>
          <widget class="QWidget" name="page_9"/>
          <widget class="QWidget" name="page_11"/>
+         <widget class="QWidget" name="page_14"/>
         </widget>
        </item>
        <item row="2" column="0" colspan="2">
@@ -210,6 +216,21 @@
            </property>
            <property name="text">
             <string>y = amp * e^(-(x - mean)^2/(2 * width^2))</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_13">
+          <widget class="QLabel" name="label_18">
+           <property name="geometry">
+            <rect>
+             <x>110</x>
+             <y>20</y>
+             <width>291</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y = amp * hwhm / ((x - mean)^2 + hwhm^2)</string>
            </property>
           </widget>
          </widget>

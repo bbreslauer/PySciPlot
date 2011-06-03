@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Fri Jun  3 18:53:21 2011
+# Created: Fri Jun  3 19:08:05 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,6 +31,7 @@ class Ui_CurveFitting(object):
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.function = QtGui.QComboBox(self.tabFunction)
         self.function.setObjectName(_fromUtf8("function"))
+        self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
@@ -78,6 +79,9 @@ class Ui_CurveFitting(object):
         self.page_11 = QtGui.QWidget()
         self.page_11.setObjectName(_fromUtf8("page_11"))
         self.functionStackedWidget.addWidget(self.page_11)
+        self.page_14 = QtGui.QWidget()
+        self.page_14.setObjectName(_fromUtf8("page_14"))
+        self.functionStackedWidget.addWidget(self.page_14)
         self.gridLayout.addWidget(self.functionStackedWidget, 1, 0, 1, 2)
         self.equationStackedWidget = QtGui.QStackedWidget(self.tabFunction)
         self.equationStackedWidget.setObjectName(_fromUtf8("equationStackedWidget"))
@@ -117,6 +121,12 @@ class Ui_CurveFitting(object):
         self.label_17.setGeometry(QtCore.QRect(70, 30, 391, 41))
         self.label_17.setObjectName(_fromUtf8("label_17"))
         self.equationStackedWidget.addWidget(self.page_12)
+        self.page_13 = QtGui.QWidget()
+        self.page_13.setObjectName(_fromUtf8("page_13"))
+        self.label_18 = QtGui.QLabel(self.page_13)
+        self.label_18.setGeometry(QtCore.QRect(110, 20, 291, 41))
+        self.label_18.setObjectName(_fromUtf8("label_18"))
+        self.equationStackedWidget.addWidget(self.page_13)
         self.gridLayout.addWidget(self.equationStackedWidget, 2, 0, 1, 2)
         self.tabWidget.addTab(self.tabFunction, _fromUtf8(""))
         self.tabData = QtGui.QWidget()
@@ -252,6 +262,7 @@ class Ui_CurveFitting(object):
         self.function.setItemText(3, QtGui.QApplication.translate("CurveFitting", "Exponential", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(4, QtGui.QApplication.translate("CurveFitting", "Logarithm", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(5, QtGui.QApplication.translate("CurveFitting", "Gaussian", None, QtGui.QApplication.UnicodeUTF8))
+        self.function.setItemText(6, QtGui.QApplication.translate("CurveFitting", "Lorentzian", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("CurveFitting", "Parameter", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("CurveFitting", "Initial Value", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Polynomial Degree", None, QtGui.QApplication.UnicodeUTF8))
@@ -261,6 +272,7 @@ class Ui_CurveFitting(object):
         self.label_15.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + A * e^(b * x)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_16.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * log(base, x)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_17.setText(QtGui.QApplication.translate("CurveFitting", "y = amp * e^(-(x - mean)^2/(2 * width^2))", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_18.setText(QtGui.QApplication.translate("CurveFitting", "y = amp * hwhm / ((x - mean)^2 + hwhm^2)", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("CurveFitting", "X Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CurveFitting", "Y Wave", None, QtGui.QApplication.UnicodeUTF8))

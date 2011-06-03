@@ -154,6 +154,8 @@ class CurveFitting(Module):
                 self.setupParameterTableRows(['y0', 'a', 'base'], [0, 1, 10])
             elif self._currentFunction == 'Gaussian':
                 self.setupParameterTableRows(['amp', 'mean', 'width'], [1, 0, 1])
+            elif self._currentFunction == 'Lorentzian':
+                self.setupParameterTableRows(['amp', 'mean', 'hwhm'], [1, 0, 1])
 
     def parameterTablePolynomialRows(self, *args):
         """
@@ -316,6 +318,8 @@ class CurveFitting(Module):
             self.fitLogarithm(xData, yData, outputWaves, outputOptions)
         elif functionName == 'Gaussian':
             self.fitGaussian(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'Lorentzian':
+            self.fitLorentzian(xData, yData, outputWaves, outputOptions)
 
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
@@ -384,7 +388,7 @@ class CurveFitting(Module):
         self.fitFunction(logarithmFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Logarithm Fit')
 
     def fitGaussian(self, xData, yData, outputWaves={}, outputOptions={}):
-        gaussianFunction = lambda p, x: numpy.multiply(p[0], numpy.power(numpy.e, numpy.divide(-1 * numpy.power((x - p[1]), 2), 2 * numpy.power(p[2], 2))))
+        gaussianFunction = lambda p, x: numpy.multiply(p[0], numpy.power(numpy.e, numpy.divide(-1 * numpy.power((numpy.subtract(x, p[1])), 2), 2 * numpy.power(p[2], 2))))
 
         parameterNames = self.parameterNames('Gaussian')
         initialValues = self.parameterInitialValues('Gaussian')
@@ -392,6 +396,16 @@ class CurveFitting(Module):
             initialValues = [1, 0, 1]
 
         self.fitFunction(gaussianFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Gaussian Fit')
+
+    def fitLorentzian(self, xData, yData, outputWaves={}, outputOptions={}):
+        lorentzianFunction = lambda p, x: numpy.divide(numpy.multiply(p[0], p[2]), numpy.add(numpy.power(numpy.subtract(x, p[1]), 2), numpy.power(p[2], 2)))
+
+        parameterNames = self.parameterNames('Lorentzian')
+        initialValues = self.parameterInitialValues('Lorentzian')
+        if initialValues is None:
+            initialValues = [1, 0, 1]
+
+        self.fitFunction(lorentzianFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Lorentzian Fit')
 
 
 

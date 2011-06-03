@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_ManageWavesWidget.ui'
 #
-# Created: Sat May 28 00:16:58 2011
+# Created: Fri Jun  3 00:20:59 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -222,6 +222,7 @@ class Ui_ManageWavesWidget(object):
 
         self.retranslateUi(ManageWavesWidget)
         self.tabWidget.setCurrentIndex(0)
+        self.createWave_dataType.setCurrentIndex(1)
         self.waveDataSelectionList.setCurrentRow(-1)
         self.waveDataStack.setCurrentIndex(2)
         QtCore.QObject.connect(self.waveDataSelectionList, QtCore.SIGNAL(_fromUtf8("currentRowChanged(int)")), self.waveDataStack.setCurrentIndex)

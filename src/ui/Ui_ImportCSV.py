@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_ImportCSV.ui'
 #
-# Created: Sat May 28 00:16:57 2011
+# Created: Fri Jun  3 00:21:04 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -147,6 +147,7 @@ class Ui_ImportCSV(object):
         self.verticalLayout.setStretch(1, 1)
 
         self.retranslateUi(ImportCSV)
+        self.defaultDataType.setCurrentIndex(1)
         QtCore.QObject.connect(self.otherRadio, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.otherDelimiter.setEnabled)
         QtCore.QObject.connect(self.useWaveNamePrefix, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.waveNamePrefix.setEnabled)
         ImportCSV.setTabOrder(self.csvFileName, self.csvFileNameButton)

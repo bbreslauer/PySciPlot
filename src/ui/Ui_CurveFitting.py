@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Fri Jun  3 17:16:10 2011
+# Created: Fri Jun  3 18:20:22 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,6 +31,7 @@ class Ui_CurveFitting(object):
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.function = QtGui.QComboBox(self.tabFunction)
         self.function.setObjectName(_fromUtf8("function"))
+        self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
         self.function.addItem(_fromUtf8(""))
@@ -70,6 +71,9 @@ class Ui_CurveFitting(object):
         self.page_7 = QtGui.QWidget()
         self.page_7.setObjectName(_fromUtf8("page_7"))
         self.functionStackedWidget.addWidget(self.page_7)
+        self.page_9 = QtGui.QWidget()
+        self.page_9.setObjectName(_fromUtf8("page_9"))
+        self.functionStackedWidget.addWidget(self.page_9)
         self.gridLayout.addWidget(self.functionStackedWidget, 1, 0, 1, 2)
         self.equationStackedWidget = QtGui.QStackedWidget(self.tabFunction)
         self.equationStackedWidget.setObjectName(_fromUtf8("equationStackedWidget"))
@@ -94,9 +98,15 @@ class Ui_CurveFitting(object):
         self.page_8 = QtGui.QWidget()
         self.page_8.setObjectName(_fromUtf8("page_8"))
         self.label_15 = QtGui.QLabel(self.page_8)
-        self.label_15.setGeometry(QtCore.QRect(160, 30, 111, 16))
+        self.label_15.setGeometry(QtCore.QRect(160, 30, 211, 16))
         self.label_15.setObjectName(_fromUtf8("label_15"))
         self.equationStackedWidget.addWidget(self.page_8)
+        self.page_10 = QtGui.QWidget()
+        self.page_10.setObjectName(_fromUtf8("page_10"))
+        self.label_16 = QtGui.QLabel(self.page_10)
+        self.label_16.setGeometry(QtCore.QRect(110, 30, 261, 31))
+        self.label_16.setObjectName(_fromUtf8("label_16"))
+        self.equationStackedWidget.addWidget(self.page_10)
         self.gridLayout.addWidget(self.equationStackedWidget, 2, 0, 1, 2)
         self.tabWidget.addTab(self.tabFunction, _fromUtf8(""))
         self.tabData = QtGui.QWidget()
@@ -230,13 +240,15 @@ class Ui_CurveFitting(object):
         self.function.setItemText(1, QtGui.QApplication.translate("CurveFitting", "Sinusoid", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(2, QtGui.QApplication.translate("CurveFitting", "Power Law", None, QtGui.QApplication.UnicodeUTF8))
         self.function.setItemText(3, QtGui.QApplication.translate("CurveFitting", "Exponential", None, QtGui.QApplication.UnicodeUTF8))
+        self.function.setItemText(4, QtGui.QApplication.translate("CurveFitting", "Logarithm", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("CurveFitting", "Parameter", None, QtGui.QApplication.UnicodeUTF8))
         self.parameterTable.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("CurveFitting", "Initial Value", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("CurveFitting", "Polynomial Degree", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * x + p2 * x^2 + ...", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("CurveFitting", "y = p0 + p1 * Cos(2 * pi * x / p2 + p3)", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_14.setText(QtGui.QApplication.translate("CurveFitting", "y = a * x^k", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_15.setText(QtGui.QApplication.translate("CurveFitting", "y = A * e^(b * x)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_14.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * x^k", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_15.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + A * e^(b * x)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_16.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * log(base, x)", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("CurveFitting", "X Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CurveFitting", "Y Wave", None, QtGui.QApplication.UnicodeUTF8))

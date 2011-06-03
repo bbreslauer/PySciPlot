@@ -18,6 +18,7 @@ from PyQt4.QtGui import QWidget, QAction, QTableWidgetItem
 from PyQt4.QtCore import Qt
 
 import Util, math, numpy, scipy.optimize
+from numpy import e
 from Wave import Wave
 from Module import Module
 from gui.SubWindows import SubWindow
@@ -144,11 +145,13 @@ class CurveFitting(Module):
             if self._currentFunction == 'Polynomial':
                 self.parameterTablePolynomialRows()
             elif self._currentFunction == 'Sinusoid':
-                self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'])
+                self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'], [1, 1, 1, 1])
             elif self._currentFunction == 'Power Law':
-                self.setupParameterTableRows(['y0', 'a', 'k'])
+                self.setupParameterTableRows(['y0', 'a', 'k'], [0, 1, 1])
             elif self._currentFunction == 'Exponential':
-                self.setupParameterTableRows(['y0', 'A', 'b'])
+                self.setupParameterTableRows(['y0', 'A', 'b'], [0, 1, 1])
+            elif self._currentFunction == 'Logarithm':
+                self.setupParameterTableRows(['y0', 'a', 'base'], [0, 1, 10])
 
     def parameterTablePolynomialRows(self, *args):
         """
@@ -159,12 +162,14 @@ class CurveFitting(Module):
 
         degree = Util.getWidgetValue(self._ui.polynomialDegree)
         rowNames = []
+        rowInitialValues = []
         for d in range(degree + 1):
             rowNames.append('p' + str(d))
+            rowInitialValues.append(1)
 
-        self.setupParameterTableRows(rowNames)
+        self.setupParameterTableRows(rowNames, rowInitialValues)
 
-    def setupParameterTableRows(self, rowNames=[]):
+    def setupParameterTableRows(self, rowNames=[], rowInitialValues=[]):
         """
         rowNames should contain all the parameter names required in the table.
         """
@@ -193,16 +198,20 @@ class CurveFitting(Module):
             item.setFlags(Qt.ItemIsEnabled)
             self._ui.parameterTable.setItem(rowIndex, 0, item)
 
+        # Set parameter initial values
+        for rowIndex in range(rowCount, desiredNumRows):
+            self._ui.parameterTable.item(rowIndex, 1).setText(str(rowInitialValues[rowIndex]))
+
     def parameterInitialValues(self, functionName):
         if functionName not in self._parameterTableData:
             return None
 
         tableData = self._parameterTableData[functionName]
 
-        # Default empty values to 1 so that we don't get trivial divide-by-0 errors
+        # Default non-number values to 1 so that we don't get trivial divide-by-0 errors
         # (but more specific checking should be done in the individual fit functions)
-        initialValues = [str(row[1]) or 1 for row in tableData]
-        return map(float, initialValues)
+        initialValues = [float(row) if Util.isNumber(x) else 1 for row in tableData]
+        return initialValues
 
     def parameterNames(self, functionName):
         if functionName not in self._parameterTableData:
@@ -301,6 +310,8 @@ class CurveFitting(Module):
             self.fitPowerLaw(xData, yData, outputWaves, outputOptions)
         elif functionName == 'Exponential':
             self.fitExponential(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'Logarithm':
+            self.fitLogarithm(xData, yData, outputWaves, outputOptions)
 
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
@@ -346,7 +357,6 @@ class CurveFitting(Module):
 
         self.fitFunction(powerLawFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Power Law Fit')
 
-
     def fitExponential(self, xData, yData, outputWaves={}, outputOptions={}):
         exponentialFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], numpy.power(numpy.e, numpy.multiply(p[2], x))))
 
@@ -357,6 +367,17 @@ class CurveFitting(Module):
 
         self.fitFunction(exponentialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Exponential Fit')
 
+    def fitLogarithm(self, xData, yData, outputWaves={}, outputOptions={}):
+        # There is no numpy log function where you can specify a custom base, so we'll define one
+        customBaseLog = lambda base, x: numpy.divide(numpy.log(x), numpy.log(base))
+        logarithmFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], customBaseLog(p[2], x)))
+
+        parameterNames = self.parameterNames('Logarithm')
+        initialValues = self.parameterInitialValues('Logarithm')
+        if initialValues is None:
+            initialValues = [0, 1, 10]
+
+        self.fitFunction(logarithmFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Logarithm Fit')
 
 
 

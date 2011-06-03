@@ -25,6 +25,12 @@ from ui.Ui_CurveFitting import Ui_CurveFitting
 class CurveFitting(Module):
     """Module to fit waves to a function."""
 
+    # To add new fitting functions, do the following:
+    # 1) Edit GUI
+    # 2) modify loadParameterTable, where it creates defaults
+    # 3) Create a fit[Function] method to do the fitting
+    # 4) Call fit[Function] from doFit
+
     def __init__(self):
         Module.__init__(self)
 
@@ -135,10 +141,11 @@ class CurveFitting(Module):
         else:
             # If there is no saved data, create defaults here
             if self._currentFunction == 'Polynomial':
-                #self.setupParameterTableRows(['p0'])
                 self.parameterTablePolynomialRows()
             elif self._currentFunction == 'Sinusoid':
                 self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'])
+            elif self._currentFunction == 'PowerLaw':
+                self.setupParameterTableRows(['a', 'k'])
 
     def parameterTablePolynomialRows(self, *args):
         """
@@ -285,6 +292,8 @@ class CurveFitting(Module):
             self.fitPolynomial(xData, yData, outputWaves, outputOptions)
         elif functionName == 'Sinusoid':
             self.fitSinusoid(xData, yData, outputWaves, outputOptions)
+        elif functionName == 'PowerLaw':
+            self.fitPowerLaw(xData, yData, outputWaves, outputOptions)
 
     def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
@@ -319,6 +328,19 @@ class CurveFitting(Module):
             initialValues = [1, 1, 1, 1]
 
         self.fitFunction(sinusoidFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Sinusoid Fit')
+
+    def fitPowerLaw(self, xData, yData, outputWaves={}, outputOptions={}):
+        powerLawFunction = lambda p, x: numpy.multiply(p[0], numpy.power(x, p[1]))
+
+        parameterNames = self.parameterNames('PowerLaw')
+        initialValues = self.parameterInitialValues('PowerLaw')
+        if initialValues is None:
+            initialValues = [1, 1]
+
+        self.fitFunction(powerLawFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Power Law Fit')
+
+
+
 
     def fitFunction(self, function, parameterNames, initialValues, xData, yData, outputWaves={}, outputOptions={}, tableName='Fit'):
         # Can also include initial guesses for the parameters, as well as sigma's for weighting of the ydata

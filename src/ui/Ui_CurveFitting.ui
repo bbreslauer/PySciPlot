@@ -46,6 +46,11 @@
            <string>Sinusoid</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>PowerLaw</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="3" column="0" colspan="2">
@@ -92,6 +97,7 @@
           </layout>
          </widget>
          <widget class="QWidget" name="page_2"/>
+         <widget class="QWidget" name="page_5"/>
         </widget>
        </item>
        <item row="2" column="0" colspan="2">
@@ -126,6 +132,21 @@
            </property>
            <property name="text">
             <string>y = p0 + p1 * Cos(2 * pi * x / p2 + p3)</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_6">
+          <widget class="QLabel" name="label_14">
+           <property name="geometry">
+            <rect>
+             <x>170</x>
+             <y>30</y>
+             <width>221</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y = a * x^k</string>
            </property>
           </widget>
          </widget>

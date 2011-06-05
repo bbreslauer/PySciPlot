@@ -29,9 +29,50 @@ class CurveFitting(Module):
 
     # To add new fitting functions, do the following:
     # 1) Edit GUI
-    # 2) modify loadParameterTable, where it creates defaults
+    # 2) Modify _parameterTableDefaults
     # 3) Create a fit[Function] method to do the fitting
     # 4) Call fit[Function] from doFit
+
+    # Default values for parameter table
+    # Each dict entry is a list of lists. The inner list contains a row of values.
+    _parameterTableDefaults = {
+            'Polynomial': [
+                ['p0', 1],
+                ['p1', 1],
+                ['p2', 1],
+                ],
+            'Sinusoid': [
+                ['p0', 1],
+                ['p1', 1],
+                ['p2', 1],
+                ['p3', 1],
+                ],
+            'Power Law': [
+                ['y0', 0],
+                ['a', 1],
+                ['k', 1],
+                ],
+            'Exponential': [
+                ['y0', 0],
+                ['A', 1],
+                ['b', 1],
+                ],
+            'Logarithm': [
+                ['y0', 0],
+                ['a', 1],
+                ['base', 10],
+                ],
+            'Gaussian': [
+                ['amp', 1],
+                ['mean', 0],
+                ['width', 1],
+                ],
+            'Lorentzian': [
+                ['amp', 1],
+                ['mean', 0],
+                ['hwhm', 1],
+                ],
+            }
 
     def __init__(self):
         Module.__init__(self)
@@ -48,8 +89,10 @@ class CurveFitting(Module):
         # Connect button signals
         self._ui.doFitButton.clicked.connect(self.doFit)
         self._ui.closeButton.clicked.connect(self.closeWindow)
-        self._ui.function.currentIndexChanged[str].connect(self.saveAndLoadParameterTable)
+        self._ui.function.currentIndexChanged[str].connect(self.changeFunction)
         self._ui.function.currentIndexChanged[str].connect(self.connectSlotsOnFunctionChange)
+        self._ui.initialValuesWave.activated[str].connect(self.changeInitialValuesWave)
+        self._ui.useInitialValuesWave.toggled[bool].connect(self.changeInitialValuesWaveFromCheckbox)
         
         self.connectSlotsOnFunctionChange('')
 
@@ -58,6 +101,7 @@ class CurveFitting(Module):
         self._allWavesListModel = self._app.model('appWaves')
         self._ui.xWave.setModel(self._allWavesListModel)
         self._ui.yWave.setModel(self._allWavesListModel)
+        self._ui.initialValuesWave.setModel(self._allWavesListModel)
         self._ui.interpolationDomain.setModel(self._allWavesListModel)
 
     def setupSpinBoxes(self):
@@ -72,10 +116,9 @@ class CurveFitting(Module):
 
     def setupParameterTableData(self):
         self._parameterTableData = {}
-        
-        self._currentFunction = Util.getWidgetValue(self._ui.function)
-        self.loadParameterTable()
-
+        self._currentFunction = None
+        self.changeFunction('')
+    
     def closeWindow(self):
         self._widget.parent().close()
 
@@ -89,29 +132,179 @@ class CurveFitting(Module):
 
         # Disconnect slots
         try:
-            self._ui.polynomialDegree.valueChanged[int].disconnect(self.parameterTablePolynomialRows)
+            self._ui.polynomialDegree.valueChanged[int].disconnect(self.changePolynomialDegree)
         except:
             pass
 
         # Connect polynomial degree change
         if Util.getWidgetValue(self._ui.function) == 'Polynomial':
-            self._ui.polynomialDegree.valueChanged[int].connect(self.parameterTablePolynomialRows)
+            self._ui.polynomialDegree.valueChanged[int].connect(self.changePolynomialDegree)
+
+    def changeFunction(self, newFunctionName):
+        # Save parameters for old function
+        if self._currentFunction:
+            self._parameterTableData[self._currentFunction] = self.getCurrentParameterTable()
+
+        # Now update _currentFunction to the function that is currently selected.
+        # If this method was called because the user selected a different function,
+        # then this will be modified. If it was called because the fit curve button
+        # was pressed, then its value will not be changed.
+        self._currentFunction = Util.getWidgetValue(self._ui.function)
+
+        # Enter in parameters for new function
+        # If there are previously user-entered values, then use them
+        # else, if a wave is selected, then use that
+        # else, use the initial values
+        # Either way, if there are blank entries, then use initial values for them
+
+        # Clear the table, but leave all the column headers
+        for rowIndex in range(self._ui.parameterTable.rowCount()):
+            self._ui.parameterTable.removeRow(0)
+
+        parameters = []
+        # If there is saved data, use it
+        if self._currentFunction in self._parameterTableData:
+            parameters = self._parameterTableData[self._currentFunction]
+
+        # If there aren't enough rows for all the parameters, extend with 
+        # initial values. This will also occur if no parameters had been saved.
+        savedParametersLength = len(parameters)
+        defaultParameters = self._parameterTableDefaults[self._currentFunction]
+        if savedParametersLength < len(defaultParameters):
+            parameters.extend(defaultParameters[len(parameters):])
+            
+            # Use wave if requested by the user
+            if Util.getWidgetValue(self._ui.useInitialValuesWave):
+                # Convert from QString to str
+                waveName = str(Util.getWidgetValue(self._ui.initialValuesWave))
+                if self._app.waves().wave(waveName) is None:
+                    # waveName is not a name of a wave
+                    pass
+                else:
+                    waveData = self._app.waves().wave(waveName).data()
+                    for i in range(savedParametersLength, len(defaultParameters)):
+                        parameters[i][1] = waveData[i]
+        
+        self.writeParametersToTable(parameters)
+
+    def writeParametersToTable(self, parameters, startRow=0):
+        # Determine how many rows the table should have
+        numRows = startRow + len(parameters)
+        self._ui.parameterTable.setRowCount(numRows)
+
+        # Now actually write to the table
+        for rowIndex, row in enumerate(parameters, startRow):
+            for colIndex, value in enumerate(row):
+                item = QTableWidgetItem(str(value))
+                if colIndex == 0:
+                    # parameter name, do not want it editable
+                    item.setFlags(Qt.ItemIsEnabled)
+
+                self._ui.parameterTable.setItem(rowIndex, colIndex, item)
+                
+    def changePolynomialDegree(self, newDegree):
+        # If decreasing the degree, just remove the last entries
+        # If increasing the degree,
+        #    If a wave is selected, then use that for the new values
+        #    else, use the initial values
+        
+        desiredNumRows = newDegree + 1
+        currentNumRows = self._ui.parameterTable.rowCount()
+        
+        if desiredNumRows == currentNumRows:
+            # Nothing to do
+            return
+
+        # Set defaults
+        rows = []
+        for d in range(desiredNumRows):
+            rows.append(['p' + str(d), 1])
+        self._parameterTableDefaults['Polynomial'] = rows
+
+        # Update table
+        self._ui.parameterTable.setRowCount(desiredNumRows)
+
+        if desiredNumRows < currentNumRows:
+            # We are done, because no rows need to be edited
+            return
+
+        # Degree is being increased
+        parameters = self._parameterTableDefaults['Polynomial'][currentNumRows:desiredNumRows]
+        if Util.getWidgetValue(self._ui.useInitialValuesWave):
+            # Convert from QString to str
+            waveName = str(Util.getWidgetValue(self._ui.initialValuesWave))
+            if self._app.waves().wave(waveName) is None:
+                # waveName is not a name of a wave
+                pass
+            else:
+                waveData = self._app.waves().wave(waveName).data(currentNumRows, desiredNumRows)
+                for index, value in enumerate(waveData):
+                    parameters[index][1] = value
+
+        self.writeParametersToTable(parameters, currentNumRows)
+
+    def changeInitialValuesWaveFromCheckbox(self, checked):
+        """
+        If the useInitialValuesWave checkbox is checked, then
+        call changeInitialValuesWave.
+        """
+
+        if checked:
+            self.changeInitialValuesWave(str(Util.getWidgetValue(self._ui.initialValuesWave)))
+
+    def changeInitialValuesWave(self, waveName):
+        # Use the wave for as many parameters as possible
+        # if the wave is too long, then just use the first n values
+        # if the wave is too short, then leave the current value in place
+        #     if there is no current value, then use the initial values
+
+        if Util.getWidgetValue(self._ui.useInitialValuesWave):
+            # Get the current values, with any undefined values using the initial values
+            parameters = self.currentParametersBackedByInitials()
+
+            # Now get the wave values
+            parameters = self.updateParametersListWithWave(parameters, waveName)
+
+            # Set the table to the parameters
+            self.writeParametersToTable(parameters)
 
 
-    # Deal with parameter table
-    def saveAndLoadParameterTable(self, newFunctionName):
-        # These cannot be connected to currentIndexChanged individually
-        # because they need to be called in order.
-        self.saveParameterTable()
-        self.loadParameterTable()
+    def updateParametersListWithWave(self, parameters, waveName):
+        """
+        Given a list of parameter table rows, and the name of a wave,
+        this will update the parameter values with the entries in the wave.
+        """
 
-    def saveParameterTable(self):
-        self._parameterTableData[self._currentFunction] = []
+        waveName = str(waveName)
+        if self._app.waves().wave(waveName) is None:
+            # waveName is not a name of a wave
+            return parameters
 
-        # Save data to a 2-d array mimicking the table.
+        waveData = self._app.waves().wave(waveName).data(0, len(parameters))
+        for i in range(len(waveData)):
+            parameters[i][1] = waveData[i]
+
+        return parameters
+
+    def currentParametersBackedByInitials(self):
+        # Start with initial values
+        parameters = self._parameterTableDefaults[self._currentFunction]
+
+        # Then get the current values and update parameters with it
+        currentParameters = self.getCurrentParameterTable()
+        for rowIndex, row in enumerate(currentParameters):
+            parameters[rowIndex] = row
+
+        return parameters
+
+    def getCurrentParameterTable(self):
+        """
+        Save data to a 2-d array mimicking the table.
+        """
         # FIXME only works with text right now. Need to add in support for check boxes
         # Maybe do this by creating a QTableWidgetItem option in Util.getWidgetValue
         # and using QTableWidget.cellWidget to get the indiv. cells
+        table = []
         row = []
         for rowIndex in range(self._ui.parameterTable.rowCount()):
             for colIndex in range(self._ui.parameterTable.columnCount()):
@@ -119,112 +312,10 @@ class CurveFitting(Module):
                     row.append(str(self._ui.parameterTable.item(rowIndex, colIndex).text()))
                 except AttributeError:
                     row.append('')
-            self._parameterTableData[self._currentFunction].append(row)
+            table.append(row)
             row = []
-        
-        # Now update _currentFunction to the function that is currently selected.
-        # If this method was called because the user selected a different function,
-        # then this will be modified. If it was called because the fit curve button
-        # was pressed, then its value will not be changed.
-        self._currentFunction = Util.getWidgetValue(self._ui.function)
 
-    def loadParameterTable(self):
-        # Clear the table, but leave all the column headers
-        for rowIndex in range(self._ui.parameterTable.rowCount()):
-            self._ui.parameterTable.removeRow(0)
-
-        # If there is saved data, use it
-        # FIXME same as in saveParameterTable, needs to accept checkmarks
-        if self._currentFunction in self._parameterTableData:
-            for rowIndex, row in enumerate(self._parameterTableData[self._currentFunction]):
-                self._ui.parameterTable.insertRow(rowIndex)
-                for colIndex, data in enumerate(row):
-                    self._ui.parameterTable.setItem(rowIndex, colIndex, QTableWidgetItem(data))
-        else:
-            # If there is no saved data, create defaults here
-            if self._currentFunction == 'Polynomial':
-                self.parameterTablePolynomialRows()
-            elif self._currentFunction == 'Sinusoid':
-                self.setupParameterTableRows(['p0', 'p1', 'p2', 'p3'], [1, 1, 1, 1])
-            elif self._currentFunction == 'Power Law':
-                self.setupParameterTableRows(['y0', 'a', 'k'], [0, 1, 1])
-            elif self._currentFunction == 'Exponential':
-                self.setupParameterTableRows(['y0', 'A', 'b'], [0, 1, 1])
-            elif self._currentFunction == 'Logarithm':
-                self.setupParameterTableRows(['y0', 'a', 'base'], [0, 1, 10])
-            elif self._currentFunction == 'Gaussian':
-                self.setupParameterTableRows(['amp', 'mean', 'width'], [1, 0, 1])
-            elif self._currentFunction == 'Lorentzian':
-                self.setupParameterTableRows(['amp', 'mean', 'hwhm'], [1, 0, 1])
-
-    def parameterTablePolynomialRows(self, *args):
-        """
-        If the polynomial degree the user selected is larger than the number
-        of rows in the parameter table, then add extra rows here. If smaller,
-        then remove rows.
-        """
-
-        degree = Util.getWidgetValue(self._ui.polynomialDegree)
-        rowNames = []
-        rowInitialValues = []
-        for d in range(degree + 1):
-            rowNames.append('p' + str(d))
-            rowInitialValues.append(1)
-
-        self.setupParameterTableRows(rowNames, rowInitialValues)
-
-    def setupParameterTableRows(self, rowNames=[], rowInitialValues=[]):
-        """
-        rowNames should contain all the parameter names required in the table.
-        """
-
-        desiredNumRows = len(rowNames)
-        rowCount = self._ui.parameterTable.rowCount()
-        
-        # Add or remove rows as necessary
-        if desiredNumRows == rowCount:
-            # Correct number of rows. Do nothing.
-            pass 
-        elif desiredNumRows < rowCount:
-            # There are more rows than there should be. Remove some.
-            self._ui.parameterTable.setRowCount(desiredNumRows)
-        else:
-            # There are fewer rows than there should be. Add some.
-            self._ui.parameterTable.setRowCount(desiredNumRows)
-
-            for d in range(rowCount, desiredNumRows):
-                for colIndex in range(1, self._ui.parameterTable.columnCount()):
-                    self._ui.parameterTable.setItem(d, colIndex, QTableWidgetItem())
-        
-        # Set parameter names
-        for rowIndex, name in enumerate(rowNames):
-            item = QTableWidgetItem(name)
-            item.setFlags(Qt.ItemIsEnabled)
-            self._ui.parameterTable.setItem(rowIndex, 0, item)
-
-        # Set parameter initial values
-        for rowIndex in range(rowCount, desiredNumRows):
-            self._ui.parameterTable.item(rowIndex, 1).setText(str(rowInitialValues[rowIndex]))
-
-    def parameterInitialValues(self, functionName):
-        if functionName not in self._parameterTableData:
-            return None
-
-        tableData = self._parameterTableData[functionName]
-
-        # Default non-number values to 1 so that we don't get trivial divide-by-0 errors
-        # (but more specific checking should be done in the individual fit functions)
-        initialValues = [float(row[1]) if Util.isNumber(row[1]) else 1 for row in tableData]
-        return initialValues
-
-    def parameterNames(self, functionName):
-        if functionName not in self._parameterTableData:
-            return None
-
-        tableData = self._parameterTableData[functionName]
-
-        names = [str(row[0]) for row in tableData]
-        return names
+        return table
 
     def doFit(self):
         # save user-defined parameters
@@ -501,4 +592,6 @@ class CurveFitting(Module):
         self.setModels()
         self.setupSpinBoxes()
         self.setupParameterTableData()
+        Util.setWidgetValue(self._ui.function, 'Polynomial')
+        Util.setWidgetValue(self._ui.useInitialValuesWave, False)
 

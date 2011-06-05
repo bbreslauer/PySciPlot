@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Fri Jun  3 19:08:05 2011
+# Created: Sun Jun  5 15:51:51 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,7 +48,7 @@ class Ui_CurveFitting(object):
         self.parameterTable.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
         self.parameterTable.setHorizontalHeaderItem(1, item)
-        self.gridLayout.addWidget(self.parameterTable, 3, 0, 1, 2)
+        self.gridLayout.addWidget(self.parameterTable, 4, 0, 1, 2)
         self.functionStackedWidget = QtGui.QStackedWidget(self.tabFunction)
         self.functionStackedWidget.setObjectName(_fromUtf8("functionStackedWidget"))
         self.page = QtGui.QWidget()
@@ -128,6 +128,14 @@ class Ui_CurveFitting(object):
         self.label_18.setObjectName(_fromUtf8("label_18"))
         self.equationStackedWidget.addWidget(self.page_13)
         self.gridLayout.addWidget(self.equationStackedWidget, 2, 0, 1, 2)
+        self.initialValuesWave = QWaveComboBox(self.tabFunction)
+        self.initialValuesWave.setEnabled(False)
+        self.initialValuesWave.setObjectName(_fromUtf8("initialValuesWave"))
+        self.gridLayout.addWidget(self.initialValuesWave, 3, 1, 1, 1)
+        self.useInitialValuesWave = QtGui.QCheckBox(self.tabFunction)
+        self.useInitialValuesWave.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.useInitialValuesWave.setObjectName(_fromUtf8("useInitialValuesWave"))
+        self.gridLayout.addWidget(self.useInitialValuesWave, 3, 0, 1, 1)
         self.tabWidget.addTab(self.tabFunction, _fromUtf8(""))
         self.tabData = QtGui.QWidget()
         self.tabData.setObjectName(_fromUtf8("tabData"))
@@ -252,6 +260,7 @@ class Ui_CurveFitting(object):
         self.equationStackedWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.function, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.functionStackedWidget.setCurrentIndex)
         QtCore.QObject.connect(self.function, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.equationStackedWidget.setCurrentIndex)
+        QtCore.QObject.connect(self.useInitialValuesWave, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.initialValuesWave.setEnabled)
 
     def retranslateUi(self, CurveFitting):
         CurveFitting.setWindowTitle(QtGui.QApplication.translate("CurveFitting", "Curve Fitting", None, QtGui.QApplication.UnicodeUTF8))
@@ -273,6 +282,7 @@ class Ui_CurveFitting(object):
         self.label_16.setText(QtGui.QApplication.translate("CurveFitting", "y = y0 + a * log(base, x)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_17.setText(QtGui.QApplication.translate("CurveFitting", "y = amp * e^(-(x - mean)^2/(2 * width^2))", None, QtGui.QApplication.UnicodeUTF8))
         self.label_18.setText(QtGui.QApplication.translate("CurveFitting", "y = amp * hwhm / ((x - mean)^2 + hwhm^2)", None, QtGui.QApplication.UnicodeUTF8))
+        self.useInitialValuesWave.setText(QtGui.QApplication.translate("CurveFitting", "Insert Wave for Initial Values", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFunction), QtGui.QApplication.translate("CurveFitting", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("CurveFitting", "X Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CurveFitting", "Y Wave", None, QtGui.QApplication.UnicodeUTF8))

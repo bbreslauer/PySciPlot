@@ -370,6 +370,16 @@
          </layout>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="createTable">
+         <property name="text">
+          <string>Create Table with Outputs</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="2">
         <widget class="QGroupBox" name="outputInterpolation">
          <property name="title">
@@ -379,45 +389,9 @@
           <bool>true</bool>
          </property>
          <layout class="QFormLayout" name="formLayout_3">
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Wave to Interpolate Over</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QWaveComboBox" name="interpolationDomain"/>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="title">
-             <string>Interpolation Range</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_5">
-             <item row="1" column="0">
-              <widget class="QWaveStartSpinBox" name="interpolationRangeStart"/>
-             </item>
-             <item row="1" column="1">
-              <widget class="QWaveEndSpinBox" name="interpolationRangeEnd"/>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_11">
-               <property name="text">
-                <string>Start</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_12">
-               <property name="text">
-                <string>End</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::ExpandingFieldsGrow</enum>
+          </property>
           <item row="0" column="0">
            <widget class="QLabel" name="label_13">
             <property name="text">
@@ -428,17 +402,120 @@
           <item row="0" column="1">
            <widget class="QLineEdit" name="interpolationDestination"/>
           </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="useWaveForInterpolation">
+            <property name="title">
+             <string>Use Wave for interpolation domain</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <layout class="QFormLayout" name="formLayout_5">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Wave to Interpolate Over</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Start Index</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>End Index</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QWaveStartSpinBox" name="interpolationWaveRangeStart"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="QWaveComboBox" name="interpolationWave"/>
+             </item>
+             <item row="2" column="1">
+              <widget class="QWaveEndSpinBox" name="interpolationWaveRangeEnd"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QGroupBox" name="useDomainForInterpolation">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="title">
+             <string>Custom Domain</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <layout class="QFormLayout" name="formLayout_4">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="interpolationCustomWaveName"/>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="interpolationCustomLowerLimit"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="interpolationCustomNumPoints">
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_20">
+               <property name="text">
+                <string>Upper Limit</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_22">
+               <property name="text">
+                <string>Wave Name</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="interpolationCustomUpperLimit"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_19">
+               <property name="text">
+                <string>Lower Limit</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>Number of points</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="createTable">
-         <property name="text">
-          <string>Create Table with Outputs</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>

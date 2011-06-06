@@ -93,6 +93,9 @@ class CurveFitting(Module):
         self._ui.function.currentIndexChanged[str].connect(self.connectSlotsOnFunctionChange)
         self._ui.initialValuesWave.activated[str].connect(self.changeInitialValuesWave)
         self._ui.useInitialValuesWave.toggled[bool].connect(self.changeInitialValuesWaveFromCheckbox)
+
+        self._ui.useWaveForInterpolation.toggled[bool].connect(self.catchInterpolationWaveGroupBoxCheck)
+        self._ui.useDomainForInterpolation.toggled[bool].connect(self.catchInterpolationDomainGroupBoxCheck)
         
         self.connectSlotsOnFunctionChange('')
 
@@ -102,7 +105,7 @@ class CurveFitting(Module):
         self._ui.xWave.setModel(self._allWavesListModel)
         self._ui.yWave.setModel(self._allWavesListModel)
         self._ui.initialValuesWave.setModel(self._allWavesListModel)
-        self._ui.interpolationDomain.setModel(self._allWavesListModel)
+        self._ui.interpolationWave.setModel(self._allWavesListModel)
 
     def setupSpinBoxes(self):
         self._ui.dataRangeStart.addWaveView(self._ui.xWave)
@@ -111,8 +114,8 @@ class CurveFitting(Module):
         self._ui.dataRangeStart.addWaveView(self._ui.yWave)
         self._ui.dataRangeEnd.addWaveView(self._ui.yWave)
 
-        self._ui.interpolationRangeStart.addWaveView(self._ui.interpolationDomain)
-        self._ui.interpolationRangeEnd.addWaveView(self._ui.interpolationDomain)
+        self._ui.interpolationWaveRangeStart.addWaveView(self._ui.interpolationWave)
+        self._ui.interpolationWaveRangeEnd.addWaveView(self._ui.interpolationWave)
 
     def setupParameterTableData(self):
         self._parameterTableData = {}
@@ -140,10 +143,27 @@ class CurveFitting(Module):
         if Util.getWidgetValue(self._ui.function) == 'Polynomial':
             self._ui.polynomialDegree.valueChanged[int].connect(self.changePolynomialDegree)
 
-    def changeFunction(self, newFunctionName):
-        # Save parameters for old function
+    def catchInterpolationWaveGroupBoxCheck(self, checked):
+        # Set the opposite check for the domain group box
+        Util.setWidgetValue(self._ui.useDomainForInterpolation, not checked)
+
+    def catchInterpolationDomainGroupBoxCheck(self, checked):
+        # Set the opposite check for the wave group box
+        Util.setWidgetValue(self._ui.useWaveForInterpolation, not checked)
+        
+    def saveParameterTable(self):
+        """
+        Save the parameters for the current function to the object.
+        """
+
         if self._currentFunction:
             self._parameterTableData[self._currentFunction] = self.getCurrentParameterTable()
+
+    def changeFunction(self, newFunctionName):
+        # Save parameters for old function
+        self.saveParameterTable()
+        #if self._currentFunction:
+        #    self._parameterTableData[self._currentFunction] = self.getCurrentParameterTable()
 
         # Now update _currentFunction to the function that is currently selected.
         # If this method was called because the user selected a different function,
@@ -260,7 +280,7 @@ class CurveFitting(Module):
 
         if Util.getWidgetValue(self._ui.useInitialValuesWave):
             # Get the current values, with any undefined values using the initial values
-            parameters = self.currentParametersBackedByInitials()
+            parameters = self.currentParametersBackedByDefaults()
 
             # Now get the wave values
             parameters = self.updateParametersListWithWave(parameters, waveName)
@@ -286,7 +306,7 @@ class CurveFitting(Module):
 
         return parameters
 
-    def currentParametersBackedByInitials(self):
+    def currentParametersBackedByDefaults(self):
         # Start with initial values
         parameters = self._parameterTableDefaults[self._currentFunction]
 
@@ -317,6 +337,33 @@ class CurveFitting(Module):
 
         return table
 
+    def parameterColumnValues(self, functionName, columnNum):
+        """
+        Return a list of the values of a specific column in the parameter table.
+        """
+
+        if functionName not in self._parameterTableData:
+            return None
+
+        tableData = self._parameterTableData[functionName]
+
+        values = [str(row[columnNum]) for row in tableData]
+        return values
+
+    def parameterNames(self, functionName):
+        """
+        Return a list of the names of the parameters for the given function.
+        """
+        return self.parameterColumnValues(functionName, 0)
+
+    def parameterInitialValues(self, functionName):
+        """
+        Return a list of the initial values of the parameters (NOT the default values) for the given function.
+        """
+        values = self.parameterColumnValues(functionName, 1)
+        initialValues = [float(v) if Util.isNumber(v) else 1 for v in values]
+        return initialValues
+
     def doFit(self):
         # save user-defined parameters
         self.saveParameterTable()
@@ -327,7 +374,7 @@ class CurveFitting(Module):
         # is lost
         xWaveName = Util.getWidgetValue(self._ui.xWave)
         yWaveName = Util.getWidgetValue(self._ui.yWave)
-        interpolationDomainWaveName = Util.getWidgetValue(self._ui.interpolationDomain)
+        interpolationDomainWaveName = Util.getWidgetValue(self._ui.interpolationWave)
 
         # Get data tab
         dataRangeStart = Util.getWidgetValue(self._ui.dataRangeStart)
@@ -374,25 +421,39 @@ class CurveFitting(Module):
             interpolationDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.interpolationDestination))
             outputWaves['interpolationDestinationWave'] = Wave(interpolationDestination, 'Decimal')
             self._app.waves().addWave(outputWaves['interpolationDestinationWave'])
-            
-            interpolationDomainWave = self._app.waves().wave(interpolationDomainWaveName)
-            interpolationRangeStart = Util.getWidgetValue(self._ui.interpolationRangeStart)
-            interpolationRangeEnd = Util.getWidgetValue(self._ui.interpolationRangeEnd)
-            
-            outputWaves['interpolationDomainWave'] = interpolationDomainWave
 
-            # Start the wave with as many blanks as necessary in order to get the destination wave
-            # to line up correctly with the domain wave, for easy plotting.
-            outputWaves['interpolationDestinationWave'].extend([''] * interpolationRangeStart)
-            
-            # Verify data range limits are valid
-            interpolationDomainLength = interpolationDomainWave.length()
-            if interpolationRangeStart > interpolationDomainLength:
-                interpolationRangeStart = 0
-            if interpolationRangeEnd > interpolationDomainLength:
-                interpolationRangeEnd  = interpolationDomainLength - 1
+            if Util.getWidgetValue(self._ui.useWaveForInterpolation):
+                # Using an already-existing wave for the interpolation points.
+                interpolationDomainWave = self._app.waves().wave(interpolationDomainWaveName)
+                interpolationWaveRangeStart = Util.getWidgetValue(self._ui.interpolationWaveRangeStart)
+                interpolationWaveRangeEnd = Util.getWidgetValue(self._ui.interpolationWaveRangeEnd)
+                
+                outputWaves['interpolationDomainWave'] = interpolationDomainWave
+    
+                # Start the wave with as many blanks as necessary in order to get the destination wave
+                # to line up correctly with the domain wave, for easy plotting.
+                outputWaves['interpolationDestinationWave'].extend([''] * interpolationWaveRangeStart)
+                
+                # Verify data range limits are valid
+                interpolationDomainLength = interpolationDomainWave.length()
+                if interpolationWaveRangeStart > interpolationDomainLength:
+                    interpolationWaveRangeStart = 0
+                if interpolationWaveRangeEnd > interpolationDomainLength:
+                    interpolationWaveRangeEnd  = interpolationDomainLength - 1
+    
+                outputOptions['interpolationDomainWaveData'] = interpolationDomainWave.data(interpolationWaveRangeStart, interpolationWaveRangeEnd + 1)
+            else:
+                # Creating a new wave based on a domain and number of points.
+                customWaveName = Util.getWidgetValue(self._ui.interpolationCustomWaveName)
+                customLowerLimit = float(Util.getWidgetValue(self._ui.interpolationCustomLowerLimit))
+                customUpperLimit = float(Util.getWidgetValue(self._ui.interpolationCustomUpperLimit))
+                customNumPoints = Util.getWidgetValue(self._ui.interpolationCustomNumPoints)
 
-            outputOptions['interpolationDomainWaveData'] = interpolationDomainWave.data(interpolationRangeStart, interpolationRangeEnd + 1)
+                outputOptions['interpolationDomainWaveData'] = numpy.linspace(customLowerLimit, customUpperLimit, customNumPoints, endpoint=True)
+
+                interpolationDomainWaveName = self._app.waves().findGoodWaveName(customWaveName)
+                outputWaves['interpolationDomainWave'] = Wave(interpolationDomainWaveName, 'Decimal', outputOptions['interpolationDomainWaveData'])
+                self._app.waves().addWave(outputWaves['interpolationDomainWave'])
 
         # Determine the function and call the appropriate method
         functionName = Util.getWidgetValue(self._ui.function)

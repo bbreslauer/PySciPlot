@@ -285,7 +285,8 @@ class QDataTableView(QTableView):
         newWaveAction.triggered.connect(addNewWaveHelper)
         
         # Get current list of waves for "add wave to table" menu
-        for wave in self._app.waves().waves().values():
+        #for wave in self._app.waves().waves().values():
+        for wave in self._app.model('appWaves').waves():
             waveAction = AddWaveAction(wave, self.addWaveMenu)
             self.addWaveMenu.addAction(waveAction)
             waveAction.addWaveClicked.connect(addWaveHelper)

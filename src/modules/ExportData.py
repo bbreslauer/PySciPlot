@@ -97,7 +97,7 @@ class ExportData(Module):
                 return False
         
         # Get waves
-        waveNames = self._ui.fileWavesListView.model().orderedWaves()
+        waveNames = self._ui.fileWavesListView.model().orderedWaveNames()
         
         with open(fileName, 'w') as fileHandle:
             if Util.getWidgetValue(self._ui.outputType) == 'Delimited':

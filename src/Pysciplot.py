@@ -138,7 +138,7 @@ class Pysciplot(QMainWindow):
         self.preferences = Preferences("~/.pysciplotrc")
 
         # Create application-wide models
-        self._models['appWaves'] = WavesListModel(self.waves().waves())
+        self._models['appWaves'] = WavesListModel(self.waves().waveNames())
 
         # Signals
         self.waves().waveAdded.connect(self.model('appWaves').appendRow)
@@ -363,7 +363,13 @@ class Pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
-        return self.createTable(self._waves.waves().values())
+        #waveNames = self.waves().waveNames()
+        #waveNames.sort()
+        waveNames = self.model('appWaves').orderedWaveNames()
+        waves = []
+        for waveName in waveNames:
+            waves.append(self.waves().wave(waveName))
+        return self.createTable(waves)
 
     def printAllWaves(self):
         print self._waves

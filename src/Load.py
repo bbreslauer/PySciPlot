@@ -91,7 +91,16 @@ def loadWaves(app, waves):
     
     Util.debug(1, "Load", "Loading waves from file")
     wavesObj = pickle.loads(str(waves.firstChild.data.strip()))
-    for wave in wavesObj.waves().values():
+    try:
+        waves = wavesObj.wavesInsertOrder()
+    except:
+        # This is for older versions (before commit 90f4d06) which don't have
+        # an explicit order in the waves object.
+        #
+        # This can be safely deleted before release, because it only affects
+        # saved projects that I have done.
+        waves = wavesObj.waves().values()
+    for wave in waves:
         app.waves().addWave(wave)
 
 def loadStoredSettings(app, storedSettings):

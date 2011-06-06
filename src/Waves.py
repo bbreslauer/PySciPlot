@@ -50,7 +50,8 @@ class Waves(QObject):
         Util.debug(1, "Waves.init", "Creating waves object")
 
         self._waves = dict()
-        
+        self._wavesInsertOrder = []
+
         if isinstance(wavesIn, dict):
             wavesIn = wavesIn.values()
 
@@ -64,11 +65,15 @@ class Waves(QObject):
         return string
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.waves()])])
+        return tuple([self.__class__, tuple([self.wavesInsertOrder()])])
 
     def waves(self):
-        """Return the waves list."""
+        """Return the waves dict."""
         return self._waves
+
+    def wavesInsertOrder(self):
+        """Return the waves list in the order in which the waves were added."""
+        return self._wavesInsertOrder
 
     def waveNames(self):
         """Return the names of all the waves, in no particular order."""
@@ -155,6 +160,7 @@ class Waves(QObject):
         if self.uniqueWaveName(wave.name()):
             Util.debug(2, "Waves.addWave", "Adding wave " + str(wave.name()) + ".")
             self.waves()[wave.name()] = wave
+            self.wavesInsertOrder().append(wave)
             wave.nameChanged.connect(self.moveWave)
             self.waveAdded.emit(wave)
             return wave
@@ -189,6 +195,7 @@ class Waves(QObject):
             wave = self.wave(name)
             del self.waves()[name]
             if not movingWave:
+                self.wavesInsertOrder().remove(wave)
                 wave.nameChanged.disconnect(self.moveWave)
                 self.waveRemoved[Wave].emit(wave)
             return wave
@@ -202,6 +209,7 @@ class Waves(QObject):
         """
 
         self._waves = dict()
+        self._wavesInsertOrder = []
         self.allWavesRemoved.emit()
         Util.debug(2, "Waves.removeAllWaves", "Removed all waves")
         return True

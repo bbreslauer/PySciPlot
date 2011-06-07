@@ -16,7 +16,6 @@
 
 import string, os, re, time, pickle
 
-
 from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import Qt, QVariant, QFile
 
@@ -73,7 +72,6 @@ class Pysciplot(QMainWindow):
         # Make signal/slot connections
         Util.debug(2, "App", "Connecting signals and slots")
         self.ui.actionQuit.triggered.connect(self.close)
-        self.ui.actionNew_Table.triggered.connect(self.createDefaultTable)
         self.ui.actionNew_Project.triggered.connect(self.newProjectSlot)
         self.ui.actionLoad_Project.triggered.connect(self.loadProjectSlot)
         self.ui.actionSave_Project.triggered.connect(self.saveProject)
@@ -84,18 +82,12 @@ class Pysciplot(QMainWindow):
         self.ui.actionShow_Waves.triggered.connect(self.printAllWaves)
         self.ui.actionShow_Figures.triggered.connect(self.printAllFigures)
 
-        # create default waves
-        self.setTestData()
-        self.createDefaultTable()
-
         Util.debug(2, "App", "Loading modules")
         for moduleName in modules.__all__:
             module = eval(moduleName + "." + moduleName + "()")
             module.load()
             self._loadedModules[moduleName] = module
 
-        #Load.loadProjectFromFile(self, "/home/ben/test.psp")
-        
     def setDefaults(self):
         """
         Setup parts of the application that have some sort of default.
@@ -191,13 +183,6 @@ class Pysciplot(QMainWindow):
         self.waves().allWavesRemoved.connect(model.removeAllWaves)
 
         return self.createDataTableView(model, tableName)
-
-    def createDefaultTable(self):
-        # Create new wave to put into this table
-        wave = Wave(self.waves().findGoodWaveName())
-        self._waves.addWave(wave)
-
-        return self.createTable([wave])
 
     def createDataTableView(self, tableModel, tableName="Table"):
         """
@@ -363,8 +348,6 @@ class Pysciplot(QMainWindow):
     # temporary methods, for testing
     ######################
     def createDefaultTable(self):
-        #waveNames = self.waves().waveNames()
-        #waveNames.sort()
         waveNames = self.model('appWaves').orderedWaveNames()
         waves = []
         for waveName in waveNames:
@@ -373,7 +356,6 @@ class Pysciplot(QMainWindow):
 
     def printAllWaves(self):
         print self._waves
-        #print self.storedSettings()
 
     def printAllFigures(self):
         print self._figures
@@ -383,5 +365,4 @@ class Pysciplot(QMainWindow):
         self._waves.addWave(Wave("Wave2", "Integer", [0, 1, 4, 9, 4, 1, 0, 1, 4, 9]))
         self._waves.addWave(Wave("Wave3", "Integer", [0, 1, 3, 1, 3, 1, 3, 1, 3, 1]))
         self._waves.addWave(Wave("Wave4", "Integer", [4, 3, 2, 1, 0, 1, 2, 3, 4, 5]))
-        #self._waves.addWave(Wave("Wave5", "Integer", range(4194304)))
 

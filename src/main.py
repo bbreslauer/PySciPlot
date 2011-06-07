@@ -26,17 +26,15 @@ import config
 from Pysciplot import Pysciplot
 
 
-
-
 def setupOptions():
     usage = "usage: %prog [options] project-file.psp"
 
     parser = OptionParser(usage)
 
     parser.add_option("-d", type="int", dest="debug", metavar="[level]", help="Debug level (between 0 and 3)")
+    parser.add_option("-t", action="store_true", dest="test", help="Enable testing data")
 
     return parser.parse_args()
-
 
 
 if __name__ == "__main__":
@@ -55,6 +53,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.window = Pysciplot()
     app.window.setup()
+    if options.test:
+        app.window.setTestData()
+        app.window.createDefaultTable()
     app.window.show()
     
     if len(args) > 0:

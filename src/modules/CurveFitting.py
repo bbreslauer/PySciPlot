@@ -461,6 +461,11 @@ class CurveFitting(Module):
             outputWaves['residualsWave'] = Wave(residualsDestination, 'Decimal')
             self._app.waves().addWave(outputWaves['residualsWave'])
 
+            # If the fit is not done to all the data in the wave, then we need to add blanks to the beginning
+            # of the residual wave because the residuals will only be calculated for the part of the data that
+            # was actually fit.
+            outputWaves['residualsWave'].extend([''] * dataRangeStart)
+
             # Save the x wave, in case it is different from the interpolationDomainWave
             outputWaves['xWave'] = xWave
 

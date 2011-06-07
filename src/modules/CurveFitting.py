@@ -455,6 +455,15 @@ class CurveFitting(Module):
                 outputWaves['interpolationDomainWave'] = Wave(interpolationDomainWaveName, 'Decimal', outputOptions['interpolationDomainWaveData'])
                 self._app.waves().addWave(outputWaves['interpolationDomainWave'])
 
+        outputOptions['saveResiduals'] = Util.getWidgetValue(self._ui.saveResiduals)
+        if outputOptions['saveResiduals']:
+            residualsDestination = self._app.waves().findGoodWaveName(Util.getWidgetValue(self._ui.residualsDestination))
+            outputWaves['residualsWave'] = Wave(residualsDestination, 'Decimal')
+            self._app.waves().addWave(outputWaves['residualsWave'])
+
+            # Save the x wave, in case it is different from the interpolationDomainWave
+            outputWaves['xWave'] = xWave
+
         # Determine the function and call the appropriate method
         functionName = Util.getWidgetValue(self._ui.function)
 
@@ -595,6 +604,14 @@ class CurveFitting(Module):
 
             tableWaves.append(outputWaves['interpolationDomainWave'])
             tableWaves.append(outputWaves['interpolationDestinationWave'])
+
+        # Do the residuals
+        if outputOptions['saveResiduals']:
+            residualsFunc = lambda p, x, y: y - function(p, x)
+            residuals = residualsFunc(parameters, xData, yData)
+            outputWaves['residualsWave'].extend(residuals)
+            tableWaves.append(outputWaves['xWave'])
+            tableWaves.append(outputWaves['residualsWave'])
 
         # Create table
         if outputOptions['createTable']:

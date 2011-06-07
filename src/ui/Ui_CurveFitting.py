@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Sun Jun  5 22:04:55 2011
+# Created: Mon Jun  6 21:48:05 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -197,6 +197,14 @@ class Ui_CurveFitting(object):
         self.saveLabelsDestination = QtGui.QLineEdit(self.outputParameters)
         self.saveLabelsDestination.setObjectName(_fromUtf8("saveLabelsDestination"))
         self.formLayout_2.setWidget(1, QtGui.QFormLayout.FieldRole, self.saveLabelsDestination)
+        self.saveResiduals = QtGui.QCheckBox(self.outputParameters)
+        self.saveResiduals.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.saveResiduals.setObjectName(_fromUtf8("saveResiduals"))
+        self.formLayout_2.setWidget(2, QtGui.QFormLayout.LabelRole, self.saveResiduals)
+        self.residualsDestination = QtGui.QLineEdit(self.outputParameters)
+        self.residualsDestination.setEnabled(False)
+        self.residualsDestination.setObjectName(_fromUtf8("residualsDestination"))
+        self.formLayout_2.setWidget(2, QtGui.QFormLayout.FieldRole, self.residualsDestination)
         self.gridLayout_4.addWidget(self.outputParameters, 1, 1, 1, 1)
         self.createTable = QtGui.QCheckBox(self.tabOutput)
         self.createTable.setChecked(True)
@@ -299,6 +307,7 @@ class Ui_CurveFitting(object):
         QtCore.QObject.connect(self.function, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.functionStackedWidget.setCurrentIndex)
         QtCore.QObject.connect(self.function, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.equationStackedWidget.setCurrentIndex)
         QtCore.QObject.connect(self.useInitialValuesWave, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.initialValuesWave.setEnabled)
+        QtCore.QObject.connect(self.saveResiduals, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.residualsDestination.setEnabled)
 
     def retranslateUi(self, CurveFitting):
         CurveFitting.setWindowTitle(QtGui.QApplication.translate("CurveFitting", "Curve Fitting", None, QtGui.QApplication.UnicodeUTF8))
@@ -331,6 +340,7 @@ class Ui_CurveFitting(object):
         self.outputParameters.setTitle(QtGui.QApplication.translate("CurveFitting", "Output Parameters?", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("CurveFitting", "Destination Wave", None, QtGui.QApplication.UnicodeUTF8))
         self.saveLabels.setText(QtGui.QApplication.translate("CurveFitting", "Save Labels to Wave", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveResiduals.setText(QtGui.QApplication.translate("CurveFitting", "Save Residuals", None, QtGui.QApplication.UnicodeUTF8))
         self.createTable.setText(QtGui.QApplication.translate("CurveFitting", "Create Table with Outputs", None, QtGui.QApplication.UnicodeUTF8))
         self.outputInterpolation.setTitle(QtGui.QApplication.translate("CurveFitting", "Apply fit to domain?", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("CurveFitting", "Destination Wave", None, QtGui.QApplication.UnicodeUTF8))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CurveFitting.ui'
 #
-# Created: Mon Jun  6 21:48:05 2011
+# Created: Mon Jun  6 23:21:53 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -154,7 +154,7 @@ class Ui_CurveFitting(object):
         self.yWave.setObjectName(_fromUtf8("yWave"))
         self.gridLayout_2.addWidget(self.yWave, 1, 1, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout_2.addItem(spacerItem, 3, 0, 1, 1)
+        self.gridLayout_2.addItem(spacerItem, 4, 0, 1, 1)
         self.groupBox = QtGui.QGroupBox(self.tabData)
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.gridLayout_3 = QtGui.QGridLayout(self.groupBox)
@@ -172,6 +172,29 @@ class Ui_CurveFitting(object):
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout_3.addWidget(self.label_6, 0, 1, 1, 1)
         self.gridLayout_2.addWidget(self.groupBox, 2, 0, 1, 2)
+        self.useWeights = QtGui.QGroupBox(self.tabData)
+        self.useWeights.setCheckable(True)
+        self.useWeights.setChecked(False)
+        self.useWeights.setObjectName(_fromUtf8("useWeights"))
+        self.formLayout_6 = QtGui.QFormLayout(self.useWeights)
+        self.formLayout_6.setObjectName(_fromUtf8("formLayout_6"))
+        self.label_23 = QtGui.QLabel(self.useWeights)
+        self.label_23.setObjectName(_fromUtf8("label_23"))
+        self.formLayout_6.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_23)
+        self.weightWave = QWaveComboBox(self.useWeights)
+        self.weightWave.setObjectName(_fromUtf8("weightWave"))
+        self.formLayout_6.setWidget(0, QtGui.QFormLayout.FieldRole, self.weightWave)
+        self.weightDirectly = QtGui.QRadioButton(self.useWeights)
+        self.weightDirectly.setChecked(True)
+        self.weightDirectly.setObjectName(_fromUtf8("weightDirectly"))
+        self.formLayout_6.setWidget(1, QtGui.QFormLayout.FieldRole, self.weightDirectly)
+        self.weightIndirectly = QtGui.QRadioButton(self.useWeights)
+        self.weightIndirectly.setObjectName(_fromUtf8("weightIndirectly"))
+        self.formLayout_6.setWidget(2, QtGui.QFormLayout.FieldRole, self.weightIndirectly)
+        self.label_24 = QtGui.QLabel(self.useWeights)
+        self.label_24.setObjectName(_fromUtf8("label_24"))
+        self.formLayout_6.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_24)
+        self.gridLayout_2.addWidget(self.useWeights, 3, 0, 1, 2)
         self.tabWidget.addTab(self.tabData, _fromUtf8(""))
         self.tabOutput = QtGui.QWidget()
         self.tabOutput.setObjectName(_fromUtf8("tabOutput"))
@@ -336,6 +359,11 @@ class Ui_CurveFitting(object):
         self.groupBox.setTitle(QtGui.QApplication.translate("CurveFitting", "Data Range", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("CurveFitting", "Start", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("CurveFitting", "End", None, QtGui.QApplication.UnicodeUTF8))
+        self.useWeights.setTitle(QtGui.QApplication.translate("CurveFitting", "Weight Y Data", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_23.setText(QtGui.QApplication.translate("CurveFitting", "Weights Wave", None, QtGui.QApplication.UnicodeUTF8))
+        self.weightDirectly.setText(QtGui.QApplication.translate("CurveFitting", "Directly weight (weight * data)", None, QtGui.QApplication.UnicodeUTF8))
+        self.weightIndirectly.setText(QtGui.QApplication.translate("CurveFitting", "Inversely weight (data / weight)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("CurveFitting", "How to weight", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabData), QtGui.QApplication.translate("CurveFitting", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.outputParameters.setTitle(QtGui.QApplication.translate("CurveFitting", "Output Parameters?", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("CurveFitting", "Destination Wave", None, QtGui.QApplication.UnicodeUTF8))

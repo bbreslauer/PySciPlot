@@ -104,6 +104,7 @@ class CurveFitting(Module):
         self._allWavesListModel = self._app.model('appWaves')
         self._ui.xWave.setModel(self._allWavesListModel)
         self._ui.yWave.setModel(self._allWavesListModel)
+        self._ui.weightWave.setModel(self._allWavesListModel)
         self._ui.initialValuesWave.setModel(self._allWavesListModel)
         self._ui.interpolationWave.setModel(self._allWavesListModel)
 
@@ -374,6 +375,7 @@ class CurveFitting(Module):
         # is lost
         xWaveName = Util.getWidgetValue(self._ui.xWave)
         yWaveName = Util.getWidgetValue(self._ui.yWave)
+        weightWaveName = Util.getWidgetValue(self._ui.weightWave)
         interpolationDomainWaveName = Util.getWidgetValue(self._ui.interpolationWave)
 
         # Get data tab
@@ -393,6 +395,22 @@ class CurveFitting(Module):
 
         xData = xWave.data(dataRangeStart, dataRangeEnd + 1)
         yData = yWave.data(dataRangeStart, dataRangeEnd + 1)
+
+        # Get weights, if required by user
+        if Util.getWidgetValue(self._ui.useWeights):
+            weightWave = self._app.waves().wave(weightWaveName)
+            weightLength = weightWave.length()
+            weightData = weightWave.data(dataRangeStart, dataRangeEnd + 1)
+
+            # If weighting inversely, invert the weights
+            if Util.getWidgetValue(self._ui.weightIndirectly):
+                weightData = [1./w if w != 0 else 0 for w in weightData]
+
+            if len(weightData) != len(yData):
+                print "The number of weight points is not the same as the number of y points."
+                return 1
+        else:
+            weightData = None
 
         # Get output tab
         outputOptions = {}
@@ -473,21 +491,21 @@ class CurveFitting(Module):
         functionName = Util.getWidgetValue(self._ui.function)
 
         if functionName == 'Polynomial':
-            self.fitPolynomial(xData, yData, outputWaves, outputOptions)
+            self.fitPolynomial(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Sinusoid':
-            self.fitSinusoid(xData, yData, outputWaves, outputOptions)
+            self.fitSinusoid(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Power Law':
-            self.fitPowerLaw(xData, yData, outputWaves, outputOptions)
+            self.fitPowerLaw(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Exponential':
-            self.fitExponential(xData, yData, outputWaves, outputOptions)
+            self.fitExponential(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Logarithm':
-            self.fitLogarithm(xData, yData, outputWaves, outputOptions)
+            self.fitLogarithm(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Gaussian':
-            self.fitGaussian(xData, yData, outputWaves, outputOptions)
+            self.fitGaussian(xData, yData, weightData, outputWaves, outputOptions)
         elif functionName == 'Lorentzian':
-            self.fitLorentzian(xData, yData, outputWaves, outputOptions)
+            self.fitLorentzian(xData, yData, weightData, outputWaves, outputOptions)
 
-    def fitPolynomial(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitPolynomial(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         # Get the degree of the polynomial the user wants to use
         degree = Util.getWidgetValue(self._ui.polynomialDegree)
 
@@ -509,9 +527,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [1] * degree
 
-        self.fitFunction(polynomialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Polynomial Fit')
+        self.fitFunction(polynomialFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Polynomial Fit')
 
-    def fitSinusoid(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitSinusoid(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         sinusoidFunction = lambda p, x: p[0] + p[1] * numpy.cos(x / p[2] * 2. * numpy.pi + p[3])
         
         parameterNames = self.parameterNames('Sinusoid')
@@ -519,9 +537,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [1, 1, 1, 1]
 
-        self.fitFunction(sinusoidFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Sinusoid Fit')
+        self.fitFunction(sinusoidFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Sinusoid Fit')
 
-    def fitPowerLaw(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitPowerLaw(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         powerLawFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], numpy.power(x, p[2])))
 
         parameterNames = self.parameterNames('Power Law')
@@ -529,9 +547,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [0, 1, 1]
 
-        self.fitFunction(powerLawFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Power Law Fit')
+        self.fitFunction(powerLawFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Power Law Fit')
 
-    def fitExponential(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitExponential(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         exponentialFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], numpy.power(numpy.e, numpy.multiply(p[2], x))))
 
         parameterNames = self.parameterNames('Exponential')
@@ -539,9 +557,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [0, 1, 1]
 
-        self.fitFunction(exponentialFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Exponential Fit')
+        self.fitFunction(exponentialFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Exponential Fit')
 
-    def fitLogarithm(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitLogarithm(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         # There is no numpy log function where you can specify a custom base, so we'll define one
         customBaseLog = lambda base, x: numpy.divide(numpy.log(x), numpy.log(base))
         logarithmFunction = lambda p, x: numpy.add(p[0], numpy.multiply(p[1], customBaseLog(p[2], x)))
@@ -551,9 +569,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [0, 1, 10]
 
-        self.fitFunction(logarithmFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Logarithm Fit')
+        self.fitFunction(logarithmFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Logarithm Fit')
 
-    def fitGaussian(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitGaussian(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         gaussianFunction = lambda p, x: numpy.multiply(p[0], numpy.power(numpy.e, numpy.divide(-1 * numpy.power((numpy.subtract(x, p[1])), 2), 2 * numpy.power(p[2], 2))))
 
         parameterNames = self.parameterNames('Gaussian')
@@ -561,9 +579,9 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [1, 0, 1]
 
-        self.fitFunction(gaussianFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Gaussian Fit')
+        self.fitFunction(gaussianFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Gaussian Fit')
 
-    def fitLorentzian(self, xData, yData, outputWaves={}, outputOptions={}):
+    def fitLorentzian(self, xData, yData, weightData=None, outputWaves={}, outputOptions={}):
         lorentzianFunction = lambda p, x: numpy.divide(numpy.multiply(p[0], p[2]), numpy.add(numpy.power(numpy.subtract(x, p[1]), 2), numpy.power(p[2], 2)))
 
         parameterNames = self.parameterNames('Lorentzian')
@@ -571,17 +589,17 @@ class CurveFitting(Module):
         if initialValues is None:
             initialValues = [1, 0, 1]
 
-        self.fitFunction(lorentzianFunction, parameterNames, initialValues, xData, yData, outputWaves, outputOptions, 'Lorentzian Fit')
+        self.fitFunction(lorentzianFunction, parameterNames, initialValues, xData, yData, weightData, outputWaves, outputOptions, 'Lorentzian Fit')
 
 
 
-    def fitFunction(self, function, parameterNames, initialValues, xData, yData, outputWaves={}, outputOptions={}, tableName='Fit'):
+    def fitFunction(self, function, parameterNames, initialValues, xData, yData, weightData=None, outputWaves={}, outputOptions={}, tableName='Fit'):
         # Can also include initial guesses for the parameters, as well as sigma's for weighting of the ydata
 
         # Need to fail with error message if the leastsq call does not succeed
 
         # Do the fit
-        result = self.fitFunctionLeastSquares(function, initialValues, xData, yData)
+        result = self.fitFunctionLeastSquares(function, initialValues, xData, yData, weightData)
         parameters = result[0]
 
         tableWaves = []
@@ -612,7 +630,7 @@ class CurveFitting(Module):
 
         # Do the residuals
         if outputOptions['saveResiduals']:
-            residualsFunc = lambda p, x, y: y - function(p, x)
+            residualsFunc = lambda p, x, y: numpy.subtract(y, function(p, x))
             residuals = residualsFunc(parameters, xData, yData)
             outputWaves['residualsWave'].extend(residuals)
             tableWaves.append(outputWaves['xWave'])
@@ -622,7 +640,7 @@ class CurveFitting(Module):
         if outputOptions['createTable']:
             self.createTable(tableWaves, tableName)
 
-    def fitFunctionLeastSquares(self, func, guess, xData, yData):
+    def fitFunctionLeastSquares(self, func, guess, xData, yData, weightData=None):
         """
         Do a least squares fit for a generic function.
 
@@ -635,9 +653,15 @@ class CurveFitting(Module):
         xData and yData are the data to fit.
         """
 
-        errorFunc = lambda p, x, y: func(p, x) - y
+        if weightData is None:
+            #errorFunc = lambda p, x, y: func(p, x) - y
+            errorFunc = lambda p, x, y: numpy.subtract(func(p, x), y)
+            return scipy.optimize.leastsq(errorFunc, guess[:], args=(xData, yData), full_output=True)
+        else:
+            errorFunc = lambda p, x, y, w: numpy.multiply(w, numpy.subtract(func(p, x), y))
+            return scipy.optimize.leastsq(errorFunc, guess[:], args=(xData, yData, weightData), full_output=True)
 
-        return scipy.optimize.leastsq(errorFunc, guess[:], args=(xData, yData), full_output=True)
+        #return scipy.optimize.leastsq(errorFunc, guess[:], args=(xData, yData), full_output=True)
 
 
     def createTable(self, waves=[], title='Fit'):

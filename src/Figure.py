@@ -170,6 +170,7 @@ class Figure(FigureObject):
             self.grid.set_axes_pad(self.getMpl('axesPadding'))
         else:
             self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
+        self.redraw()
 
     def update_backgroundColor(self):
         Util.debug(3, "Figure.update_backgroundColor", "")

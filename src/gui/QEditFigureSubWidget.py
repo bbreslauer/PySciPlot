@@ -18,6 +18,7 @@ from PyQt4.QtGui import QWidget, QApplication, QDialogButtonBox
 
 from Property import Property
 import Util
+import time
 
 class QEditFigureSubWidget(QWidget):
 
@@ -71,7 +72,9 @@ class QEditFigureSubWidget(QWidget):
         pass
 
     def applyClicked(self):
+        st = time.time()
         self.saveUi()
+        print "apply took " + str(time.time() - st)
 
     def resetClicked(self):
         self.resetUi()

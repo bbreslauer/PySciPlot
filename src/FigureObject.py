@@ -47,7 +47,7 @@ class FigureObject(QObject):
 
     def getMpl(self, variable):
         try:
-            Util.debug(3, "FigureObject.getMpl", "Getting mpl variable " + str(variable) + "=" + str(self.properties[variable].get()))
+            Util.debug(3, "FigureObject.getMpl", "Getting mpl variable " + str(variable) + "=" + str(self.properties[variable].getMpl()))
             return self.properties[variable].getMpl()
         except KeyError:
             return None

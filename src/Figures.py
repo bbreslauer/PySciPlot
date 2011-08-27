@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QObject, pyqtSignal
+from PySide.QtCore import QObject, Signal
 
 import Util
 
@@ -33,9 +33,9 @@ class Figures(QObject):
     """
 
     # Signals
-    figureAdded   = pyqtSignal()
-    figureRemoved = pyqtSignal()
-    figureRenamed = pyqtSignal()
+    figureAdded   = Signal()
+    figureRemoved = Signal()
+    figureRenamed = Signal()
 
     def __init__(self, figuresIn=[]):
         """

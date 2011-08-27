@@ -19,7 +19,7 @@ import Util
 
 import xml.dom.minidom, os.path, pickle
 
-from PyQt4.QtCore import Qt
+from PySide.QtCore import Qt
 
 from Wave import Wave
 from Figure import Figure

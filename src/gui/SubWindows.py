@@ -14,8 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QMdiSubWindow
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QMdiSubWindow
+from PySide.QtCore import Qt
+from PySide import QtCore
 
 class SubWindow(QMdiSubWindow):
     """
@@ -28,7 +29,7 @@ class SubWindow(QMdiSubWindow):
     def setWidget(self, widget):
         QMdiSubWindow.setWidget(self, widget)
         self.resize(widget.size())
-    
+
     def show(self):
         QMdiSubWindow.show(self)
         self.widget().setVisible(True)

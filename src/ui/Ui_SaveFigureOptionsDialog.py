@@ -2,53 +2,48 @@
 
 # Form implementation generated from reading ui file 'Ui_SaveFigureOptionsDialog.ui'
 #
-# Created: Sat May 28 00:16:59 2011
-#      by: PyQt4 UI code generator 4.8.4
+# Created: Sat Aug 27 19:02:55 2011
+#      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
+from PySide import QtCore, QtGui
 
 class Ui_SaveFigureOptionsDialog(object):
     def setupUi(self, SaveFigureOptionsDialog):
-        SaveFigureOptionsDialog.setObjectName(_fromUtf8("SaveFigureOptionsDialog"))
+        SaveFigureOptionsDialog.setObjectName("SaveFigureOptionsDialog")
         SaveFigureOptionsDialog.setWindowModality(QtCore.Qt.WindowModal)
         SaveFigureOptionsDialog.resize(239, 300)
         SaveFigureOptionsDialog.setModal(True)
         self.formLayout = QtGui.QFormLayout(SaveFigureOptionsDialog)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
-        self.formLayout.setObjectName(_fromUtf8("formLayout"))
+        self.formLayout.setObjectName("formLayout")
         self.label = QtGui.QLabel(SaveFigureOptionsDialog)
-        self.label.setObjectName(_fromUtf8("label"))
+        self.label.setObjectName("label")
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label)
         self.dpi = QtGui.QSpinBox(SaveFigureOptionsDialog)
         self.dpi.setMaximum(10000)
-        self.dpi.setProperty(_fromUtf8("value"), 100)
-        self.dpi.setObjectName(_fromUtf8("dpi"))
+        self.dpi.setProperty("value", 100)
+        self.dpi.setObjectName("dpi")
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.dpi)
         self.label_2 = QtGui.QLabel(SaveFigureOptionsDialog)
-        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_2)
         self.orientation = QtGui.QComboBox(SaveFigureOptionsDialog)
-        self.orientation.setObjectName(_fromUtf8("orientation"))
-        self.orientation.addItem(_fromUtf8(""))
-        self.orientation.addItem(_fromUtf8(""))
+        self.orientation.setObjectName("orientation")
+        self.orientation.addItem("")
+        self.orientation.addItem("")
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.orientation)
         self.buttonBox = QtGui.QDialogButtonBox(SaveFigureOptionsDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setCenterButtons(True)
-        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+        self.buttonBox.setObjectName("buttonBox")
         self.formLayout.setWidget(2, QtGui.QFormLayout.SpanningRole, self.buttonBox)
 
         self.retranslateUi(SaveFigureOptionsDialog)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), SaveFigureOptionsDialog.accept)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), SaveFigureOptionsDialog.reject)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), SaveFigureOptionsDialog.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), SaveFigureOptionsDialog.reject)
 
     def retranslateUi(self, SaveFigureOptionsDialog):
         SaveFigureOptionsDialog.setWindowTitle(QtGui.QApplication.translate("SaveFigureOptionsDialog", "Save Figure Options", None, QtGui.QApplication.UnicodeUTF8))

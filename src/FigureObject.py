@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QObject, pyqtSignal
-from PyQt4.QtGui import QApplication
+from PySide.QtCore import QObject, Signal
+from PySide.QtGui import QApplication
 
 import Util
 

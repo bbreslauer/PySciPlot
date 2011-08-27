@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QColor
+from PySide.QtGui import QColor
 
 import Util, Property
 

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QPushButton, QColor, QColorDialog, QApplication
+from PySide.QtGui import QPushButton, QColor, QColorDialog, QApplication
 
 import Util, Property
 

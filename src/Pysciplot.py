@@ -16,8 +16,9 @@
 
 import string, os, re, time, pickle
 
-from PyQt4.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
-from PyQt4.QtCore import Qt, QVariant, QFile
+from PySide.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
+#from PySide.QtCore import Qt, QVariant, QFile
+from PySide.QtCore import Qt, QFile
 
 import matplotlib
 matplotlib.use('Qt4Agg')
@@ -207,7 +208,7 @@ class Pysciplot(QMainWindow):
 
         Util.debug(2, "App.saveProjectAs", "Saving project as")
         
-        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", self.projectDirectory(), "PySciPlot Project (*.psp);;All Files (*)"))
+        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Project", self.projectDirectory(), "PySciPlot Project (*.psp);;All Files (*)")[0])
 
         Save.writeProjectToFile(self, fileName)
 
@@ -338,10 +339,10 @@ class Pysciplot(QMainWindow):
             return False
         
         # As user for the filename to save to
-        fileName = QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", self.projectDirectory())
+        fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", self.projectDirectory())[0])
 
         # Save the figure to the file
-        currentWindow.widget().figure.savefig(str(fileName), dpi=dpi, orientation=orientation)
+        currentWindow.widget().figure.savefig(fileName, dpi=dpi, orientation=orientation)
 
 
     ######################

@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QAction, QColor, QApplication
+from PySide.QtCore import Qt
+from PySide.QtGui import QAction, QColor, QApplication
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure as MPLFigure

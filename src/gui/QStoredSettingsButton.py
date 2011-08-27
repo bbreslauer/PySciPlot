@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QToolButton, QApplication
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QToolButton, QApplication
+from PySide.QtCore import Qt
 
 from gui.SubWindows import SubWindow
 from gui.QStoredSettingsWidget import *

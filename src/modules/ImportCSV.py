@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor, QComboBox
-from PyQt4.QtCore import QStringList
+from PySide.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor, QComboBox
+#from PySide.QtCore import QStringList
 
 import os, csv
 
@@ -48,7 +48,7 @@ class ImportCSV(Module):
         if not os.path.isdir(directory):
             directory = self._app.preferences.getInternal('projectDirectory')
 
-        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Comma Separated Values (*.csv);;All Files(*)"))
+        csvFile = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Comma Separated Values (*.csv);;All Files(*)")[0])
 
         if csvFile != "":
             return Util.setWidgetValue(self._ui.csvFileName, csvFile)
@@ -137,7 +137,8 @@ class ImportCSV(Module):
         self.validateWaveNames()
 
         # Adjust the row headers so that they number correctly with the wave names in the first row
-        rowLabels = QStringList("Type")
+        #rowLabels = QStringList("Type")
+        rowLabels = ["Type"]
         rowLabels.append("Name")
         for row in range(1, dataTable.rowCount()):
             rowLabels.append(str(row))
@@ -241,7 +242,7 @@ class ImportCSV(Module):
         self.menuEntry.setObjectName("actionImportCSV")
         self.menuEntry.setShortcut("Ctrl+I")
         self.menuEntry.setText("Import CSV Data")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         
         # Check if menu already exists
         if "menuImport" not in vars(self._app.ui).keys():

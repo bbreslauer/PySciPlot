@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction, QFileDialog, QMessageBox
+from PySide.QtGui import QWidget, QAction, QFileDialog, QMessageBox
 
 import os, csv
 
@@ -56,7 +56,7 @@ class ExportData(Module):
         if not os.path.isdir(directory):
             directory = self._app.preferences.getInternal('projectDirectory')
 
-        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "All Files(*)"))
+        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "All Files(*)")[0])
 
         if fileName != "":
             return Util.setWidgetValue(self._ui.fileName, fileName)
@@ -134,7 +134,7 @@ class ExportData(Module):
         self.menuEntry.setObjectName("actionExportData")
         self.menuEntry.setShortcut("Ctrl+E")
         self.menuEntry.setText("Export Data")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
 
         # Check if menu already exists
         if "menuExport" not in vars(self._app.ui).keys():

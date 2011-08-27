@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QSpinBox, QApplication
+from PySide.QtGui import QSpinBox, QApplication
 
 class QWaveLimitSpinBox(QSpinBox):
     """

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QApplication, QDialogButtonBox
+from PySide.QtGui import QWidget, QApplication, QDialogButtonBox
 
 import Util
 from QEditFigureSubWidget import *

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QColor
+from PySide.QtGui import QColor
 
 from numpy import nan
 from matplotlib.axes import Axes
@@ -36,7 +36,7 @@ class CartesianPlot(FigureObject):
     """
     
     # Signals
-    wavePairRemovedFromPlot = pyqtSignal(WavePair)
+    wavePairRemovedFromPlot = Signal(WavePair)
 
     def __init__(self, plot, moreProperties={}):
         Util.debug(2, "CartesianPlot.init", "Creating Cartesian Plot")

@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QModelIndex, Qt, QVariant, QString, QMimeData, QDataStream, QIODevice, QAbstractListModel
-from PyQt4.QtGui import QStringListModel, QApplication, QStandardItemModel
+from PySide.QtCore import QModelIndex, Qt,  QMimeData, QDataStream, QIODevice, QAbstractListModel
+from PySide.QtGui import QStringListModel, QApplication, QStandardItemModel
 
 from Wave import Wave
 
@@ -99,9 +99,8 @@ class WavesListModel(QAbstractListModel):
 
     def data(self, index, role=Qt.DisplayRole):
         if index.isValid() and index.row() < self.rowCount() and role == Qt.DisplayRole:
-            return QVariant(self.waveNameByRow(index.row()))
-        else:
-            return QVariant()
+            return str(self.waveNameByRow(index.row()))
+        return None
 
     def flags(self, index):
         defaultFlags = Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled
@@ -149,9 +148,9 @@ class WavesListModel(QAbstractListModel):
         if isinstance(entry, Wave):
             wave = entry
             name = entry.name()
-        elif isinstance(entry, QVariant):
-            name = str(entry.toString())
-            wave = self.appWaves().wave(name)
+        #elif isinstance(entry, QVariant):
+        #    name = str(entry.toString())
+        #    wave = self.appWaves().wave(name)
         else:
             name = entry
             wave = self.appWaves().wave(name)

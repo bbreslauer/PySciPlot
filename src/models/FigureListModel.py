@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QAbstractListModel, QModelIndex, Qt, QVariant
+from PySide.QtCore import QAbstractListModel, QModelIndex, Qt
 
 class FigureListModel(QAbstractListModel):
     """
@@ -41,16 +41,16 @@ class FigureListModel(QAbstractListModel):
         if index.isValid() and (role == Qt.DisplayRole or role == Qt.EditRole):
             if self._figures.getFigure(index.row()):
                 return self._figures.getFigure(index.row()).get('windowTitle')
-        return QVariant()
+        return None
 
     def headerData(self, section, orientation, role):
         """Return the header for the given section and orientation."""
 
         if orientation == Qt.Horizontal:
-            return QVariant("Figures")
+            return "Figures"
         elif orientation == Qt.Vertical:
-            return QVariant(section)
-        return QVariant()
+            return str(section)
+        return None
 
     def flags(self, index):
         """Return the flags for the given index."""

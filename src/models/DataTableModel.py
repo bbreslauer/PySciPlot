@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QAbstractTableModel, QVariant, Qt, QModelIndex, QString, pyqtSignal
-from PyQt4.QtGui import QApplication
+from PySide.QtCore import QAbstractTableModel, Qt, QModelIndex, Signal, QSize
+from PySide.QtGui import QApplication
 
 import Util
 from Wave import Wave
@@ -30,7 +30,7 @@ class DataTableModel(QAbstractTableModel):
     """
 
     # Signals
-    dataChanged = pyqtSignal(QModelIndex, QModelIndex)
+    dataChanged = Signal(QModelIndex, QModelIndex)
     
     def __init__(self, wavesIn=[], parent=None, *args):
         """
@@ -52,7 +52,7 @@ class DataTableModel(QAbstractTableModel):
 
     def waves(self):
         return self._waves
-        
+
     def rowCount(self, parent = QModelIndex()):
         """Return the number of rows."""
 
@@ -82,15 +82,15 @@ class DataTableModel(QAbstractTableModel):
         """Return the data at position index with the given role."""
 
         if not index.isValid():
-            return QVariant()
+            return None
         elif role != Qt.DisplayRole and role != Qt.EditRole:
-            return QVariant()
+            return None
         elif index.column() >= self.columnCount():
-            return QVariant()
+            return None
         elif index.row() >= self.waves()[index.column()].length():
-            return QVariant()
+            return None
         elif self.waves()[index.column()].data()[index.row()] == "":
-            return QVariant()
+            return None
         #
         # If we return long() or float() instead of str(), then the view uses a spinbox
         # and we cannot easily return to a blank entry
@@ -100,7 +100,7 @@ class DataTableModel(QAbstractTableModel):
             return str(self.waves()[index.column()].data()[index.row()])
         elif 'String' == self.waves()[index.column()].dataType():
             return str(self.waves()[index.column()].data()[index.row()])
-        return QVariant()
+        return None
 
     def headerData(self, section, orientation, role):
         """
@@ -110,10 +110,10 @@ class DataTableModel(QAbstractTableModel):
         """
 
         if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
-            return QVariant(QString(self.waves()[section].name()))
+            return str(self.waves()[section].name())
         elif orientation == Qt.Vertical and role == Qt.DisplayRole:
-            return QVariant(section)
-        return QVariant()
+            return str(section)
+        return None
 
     def flags(self, index):
         """Return the flags for the item at the given index."""
@@ -121,7 +121,6 @@ class DataTableModel(QAbstractTableModel):
         if not index.isValid():
             return Qt.ItemIsEnabled
         return Qt.ItemIsEnabled | Qt.ItemIsEditable | Qt.ItemIsSelectable
-    
 
     # Modifying methods
     def addColumn(self, wave):

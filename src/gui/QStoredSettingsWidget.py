@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QDialog, QMessageBox, QFrame, QApplication
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QWidget, QDialog, QMessageBox, QFrame, QApplication
+from PySide.QtCore import Qt
 
 from models.StoredSettingsModel import *
 from ui.Ui_StoredSettingsName import *

@@ -16,7 +16,7 @@
 
 import Util
 
-from PyQt4.QtCore import QObject, pyqtSignal
+from PySide.QtCore import QObject, Signal
 from numpy import nan
 
 class Wave(QObject):
@@ -40,9 +40,9 @@ class Wave(QObject):
     """
 
     # Signals
-    nameChanged = pyqtSignal(str, Wave)
-    dataModified = pyqtSignal()
-    lengthChanged = pyqtSignal()
+    nameChanged = Signal(str, Wave)
+    dataModified = Signal()
+    lengthChanged = Signal()
 
     def __init__(self, waveName, dataType="Decimal", dataIn=[]):
         """

@@ -19,8 +19,8 @@
 import sys, string, signal, os
 from optparse import OptionParser
 
-from PyQt4.QtCore import QT_VERSION_STR
-from PyQt4.QtGui import QApplication
+from PySide import QtCore
+from PySide.QtGui import QApplication
 
 import config
 from Pysciplot import Pysciplot
@@ -40,9 +40,9 @@ def setupOptions():
 if __name__ == "__main__":
     # check to make sure we are using at least Qt 4.6.1, as there is a bugfix in that version that causes
     # qheaderview logicalindices to refactor when removing a column
-    qtVersion = string.split(QT_VERSION_STR, ".")
-    if qtVersion < ['4',  '6',  '1']:
-        print "This application requires at least Qt version 4.6.1.  You are running " + QT_VERSION_STR + "."
+    qtVersion = QtCore.__version_info__
+    if qtVersion < (4,6,1):
+        print "This application requires at least Qt version 4.6.1.  You are running " + '.'.join(map(str, qtVersion)) + "."
         sys.exit()
     
     (options, args) = setupOptions()

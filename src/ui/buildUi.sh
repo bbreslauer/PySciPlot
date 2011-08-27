@@ -28,7 +28,7 @@ fi
 for file in $files
 do
     echo ${file}
-    pyuic4 -o ${file}.py ${file}
+    pyside-uic -o ${file}.py ${file}
     
     # remove all connectSlotsByName entries in py files
     sed '/connectSlotsByName/d' ${file}.py > ${file}.py.new

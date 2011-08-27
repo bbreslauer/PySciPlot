@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QItemDelegate, QSpinBox, QComboBox, QLineEdit
+from PySide.QtCore import Qt
+from PySide.QtGui import QItemDelegate, QSpinBox, QComboBox, QLineEdit
 
 
 class SpinBoxDelegate(QItemDelegate):

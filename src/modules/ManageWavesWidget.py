@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox, QItemSelectionModel
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QWidget, QAction, QMessageBox, QItemSelection, QDialogButtonBox, QItemSelectionModel
+from PySide.QtCore import Qt
 
 import re
 from math import *
@@ -296,7 +296,7 @@ class ManageWavesWidget(Module):
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionManageWavesWidget")
         self.menuEntry.setText("Manage Waves")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         self.menu = vars(self._app.ui)["menuData"]
         self.menu.addAction(self.menuEntry)
 

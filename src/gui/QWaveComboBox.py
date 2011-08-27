@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QComboBox, QApplication
+from PySide.QtGui import QComboBox, QApplication
+from PySide import QtCore
 
 class QWaveComboBox(QComboBox):
     """
@@ -48,7 +49,6 @@ class QWaveComboBox(QComboBox):
 
         self.model().modelAboutToBeReset.connect(self.beforeReset)
         self.model().modelReset.connect(self.afterReset)
-
 
     def beforeReset(self):
         """

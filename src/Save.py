@@ -18,7 +18,7 @@
 
 import Util
 
-from PyQt4.QtGui import QMdiArea
+from PySide.QtGui import QMdiArea
 
 import xml.dom.minidom, os.path, pickle
 

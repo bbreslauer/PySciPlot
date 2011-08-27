@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QModelIndex, Qt, QVariant
-from PyQt4.QtGui import QStringListModel, QApplication
+from PySide.QtCore import QModelIndex, Qt
+from PySide.QtGui import QStringListModel, QApplication
 
 from Property import *
 
@@ -54,8 +54,7 @@ class StoredSettingsModel(QStringListModel):
     def data(self, index, role=Qt.DisplayRole):
         if index.isValid() and role == Qt.DisplayRole:
             return index.internalPointer()[0]
-        else:
-            return QVariant()
+        return None
 
     def setData(self, index, value, role):
         name = str(value.toString()).strip()

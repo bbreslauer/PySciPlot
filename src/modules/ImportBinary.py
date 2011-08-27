@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor, QComboBox, QMessageBox
+from PySide.QtGui import QAction, QMenu, QWidget, QApplication, QFileDialog, QTableWidgetItem, QAbstractItemView, QBrush, QColor, QComboBox, QMessageBox
 
 import os, csv, array, struct
 
@@ -63,7 +63,7 @@ class ImportBinary(Module):
         if not os.path.isdir(directory):
             directory = self._app.preferences.getInternal('projectDirectory')
 
-        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Binary (*.bin *.dat);;All Files(*)"))
+        fileName = str(QFileDialog.getOpenFileName(self._app.ui.workspace, "Select Data File", directory, "Binary (*.bin *.dat);;All Files(*)")[0])
 
         if fileName != "":
             return Util.setWidgetValue(self._ui.fileName, fileName)
@@ -136,7 +136,7 @@ class ImportBinary(Module):
         self.menuEntry.setObjectName("actionImportBinary")
         self.menuEntry.setShortcut("Ctrl+B")
         self.menuEntry.setText("Import Binary Data")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         
         # Check if menu already exists
         if "menuImport" not in vars(self._app.ui).keys():

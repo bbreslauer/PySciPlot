@@ -18,8 +18,8 @@
 
 import config, numpy
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QColor, QApplication
+from PySide.QtCore import Qt
+from PySide.QtGui import QColor, QApplication
 
 from Exceptions import UnknownWidgetTypeError
 

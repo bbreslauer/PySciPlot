@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QApplication
+from PySide.QtGui import QApplication
 
 class Module():
     """
@@ -66,4 +66,9 @@ class Module():
         Perform all actions required to reset this module to its original state.
         """
         pass
+
+    # Created this method to get around a problem with overriding QWidget.show. I wrote
+    # an email to the pyside list, and am awaiting a solution.
+    def show(self):
+        self.window.show()
 

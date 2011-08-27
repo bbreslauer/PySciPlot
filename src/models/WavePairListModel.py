@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt, QVariant, QString, pyqtSignal
+from PySide.QtCore import QAbstractTableModel, QModelIndex, Qt,  Signal
 
 class WavePairListModel(QAbstractTableModel):
     """
@@ -25,8 +25,8 @@ class WavePairListModel(QAbstractTableModel):
         WavePairRemoved - emitted when a WavePair is removed from the list
     """
 
-    wavePairAdded   = pyqtSignal()
-    wavePairRemoved = pyqtSignal()
+    wavePairAdded   = Signal()
+    wavePairRemoved = Signal()
 
 
     def __init__(self, parent=None, *args):
@@ -52,8 +52,8 @@ class WavePairListModel(QAbstractTableModel):
         """Return the header for the given section and orientation."""
 
         if orientation == Qt.Horizontal and section < self.columnCount() and role == Qt.DisplayRole:
-            return QVariant(QString(self._columnNames[section]))
-        return QVariant()
+            return str(self._columnNames[section])
+        return None
 
     def index(self, row, column, parent=QModelIndex()):
         if row >= len(self._data):
@@ -65,13 +65,12 @@ class WavePairListModel(QAbstractTableModel):
 
         if self.indexIsValid(index) and role == Qt.DisplayRole:
             if self._columnNames[index.column()] == 'X':
-                return QVariant(self._data[index.row()].xName())
+                return str(self._data[index.row()].xName())
             elif self._columnNames[index.column()] == 'Y':
-                return QVariant(self._data[index.row()].yName())
+                return str(self._data[index.row()].yName())
             elif self._columnNames[index.column()] == 'Label':
-                return QVariant(self._data[index.row()].label())
-        else:
-            return QVariant()
+                return str(self._data[index.row()].label())
+        return None
     
     def indexIsValid(self, index):
         if index.isValid() and index.column() < self.columnCount() and index.row() < self.rowCount():

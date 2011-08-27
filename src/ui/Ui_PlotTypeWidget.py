@@ -2,37 +2,32 @@
 
 # Form implementation generated from reading ui file 'Ui_PlotTypeWidget.ui'
 #
-# Created: Sat May 28 00:16:58 2011
-#      by: PyQt4 UI code generator 4.8.4
+# Created: Sat Aug 27 19:02:55 2011
+#      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
+from PySide import QtCore, QtGui
 
 class Ui_PlotTypeWidget(object):
     def setupUi(self, PlotTypeWidget):
-        PlotTypeWidget.setObjectName(_fromUtf8("PlotTypeWidget"))
+        PlotTypeWidget.setObjectName("PlotTypeWidget")
         PlotTypeWidget.resize(400, 300)
         self.verticalLayout = QtGui.QVBoxLayout(PlotTypeWidget)
-        self.verticalLayout.setMargin(0)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.tabWidget = QtGui.QTabWidget(PlotTypeWidget)
-        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tabWidget.setObjectName("tabWidget")
         self.verticalLayout.addWidget(self.tabWidget)
         self.buttons = QtGui.QDialogButtonBox(PlotTypeWidget)
         self.buttons.setStandardButtons(QtGui.QDialogButtonBox.Apply|QtGui.QDialogButtonBox.Reset)
         self.buttons.setCenterButtons(True)
-        self.buttons.setObjectName(_fromUtf8("buttons"))
+        self.buttons.setObjectName("buttons")
         self.verticalLayout.addWidget(self.buttons)
 
         self.retranslateUi(PlotTypeWidget)
         self.tabWidget.setCurrentIndex(-1)
-        QtCore.QObject.connect(self.buttons, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), PlotTypeWidget.buttonClickHandler)
+        QtCore.QObject.connect(self.buttons, QtCore.SIGNAL("clicked(QAbstractButton*)"), PlotTypeWidget.buttonClickHandler)
 
     def retranslateUi(self, PlotTypeWidget):
         PlotTypeWidget.setWindowTitle(QtGui.QApplication.translate("PlotTypeWidget", "Form", None, QtGui.QApplication.UnicodeUTF8))

@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import Qt, QObject
-from PyQt4.QtGui import QWidget, QAction, QMessageBox
+from PySide.QtCore import Qt, QObject
+from PySide.QtGui import QWidget, QAction, QMessageBox
 
 from Wave import *
 from Module import *
@@ -188,7 +188,7 @@ class EditFigureDialog(Module):
         self.menuEntry.setObjectName("actionEditFiguresDialog")
         self.menuEntry.setShortcut("Ctrl+F")
         self.menuEntry.setText("Edit Figures")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         self.menu = vars(self._app.ui)["menuPlot"]
         self.menu.addAction(self.menuEntry)
 

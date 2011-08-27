@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QObject, pyqtSignal
-from PyQt4.QtGui import QColor
+from PySide.QtCore import QObject, Signal
+from PySide.QtGui import QColor
 import copy
 
 class Property(QObject):
@@ -30,7 +30,7 @@ class Property(QObject):
     castType = None
 
     # Signals
-    modified = pyqtSignal()
+    modified = Signal()
 
     def __init__(self, *args):
         """
@@ -48,7 +48,15 @@ class Property(QObject):
         # by reference. We need to copy their values, instead, so that we don't
         # have multiple dictionaries pointing to the same property.
 
-        self._value = copy.deepcopy(self.default)
+        # We should always be deepcopy'ing. But until PySide bug 984 is resolved,
+        # this can segfault at times. The except seems to resolve this for the
+        # time being.
+        # TODO fix this when PySide bug 984 is resolved
+        try:
+            self._value = copy.deepcopy(self.default)
+        except SystemError:
+            self._value = copy.copy(self.default)
+
         if len(args) > 0:
             self.set(args[0])
 

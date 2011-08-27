@@ -2,33 +2,28 @@
 
 # Form implementation generated from reading ui file 'Ui_PlotOptionsWidget.ui'
 #
-# Created: Sat May 28 00:16:58 2011
-#      by: PyQt4 UI code generator 4.8.4
+# Created: Sat Aug 27 19:02:55 2011
+#      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
+from PySide import QtCore, QtGui
 
 class Ui_PlotOptionsWidget(object):
     def setupUi(self, PlotOptionsWidget):
-        PlotOptionsWidget.setObjectName(_fromUtf8("PlotOptionsWidget"))
+        PlotOptionsWidget.setObjectName("PlotOptionsWidget")
         PlotOptionsWidget.resize(797, 442)
         self.horizontalLayout = QtGui.QHBoxLayout(PlotOptionsWidget)
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtGui.QVBoxLayout()
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.verticalLayout.setObjectName("verticalLayout")
         self.label_29 = QtGui.QLabel(PlotOptionsWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_29.sizePolicy().hasHeightForWidth())
         self.label_29.setSizePolicy(sizePolicy)
-        self.label_29.setObjectName(_fromUtf8("label_29"))
+        self.label_29.setObjectName("label_29")
         self.verticalLayout.addWidget(self.label_29)
         self.plotSelector = QtGui.QComboBox(PlotOptionsWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -38,12 +33,12 @@ class Ui_PlotOptionsWidget(object):
         self.plotSelector.setSizePolicy(sizePolicy)
         self.plotSelector.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContents)
         self.plotSelector.setMinimumContentsLength(20)
-        self.plotSelector.setObjectName(_fromUtf8("plotSelector"))
+        self.plotSelector.setObjectName("plotSelector")
         self.verticalLayout.addWidget(self.plotSelector)
         self.line = QtGui.QFrame(PlotOptionsWidget)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName(_fromUtf8("line"))
+        self.line.setObjectName("line")
         self.verticalLayout.addWidget(self.line)
         self.groupBox = QtGui.QGroupBox(PlotOptionsWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
@@ -52,16 +47,16 @@ class Ui_PlotOptionsWidget(object):
         sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
         self.groupBox.setSizePolicy(sizePolicy)
         self.groupBox.setMinimumSize(QtCore.QSize(200, 0))
-        self.groupBox.setObjectName(_fromUtf8("groupBox"))
+        self.groupBox.setObjectName("groupBox")
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.groupBox)
-        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.label_3 = QtGui.QLabel(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
         self.label_3.setSizePolicy(sizePolicy)
-        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.label_3.setObjectName("label_3")
         self.verticalLayout_3.addWidget(self.label_3)
         self.name = QtGui.QLineEdit(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -71,7 +66,7 @@ class Ui_PlotOptionsWidget(object):
         self.name.setSizePolicy(sizePolicy)
         self.name.setMinimumSize(QtCore.QSize(150, 0))
         self.name.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.name.setObjectName(_fromUtf8("name"))
+        self.name.setObjectName("name")
         self.verticalLayout_3.addWidget(self.name)
         self.nameFont = QTextOptionsButton(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -81,12 +76,12 @@ class Ui_PlotOptionsWidget(object):
         self.nameFont.setSizePolicy(sizePolicy)
         self.nameFont.setMinimumSize(QtCore.QSize(75, 0))
         self.nameFont.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.nameFont.setObjectName(_fromUtf8("nameFont"))
+        self.nameFont.setObjectName("nameFont")
         self.verticalLayout_3.addWidget(self.nameFont)
         self.line_5 = QtGui.QFrame(self.groupBox)
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
         self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_5.setObjectName(_fromUtf8("line_5"))
+        self.line_5.setObjectName("line_5")
         self.verticalLayout_3.addWidget(self.line_5)
         self.label_8 = QtGui.QLabel(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -94,18 +89,18 @@ class Ui_PlotOptionsWidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
         self.label_8.setSizePolicy(sizePolicy)
-        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.label_8.setObjectName("label_8")
         self.verticalLayout_3.addWidget(self.label_8)
         self.backgroundColor = QColorButton(self.groupBox)
         self.backgroundColor.setMinimumSize(QtCore.QSize(150, 0))
-        self.backgroundColor.setStyleSheet(_fromUtf8("color: rgb(0, 0, 0);\n"
-"background-color: rgb(255, 255, 255);"))
-        self.backgroundColor.setObjectName(_fromUtf8("backgroundColor"))
+        self.backgroundColor.setStyleSheet("color: rgb(0, 0, 0);\n"
+"background-color: rgb(255, 255, 255);")
+        self.backgroundColor.setObjectName("backgroundColor")
         self.verticalLayout_3.addWidget(self.backgroundColor)
         self.line_6 = QtGui.QFrame(self.groupBox)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
         self.line_6.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_6.setObjectName(_fromUtf8("line_6"))
+        self.line_6.setObjectName("line_6")
         self.verticalLayout_3.addWidget(self.line_6)
         self.label = QtGui.QLabel(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -113,7 +108,7 @@ class Ui_PlotOptionsWidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
-        self.label.setObjectName(_fromUtf8("label"))
+        self.label.setObjectName("label")
         self.verticalLayout_3.addWidget(self.label)
         self.plotType = QtGui.QListWidget(self.groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
@@ -122,12 +117,12 @@ class Ui_PlotOptionsWidget(object):
         sizePolicy.setHeightForWidth(self.plotType.sizePolicy().hasHeightForWidth())
         self.plotType.setSizePolicy(sizePolicy)
         self.plotType.setMinimumSize(QtCore.QSize(100, 0))
-        self.plotType.setObjectName(_fromUtf8("plotType"))
+        self.plotType.setObjectName("plotType")
         self.verticalLayout_3.addWidget(self.plotType)
         self.buttons = QtGui.QDialogButtonBox(self.groupBox)
         self.buttons.setStandardButtons(QtGui.QDialogButtonBox.Apply|QtGui.QDialogButtonBox.Reset)
         self.buttons.setCenterButtons(True)
-        self.buttons.setObjectName(_fromUtf8("buttons"))
+        self.buttons.setObjectName("buttons")
         self.verticalLayout_3.addWidget(self.buttons)
         self.verticalLayout.addWidget(self.groupBox)
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -138,17 +133,17 @@ class Ui_PlotOptionsWidget(object):
         sizePolicy.setHeightForWidth(self.plotTypeStack.sizePolicy().hasHeightForWidth())
         self.plotTypeStack.setSizePolicy(sizePolicy)
         self.plotTypeStack.setFrameShape(QtGui.QFrame.NoFrame)
-        self.plotTypeStack.setObjectName(_fromUtf8("plotTypeStack"))
+        self.plotTypeStack.setObjectName("plotTypeStack")
         self.horizontalLayout.addWidget(self.plotTypeStack)
         self.horizontalLayout.setStretch(0, 1)
         self.horizontalLayout.setStretch(1, 3)
 
         self.retranslateUi(PlotOptionsWidget)
         self.plotTypeStack.setCurrentIndex(-1)
-        QtCore.QObject.connect(self.plotSelector, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), PlotOptionsWidget.changeCurrentPlot)
-        QtCore.QObject.connect(self.buttons, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), PlotOptionsWidget.buttonClickHandler)
-        QtCore.QObject.connect(self.nameFont, QtCore.SIGNAL(_fromUtf8("clicked()")), self.nameFont.showTextOptionsWidget)
-        QtCore.QObject.connect(self.backgroundColor, QtCore.SIGNAL(_fromUtf8("clicked()")), self.backgroundColor.createColorDialog)
+        QtCore.QObject.connect(self.plotSelector, QtCore.SIGNAL("currentIndexChanged(int)"), PlotOptionsWidget.changeCurrentPlot)
+        QtCore.QObject.connect(self.buttons, QtCore.SIGNAL("clicked(QAbstractButton*)"), PlotOptionsWidget.buttonClickHandler)
+        QtCore.QObject.connect(self.nameFont, QtCore.SIGNAL("clicked()"), self.nameFont.showTextOptionsWidget)
+        QtCore.QObject.connect(self.backgroundColor, QtCore.SIGNAL("clicked()"), self.backgroundColor.createColorDialog)
 
     def retranslateUi(self, PlotOptionsWidget):
         PlotOptionsWidget.setWindowTitle(QtGui.QApplication.translate("PlotOptionsWidget", "Form", None, QtGui.QApplication.UnicodeUTF8))

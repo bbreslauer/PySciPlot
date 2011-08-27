@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QPushButton, QDialogButtonBox, QColor, QApplication
+from PySide.QtGui import QPushButton, QDialogButtonBox, QColor, QApplication
 
 import matplotlib.font_manager as fm
 

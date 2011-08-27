@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import Qt, QModelIndex, pyqtSignal
-from PyQt4.QtGui import QTableView, QAbstractItemView, QMenu, QAction, QDialog, QMessageBox, QApplication
+from PySide.QtCore import Qt, QModelIndex, Signal
+from PySide.QtGui import QTableView, QAbstractItemView, QMenu, QAction, QDialog, QMessageBox, QApplication
 
 import Util
 from Wave import Wave
@@ -31,7 +31,7 @@ class AddWaveAction(QAction):
     """
 
     # Signals
-    addWaveClicked = pyqtSignal(Wave)
+    addWaveClicked = Signal(Wave)
 
     def __init__(self, wave, parent):
         QAction.__init__(self, wave.name(), parent)
@@ -311,7 +311,7 @@ class QDataTableView(QTableView):
         QTableView.reset(self)
         self.resizeRowsToContents()
         self.resizeColumnsToContents()
-
+#
     def keyPressEvent(self, event):
         """Capture certain types of keypress events and handle them different ways."""
         # When data has been edited, move to the next row in the column and continue editing.

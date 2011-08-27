@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QAbstractListModel, QModelIndex, Qt, QVariant
+from PySide.QtCore import QAbstractListModel, QModelIndex, Qt
 
 class PlotListModel(QAbstractListModel):
     """
@@ -44,16 +44,16 @@ class PlotListModel(QAbstractListModel):
         if index.isValid() and role == Qt.DisplayRole and self._figure and index.row() < self._figure.numPlots():
             plotNum = index.row()
             return str(plotNum) + " - " + str(self._figure.getPlot(plotNum).get('name'))
-        return QVariant()
+        return None
 
     def headerData(self, section, orientation, role):
         """Return the header for the given section and orientation."""
 
         if orientation == Qt.Horizontal:
-            return QVariant("Plots")
+            return "Plots"
         elif orientation == Qt.Vertical:
-            return QVariant(section)
-        return QVariant()
+            return str(section)
+        return None
 
     def flags(self, index):
         """Return the flags for the given index."""

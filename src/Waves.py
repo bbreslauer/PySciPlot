@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtCore import QObject, pyqtSignal
+from PySide.QtCore import QObject, Signal
 
 import Util
 
@@ -32,10 +32,10 @@ class Waves(QObject):
     """
 
     # Signals
-    waveAdded   = pyqtSignal(Wave)
-    waveRemoved = pyqtSignal(Wave)
-    allWavesRemoved = pyqtSignal()
-    waveRenamed = pyqtSignal(Wave)
+    waveAdded   = Signal(Wave)
+    waveRemoved = Signal(Wave)
+    allWavesRemoved = Signal()
+    waveRenamed = Signal(Wave)
 
     def __init__(self, wavesIn=[]):
         """

@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction, QMessageBox
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QWidget, QAction, QMessageBox
+from PySide.QtCore import Qt
 
 import Util
 from Wave import Wave
@@ -107,7 +107,7 @@ class CreateTableDialog(Module):
         self.menuEntry.setObjectName("actionNewTableDialog")
         self.menuEntry.setShortcut("Ctrl+T")
         self.menuEntry.setText("New Table")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         self.menu = vars(self._app.ui)["menuNew"]
         self.menu.addAction(self.menuEntry)
 

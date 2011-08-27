@@ -14,8 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QAction, QTableWidgetItem
-from PyQt4.QtCore import Qt
+from PySide.QtGui import QWidget, QAction, QTableWidgetItem
+from PySide.QtCore import Qt
+from PySide import QtCore
 
 import Util, math, numpy, scipy.optimize
 from numpy import pi, e
@@ -134,10 +135,13 @@ class CurveFitting(Module):
         on degree change.
         """
 
+        # TODO this is here because a segfault is caused on startup if this line
+        # does not exist. remove this when PySide bug 990 is fixed
+        self._ui.polynomialDegree.valueChanged[int].connect(self.changePolynomialDegree)
         # Disconnect slots
         try:
             self._ui.polynomialDegree.valueChanged[int].disconnect(self.changePolynomialDegree)
-        except:
+        except e:
             pass
 
         # Connect polynomial degree change
@@ -222,7 +226,8 @@ class CurveFitting(Module):
                     item.setFlags(Qt.ItemIsEnabled)
 
                 self._ui.parameterTable.setItem(rowIndex, colIndex, item)
-                
+         
+#    @QtCore.Slot(int)
     def changePolynomialDegree(self, newDegree):
         # If decreasing the degree, just remove the last entries
         # If increasing the degree,
@@ -678,7 +683,7 @@ class CurveFitting(Module):
         self.menuEntry = QAction(self._app)
         self.menuEntry.setObjectName("actionCurveFiting")
         self.menuEntry.setText("Curve Fitting")
-        self.menuEntry.triggered.connect(self.window.show)
+        self.menuEntry.triggered.connect(self.show)
         
         self.menu = vars(self._app.ui)["menuData"]
         self.menu.addAction(self.menuEntry)

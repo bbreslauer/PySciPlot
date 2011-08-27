@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
+from PySide.QtGui import QWidget, QDialogButtonBox, QFileDialog, QApplication
 
 import os, pickle
 

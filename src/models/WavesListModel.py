@@ -112,7 +112,7 @@ class WavesListModel(QAbstractListModel):
     def setData(self, index, value, role=Qt.EditRole):
 
         if index.isValid() and role == Qt.DisplayRole and index.row() < self.rowCount():
-            waveName = str(value.toString())
+            waveName = str(value)
             self.orderedWaveNames()[index.row()] = waveName
             self.dataChanged.emit(index, index)
             return True
@@ -148,9 +148,6 @@ class WavesListModel(QAbstractListModel):
         if isinstance(entry, Wave):
             wave = entry
             name = entry.name()
-        #elif isinstance(entry, QVariant):
-        #    name = str(entry.toString())
-        #    wave = self.appWaves().wave(name)
         else:
             name = entry
             wave = self.appWaves().wave(name)

@@ -189,12 +189,7 @@ class DataTableModel(QAbstractTableModel):
 
         if index.isValid() and role == Qt.EditRole:
             wave = self.waves()[index.column()]
-
-            # Convert from QVariant to QString to str
-            try:
-                value = str(value.toString())
-            except:
-                value = str(value)
+            value = str(value)
 
             # Disregard if there is no change
             if str(self.data(index)) == value:

@@ -57,7 +57,7 @@ class StoredSettingsModel(QStringListModel):
         return None
 
     def setData(self, index, value, role):
-        name = str(value.toString()).strip()
+        name = str(value).strip()
         if index.isValid() and role == Qt.EditRole and name != "":
             try:
                 index.internalPointer()[0] = name

@@ -65,7 +65,7 @@ class FigureListModel(QAbstractListModel):
             # Do not allow for blank figure names
             if value == "":
                 return False
-            self._figures.getFigure(index.row()).set_('windowTitle', str(value.toString()))
+            self._figures.getFigure(index.row()).set_('windowTitle', str(value))
             self.dataChanged.emit(index, index)
             return True
         return False

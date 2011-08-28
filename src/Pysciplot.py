@@ -20,6 +20,8 @@ from PySide.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDia
 #from PySide.QtCore import Qt, QVariant, QFile
 from PySide.QtCore import Qt, QFile
 
+os.environ['QT_API'] = 'pyside'
+
 import matplotlib
 matplotlib.use('Qt4Agg')
 

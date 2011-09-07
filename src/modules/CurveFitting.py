@@ -137,6 +137,7 @@ class CurveFitting(Module):
 
         # TODO this is here because a segfault is caused on startup if this line
         # does not exist. remove this when PySide bug 990 is fixed
+        # BUG FIXED IN 8/29/11 COMMIT
         self._ui.polynomialDegree.valueChanged[int].connect(self.changePolynomialDegree)
         # Disconnect slots
         try:

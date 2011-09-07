@@ -17,11 +17,15 @@
 from PySide.QtCore import Qt
 from PySide.QtGui import QAction, QColor, QApplication
 
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure as MPLFigure
-from matplotlib.font_manager import FontProperties
-from mpl_toolkits.axes_grid.axislines import Axes
-from mpl_toolkits.axes_grid1 import Grid
+#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+#from matplotlib.figure import Figure as MPLFigure
+#from matplotlib.font_manager import FontProperties
+#from mpl_toolkits.axes_grid.axislines import Axes
+#from mpl_toolkits.axes_grid1 import Grid
+
+from pygraphene import figure as pgf
+from pygraphene import plot as pgp
+from pygraphene import font as pgfont
 
 import Util, Property
 from FigureObject import *
@@ -56,10 +60,13 @@ class Figure(FigureObject):
         self._app = QApplication.instance().window
 
         # Graphical stuff
-        self._figure = MPLFigure()
-        self._canvas = FigureCanvas(self._figure)
+        width=600
+        height=400
+        self._figure = pgf.Figure(width, height)
+        self._canvas = self._figure.canvas().widget()
         self._figureSubWindow = FigureSubWindow(self._app.ui.workspace)
         self._figureSubWindow.setWidget(self._canvas)
+        self._figureSubWindow.resize(width+10, height+31) # resize includes the window frame, for some reason, so we need to add some pixels
         self._app.ui.workspace.addSubWindow(self._figureSubWindow)
         self._canvas.setParent(self._figureSubWindow)
         self.showFigure()
@@ -99,7 +106,7 @@ class Figure(FigureObject):
 
         self.refreshPlots()
 
-    def mplFigure(self):
+    def pgFigure(self):
         return self._figure
     
     def plots(self):
@@ -113,9 +120,15 @@ class Figure(FigureObject):
             return self.plots()[plotNum]
         return None
 
-    def addPlot(self, plot):
-        self.plots().append(plot)
-        self.refreshPlots()
+    def addPlot(self, plot, refresh=True):
+        self.plots().append(plot)  # Keep reference to the PSP plot around
+        plot.addFigure(self)  # Need the plot to keep the PSP figure reference
+        plot.initPgPlot()  # Create the PG plot in the PSP plot
+        self.pgFigure().addPlot(plot.pgPlot())  # Add the PG plot to the PG figure
+        plot.pgPlot().setPlotLocation(self.getPg('rows'), self.getPg('columns'), self.numPlots())
+
+        if refresh:
+            self.refreshPlots()  # Update the screen
 
     def extendPlots(self, maxPlotNum=-1):
         """
@@ -127,7 +140,8 @@ class Figure(FigureObject):
         Util.debug(2, "Figure.extendPlots", "Extending figure to contain " + str(maxPlotNum + 1) + " plots")
         for i in range(len(self.plots()), maxPlotNum + 1):
             plot = Plot()
-            self.plots().append(plot)
+            self.addPlot(plot, False)
+            #self.plots().append(plot)
 
 
     #################################
@@ -140,74 +154,91 @@ class Figure(FigureObject):
 
     def update_title(self):
         Util.debug(3, "Figure.update_title", "")
-        try:
-            self.mplFigure().texts.remove(self.mplHandles['title'])
-        except:
-            pass
-
-        self.mplHandles['title'] = self.mplFigure().suptitle(str(self.getMpl('title')), **(self.getMpl('titleFont')))
-        self.redraw()
+        self.pgFigure().setTitle(self.getPg('title'), pgfont.Font(**self.getPg('titleFont')))
+        self.pgFigure().title().draw()
 
     def update_titleFont(self):
         Util.debug(3, "Figure.update_titleFont", "")
-        self.update_title()
+        self.pgFigure().setTitle(font=pgfont.Font(**self.getPg('titleFont')))
+        self.pgFigure().title().draw()
 
     def update_rows(self):
         Util.debug(3, "Figure.update_rows", "")
-        self.refreshPlots()
+        # TODO
+        #self.refreshPlots()
 
     def update_columns(self):
         Util.debug(3, "Figure.update_columns", "")
-        self.refreshPlots()
+        # TODO
+        #self.refreshPlots()
 
     def update_linkPlotAxes(self):
         Util.debug(3, "Figure.update_linkPlotAxes", "")
-        self.refreshPlots()
+        # TODO
+        #self.refreshPlots()
     
     def update_axesPadding(self):
         Util.debug(3, "Figure.update_axesPadding", "")
-        if self.getMpl('linkPlotAxes'):
-            self.grid.set_axes_pad(self.getMpl('axesPadding'))
-        else:
-            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
-        self.redraw()
+        # TODO
+#        if self.getMpl('linkPlotAxes'):
+#            self.grid.set_axes_pad(self.getMpl('axesPadding'))
+#        else:
+#            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
+        #self.redraw()
 
     def update_backgroundColor(self):
         Util.debug(3, "Figure.update_backgroundColor", "")
-        self.mplFigure().set_facecolor(self.getMpl('backgroundColor'))
-        self.redraw()
+        # TODO
+#        self.mplFigure().set_facecolor(self.getMpl('backgroundColor'))
+        #self.redraw()
         
     def refreshPlots(self):
         Util.debug(3, "Figure.refreshPlots", "")
-        # Remove old axes
-        for plot in self.plots():
-            try:
-                self.mplFigure().delaxes(plot.axes())
-            except:
-                pass
-
+#        # Remove old axes
+#        for plot in self.plots():
+#            try:
+#                self.mplFigure().delaxes(plot.axes())
+#            except:
+#                pass
+#
         # Create any new plots that might be necessary
         self.extendPlots()
 
-        # Prepare the figure with a grid for the subplots to go into
-        if self.getMpl('linkPlotAxes'):
-            self.grid = Grid(self.mplFigure(), 111, nrows_ncols = (self.getMpl('rows'), self.getMpl('columns')), axes_pad=self.getMpl('axesPadding'), share_x=False, share_y=False)
-        else:
-            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
+        # Refresh the plots
+        for plot in self.plots():
+            plot.refresh()
+#
+#        # Prepare the figure with a grid for the subplots to go into
+#        if self.getMpl('linkPlotAxes'):
+#            self.grid = Grid(self.mplFigure(), 111, nrows_ncols = (self.getMpl('rows'), self.getMpl('columns')), axes_pad=self.getMpl('axesPadding'), share_x=False, share_y=False)
+#        else:
+#            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
+#
 
-        # Create the subplots and send the axes to the Plot objects
-        for plotNum in range(0, self.numPlots()):
-            if self.getMpl('linkPlotAxes'):
-                self.getPlot(plotNum).setAxes(self.grid[plotNum])
-            else:
-                self.getPlot(plotNum).setAxes(self.mplFigure().add_subplot(self.getMpl('rows'), self.getMpl('columns'), plotNum + 1))
+##########
+#        # Create the subplots and send the axes to the Plot objects
+#        for plotNum in range(0, self.numPlots()):
+#            plot = pgp.CartesianPlot(self._figure, self._figure.canvas())
+#            self.pgFigure().addPlot(plot)
+#            plot.setPlotLocation(self.getPg('rows'), self.getPg('columns'), plotNum + 1)
+##########
+
+#            if self.getMpl('linkPlotAxes'):
+#                self.getPlot(plotNum).setAxes(self.grid[plotNum])
+#            else:
+#                self.getPlot(plotNum).setAxes(self.mplFigure().add_subplot(self.getMpl('rows'), self.getMpl('columns'), plotNum + 1))
+
+
+        
+
 
         # Finally, redraw the canvas to show all the plots
-        self.redraw()
+        #self.redraw()
 
     def redraw(self):
         Util.debug(3, "Figure.redraw", "Drawing canvas")
-        self._canvas.draw()
+        print 'figure redraw'
+        self.pgFigure().draw()
 
 
     def refresh(self):

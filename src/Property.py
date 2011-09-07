@@ -97,6 +97,10 @@ class Property(QObject):
         """Return the value of this property in a matplotlib compatible form."""
         return self.get()
 
+    def getPg(self):
+        """Return the value of this property in a pygraphene compatible form."""
+        return self.get()
+
     def set(self, newValue):
         """
         Set the value of this property to newValue.
@@ -295,6 +299,9 @@ class Color(Property):
     def getMpl(self):
         return self.get().getRgbF()
     
+    def getPg(self):
+        return str(self.get().name())
+
     def _validateValue(self, newValue):
         # The passed value could be one of the following:
         # QColor()
@@ -316,6 +323,9 @@ class SymbolString(String):
     def getMpl(self):
         """Convert from a word to a character representation of the line style."""
         return self.symbols[self.get()]
+
+    def getPg(self):
+        return self.getMpl()
 
 class AxisScaleType(SymbolString):
     default = "Linear"
@@ -341,6 +351,14 @@ class Options(Dictionary):
 
         return mplDict
 
+    def getPg(self):
+        pgDict = {}
+
+        for (key, value) in self.get().items():
+            pgDict[key] = value.getPg()
+
+        return pgDict
+
     def _setValueDictEntry(self, key, value):
         self._value[key].set(value)
         
@@ -360,6 +378,14 @@ class TextOptions(Options):
         'linespacing':           Float(1.2),
         'rotation':              String('horizontal'),
     }
+
+    def getPg(self):
+        pgDict = {}
+        pgDict['family'] = self.get()['name'].getPg()
+        pgDict['size'] = self.get()['size'].getPg()
+        pgDict['color'] = self.get()['color'].getPg()
+
+        return pgDict
 
 class GenericAxis(Options):
     default = {
@@ -434,42 +460,55 @@ class Legend(Options):
 class LineStyle(SymbolString):
     default = "Solid"
 
+#    symbols = {
+#            'None': '',
+#            'Solid': '-',
+#            'Dashed': '--',
+#            'Dash Dot': '-.',
+#            'Dotted': ':',
+#        }
     symbols = {
-            'None': '',
-            'Solid': '-',
-            'Dashed': '--',
-            'Dash Dot': '-.',
-            'Dotted': ':',
+            'None': 'none',
+            'Solid': 'solid',
+            'Dashed': 'dash',
+            'Dash Dot': 'dashdot',
+            'Dotted': 'dot',
         }
 
 class PointMarker(SymbolString):
-    default = "Point"
+    default = "Circle"
 
     symbols = {
-            'None': '',
-            'Point': '.',
-            'Pixel': ',',
-            'Circle': 'o',
-            'Triangle - Down': 'v',
-            'Triangle - Up': '^',
-            'Triangle - Left': '<',
-            'Triangle - Right': '>',
-            'Y - Down': '1',
-            'Y - Up': '2',
-            'Y - Left': '3',
-            'Y - Right': '4',
-            'Square': 's',
-            'Pentagon': 'p',
-            'Star': '*',
-            'Hexagon 1': 'h',
-            'Hexagon 2': 'H',
-            'Plus': '+',
-            'X': 'x',
-            'Diamond': 'D',
-            'Thin Diamond': 'd',
-            'Vertical Line': '|',
-            'Horizontal Line': '_',
-        }
+            'None': 'none',
+            'Circle': 'circle',
+            'Square': 'square',
+            }
+
+#    symbols = {
+#            'None': '',
+#            'Point': '.',
+#            'Pixel': ',',
+#            'Circle': 'o',
+#            'Triangle - Down': 'v',
+#            'Triangle - Up': '^',
+#            'Triangle - Left': '<',
+#            'Triangle - Right': '>',
+#            'Y - Down': '1',
+#            'Y - Up': '2',
+#            'Y - Left': '3',
+#            'Y - Right': '4',
+#            'Square': 's',
+#            'Pentagon': 'p',
+#            'Star': '*',
+#            'Hexagon 1': 'h',
+#            'Hexagon 2': 'H',
+#            'Plus': '+',
+#            'X': 'x',
+#            'Diamond': 'D',
+#            'Thin Diamond': 'd',
+#            'Vertical Line': '|',
+#            'Horizontal Line': '_',
+#        }
 
 
 

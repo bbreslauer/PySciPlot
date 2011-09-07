@@ -21,6 +21,8 @@ import Util, Property
 from Wave import *
 from FigureObject import *
 
+from pygraphene import datapair as pgdp
+
 class WavePair(FigureObject):
     """
     A pair of waves that are plotted against one another in some manner.
@@ -33,7 +35,8 @@ class WavePair(FigureObject):
         Util.debug(2, "WavePair.init", "Creating a wave pair")
 
         FigureObject.__init__(self, properties)
-        
+
+        self._line = None
         self.initializeVariables()
         self.setX(x)
         self.setY(y)
@@ -207,6 +210,20 @@ class Trace(WavePair):
             'pointMarkerSize':         'markersize',
             }
 
+    pgLineProps = {
+            'lineColor': 'color',
+            'lineStyle': 'style',
+            'lineWidth': 'width',
+            }
+
+    pgMarkerProps = {
+            'pointMarker':             'marker',
+            'pointMarkerEdgeColor':    'color',
+            'pointMarkerEdgeWidth':    'width',
+            'pointMarkerFaceColor':    'fillcolor',
+            'pointMarkerSize':         'size',
+            }
+            
 
     def __init__(self, x=None, y=None, plot=None):
         Util.debug(2, "Trace.init", "Creating trace")
@@ -231,6 +248,28 @@ class Trace(WavePair):
             formatDict[self.mplNames[prop]] = self.getMpl(prop)
         return formatDict
 
+    def getLineProps(self):
+        propDict = {}
+
+        for prop in self.pgLineProps.keys():
+            propDict[self.pgLineProps[prop]] = self.getPg(prop)
+        if propDict['style'] == 'none':
+            propDict['visible'] = False
+        else:
+            propDict['visible'] = True
+        return propDict
+
+    def getMarkerProps(self):
+        propDict = {}
+
+        for prop in self.pgMarkerProps.keys():
+            propDict[self.pgMarkerProps[prop]] = self.getPg(prop)
+        if propDict['marker'] == 'none':
+            propDict['visible'] = False
+        else:
+            propDict['visible'] = True
+        return propDict
+
     def refreshLabel(self):
         if self._line:
             self._line.set_label(self.label())
@@ -244,36 +283,60 @@ class Trace(WavePair):
         # Remove the line if it exists
         try:
             self._line.remove()
+            self.plot().pgPlot().removeDataPair(self._line)
         except:
             pass
     
     def updatePlotData(self):
         """Only update the data on the plot. Do not change the format."""
-        
+        pass
+
         if self._line:
             [x, y] = self.dataSet()
-            self._line.set_data(x, y)
+            self._line.setX(x)
+            self._line.setY(y)
             self.plot().redraw()
         else:
             self.refresh()
 
     def refresh(self):
-        [x, y] = self.dataSet()
-        
         # If this trace is not associated with a plot, then don't do anything
         if self.plot() is None:
             return
 
-        self.removeFromPlot()
+        [x, y] = self.dataSet()
+        pgPlot = self.plot().pgPlot()
 
-        # If the axes object does not yet exist in the plot object, then
-        # we cannot plot anything
-        try:
-            self._line = self.plot().axes().plot(x, y, label=self.label(), **(self.getFormat()))[0]
-            self.plot().plotTypeObject.update_legend()
-            self.plot().redraw()
-        except:
-            return
+        # Create a new DataPair if none exists. Otherwise, modify the current one.
+        if self._line is None:
+            self._line = pgdp.DataPair(pgPlot.canvas(), x, y, '', pgPlot.axis('bottom'), pgPlot.axis('left'), lineProps=self.getLineProps(), markerProps=self.getMarkerProps())
+            pgPlot.addDataPair(self._line)
+        else:
+            self._line.setX(x)
+            self._line.setY(y)
+            self._line.setXAxis(pgPlot.axis('bottom'))
+            self._line.setYAxis(pgPlot.axis('left'))
+            self._line.setLineProps(**self.getLineProps())
+            self._line.setMarkerProps(**self.getMarkerProps())
+
+        self.plot().redraw()
+
+
+        
+#        # If this trace is not associated with a plot, then don't do anything
+#        if self.plot() is None:
+#            return
+#
+#        self.removeFromPlot()
+#
+#        # If the axes object does not yet exist in the plot object, then
+#        # we cannot plot anything
+#        try:
+#            self._line = self.plot().axes().plot(x, y, label=self.label(), **(self.getFormat()))[0]
+#            self.plot().plotTypeObject.update_legend()
+#            self.plot().redraw()
+#        except:
+#            return
 
 
 

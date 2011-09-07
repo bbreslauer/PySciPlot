@@ -52,6 +52,13 @@ class FigureObject(QObject):
         except KeyError:
             return None
 
+    def getPg(self, variable):
+        try:
+            Util.debug(3, "FigureObject.getPg", "Getting pg variable " + str(variable) + "=" + str(self.properties[variable].getPg()))
+            return self.properties[variable].getPg()
+        except KeyError:
+            return None
+
     def set_(self, variable, value):
         print "FigureObject.set_ is deprecated. Please use FigureObject.set instead." + str(variable) + "   " + str(value)
         return self.set(variable, value)

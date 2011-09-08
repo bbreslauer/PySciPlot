@@ -46,7 +46,7 @@ class Figure(FigureObject):
                             'titleFont':          Property.TextOptions({'size': 20, 'rotation': 'horizontal', 'verticalalignment': 'top'}),
                             'rows':               Property.Integer(1),
                             'columns':            Property.Integer(1),
-                            'axesPadding':        Property.Float(0.5),
+                            'axesPadding':        Property.Integer(50),
                             'backgroundColor':    Property.Color(QColor(255,255,255,255)),
                             'linkPlotAxes':       Property.Boolean(False),
                           }
@@ -134,6 +134,19 @@ class Figure(FigureObject):
             plot = Plot()
             self.addPlot(plot, False)
 
+        # Modify the sizing of all the plots now
+        rows = self.get('rows')
+        columns = self.get('columns')
+        for i in range(self.numPlots()):
+            self.plots()[i].pgPlot().setVisible(True)
+            self.plots()[i].pgPlot().setPlotLocation(rows, columns, i + 1)
+
+        # Hide the plots that are not supposed to exist, but do because we keep around
+        # all the plots (if the user creates 4, then goes back to 2, we still keep
+        # numbers 3 and 4 in case they accidentally made that change)
+        for i in range(self.numPlots(), len(self.plots())):
+            self.plots()[i].pgPlot().setVisible(False)
+
     #################################
     # Handlers for when a property is modified
     #################################
@@ -154,13 +167,11 @@ class Figure(FigureObject):
 
     def update_rows(self):
         Util.debug(3, "Figure.update_rows", "")
-        # TODO
-        #self.refreshPlots()
+        self.refreshPlots()
 
     def update_columns(self):
         Util.debug(3, "Figure.update_columns", "")
-        # TODO
-        #self.refreshPlots()
+        self.refreshPlots()
 
     def update_linkPlotAxes(self):
         Util.debug(3, "Figure.update_linkPlotAxes", "")
@@ -169,12 +180,12 @@ class Figure(FigureObject):
     
     def update_axesPadding(self):
         Util.debug(3, "Figure.update_axesPadding", "")
-        # TODO
-#        if self.getMpl('linkPlotAxes'):
-#            self.grid.set_axes_pad(self.getMpl('axesPadding'))
-#        else:
-#            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
-        #self.redraw()
+
+        pad = int(self.getPg('axesPadding'))
+        for plot in self.plots():
+            plot.pgPlot().setPadding(pad, pad, pad, pad)
+
+        self.refreshPlots()
 
     def update_backgroundColor(self):
         Util.debug(3, "Figure.update_backgroundColor", "")

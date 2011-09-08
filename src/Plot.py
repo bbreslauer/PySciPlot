@@ -401,6 +401,7 @@ class Plot(FigureObject):
 
     def redraw(self):
         try:
+            self.pgPlot().clear()
             self.pgPlot().draw()
         except:
             pass

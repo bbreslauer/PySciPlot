@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_FigureOptionsWidget.ui'
 #
-# Created: Sat Aug 27 19:02:54 2011
+# Created: Wed Sep  7 23:34:12 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -96,11 +96,6 @@ class Ui_FigureOptionsWidget(object):
         self.label_20 = QtGui.QLabel(FigureOptionsWidget)
         self.label_20.setObjectName("label_20")
         self.gridLayout.addWidget(self.label_20, 3, 0, 1, 1)
-        self.axesPadding = QtGui.QDoubleSpinBox(FigureOptionsWidget)
-        self.axesPadding.setSingleStep(0.1)
-        self.axesPadding.setProperty("value", 0.5)
-        self.axesPadding.setObjectName("axesPadding")
-        self.gridLayout.addWidget(self.axesPadding, 3, 1, 1, 2)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem, 3, 4, 1, 1)
         self.line_2 = QtGui.QFrame(FigureOptionsWidget)
@@ -127,6 +122,11 @@ class Ui_FigureOptionsWidget(object):
         self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
         self.storedSettingsButton.setObjectName("storedSettingsButton")
         self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 8, 1)
+        self.axesPadding = QtGui.QSpinBox(FigureOptionsWidget)
+        self.axesPadding.setMaximum(1000)
+        self.axesPadding.setProperty("value", 50)
+        self.axesPadding.setObjectName("axesPadding")
+        self.gridLayout.addWidget(self.axesPadding, 3, 1, 1, 2)
 
         self.retranslateUi(FigureOptionsWidget)
         QtCore.QObject.connect(self.backgroundColor, QtCore.SIGNAL("clicked()"), self.backgroundColor.createColorDialog)

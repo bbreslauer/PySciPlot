@@ -93,10 +93,6 @@ class Property(QObject):
         """
         return self._value
     
-    def getMpl(self):
-        """Return the value of this property in a matplotlib compatible form."""
-        return self.get()
-
     def getPg(self):
         """Return the value of this property in a pygraphene compatible form."""
         return self.get()
@@ -296,9 +292,9 @@ class Color(Property):
     default = QColor()
     castType = QColor
 
-    def getMpl(self):
-        return self.get().getRgbF()
-    
+#    def getMpl(self):
+#        return self.get().getRgbF()
+#    
     def getPg(self):
         return str(self.get().name())
 
@@ -320,12 +316,9 @@ class SymbolString(String):
 
     symbols = {}
 
-    def getMpl(self):
+    def getPg(self):
         """Convert from a word to a character representation of the line style."""
         return self.symbols[self.get()]
-
-    def getPg(self):
-        return self.getMpl()
 
 class AxisScaleType(SymbolString):
     default = "Linear"
@@ -342,16 +335,8 @@ class Options(Dictionary):
     values are Property's.
     """
 
-    def getMpl(self):
-        """Convert the dictionary from properties to python types."""
-        mplDict = {}
-
-        for (key, value) in self.get().items():
-            mplDict[key] = value.getMpl()
-
-        return mplDict
-
     def getPg(self):
+        """Convert the dictionary from properties to python types."""
         pgDict = {}
 
         for (key, value) in self.get().items():

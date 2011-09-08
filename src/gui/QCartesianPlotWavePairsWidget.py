@@ -187,43 +187,45 @@ class QScatterPlotTracesWidget(QCartesianPlotWavePairsWidget):
 
 
 class QBarPlotBarsWidget(QCartesianPlotWavePairsWidget):
-
-    # We need to deal with the special orientation property, which belongs to the entire plot,
-    # but is chosen in this widget. This involves reimplementing the init, saveOptionsToWavePair,
-    # and setUiToWavePair methods, so that we don't try to save or load orientation from each
-    # individual WavePair.
-
-    properties = Bar.verticalMplNames.keys()
-    properties.append('orientation')
-
-    def __init__(self, plotOptionsWidget, *args):
-        QCartesianPlotWavePairsWidget.__init__(self, plotOptionsWidget, *args)
-
-    def initSubWidgets(self):
-        self.getChild('fillColor').initButtonColor()
-        self.getChild('edgeColor').initButtonColor()
-
-        QCartesianPlotWavePairsWidget.initSubWidgets(self)
-
-    def addWavePairsToPlot(self):
-        QCartesianPlotWavePairsWidget.addWavePairsToPlot(self, Bar)
-
-    def saveOptionsToWavePair(self, wavePair):
-        """Reimplementing this to override the default action for the orientation property."""
-
-        currentUi = self.getCurrentUi()
-        orientation = currentUi.pop('orientation', 'vertical')
-
-        # Set orientation for entire plot
-        wavePair.plot().plotTypeObject.set('orientation', orientation)
-
-        # Default action
-        wavePair.setMultiple(currentUi)
-
-    def setUiToWavePair(self, wavePair):
-        """Reimplementing this to override the default action for the orientation property."""
-
-        properties = copy.deepcopy(wavePair.properties)
-        properties.update({'orientation': wavePair.plot().plotTypeObject.get('orientation')})
-        self.setCurrentUi(properties)
-
+    pass
+#class QBarPlotBarsWidget(QCartesianPlotWavePairsWidget):
+#
+#    # We need to deal with the special orientation property, which belongs to the entire plot,
+#    # but is chosen in this widget. This involves reimplementing the init, saveOptionsToWavePair,
+#    # and setUiToWavePair methods, so that we don't try to save or load orientation from each
+#    # individual WavePair.
+#
+#    properties = Bar.verticalMplNames.keys()
+#    properties.append('orientation')
+#
+#    def __init__(self, plotOptionsWidget, *args):
+#        QCartesianPlotWavePairsWidget.__init__(self, plotOptionsWidget, *args)
+#
+#    def initSubWidgets(self):
+#        self.getChild('fillColor').initButtonColor()
+#        self.getChild('edgeColor').initButtonColor()
+#
+#        QCartesianPlotWavePairsWidget.initSubWidgets(self)
+#
+#    def addWavePairsToPlot(self):
+#        QCartesianPlotWavePairsWidget.addWavePairsToPlot(self, Bar)
+#
+#    def saveOptionsToWavePair(self, wavePair):
+#        """Reimplementing this to override the default action for the orientation property."""
+#
+#        currentUi = self.getCurrentUi()
+#        orientation = currentUi.pop('orientation', 'vertical')
+#
+#        # Set orientation for entire plot
+#        wavePair.plot().plotTypeObject.set('orientation', orientation)
+#
+#        # Default action
+#        wavePair.setMultiple(currentUi)
+#
+#    def setUiToWavePair(self, wavePair):
+#        """Reimplementing this to override the default action for the orientation property."""
+#
+#        properties = copy.deepcopy(wavePair.properties)
+#        properties.update({'orientation': wavePair.plot().plotTypeObject.get('orientation')})
+#        self.setCurrentUi(properties)
+#

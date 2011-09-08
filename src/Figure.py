@@ -17,12 +17,6 @@
 from PySide.QtCore import Qt
 from PySide.QtGui import QAction, QColor, QApplication
 
-#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.figure import Figure as MPLFigure
-#from matplotlib.font_manager import FontProperties
-#from mpl_toolkits.axes_grid.axislines import Axes
-#from mpl_toolkits.axes_grid1 import Grid
-
 from pygraphene import figure as pgf
 from pygraphene import plot as pgp
 from pygraphene import font as pgfont
@@ -77,8 +71,6 @@ class Figure(FigureObject):
 
         self._plots = []
         self.extendPlots(0)
-        
-        self.mplHandles = {}
         
         self.refresh()
 
@@ -141,8 +133,6 @@ class Figure(FigureObject):
         for i in range(len(self.plots()), maxPlotNum + 1):
             plot = Plot()
             self.addPlot(plot, False)
-            #self.plots().append(plot)
-
 
     #################################
     # Handlers for when a property is modified
@@ -150,7 +140,7 @@ class Figure(FigureObject):
 
     def update_windowTitle(self):
         Util.debug(3, "Figure.update_windowTitle", "")
-        self._figureSubWindow.setWindowTitle(self.getMpl('windowTitle'))
+        self._figureSubWindow.setWindowTitle(self.getPg('windowTitle'))
 
     def update_title(self):
         Util.debug(3, "Figure.update_title", "")
@@ -194,46 +184,13 @@ class Figure(FigureObject):
         
     def refreshPlots(self):
         Util.debug(3, "Figure.refreshPlots", "")
-#        # Remove old axes
-#        for plot in self.plots():
-#            try:
-#                self.mplFigure().delaxes(plot.axes())
-#            except:
-#                pass
-#
+        
         # Create any new plots that might be necessary
         self.extendPlots()
 
         # Refresh the plots
         for plot in self.plots():
             plot.refresh()
-#
-#        # Prepare the figure with a grid for the subplots to go into
-#        if self.getMpl('linkPlotAxes'):
-#            self.grid = Grid(self.mplFigure(), 111, nrows_ncols = (self.getMpl('rows'), self.getMpl('columns')), axes_pad=self.getMpl('axesPadding'), share_x=False, share_y=False)
-#        else:
-#            self.mplFigure().subplots_adjust(wspace=self.getMpl('axesPadding'), hspace=self.getMpl('axesPadding'))
-#
-
-##########
-#        # Create the subplots and send the axes to the Plot objects
-#        for plotNum in range(0, self.numPlots()):
-#            plot = pgp.CartesianPlot(self._figure, self._figure.canvas())
-#            self.pgFigure().addPlot(plot)
-#            plot.setPlotLocation(self.getPg('rows'), self.getPg('columns'), plotNum + 1)
-##########
-
-#            if self.getMpl('linkPlotAxes'):
-#                self.getPlot(plotNum).setAxes(self.grid[plotNum])
-#            else:
-#                self.getPlot(plotNum).setAxes(self.mplFigure().add_subplot(self.getMpl('rows'), self.getMpl('columns'), plotNum + 1))
-
-
-        
-
-
-        # Finally, redraw the canvas to show all the plots
-        #self.redraw()
 
     def redraw(self):
         Util.debug(3, "Figure.redraw", "Drawing canvas")

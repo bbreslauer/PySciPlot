@@ -70,6 +70,9 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
 
         self.getChild('plotType').setCurrentRow(0)
 
+    def saveSubWidgets(self):
+        self.getChild('plotTypeStack').currentWidget().saveUi()
+
     def changeCurrentPlot(self, index):
         if index < 0:
             return

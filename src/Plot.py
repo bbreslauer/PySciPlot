@@ -16,13 +16,6 @@
 
 from PySide.QtGui import QColor
 
-from numpy import nan
-from matplotlib.axes import Axes
-from matplotlib import ticker
-from matplotlib.artist import setp
-from matplotlib.font_manager import FontProperties
-import numpy
-
 from pygraphene import plot as pgp
 from pygraphene import font as pgfont
 from pygraphene import ticker as pgticker
@@ -104,8 +97,6 @@ class CartesianPlot(FigureObject):
     def removeWavePair(self, wp):
         self._wavePairs.remove(wp)
         wp.removeFromPlot()
-        #self.wavePairRemovedFromPlot.emit(wp)
-        #self.plot().refresh()
 
     def makePgPlot(self, pgFigure, pgCanvas):
         """
@@ -118,14 +109,12 @@ class CartesianPlot(FigureObject):
 
         if self.plot().pgPlot() != None:
             self.update_axis('bottomAxis')
-            #self.update_axis('bottomAxis', self.plot().axes().get_xaxis())
 
     def update_leftAxis(self):
         Util.debug(3, "ScatterPlot.update_leftAxis", "")
 
         if self.plot().pgPlot() != None:
             self.update_axis('leftAxis')
-#            self.update_axis('leftAxis', self.plot().axes().get_yaxis())
 
     def update_topAxis(self):
         pass
@@ -162,137 +151,6 @@ class CartesianPlot(FigureObject):
 #            self.plot().axes().set_xscale(axisDict['scaleType'])
 #        elif axisName == 'leftAxis':
 #            self.plot().axes().set_yscale(axisDict['scaleType'])
-
-#    def update_axisMajorTicks(self, axisName, axisDict, axis):
-#        
-#        minimum, maximum = axis.get_view_interval()
-#
-#        # Set the formatter and locator for the major ticks
-#        if axisDict['majorTicksLabelUseWave'] == True:
-#            wave = self._app.waves().wave(str(axisDict['majorTicksLabelWave']))
-#            data = wave.data()
-#            majorFormatter = ticker.FixedFormatter(data)
-#        elif axisDict['scaleType'] in ('log', 'symlog'):
-#            majorFormatter = ticker.LogFormatter(10.0, False)
-#        else:
-#            # Just revert to a normal scale with linear formatting
-#            majorFormatter = ticker.FormatStrFormatter(axisDict['majorTicksLabelNumericFormat'])
-#        
-#        axis.set_major_formatter(majorFormatter)
-#
-#        majorTickPositions = []
-#        
-#        if axisDict['useMajorTicksWaveValues']:
-#            wave = self._app.waves().wave(str(axisDict['majorTicksWaveValues']))
-#            data = Util.uniqueList(wave.data())
-#            data.sort()
-#            majorTickPositions = data
-#        elif axisDict['useMajorTicksNumber']:
-#            majorTicksNumber = axisDict['majorTicksNumber']
-#
-#            if axisDict['useMajorTicksAnchor']:
-#                anchor = axisDict['majorTicksAnchor']
-#                spacing = (float(maximum) - float(minimum)) / (majorTicksNumber - 1)
-#
-#                # firstTick is the closest would-be tick to the smallest tick which is off the visible axis
-#                # lastTick  is the closest would-be tick to the largest  tick which is off the visible axis
-#                firstTick = float(minimum) - float(spacing) + ((float(anchor) - float(minimum)) % float(spacing))
-#                lastTick  = float(maximum) + float(spacing) - ((float(maximum) - float(anchor)) % float(spacing))
-#                
-#                if (float(minimum) - float(anchor)) % float(spacing) == 0 or \
-#                   (float(maximum) - float(anchor)) % float(spacing) == 0:
-#                    # The anchor is located at the min or max of the viewing window (or a spacing multiple thereof)
-#                    # and so the number of major ticks visible will be equal to majorTicksNumber, since firstTick
-#                    # and lastTick are not within the viewing window
-#                    majorTickPositions = Util.subdivideList([firstTick, lastTick], majorTicksNumber)
-#                else:
-#                    # FIXME
-#                    # This produces 1 less than the user's desired number of ticks. However, if we do not subtract 1,
-#                    # then the spacing gets screwed up and the anchor no longer has a tick mark. See issue #37.
-#                    majorTickPositions = Util.subdivideList([firstTick, lastTick], majorTicksNumber-1)
-#            else:
-#                # no anchor
-#                # We need to account for the two endpoints, which is why we subtract 2 from the majorTicksNumber
-#                majorTickPositions = Util.subdivideList([minimum, maximum], majorTicksNumber-2)
-#        else:
-#            # Using spacing
-#            if axisDict['useMajorTicksAnchor']:
-#                firstTick = axisDict['majorTicksAnchor'] + int((float(minimum) - float(axisDict['majorTicksAnchor'])) / float(axisDict['majorTicksSpacing']) - 1) * float(axisDict['majorTicksSpacing'])
-#            else:
-#                firstTick = minimum
-#            
-#            majorTickPositions = list(numpy.arange(firstTick, maximum, axisDict['majorTicksSpacing']))
-#            majorTickPositions.append(majorTickPositions[-1] + axisDict['majorTicksSpacing'])
-#            
-#        # Now place the ticks on the plot
-#        if axisDict['scaleType'] == 'linear':
-#            axis.set_major_locator(ticker.FixedLocator(majorTickPositions))
-#        else:
-#            subs = axisDict['majorTicksLogLocations'].split(',')
-#            subs = map(int, subs)
-#            axis.set_major_locator(ticker.LogLocator(base=axisDict['majorTicksLogBase'], subs=subs))
-#
-#                
-#        # Set the major tick params
-#        majorTickParams = {
-#                    'direction': axisDict['majorTicksDirection'],
-#                    'length': axisDict['majorTicksLength'],
-#                    'width': axisDict['majorTicksWidth'],
-#                    'color': axisDict['majorTicksColor'],
-#                    'pad': axisDict['majorTicksLabelPadding'],
-#                }
-#        if axisName == 'bottomAxis':
-#            majorTickParams.update({
-#                    'bottom': axisDict['majorTicksVisible'],
-#                    'top': axisDict['majorTicksVisible'],
-#                    'labelbottom': axisDict['majorTicksLabelVisible'],
-#                    'labeltop': False,
-#                })
-#        elif axisName == 'leftAxis':
-#            majorTickParams.update({
-#                    'left': axisDict['majorTicksVisible'],
-#                    'right': axisDict['majorTicksVisible'],
-#                    'labelleft': axisDict['majorTicksLabelVisible'],
-#                    'labelright': False,
-#                })
-#        axis.set_tick_params(which='major', **majorTickParams)
-#
-#        # Set font for major tick labels
-#        if axisDict['majorTicksLabelFont'] != {}:
-#            setp(axis.get_majorticklabels(), **(axisDict['majorTicksLabelFont']))
-
-#    def update_axisMinorTicks(self, axisName, axisDict, axis):
-#        # Set the formatter and locator for the minor ticks
-#        if axisDict['scaleType'] == 'linear':
-#            axis.set_minor_formatter(ticker.NullFormatter())
-#            sortedMajorTickLocs = axis.get_majorticklocs()
-#            sortedMajorTickLocs.sort()
-#            minorTicks = Util.subdivideList(sortedMajorTickLocs, float(axisDict['minorTicksNumber']))
-#            axis.set_minor_locator(ticker.FixedLocator(minorTicks))
-#        else:
-#            # this needs to be worked on
-#            subs = axisDict['minorTicksLogLocations'].split(',')
-#            subs = map(int, subs)
-#            axis.set_minor_locator(ticker.LogLocator(base=axisDict['majorTicksLogBase'], subs=subs))
-#
-#        # Set the minor tick params
-#        minorTickParams = {
-#                    'direction': axisDict['minorTicksDirection'],
-#                    'length': axisDict['minorTicksLength'],
-#                    'width': axisDict['minorTicksWidth'],
-#                    'color': axisDict['minorTicksColor'],
-#                }
-#        if axisName == 'bottomAxis':
-#            minorTickParams.update({
-#                    'bottom': axisDict['minorTicksVisible'],
-#                    'top': axisDict['minorTicksVisible'],
-#                })
-#        elif axisName == 'leftAxis':
-#            minorTickParams.update({
-#                    'left': axisDict['minorTicksVisible'],
-#                    'right': axisDict['minorTicksVisible'],
-#                })
-#        axis.set_tick_params(which='minor', **minorTickParams)
 
     def update_axisLimits(self, axis, axisDict):
         # Set minimum and maximum for axes
@@ -333,30 +191,37 @@ class CartesianPlot(FigureObject):
                 wave = self._app.waves().wave(str(axisDict['majorTicksLabelWave']))
                 data = wave.data()
                 axis.setTicksLabeler('major', pgticker.StringLabeler(data), applyToSlaves=True)
+
+            axis.setTicksFont(pgfont.Font(**axisDict['majorTicksLabelFont']), applyToSlaves=True)
+            axis.ticks('major').setLength(axisDict['majorTicksLength'])
+            axis.ticks('major').setWidth(axisDict['majorTicksWidth'])
+            axis.ticks('major').setTickMarkProps(color=axisDict['majorTicksColor'])
+            axis.ticks('major').setDirection(axisDict['majorTicksDirection'])
         
         # Tick labels are not visible
         else:
             axis.setTicksLabeler('major', pgticker.NullLabeler(), applyToSlaves=True)
 
     def update_axisMinorTicks(self, axis, axisDict):
-        pass
+        ticks = axis.ticks('minor')
 
-    #def update_axisTicks(self, axisName, axisDict, axis):
+        # Set the tick locations
+        if axisDict['majorTicksVisible'] and axisDict['minorTicksVisible']:
+            ticks.setVisible(True)
+            
+            axis.setTicksLocator('minor', pgticker.LinearLocator(axisDict['minorTicksNumber']), applyToSlaves=True)
+            axis.ticks('minor').setLength(axisDict['minorTicksLength'])
+            axis.ticks('minor').setWidth(axisDict['minorTicksWidth'])
+            axis.ticks('minor').setTickMarkProps(color=axisDict['minorTicksColor'])
+            axis.ticks('minor').setDirection(axisDict['minorTicksDirection'])
+        
+        # Ticks are not visible
+        else:
+            ticks.setVisible(False)
+
     def update_axisTicks(self, axis, axisDict):
         self.update_axisMajorTicks(axis, axisDict)
         self.update_axisMinorTicks(axis, axisDict)
-#        if axisDict['majorTicksVisible']:
-#            self.update_axisMajorTicks(axis, axisDict)
-#    
-#            if axisDict['minorTicksVisible']:
-#                self.update_axisMinorTicks(axis, axisDict)
-#            else:
-#                # minor ticks have been disabled
-#                axis.set_minor_locator(ticker.NullLocator())
-#        else:
-#            # major ticks have been disabled, which implies that the minor ticks have also been disabled
-#            axis.set_major_locator(ticker.NullLocator())
-#            axis.set_minor_locator(ticker.NullLocator())
 
     def update_axisLabel(self, axis, axisDict):
         axis.setLabelText(axisDict['label'])
@@ -372,15 +237,17 @@ class CartesianPlot(FigureObject):
             return
         axisDict = self.getPg(axisName)
 
-        self.update_axisLimits(axis, axisDict)
-        self.update_axisScaling(axis, axisDict)
-
-        #self.update_axisTicks(axisName, axisDict, axis)
-        self.update_axisTicks(axis, axisDict)
-
-        # Set axis label
-        self.update_axisLabel(axis, axisDict)
-        #axis.set_label_text(axisDict['label'], axisDict['labelFont'])
+        if axisDict['visible']:
+            axis.setVisible(True)
+            self.update_axisLimits(axis, axisDict)
+            self.update_axisScaling(axis, axisDict)
+    
+            self.update_axisTicks(axis, axisDict)
+    
+            # Set axis label
+            self.update_axisLabel(axis, axisDict)
+        else:
+            axis.setVisible(False)
 
         # Redraw the canvas
         self.plot().redraw()

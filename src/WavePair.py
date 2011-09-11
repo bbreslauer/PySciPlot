@@ -29,8 +29,6 @@ class WavePair(FigureObject):
     This could be used for a scatter plot, a bar plot, or something else.
     """
     
-    mplNames = {}
-
     def __init__(self, x=None, y=None, plot=None, properties={}):
         Util.debug(2, "WavePair.init", "Creating a wave pair")
 

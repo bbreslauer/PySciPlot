@@ -26,8 +26,6 @@ from QEditFigureSubWidget import *
 
 class QCartesianPlotWavePairsWidget(QEditFigureSubWidget):
 
-    properties = WavePair.mplNames.keys()
-
     def __init__(self, plotOptionsWidget, *args):
         QEditFigureSubWidget.__init__(self, *args)
 
@@ -169,8 +167,8 @@ class QCartesianPlotWavePairsWidget(QEditFigureSubWidget):
 
 
 class QScatterPlotTracesWidget(QCartesianPlotWavePairsWidget):
-
-    properties = Trace.mplNames.keys()
+    properties = Trace.pgLineProps.keys()
+    properties.extend(Trace.pgMarkerProps.keys())
 
     def __init__(self, plotOptionsWidget, *args):
         QCartesianPlotWavePairsWidget.__init__(self, plotOptionsWidget, *args)

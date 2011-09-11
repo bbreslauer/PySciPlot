@@ -218,14 +218,14 @@ class Trace(WavePair):
         Util.debug(2, "Trace.init", "Creating trace")
 
         properties = {
-            'lineColor':               Property.Color(QColor(255,0,0,255)),
+            'lineColor':               Property.Color(QColor(0,0,0,255)),
             'lineStyle':               Property.LineStyle('Solid'),
             'lineWidth':               Property.Float(1.0),
-            'pointMarker':             Property.PointMarker('Point'),
+            'pointMarker':             Property.PointMarker('Circle'),
             'pointMarkerEdgeColor':    Property.Color(QColor(0,0,0,255)),
             'pointMarkerEdgeWidth':    Property.Float(1.0),
             'pointMarkerFaceColor':    Property.Color(QColor(0,0,0,255)),
-            'pointMarkerSize':         Property.Float(1.0),
+            'pointMarkerSize':         Property.Float(5.0),
                 }
 
         WavePair.__init__(self, x, y, plot, properties)
@@ -291,7 +291,7 @@ class Trace(WavePair):
 
         # Create a new DataPair if none exists. Otherwise, modify the current one.
         if self._line is None:
-            self._line = pgdp.DataPair(pgPlot.canvas(), x, y, '', pgPlot.axis('bottom'), pgPlot.axis('left'), lineProps=self.getLineProps(), markerProps=self.getMarkerProps())
+            self._line = pgdp.DataPair(pgPlot.canvas(), x, y, '', pgPlot, pgPlot.axis('bottom'), pgPlot.axis('left'), lineProps=self.getLineProps(), markerProps=self.getMarkerProps())
             pgPlot.addDataPair(self._line)
         else:
             self._line.setX(x)

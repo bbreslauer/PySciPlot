@@ -467,6 +467,15 @@ class PointMarker(SymbolString):
             'None': 'none',
             'Circle': 'circle',
             'Square': 'square',
+            'Vertical Line': 'vertical',
+            'Horizontal Line': 'horizontal',
+            'Star': 'star',
+            'Plus': 'plus',
+            'X': 'x',
+            'Triangle - Down': 'downtriangle',
+            'Triangle - Up': 'uptriangle',
+            'Triangle - Left': 'lefttriangle',
+            'Triangle - Right': 'righttriangle',
             }
 
 #    symbols = {

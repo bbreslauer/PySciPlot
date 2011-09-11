@@ -93,6 +93,7 @@ class CartesianPlot(FigureObject):
     def addWavePair(self, wp):
         wp.setPlot(self.plot())
         self._wavePairs.append(wp)
+        wp.refresh()
 
     def removeWavePair(self, wp):
         self._wavePairs.remove(wp)

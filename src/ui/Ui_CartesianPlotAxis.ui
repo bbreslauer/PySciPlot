@@ -196,6 +196,9 @@
              </property>
              <item row="0" column="0">
               <widget class="QCheckBox" name="useMajorTicksAnchor">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="layoutDirection">
                 <enum>Qt::RightToLeft</enum>
                </property>
@@ -785,10 +788,6 @@ s</string>
     </widget>
    </item>
   </layout>
-  <zorder>groupBox</zorder>
-  <zorder>majorTicksVisible</zorder>
-  <zorder>minorTicksVisible</zorder>
-  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -880,12 +879,12 @@ s</string>
    <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>111</y>
+     <x>251</x>
+     <y>102</y>
     </hint>
     <hint type="destinationlabel">
-     <x>165</x>
-     <y>111</y>
+     <x>251</x>
+     <y>102</y>
     </hint>
    </hints>
   </connection>
@@ -896,12 +895,12 @@ s</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>51</y>
+     <x>251</x>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
-     <x>540</x>
-     <y>79</y>
+     <x>549</x>
+     <y>75</y>
     </hint>
    </hints>
   </connection>
@@ -912,12 +911,12 @@ s</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>51</y>
+     <x>251</x>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
-     <x>540</x>
-     <y>109</y>
+     <x>549</x>
+     <y>101</y>
     </hint>
    </hints>
   </connection>
@@ -928,12 +927,12 @@ s</string>
    <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>543</x>
-     <y>242</y>
+     <x>549</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
-     <x>543</x>
-     <y>242</y>
+     <x>549</x>
+     <y>226</y>
     </hint>
    </hints>
   </connection>
@@ -944,12 +943,12 @@ s</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>543</x>
-     <y>307</y>
+     <x>549</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
-     <x>543</x>
-     <y>307</y>
+     <x>549</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -960,12 +959,12 @@ s</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>426</x>
-     <y>412</y>
+     <x>437</x>
+     <y>383</y>
     </hint>
     <hint type="destinationlabel">
-     <x>426</x>
-     <y>412</y>
+     <x>437</x>
+     <y>383</y>
     </hint>
    </hints>
   </connection>
@@ -976,12 +975,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>213</y>
+     <x>135</x>
+     <y>196</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>214</y>
+     <x>269</x>
+     <y>198</y>
     </hint>
    </hints>
   </connection>
@@ -992,12 +991,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>240</y>
+     <x>135</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>240</y>
+     <x>269</x>
+     <y>224</y>
     </hint>
    </hints>
   </connection>
@@ -1012,8 +1011,8 @@ s</string>
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>283</x>
-     <y>423</y>
+     <x>289</x>
+     <y>392</y>
     </hint>
    </hints>
   </connection>
@@ -1024,12 +1023,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>186</y>
+     <x>135</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>187</y>
+     <x>269</x>
+     <y>172</y>
     </hint>
    </hints>
   </connection>
@@ -1040,12 +1039,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>420</x>
-     <y>184</y>
+     <x>423</x>
+     <y>168</y>
     </hint>
     <hint type="destinationlabel">
-     <x>543</x>
-     <y>185</y>
+     <x>549</x>
+     <y>170</y>
     </hint>
    </hints>
   </connection>
@@ -1056,12 +1055,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>420</x>
-     <y>211</y>
+     <x>423</x>
+     <y>196</y>
     </hint>
     <hint type="destinationlabel">
-     <x>543</x>
-     <y>212</y>
+     <x>549</x>
+     <y>199</y>
     </hint>
    </hints>
   </connection>
@@ -1072,12 +1071,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>256</y>
+     <x>135</x>
+     <y>250</y>
     </hint>
     <hint type="destinationlabel">
-     <x>184</x>
-     <y>259</y>
+     <x>269</x>
+     <y>253</y>
     </hint>
    </hints>
   </connection>
@@ -1100,37 +1099,55 @@ s</string>
   <connection>
    <sender>useMajorTicksWaveValues</sender>
    <signal>toggled(bool)</signal>
-   <receiver>useMajorTicksAnchor</receiver>
-   <slot>setDisabled(bool)</slot>
+   <receiver>CartesianPlotAxis</receiver>
+   <slot>disableAnchorToValue(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>249</y>
+     <x>84</x>
+     <y>245</y>
     </hint>
     <hint type="destinationlabel">
-     <x>99</x>
-     <y>177</y>
+     <x>3</x>
+     <y>270</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>useMajorTicksWaveValues</sender>
+   <sender>useMajorTicksNumber</sender>
    <signal>toggled(bool)</signal>
-   <receiver>majorTicksAnchor</receiver>
-   <slot>setDisabled(bool)</slot>
+   <receiver>CartesianPlotAxis</receiver>
+   <slot>disableAnchorToValue(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>52</x>
-     <y>256</y>
+     <x>63</x>
+     <y>209</y>
     </hint>
     <hint type="destinationlabel">
-     <x>197</x>
-     <y>174</y>
+     <x>0</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useMajorTicksSpacing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CartesianPlotAxis</receiver>
+   <slot>enableAnchorToValue(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>198</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>changeScaleType(QString)</slot>
+  <slot>enableAnchorToValue(bool)</slot>
+  <slot>disableAnchorToValue(bool)</slot>
  </slots>
 </ui>

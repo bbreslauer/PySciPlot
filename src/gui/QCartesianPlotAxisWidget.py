@@ -36,4 +36,12 @@ class QCartesianPlotAxisWidget(QEditFigureSubWidget):
             self.getChild('majorTicksLocationsStackedWidget').setCurrentIndex(1)
             self.getChild('minorTicksLocationsStackedWidget').setCurrentIndex(1)
 
+    def enableAnchorToValue(self, b):
+        self.getChild('useMajorTicksAnchor').setEnabled(True)
+        if self.getChild('useMajorTicksAnchor').isChecked():
+            self.getChild('majorTicksAnchor').setEnabled(True)
+
+    def disableAnchorToValue(self, b):
+        self.getChild('useMajorTicksAnchor').setEnabled(False)
+        self.getChild('majorTicksAnchor').setEnabled(False)
 

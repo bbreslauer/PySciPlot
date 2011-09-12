@@ -193,11 +193,11 @@ class CartesianPlot(FigureObject):
                 data = wave.data()
                 axis.setTicksLabeler('major', pgticker.StringLabeler(data), applyToSlaves=True)
 
-            axis.setTicksFont(pgfont.Font(**axisDict['majorTicksLabelFont']), applyToSlaves=True)
-            axis.ticks('major').setLength(axisDict['majorTicksLength'])
-            axis.ticks('major').setWidth(axisDict['majorTicksWidth'])
-            axis.ticks('major').setTickMarkProps(color=axisDict['majorTicksColor'])
-            axis.ticks('major').setDirection(axisDict['majorTicksDirection'])
+            axis.setTicksFont('major', pgfont.Font(**axisDict['majorTicksLabelFont']), applyToSlaves=True)
+            axis.setTicksLength('major', axisDict['majorTicksLength'], applyToSlaves=True)
+            axis.setTicksWidth('major', axisDict['majorTicksWidth'], applyToSlaves=True)
+            axis.setTickMarkProps('major', color=axisDict['majorTicksColor'], applyToSlaves=True)
+            axis.setTicksDirection('major', axisDict['majorTicksDirection'], applyToSlaves=True)
         
         # Tick labels are not visible
         else:
@@ -211,10 +211,10 @@ class CartesianPlot(FigureObject):
             ticks.setVisible(True)
             
             axis.setTicksLocator('minor', pgticker.LinearLocator(axisDict['minorTicksNumber']), applyToSlaves=True)
-            axis.ticks('minor').setLength(axisDict['minorTicksLength'])
-            axis.ticks('minor').setWidth(axisDict['minorTicksWidth'])
-            axis.ticks('minor').setTickMarkProps(color=axisDict['minorTicksColor'])
-            axis.ticks('minor').setDirection(axisDict['minorTicksDirection'])
+            axis.setTicksLength('minor', axisDict['minorTicksLength'], applyToSlaves=True)
+            axis.setTicksWidth('minor', axisDict['minorTicksWidth'], applyToSlaves=True)
+            axis.setTickMarkProps('minor', color=axisDict['minorTicksColor'], applyToSlaves=True)
+            axis.setTicksDirection('minor', axisDict['minorTicksDirection'], applyToSlaves=True)
         
         # Ticks are not visible
         else:

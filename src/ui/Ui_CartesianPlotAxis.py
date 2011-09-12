@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Wed Sep  7 23:34:12 2011
+# Created: Mon Sep 12 00:10:28 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -104,6 +104,7 @@ class Ui_CartesianPlotAxis(object):
         self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.useMajorTicksAnchor = QtGui.QCheckBox(self.page)
+        self.useMajorTicksAnchor.setEnabled(False)
         self.useMajorTicksAnchor.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.useMajorTicksAnchor.setObjectName("useMajorTicksAnchor")
         self.gridLayout_6.addWidget(self.useMajorTicksAnchor, 0, 0, 1, 1)
@@ -386,8 +387,9 @@ class Ui_CartesianPlotAxis(object):
         QtCore.QObject.connect(self.majorTicksLabelUseWave, QtCore.SIGNAL("toggled(bool)"), self.majorTicksLabelWave.setEnabled)
         QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL("toggled(bool)"), self.majorTicksWaveValues.setEnabled)
         QtCore.QObject.connect(self.scaleType, QtCore.SIGNAL("currentIndexChanged(QString)"), CartesianPlotAxis.changeScaleType)
-        QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL("toggled(bool)"), self.useMajorTicksAnchor.setDisabled)
-        QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL("toggled(bool)"), self.majorTicksAnchor.setDisabled)
+        QtCore.QObject.connect(self.useMajorTicksWaveValues, QtCore.SIGNAL("toggled(bool)"), CartesianPlotAxis.disableAnchorToValue)
+        QtCore.QObject.connect(self.useMajorTicksNumber, QtCore.SIGNAL("toggled(bool)"), CartesianPlotAxis.disableAnchorToValue)
+        QtCore.QObject.connect(self.useMajorTicksSpacing, QtCore.SIGNAL("toggled(bool)"), CartesianPlotAxis.enableAnchorToValue)
         CartesianPlotAxis.setTabOrder(self.visible, self.autoscale)
         CartesianPlotAxis.setTabOrder(self.autoscale, self.label)
         CartesianPlotAxis.setTabOrder(self.label, self.labelFont)

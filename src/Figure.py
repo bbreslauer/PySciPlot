@@ -189,9 +189,8 @@ class Figure(FigureObject):
 
     def update_backgroundColor(self):
         Util.debug(3, "Figure.update_backgroundColor", "")
-        # TODO
-#        self.mplFigure().set_facecolor(self.getMpl('backgroundColor'))
-        #self.redraw()
+        self.pgFigure().setColor(self.getPg('backgroundColor'))
+        self.redraw()
         
     def refreshPlots(self):
         Util.debug(3, "Figure.refreshPlots", "")

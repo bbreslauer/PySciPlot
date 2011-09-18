@@ -332,7 +332,7 @@ class Plot(FigureObject):
         properties = {
                 'name':             Property.String(''),
                 'nameFont':         Property.TextOptions({'size': 18, 'verticalalignment': 'baseline'}),
-                'backgroundColor':  Property.Color(QColor(255,255,255,255)),
+                'backgroundColor':  Property.Color((255,255,255,255)),
                 'plotType':         Property.String('Scatter Plot'),
                      }
 
@@ -398,6 +398,9 @@ class Plot(FigureObject):
         self.redraw()
 
     def refresh(self):
+        self.update_name()
+        self.update_backgroundColor()
+        self.plotTypeObject.refresh()
         self.redraw()
 
     def redraw(self):

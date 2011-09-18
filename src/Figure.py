@@ -47,7 +47,7 @@ class Figure(FigureObject):
                             'rows':               Property.Integer(1),
                             'columns':            Property.Integer(1),
                             'axesPadding':        Property.Integer(50),
-                            'backgroundColor':    Property.Color(QColor(255,255,255,255)),
+                            'backgroundColor':    Property.Color((255,255,255,255)),
                             'linkPlotAxes':       Property.Boolean(False),
                           }
 

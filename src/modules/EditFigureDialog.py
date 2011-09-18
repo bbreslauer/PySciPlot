@@ -97,10 +97,15 @@ class EditFigureDialog(Module):
         # Select figure
         self._ui.figureSelector.setCurrentIndex(self._ui.figureSelector.model().rowCount() - 1)
 
-        # Initialize the figure/plot to the GUI settings
+        # Initialize the figure/plot to the default settings
+        self._figureTab.resetUi()
+        self._plotTab.resetUi()
+
         self._figureTab.saveUi()
         self._plotTab.saveUi()
         self._plotTab.saveSubWidgets()
+
+        figure.refresh()
 
     def showFigure(self):
         """Display the figure, in case it got hidden."""

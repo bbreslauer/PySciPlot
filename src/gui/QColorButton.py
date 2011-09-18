@@ -43,6 +43,10 @@ class QColorButton(QPushButton):
         """Return #rrggbb for the currently selected color."""
         return str(self.getQColor().name())
 
+    def getColorTuple(self):
+        """Return (r, g, b, a) tuple for the currently selected color."""
+        return self.color.getRgb()
+
     def setColor(self, color):
         """
         Change the color of this button. This will both set the background
@@ -55,6 +59,8 @@ class QColorButton(QPushButton):
 
         if isinstance(color, QColor):
             self.color = color
+        elif isinstance(color, tuple) or isinstance(color, list):
+            self.color = QColor(*color)
         elif isinstance(color, Property.Color):
             self.color = color.get()
         else:

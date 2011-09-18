@@ -15,7 +15,6 @@
 
 
 from PySide.QtCore import QObject, Signal
-from PySide.QtGui import QColor
 import copy
 
 class Property(QObject):
@@ -289,27 +288,8 @@ class List(Property):
     castType = list
 
 class Color(Property):
-    default = QColor()
-    castType = QColor
-
-#    def getMpl(self):
-#        return self.get().getRgbF()
-#    
-    def getPg(self):
-        return str(self.get().name())
-
-    def _validateValue(self, newValue):
-        # The passed value could be one of the following:
-        # QColor()
-        # (f, f, f, f)    where f are floats between 0 and 1
-        # (i, i, i, i)    where i are ints between 0 and 255
-        #
-        # The QColor constructor expects a QColor() or (i, i, i, i) passed to it
-        # so if we get (f, f, f, f) we need to convert it
-        if (isinstance(newValue, tuple) or isinstance(newValue, list)) and isinstance(newValue[0], float):
-            newValue = map(lambda x: int(x * 255), newValue)
-
-        return newValue
+    default = [0, 0, 0, 255]
+    castType = list
 
 class SymbolString(String):
     default = ""
@@ -355,8 +335,8 @@ class TextOptions(Options):
         'stretch':               Integer(100),
         'weight':                Integer(100),
         'size':                  Integer(12),
-        'color':                 Color(QColor(0,0,0,255)),
-        'backgroundcolor':       Color(QColor(255,255,255,0)),
+        'color':                 Color((0,0,0,255)),
+        'backgroundcolor':       Color((255,255,255,0)),
         'alpha':                 Float(1.0),
         'horizontalalignment':   String('center'),
         'verticalalignment':     String('center'),
@@ -399,7 +379,7 @@ class GenericAxis(Options):
         'majorTicksLabelFont':                  TextOptions({'verticalalignment': 'top'}),
         'majorTicksLabelPadding':               Integer(4),
         'majorTicksDirection':                  String('in'),
-        'majorTicksColor':                      Color(QColor(0,0,0,255)),
+        'majorTicksColor':                      Color([0,0,0,255]),
         'majorTicksLength':                     Integer(4),
         'majorTicksWidth':                      Integer(1),
         #'majorTicksDisplayPrimary':             Boolean(True),
@@ -412,7 +392,7 @@ class GenericAxis(Options):
         'minorTicksVisible':                    Boolean(True),
         'minorTicksNumber':                     Integer(5),
         'minorTicksDirection':                  String('in'),
-        'minorTicksColor':                      Color(QColor(0,0,0,255)),
+        'minorTicksColor':                      Color([0,0,0,255]),
         'minorTicksLength':                     Integer(2),
         'minorTicksWidth':                      Integer(1),
         #'minorTicksDisplayPrimary':             Boolean(True),

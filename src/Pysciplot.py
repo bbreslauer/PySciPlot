@@ -22,9 +22,6 @@ from PySide.QtCore import Qt, QFile
 
 os.environ['QT_API'] = 'pyside'
 
-import matplotlib
-matplotlib.use('Qt4Agg')
-
 import Util
 import Save
 import Load

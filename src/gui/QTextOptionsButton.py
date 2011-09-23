@@ -16,7 +16,7 @@
 
 from PySide.QtGui import QPushButton, QDialogButtonBox, QColor, QApplication
 
-import matplotlib.font_manager as fm
+from pygraphene.canvas import qt4pyside_canvas
 
 from gui.SubWindows import SubWindow
 from ui.Ui_TextOptionsWidget import *
@@ -50,20 +50,14 @@ class QTextOptionsButton(QPushButton):
         self._dialog.setParent(self._window)
         
         self.hideTextOptionsWidget()
-        
-        # Create font list from matplotlib fonts
-        fontPropList = fm.createFontList(fm.findSystemFonts())
-        
-        # Get just the names
-        fontList = map(lambda x:x.name, fontPropList)
-        
-        # Unique and sort the names
-        fontList = list(set(fontList))
+
+        # Create font list from pygraphene fonts
+        fontList = qt4pyside_canvas.listFonts()
         fontList.sort()
-        
+
         # Enter fonts into the ui widget
         self._ui.name.addItems(fontList)
-        
+
     def getOption(self, option):
         return self.textOptions.get()[option]
 

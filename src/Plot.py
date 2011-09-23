@@ -193,7 +193,8 @@ class CartesianPlot(FigureObject):
                 data = wave.data()
                 axis.setTicksLabeler('major', pgticker.StringLabeler(data), applyToSlaves=True)
 
-            axis.setTicksFont('major', pgfont.Font(**axisDict['majorTicksLabelFont']), applyToSlaves=True)
+            axis.setTicksFont('major', pgfont.Font(**axisDict['majorTicksLabelFont'][0]), applyToSlaves=True)
+            axis.setTickLabelProps('major', axisDict['majorTicksLabelFont'][1])
             axis.setTicksLength('major', axisDict['majorTicksLength'], applyToSlaves=True)
             axis.setTicksWidth('major', axisDict['majorTicksWidth'], applyToSlaves=True)
             axis.setTickMarkProps('major', color=axisDict['majorTicksColor'], applyToSlaves=True)
@@ -226,7 +227,8 @@ class CartesianPlot(FigureObject):
 
     def update_axisLabel(self, axis, axisDict):
         axis.setLabelText(axisDict['label'])
-        axis.setLabelFont(pgfont.Font(**axisDict['labelFont']))
+        axis.setLabelFont(pgfont.Font(**axisDict['labelFont'][0]))
+        axis.setLabelProps(axisDict['labelFont'][1])
 
     def update_axis(self, axisName):
         if axisName == 'bottomAxis':
@@ -384,12 +386,13 @@ class Plot(FigureObject):
 
     def update_name(self):
         Util.debug(3, "Plot.update_name", "")
-        self.pgPlot().setTitle(self.getPg('name'), pgfont.Font(**self.getPg('nameFont')))
+        self.pgPlot().setTitle(self.getPg('name'))
+        self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
         self.pgPlot().title().draw()
 
     def update_nameFont(self):
         Util.debug(3, "Plot.update_nameFont", "")
-        self.pgPlot().setTitle(font=pgfont.Font(**self.getPg('nameFont')))
+        self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
         self.pgPlot().title().draw()
 
     def update_backgroundColor(self):

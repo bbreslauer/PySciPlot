@@ -157,12 +157,13 @@ class Figure(FigureObject):
 
     def update_title(self):
         Util.debug(3, "Figure.update_title", "")
-        self.pgFigure().setTitle(self.getPg('title'), pgfont.Font(**self.getPg('titleFont')))
+        self.pgFigure().setTitle(self.getPg('title'))
+        self.pgFigure().setTitle(self.getPg('titleFont')[1], pgfont.Font(**self.getPg('titleFont')[0]))
         self.pgFigure().title().draw()
 
     def update_titleFont(self):
         Util.debug(3, "Figure.update_titleFont", "")
-        self.pgFigure().setTitle(font=pgfont.Font(**self.getPg('titleFont')))
+        self.pgFigure().setTitle(self.getPg('titleFont')[1], pgfont.Font(**self.getPg('titleFont')[0]))
         self.pgFigure().title().draw()
 
     def update_rows(self):

@@ -27,6 +27,8 @@ class QFigureOptionsWidget(QEditFigureSubWidget):
                  'titleFont',
                  'rows',
                  'columns',
+                 'width',
+                 'height',
                  'axesPadding',
                  'backgroundColor',
                  'linkPlotAxes',
@@ -44,6 +46,18 @@ class QFigureOptionsWidget(QEditFigureSubWidget):
         except:
             # There were probably no figures available (the last one was deleted) and so properties doesn't exist.
             # In this case, just leave the current options alone.
+            pass
+
+    def resetUiSize(self):
+        """Set the UI to the current Figure's settings, but only for the width and height."""
+
+        size = {}
+        size['width'] = self._editFigureDialogModule.currentFigure().properties['width']
+        size['height'] = self._editFigureDialogModule.currentFigure().properties['height']
+
+        try:
+            self.setCurrentUi(size)
+        except:
             pass
 
     def reload(self):

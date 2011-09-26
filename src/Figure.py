@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PySide.QtCore import Qt
-from PySide.QtGui import QAction, QColor, QApplication
+from PySide.QtCore import Qt, Signal
+from PySide.QtGui import QAction, QColor, QApplication, QSizePolicy
 
 from pygraphene import figure as pgf
 from pygraphene import plot as pgp
@@ -35,6 +35,8 @@ class Figure(FigureObject):
     plotNum is 0-based.
     """
 
+    figureSizeUpdated = Signal()
+
     def __init__(self, windowTitle=""):
         
         Util.debug(2, "Figure.init", "Creating figure")
@@ -43,9 +45,11 @@ class Figure(FigureObject):
         properties = {  
                             'windowTitle':        Property.String(''),
                             'title':              Property.String(''),
-                            'titleFont':          Property.TextOptions({'size': 20, 'rotation': 'horizontal', 'verticalalignment': 'top'}),
+                            'titleFont':          Property.TextOptions({'size': 20, 'rotation': 'horizontal', 'verticalalignment': 'center'}),
                             'rows':               Property.Integer(1),
                             'columns':            Property.Integer(1),
+                            'width':              Property.Integer(600),
+                            'height':             Property.Integer(400),
                             'axesPadding':        Property.Integer(50),
                             'backgroundColor':    Property.Color((255,255,255,255)),
                             'linkPlotAxes':       Property.Boolean(False),
@@ -54,8 +58,10 @@ class Figure(FigureObject):
         self._app = QApplication.instance().window
 
         # Graphical stuff
-        width=600
-        height=400
+#        width=600
+#        height=400
+        width = properties['width'].get()
+        height = properties['height'].get()
         self._figure = pgf.Figure(width, height)
         self._canvas = self._figure.canvas().widget()
         self._figureSubWindow = FigureSubWindow(self._app.ui.workspace)
@@ -63,6 +69,7 @@ class Figure(FigureObject):
         self._figureSubWindow.resize(width+10, height+31) # resize includes the window frame, for some reason, so we need to add some pixels
         self._app.ui.workspace.addSubWindow(self._figureSubWindow)
         self._canvas.setParent(self._figureSubWindow)
+
         self.showFigure()
         
         FigureObject.__init__(self, properties)
@@ -73,6 +80,9 @@ class Figure(FigureObject):
         self.extendPlots(0)
         
         self.refresh()
+
+        # When resizing the figure by dragging the window frame, update the Figure's options immediately
+        self._canvas.viewResized.connect(self.updateSizeFromView)
 
         Util.debug(1, "Figure.init", "Created figure " + self.get('windowTitle'))
 
@@ -147,6 +157,19 @@ class Figure(FigureObject):
         for i in range(self.numPlots(), len(self.plots())):
             self.plots()[i].pgPlot().setVisible(False)
 
+    def updateSizeFromView(self, width, height):
+        # When the Figure is resized by using the mouse to drag the window frame, update
+        # the Figure's internally-stored size
+        # Don't want to refresh the Figure when modifying the property, so block the signals
+        # before setting
+        self.properties['width'].blockSignals(True)
+        self.properties['height'].blockSignals(True)
+        self.set('width', width)
+        self.set('height', height)
+        self.properties['width'].blockSignals(False)
+        self.properties['height'].blockSignals(False)
+        self.figureSizeUpdated.emit()
+
     #################################
     # Handlers for when a property is modified
     #################################
@@ -173,6 +196,15 @@ class Figure(FigureObject):
     def update_columns(self):
         Util.debug(3, "Figure.update_columns", "")
         self.refreshPlots()
+
+    def update_width(self):
+        self.refresh()
+
+    def update_height(self):
+        self.refresh()
+
+    def update_size(self):
+        self.pgFigure().setSize(self.getPg('width'), self.getPg('height'))
 
     def update_linkPlotAxes(self):
         Util.debug(3, "Figure.update_linkPlotAxes", "")
@@ -211,6 +243,7 @@ class Figure(FigureObject):
 
     def refresh(self):
         self.refreshPlots()
+        self.update_size()
         self.update_backgroundColor()
         self.update_title()
         self.update_windowTitle()

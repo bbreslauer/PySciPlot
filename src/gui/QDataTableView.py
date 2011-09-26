@@ -122,7 +122,7 @@ class QDataTableView(QTableView):
         if self.model().addColumn(wave):
             # The wave was added (i.e. it did not already exist in the table)
             # We need to move the newly added column from the end to where the user clicked
-            self.horizontalHeader().moveSection(self.model().columnCount() - 1, visualIndex + 1)
+            self.horizontalHeader().moveSection(self.model().columnCount() - 1, visualIndex)
 
     def insertCells(self):
         """Insert cells into waves based on selected cells in this table."""

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_FigureOptionsWidget.ui'
 #
-# Created: Wed Sep  7 23:34:12 2011
+# Created: Fri Sep 23 15:03:50 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -49,7 +49,7 @@ class Ui_FigureOptionsWidget(object):
         self.linkPlotAxes.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.linkPlotAxes.setObjectName("linkPlotAxes")
         self.gridLayout_2.addWidget(self.linkPlotAxes, 0, 4, 1, 2)
-        self.gridLayout.addLayout(self.gridLayout_2, 4, 0, 1, 3)
+        self.gridLayout.addLayout(self.gridLayout_2, 6, 0, 1, 3)
         self.windowTitle = QtGui.QLineEdit(FigureOptionsWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -95,22 +95,27 @@ class Ui_FigureOptionsWidget(object):
         self.gridLayout.addWidget(self.backgroundColor, 2, 1, 1, 2)
         self.label_20 = QtGui.QLabel(FigureOptionsWidget)
         self.label_20.setObjectName("label_20")
-        self.gridLayout.addWidget(self.label_20, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_20, 5, 0, 1, 1)
+        self.axesPadding = QtGui.QSpinBox(FigureOptionsWidget)
+        self.axesPadding.setMaximum(1000)
+        self.axesPadding.setProperty("value", 50)
+        self.axesPadding.setObjectName("axesPadding")
+        self.gridLayout.addWidget(self.axesPadding, 5, 1, 1, 2)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 3, 4, 1, 1)
+        self.gridLayout.addItem(spacerItem, 5, 4, 1, 1)
         self.line_2 = QtGui.QFrame(FigureOptionsWidget)
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
-        self.gridLayout.addWidget(self.line_2, 5, 0, 1, 3)
+        self.gridLayout.addWidget(self.line_2, 7, 0, 1, 3)
         self.buttons = QtGui.QDialogButtonBox(FigureOptionsWidget)
         self.buttons.setOrientation(QtCore.Qt.Horizontal)
         self.buttons.setStandardButtons(QtGui.QDialogButtonBox.Apply|QtGui.QDialogButtonBox.Reset)
         self.buttons.setCenterButtons(True)
         self.buttons.setObjectName("buttons")
-        self.gridLayout.addWidget(self.buttons, 6, 0, 1, 3)
+        self.gridLayout.addWidget(self.buttons, 8, 0, 1, 3)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 8, 3, 1, 1)
+        self.gridLayout.addItem(spacerItem1, 10, 3, 1, 1)
         self.storedSettingsButton = QStoredSettingsButton(FigureOptionsWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -121,12 +126,25 @@ class Ui_FigureOptionsWidget(object):
         self.storedSettingsButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
         self.storedSettingsButton.setObjectName("storedSettingsButton")
-        self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 8, 1)
-        self.axesPadding = QtGui.QSpinBox(FigureOptionsWidget)
-        self.axesPadding.setMaximum(1000)
-        self.axesPadding.setProperty("value", 50)
-        self.axesPadding.setObjectName("axesPadding")
-        self.gridLayout.addWidget(self.axesPadding, 3, 1, 1, 2)
+        self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 10, 1)
+        self.label = QtGui.QLabel(FigureOptionsWidget)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 3, 0, 1, 1)
+        self.label_2 = QtGui.QLabel(FigureOptionsWidget)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 4, 0, 1, 1)
+        self.width = QtGui.QSpinBox(FigureOptionsWidget)
+        self.width.setMaximum(10000)
+        self.width.setSingleStep(10)
+        self.width.setProperty("value", 600)
+        self.width.setObjectName("width")
+        self.gridLayout.addWidget(self.width, 3, 1, 1, 2)
+        self.height = QtGui.QSpinBox(FigureOptionsWidget)
+        self.height.setMaximum(10000)
+        self.height.setSingleStep(10)
+        self.height.setProperty("value", 400)
+        self.height.setObjectName("height")
+        self.gridLayout.addWidget(self.height, 4, 1, 1, 2)
 
         self.retranslateUi(FigureOptionsWidget)
         QtCore.QObject.connect(self.backgroundColor, QtCore.SIGNAL("clicked()"), self.backgroundColor.createColorDialog)
@@ -161,6 +179,8 @@ class Ui_FigureOptionsWidget(object):
 "n\n"
 "g\n"
 "s", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Height", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QColorButton import QColorButton

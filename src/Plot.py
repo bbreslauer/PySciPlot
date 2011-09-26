@@ -145,13 +145,8 @@ class CartesianPlot(FigureObject):
 #        self.plot().redraw()
 
     def update_axisScaling(self, axis, axisDict):
-        # TODO NOT IMPLEMENTED IN PYGRAPHENE
-        pass
-#        # Set linear or logarithmic scaling
-#        if axisName == 'bottomAxis':
-#            self.plot().axes().set_xscale(axisDict['scaleType'])
-#        elif axisName == 'leftAxis':
-#            self.plot().axes().set_yscale(axisDict['scaleType'])
+        # Set linear or logarithmic scaling
+        axis.setScaling(axisDict['scaleType'], axisDict['majorTicksLogBase'])
 
     def update_axisLimits(self, axis, axisDict):
         # Set minimum and maximum for axes
@@ -167,22 +162,28 @@ class CartesianPlot(FigureObject):
         if axisDict['majorTicksVisible']:
             ticks.setVisible(True)
             
-            if axisDict['useMajorTicksNumber']:
-                axis.setTicksLocator('major', pgticker.LinearLocator(axisDict['majorTicksNumber']), applyToSlaves=True)
-            elif axisDict['useMajorTicksWaveValues']:
-                wave = self._app.waves().wave(str(axisDict['majorTicksWaveValues']))
-                data = Util.uniqueList(wave.data())
-                data.sort()
-                axis.setTicksLocator('major', pgticker.FixedLocator(data), applyToSlaves=True)
-            elif axisDict['useMajorTicksSpacing']:
-                anchor = None
-                if axisDict['useMajorTicksAnchor']:
-                    anchor = axisDict['majorTicksAnchor']
-                axis.setTicksLocator('major', pgticker.SpacedLocator(axisDict['majorTicksSpacing'], anchor), applyToSlaves=True)
+            if axisDict['scaleType'] in ('log', 'symlog'):
+                subs = axisDict['majorTicksLogLocations'].split(',')
+                subs = map(float, subs)
+                axis.setTicksLocator('major', pgticker.LogLocator(axisDict['majorTicksLogBase'], subs), applyToSlaves=True)
+            else:  # linear scaling
+                if axisDict['useMajorTicksNumber']:
+                    axis.setTicksLocator('major', pgticker.LinearLocator(axisDict['majorTicksNumber']), applyToSlaves=True)
+                elif axisDict['useMajorTicksWaveValues']:
+                    wave = self._app.waves().wave(str(axisDict['majorTicksWaveValues']))
+                    data = Util.uniqueList(wave.data())
+                    data.sort()
+                    axis.setTicksLocator('major', pgticker.FixedLocator(data), applyToSlaves=True)
+                elif axisDict['useMajorTicksSpacing']:
+                    anchor = None
+                    if axisDict['useMajorTicksAnchor']:
+                        anchor = axisDict['majorTicksAnchor']
+                    axis.setTicksLocator('major', pgticker.SpacedLocator(axisDict['majorTicksSpacing'], anchor), applyToSlaves=True)
 
         # Ticks are not visible
         else:
             ticks.setVisible(False)
+            return
 
         # Set the tick labels
         if axisDict['majorTicksLabelVisible']:
@@ -210,8 +211,13 @@ class CartesianPlot(FigureObject):
         # Set the tick locations
         if axisDict['majorTicksVisible'] and axisDict['minorTicksVisible']:
             ticks.setVisible(True)
-            
-            axis.setTicksLocator('minor', pgticker.LinearLocator(axisDict['minorTicksNumber']), applyToSlaves=True)
+
+            if axisDict['scaleType'] in ('log', 'symlog'):
+                subs = axisDict['minorTicksLogLocations'].split(',')
+                subs = map(float, subs)
+                axis.setTicksLocator('minor', pgticker.LogLocator(axisDict['majorTicksLogBase'], subs), applyToSlaves=True)
+            else:
+                axis.setTicksLocator('minor', pgticker.LinearLocator(axisDict['minorTicksNumber']), applyToSlaves=True)
             axis.setTicksLength('minor', axisDict['minorTicksLength'], applyToSlaves=True)
             axis.setTicksWidth('minor', axisDict['minorTicksWidth'], applyToSlaves=True)
             axis.setTickMarkProps('minor', color=axisDict['minorTicksColor'], applyToSlaves=True)

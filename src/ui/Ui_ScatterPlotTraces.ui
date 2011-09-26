@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>469</width>
+    <width>473</width>
     <height>360</height>
    </rect>
   </property>
@@ -470,7 +470,7 @@ color: rgb(255, 255, 255);</string>
             </size>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>1</number>
            </property>
            <property name="sizeAdjustPolicy">
             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
@@ -478,16 +478,6 @@ color: rgb(255, 255, 255);</string>
            <item>
             <property name="text">
              <string>None</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Point</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Pixel</string>
             </property>
            </item>
            <item>
@@ -517,47 +507,12 @@ color: rgb(255, 255, 255);</string>
            </item>
            <item>
             <property name="text">
-             <string>Y - Down</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Y - Up</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Y - Left</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Y - Right</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Square</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Pentagon</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Star</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Hexagon 1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Hexagon 2</string>
             </property>
            </item>
            <item>
@@ -568,16 +523,6 @@ color: rgb(255, 255, 255);</string>
            <item>
             <property name="text">
              <string>X</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Diamond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Thin Diamond</string>
             </property>
            </item>
            <item>

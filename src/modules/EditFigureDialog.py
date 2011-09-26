@@ -105,6 +105,8 @@ class EditFigureDialog(Module):
         self._plotTab.saveUi()
         self._plotTab.saveSubWidgets()
 
+        figure.figureSizeUpdated.connect(self._figureTab.resetUiSize)
+
         figure.refresh()
 
     def showFigure(self):

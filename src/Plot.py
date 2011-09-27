@@ -40,21 +40,25 @@ class CartesianPlot(FigureObject):
 
         # Add additional properties without deleting the ones defined in Plot()
         properties = {
-                'bottomAxis':       Property.GenericAxis({
+                'bottom':       Property.GenericAxis({
                                                     'majorTicksLabelFont':  Property.TextOptions({'verticalalignment': 'top'}),
                                                     'labelFont':            Property.TextOptions({'verticalalignment': 'top'}),
                                                     }),
-                'leftAxis':         Property.GenericAxis({
+                'left':         Property.GenericAxis({
                                                     'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'right'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'right', 'rotation': 'vertical'}),
                                                     }),
-                'topAxis':          Property.GenericAxis({
+                'top':          Property.GenericAxis({
                                                     'majorTicksLabelFont':  Property.TextOptions({'verticalalignment': 'bottom'}),
-                                                    'labelFont':            Property.TextOptions({'verticalalignment': 'top'}),
+                                                    'labelFont':            Property.TextOptions({'verticalalignment': 'bottom'}),
+                                                    'slaveAxisToOther':     Property.Boolean(True),
+                                                    'slavedTo':             Property.String('bottom'),
                                                     }),
-                'rightAxis':        Property.GenericAxis({
+                'right':        Property.GenericAxis({
                                                     'majorTicksLabelFont':  Property.TextOptions({'horizontalalignment': 'left'}),
                                                     'labelFont':            Property.TextOptions({'horizontalalignment': 'left', 'rotation': 'vertical'}),
+                                                    'slaveAxisToOther':     Property.Boolean(True),
+                                                    'slavedTo':             Property.String('left'),
                                                     }),
                 'legend':           Property.Legend(),
                 }
@@ -105,23 +109,29 @@ class CartesianPlot(FigureObject):
         """
         return pgp.CartesianPlot(pgFigure, pgCanvas)
 
-    def update_bottomAxis(self):
-        Util.debug(3, "ScatterPlot.update_bottomAxis", "")
+    def update_bottom(self):
+        Util.debug(3, "ScatterPlot.update_bottom", "")
 
         if self.plot().pgPlot() != None:
-            self.update_axis('bottomAxis')
+            self.update_axis('bottom')
 
-    def update_leftAxis(self):
-        Util.debug(3, "ScatterPlot.update_leftAxis", "")
+    def update_left(self):
+        Util.debug(3, "ScatterPlot.update_left", "")
 
         if self.plot().pgPlot() != None:
-            self.update_axis('leftAxis')
+            self.update_axis('left')
 
-    def update_topAxis(self):
-        pass
+    def update_top(self):
+        Util.debug(3, "ScatterPlot.update_top", "")
 
-    def update_rightAxis(self):
-        pass
+        if self.plot().pgPlot() != None:
+            self.update_axis('top')
+
+    def update_right(self):
+        Util.debug(3, "ScatterPlot.update_right", "")
+
+        if self.plot().pgPlot() != None:
+            self.update_axis('right')
 
     def update_legend(self):
         Util.debug(1, "ScatterPlot.update_legend", "")
@@ -236,11 +246,17 @@ class CartesianPlot(FigureObject):
         axis.setLabelFont(pgfont.Font(**axisDict['labelFont'][0]))
         axis.setLabelProps(axisDict['labelFont'][1])
 
+    def update_axisSlaving(self, axis, axisDict):
+        if axisDict['slaveAxisToOther']:
+            otherAxisName = axisDict['slavedTo']
+            other = self.plot().pgPlot().axis(otherAxisName)
+            axis.slaveTo(other)
+        else:
+            axis.unslave()
+
     def update_axis(self, axisName):
-        if axisName == 'bottomAxis':
-            axis = self.plot().pgPlot().axis('bottom')
-        elif axisName == 'leftAxis':
-            axis = self.plot().pgPlot().axis('left')
+        if axisName in ('bottom', 'left', 'top', 'right'):
+            axis = self.plot().pgPlot().axis(axisName)
         else:
             print "Unknown axis: " + str(axisName)
             return
@@ -248,6 +264,7 @@ class CartesianPlot(FigureObject):
 
         if axisDict['visible']:
             axis.setVisible(True)
+            self.update_axisSlaving(axis, axisDict)
             self.update_axisLimits(axis, axisDict)
             self.update_axisScaling(axis, axisDict)
     
@@ -265,8 +282,8 @@ class CartesianPlot(FigureObject):
         for wavePair in self.wavePairs():
             wavePair.refresh()
 
-        self.update_bottomAxis()
-        self.update_leftAxis()
+        self.update_bottom()
+        self.update_left()
         self.update_legend()
 
 class ScatterPlot(CartesianPlot):

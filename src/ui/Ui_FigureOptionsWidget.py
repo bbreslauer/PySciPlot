@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_FigureOptionsWidget.ui'
 #
-# Created: Fri Sep 23 15:03:50 2011
+# Created: Tue Sep 27 00:41:09 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -116,17 +116,6 @@ class Ui_FigureOptionsWidget(object):
         self.gridLayout.addWidget(self.buttons, 8, 0, 1, 3)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem1, 10, 3, 1, 1)
-        self.storedSettingsButton = QStoredSettingsButton(FigureOptionsWidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.storedSettingsButton.sizePolicy().hasHeightForWidth())
-        self.storedSettingsButton.setSizePolicy(sizePolicy)
-        self.storedSettingsButton.setMaximumSize(QtCore.QSize(26, 16777215))
-        self.storedSettingsButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-        self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
-        self.storedSettingsButton.setObjectName("storedSettingsButton")
-        self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 10, 1)
         self.label = QtGui.QLabel(FigureOptionsWidget)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 3, 0, 1, 1)
@@ -145,6 +134,17 @@ class Ui_FigureOptionsWidget(object):
         self.height.setProperty("value", 400)
         self.height.setObjectName("height")
         self.gridLayout.addWidget(self.height, 4, 1, 1, 2)
+        self.storedSettingsButton = QStoredSettingsButton(FigureOptionsWidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.storedSettingsButton.sizePolicy().hasHeightForWidth())
+        self.storedSettingsButton.setSizePolicy(sizePolicy)
+        self.storedSettingsButton.setMaximumSize(QtCore.QSize(26, 16777215))
+        self.storedSettingsButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.storedSettingsButton.setArrowType(QtCore.Qt.LeftArrow)
+        self.storedSettingsButton.setObjectName("storedSettingsButton")
+        self.gridLayout.addWidget(self.storedSettingsButton, 0, 3, 10, 1)
 
         self.retranslateUi(FigureOptionsWidget)
         QtCore.QObject.connect(self.backgroundColor, QtCore.SIGNAL("clicked()"), self.backgroundColor.createColorDialog)
@@ -164,6 +164,8 @@ class Ui_FigureOptionsWidget(object):
         self.label_5.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Background Color", None, QtGui.QApplication.UnicodeUTF8))
         self.backgroundColor.setText(QtGui.QApplication.translate("FigureOptionsWidget", "(255,255,255,255)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_20.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Padding between Plots", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Height", None, QtGui.QApplication.UnicodeUTF8))
         self.storedSettingsButton.setText(QtGui.QApplication.translate("FigureOptionsWidget", "S\n"
 "t\n"
 "o\n"
@@ -179,8 +181,6 @@ class Ui_FigureOptionsWidget(object):
 "n\n"
 "g\n"
 "s", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Width", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Height", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QColorButton import QColorButton

@@ -25,6 +25,7 @@ from ui.Ui_ScatterPlotTraces import *
 from ui.Ui_BarPlotBars import *
 from ui.Ui_PlotLegend import *
 
+import Util
 
 class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
@@ -35,31 +36,33 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
     def initSubWidgets(self):
         # Add the various tabs to this widget
-        self.bottomAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.bottom = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
         bottomAxisUi = Ui_CartesianPlotAxis()
-        bottomAxisUi.setupUi(self.bottomAxis)
-        self.bottomAxis.initSubWidgets()
-        self.getChild('tabWidget').addTab(self.bottomAxis, 'Bottom Axis')
+        bottomAxisUi.setupUi(self.bottom)
+        self.bottom.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.bottom, 'Bottom Axis')
 
-        self.leftAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.left = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
         leftAxisUi = Ui_CartesianPlotAxis()
-        leftAxisUi.setupUi(self.leftAxis)
-        self.leftAxis.initSubWidgets()
-        self.getChild('tabWidget').addTab(self.leftAxis, 'Left Axis')
+        leftAxisUi.setupUi(self.left)
+        self.left.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.left, 'Left Axis')
+        Util.setWidgetValue(self.left.getChild('slavedTo'), 'left')
 
-        self.topAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.top = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
         topAxisUi = Ui_CartesianPlotAxis()
-        topAxisUi.setupUi(self.topAxis)
-        self.topAxis.initSubWidgets()
-        self.getChild('tabWidget').addTab(self.topAxis, 'Top Axis')
-        self.getChild('tabWidget').setTabEnabled(2, False)
+        topAxisUi.setupUi(self.top)
+        self.top.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.top, 'Top Axis')
+        Util.setWidgetValue(self.top.getChild('slaveAxisToOther'), True)
 
-        self.rightAxis = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.right = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
         rightAxisUi = Ui_CartesianPlotAxis()
-        rightAxisUi.setupUi(self.rightAxis)
-        self.rightAxis.initSubWidgets()
-        self.getChild('tabWidget').addTab(self.rightAxis, 'Right Axis')
-        self.getChild('tabWidget').setTabEnabled(3, False)
+        rightAxisUi.setupUi(self.right)
+        self.right.initSubWidgets()
+        self.getChild('tabWidget').addTab(self.right, 'Right Axis')
+        Util.setWidgetValue(self.right.getChild('slavedTo'), 'left')
+        Util.setWidgetValue(self.right.getChild('slaveAxisToOther'), True)
 
         self.legend = QPlotLegendWidget(self.getChild('tabWidget'))
         legendUi = Ui_PlotLegend()
@@ -72,17 +75,17 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
     def saveUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         
-        bottomAxisUiOptions = self.bottomAxis.getCurrentUi()
-        plotTypeObject.set('bottomAxis', bottomAxisUiOptions)
+        bottomAxisUiOptions = self.bottom.getCurrentUi()
+        plotTypeObject.set('bottom', bottomAxisUiOptions)
 
-        leftAxisUiOptions = self.leftAxis.getCurrentUi()
-        plotTypeObject.set('leftAxis', leftAxisUiOptions)
+        leftAxisUiOptions = self.left.getCurrentUi()
+        plotTypeObject.set('left', leftAxisUiOptions)
         
-        topAxisUiOptions = self.topAxis.getCurrentUi()
-        plotTypeObject.set('topAxis', topAxisUiOptions)
+        topAxisUiOptions = self.top.getCurrentUi()
+        plotTypeObject.set('top', topAxisUiOptions)
 
-        rightAxisUiOptions = self.rightAxis.getCurrentUi()
-        plotTypeObject.set('rightAxis', rightAxisUiOptions)
+        rightAxisUiOptions = self.right.getCurrentUi()
+        plotTypeObject.set('right', rightAxisUiOptions)
 
         legendUiOptions = self.legend.getCurrentUi()
         plotTypeObject.set('legend', legendUiOptions)
@@ -92,17 +95,17 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
     def resetUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject
         
-        bottomAxisOptions = plotTypeObject.get('bottomAxis')
-        self.bottomAxis.setCurrentUi(bottomAxisOptions)
+        bottomAxisOptions = plotTypeObject.get('bottom')
+        self.bottom.setCurrentUi(bottomAxisOptions)
 
-        leftAxisOptions = plotTypeObject.get('leftAxis')
-        self.leftAxis.setCurrentUi(leftAxisOptions)
+        leftAxisOptions = plotTypeObject.get('left')
+        self.left.setCurrentUi(leftAxisOptions)
 
-        topAxisOptions = plotTypeObject.get('topAxis')
-        self.topAxis.setCurrentUi(topAxisOptions)
+        topAxisOptions = plotTypeObject.get('top')
+        self.top.setCurrentUi(topAxisOptions)
 
-        rightAxisOptions = plotTypeObject.get('rightAxis')
-        self.rightAxis.setCurrentUi(rightAxisOptions)
+        rightAxisOptions = plotTypeObject.get('right')
+        self.right.setCurrentUi(rightAxisOptions)
 
         legendOptions = plotTypeObject.get('legend')
         self.legend.setCurrentUi(legendOptions)
@@ -110,13 +113,12 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
         self.wavePairs.resetUi()
 
     def reload(self):
-        self.bottomAxis.initSubWidgets()
-        self.leftAxis.initSubWidgets()
-        self.topAxis.initSubWidgets()
-        self.rightAxis.initSubWidgets()
+        self.bottom.initSubWidgets()
+        self.left.initSubWidgets()
+        self.top.initSubWidgets()
+        self.right.initSubWidgets()
 
         self.wavePairs.initSubWidgets()
-
 
 
 class QScatterPlotTypeWidget(QCartesianPlotTypeWidget):

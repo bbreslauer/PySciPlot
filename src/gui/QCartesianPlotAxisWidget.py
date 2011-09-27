@@ -45,3 +45,21 @@ class QCartesianPlotAxisWidget(QEditFigureSubWidget):
         self.getChild('useMajorTicksAnchor').setEnabled(False)
         self.getChild('majorTicksAnchor').setEnabled(False)
 
+    def setAxisVisible(self, b):
+        """
+        Set the various group boxes to be enabled or disabled, based on
+        whether the axis is set to be visible.
+        """
+
+        if not b:
+            self.getChild('scaleGroupBox').setEnabled(False)
+            self.getChild('majorTicksVisible').setEnabled(False)
+            self.getChild('minorTicksVisible').setEnabled(False)
+        else:
+            self.getChild('majorTicksVisible').setEnabled(True)
+            if self.getChild('majorTicksVisible').isChecked():
+                self.getChild('minorTicksVisible').setEnabled(True)
+            if not self.getChild('slaveAxisToOther').isChecked():
+                self.getChild('scaleGroupBox').setEnabled(True)
+
+

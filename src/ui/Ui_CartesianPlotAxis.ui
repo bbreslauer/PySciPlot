@@ -7,21 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>578</width>
-    <height>439</height>
+    <height>357</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,1,1">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QGroupBox" name="visible">
      <property name="minimumSize">
       <size>
        <width>185</width>
@@ -29,57 +23,12 @@
       </size>
      </property>
      <property name="title">
-      <string>Axis</string>
+      <string>Axis Visible</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="visible">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>Visible?</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QComboBox" name="scaleType">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <item>
-         <property name="text">
-          <string>Linear</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Logarithmic</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Symmetric Log</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="2" rowspan="3" colspan="2">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="label"/>
       </item>
@@ -90,68 +39,51 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="5">
-       <widget class="QLineEdit" name="minimum">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>-10.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>Minimum</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_21">
-        <property name="text">
-         <string>Type</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QLabel" name="label_22">
-        <property name="text">
-         <string>Maximum</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="QLineEdit" name="maximum">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>10.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="1" column="2">
        <widget class="QTextOptionsButton" name="labelFont">
         <property name="text">
          <string>Label Font</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="autoscale">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="slaveAxisToOther">
         <property name="text">
-         <string>Autoscale?</string>
+         <string>Mirror other Axis</string>
         </property>
-        <property name="checked">
-         <bool>true</bool>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QComboBox" name="slavedTo">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
+        <item>
+         <property name="text">
+          <string>bottom</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>left</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>top</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>right</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="0" colspan="2">
     <widget class="QGroupBox" name="majorTicksVisible">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -529,7 +461,7 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="minorTicksVisible">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -737,7 +669,103 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" rowspan="4">
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="scaleGroupBox">
+     <property name="title">
+      <string>Scale</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QCheckBox" name="autoscale">
+          <property name="text">
+           <string>Autoscale?</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>Type</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="scaleType">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>Linear</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Logarithmic</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Symmetric Log</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>Minimum</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="minimum">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>-10.00</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>Maximum</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="maximum">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>10.00</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2" rowspan="4">
     <widget class="QStoredSettingsButton" name="storedSettingsButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -777,6 +805,11 @@ s</string>
     </widget>
    </item>
   </layout>
+  <zorder>visible</zorder>
+  <zorder>majorTicksVisible</zorder>
+  <zorder>minorTicksVisible</zorder>
+  <zorder>scaleGroupBox</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -805,13 +838,7 @@ s</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>visible</tabstop>
-  <tabstop>autoscale</tabstop>
   <tabstop>label</tabstop>
-  <tabstop>labelFont</tabstop>
-  <tabstop>scaleType</tabstop>
-  <tabstop>minimum</tabstop>
-  <tabstop>maximum</tabstop>
   <tabstop>majorTicksVisible</tabstop>
   <tabstop>useMajorTicksAnchor</tabstop>
   <tabstop>majorTicksAnchor</tabstop>
@@ -851,12 +878,12 @@ s</string>
    <slot>toggleWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>582</x>
-     <y>20</y>
+     <x>571</x>
+     <y>26</y>
     </hint>
     <hint type="destinationlabel">
-     <x>583</x>
-     <y>18</y>
+     <x>571</x>
+     <y>24</y>
     </hint>
    </hints>
   </connection>
@@ -867,12 +894,12 @@ s</string>
    <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>102</y>
+     <x>203</x>
+     <y>79</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>102</y>
+     <x>203</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>
@@ -883,12 +910,12 @@ s</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
+     <x>298</x>
      <y>46</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>75</y>
+     <x>373</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>
@@ -899,12 +926,12 @@ s</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
+     <x>298</x>
      <y>46</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>101</y>
+     <x>530</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>
@@ -915,12 +942,12 @@ s</string>
    <slot>showTextOptionsWidget()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>549</x>
-     <y>226</y>
+     <x>531</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>226</y>
+     <x>531</x>
+     <y>208</y>
     </hint>
    </hints>
   </connection>
@@ -931,12 +958,12 @@ s</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>549</x>
-     <y>286</y>
+     <x>531</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>286</y>
+     <x>531</x>
+     <y>237</y>
     </hint>
    </hints>
   </connection>
@@ -947,12 +974,12 @@ s</string>
    <slot>createColorDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>437</x>
-     <y>383</y>
+     <x>419</x>
+     <y>336</y>
     </hint>
     <hint type="destinationlabel">
-     <x>437</x>
-     <y>383</y>
+     <x>419</x>
+     <y>336</y>
     </hint>
    </hints>
   </connection>
@@ -963,12 +990,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>196</y>
+     <x>146</x>
+     <y>177</y>
     </hint>
     <hint type="destinationlabel">
-     <x>269</x>
-     <y>198</y>
+     <x>233</x>
+     <y>178</y>
     </hint>
    </hints>
   </connection>
@@ -979,12 +1006,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>222</y>
+     <x>146</x>
+     <y>203</y>
     </hint>
     <hint type="destinationlabel">
-     <x>269</x>
-     <y>224</y>
+     <x>233</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -999,8 +1026,8 @@ s</string>
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>289</x>
-     <y>392</y>
+     <x>295</x>
+     <y>344</y>
     </hint>
    </hints>
   </connection>
@@ -1011,12 +1038,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>170</y>
+     <x>146</x>
+     <y>151</y>
     </hint>
     <hint type="destinationlabel">
-     <x>269</x>
-     <y>172</y>
+     <x>233</x>
+     <y>152</y>
     </hint>
    </hints>
   </connection>
@@ -1027,12 +1054,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>423</x>
-     <y>168</y>
+     <x>398</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>170</y>
+     <x>531</x>
+     <y>150</y>
     </hint>
    </hints>
   </connection>
@@ -1043,12 +1070,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>423</x>
-     <y>196</y>
+     <x>398</x>
+     <y>176</y>
     </hint>
     <hint type="destinationlabel">
-     <x>549</x>
-     <y>199</y>
+     <x>531</x>
+     <y>179</y>
     </hint>
    </hints>
   </connection>
@@ -1059,12 +1086,12 @@ s</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>250</y>
+     <x>146</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
-     <x>269</x>
-     <y>253</y>
+     <x>233</x>
+     <y>233</y>
     </hint>
    </hints>
   </connection>
@@ -1091,8 +1118,8 @@ s</string>
    <slot>disableAnchorToValue(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>84</x>
-     <y>245</y>
+     <x>100</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1107,8 +1134,8 @@ s</string>
    <slot>disableAnchorToValue(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>63</x>
-     <y>209</y>
+     <x>79</x>
+     <y>203</y>
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
@@ -1123,12 +1150,60 @@ s</string>
    <slot>enableAnchorToValue(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>186</y>
+     <x>46</x>
+     <y>177</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
      <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slaveAxisToOther</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>slavedTo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>94</x>
+     <y>40</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>178</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slaveAxisToOther</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>scaleGroupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>302</x>
+     <y>18</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>visible</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CartesianPlotAxis</receiver>
+   <slot>setAxisVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>85</x>
+     <y>0</y>
     </hint>
    </hints>
   </connection>
@@ -1137,5 +1212,6 @@ s</string>
   <slot>changeScaleType(QString)</slot>
   <slot>enableAnchorToValue(bool)</slot>
   <slot>disableAnchorToValue(bool)</slot>
+  <slot>setAxisVisible(bool)</slot>
  </slots>
 </ui>

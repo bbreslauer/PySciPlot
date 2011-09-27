@@ -242,45 +242,6 @@ color: rgb(0, 0, 0);
      </property>
     </spacer>
    </item>
-   <item row="0" column="3" rowspan="10">
-    <widget class="QStoredSettingsButton" name="storedSettingsButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>26</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>S
-t
-o
-r
-e
-d
-
-S
-e
-t
-t
-i
-n
-g
-s</string>
-     </property>
-     <property name="toolButtonStyle">
-      <enum>Qt::ToolButtonTextUnderIcon</enum>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::LeftArrow</enum>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -321,6 +282,45 @@ s</string>
      </property>
     </widget>
    </item>
+   <item row="0" column="3" rowspan="10">
+    <widget class="QStoredSettingsButton" name="storedSettingsButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>S
+t
+o
+r
+e
+d
+
+S
+e
+t
+t
+i
+n
+g
+s</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::LeftArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
   <zorder>windowTitle</zorder>
   <zorder>label_24</zorder>
@@ -335,11 +335,11 @@ s</string>
   <zorder>line_2</zorder>
   <zorder>buttons</zorder>
   <zorder>verticalSpacer</zorder>
-  <zorder>storedSettingsButton</zorder>
   <zorder>label</zorder>
   <zorder>label_2</zorder>
   <zorder>width</zorder>
   <zorder>height</zorder>
+  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>

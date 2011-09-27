@@ -368,6 +368,8 @@ class GenericAxis(Options):
         'label':              String(''),
         'labelFont':          TextOptions({'verticalalignment': 'top'}),
         'visible':            Boolean(True),
+        'slaveAxisToOther':   Boolean(False),
+        'slavedTo':           String('bottom'),
 
         'majorTicksVisible':                    Boolean(True),
         'useMajorTicksAnchor':                  Boolean(False),

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Sat Oct  1 22:28:58 2011
+# Created: Sat Oct  1 22:51:30 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -103,7 +103,7 @@ class Ui_CartesianPlotAxis(object):
         self.useMajorTicksWaveValues.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.useMajorTicksWaveValues.setObjectName("useMajorTicksWaveValues")
         self.gridLayout_6.addWidget(self.useMajorTicksWaveValues, 4, 0, 1, 1)
-        self.majorTicksWaveValues = QtGui.QComboBox(self.page)
+        self.majorTicksWaveValues = QWaveComboBox(self.page)
         self.majorTicksWaveValues.setEnabled(False)
         self.majorTicksWaveValues.setObjectName("majorTicksWaveValues")
         self.gridLayout_6.addWidget(self.majorTicksWaveValues, 4, 1, 1, 1)
@@ -191,7 +191,7 @@ class Ui_CartesianPlotAxis(object):
         self.majorTicksLabelNumericFormat = QtGui.QLineEdit(self.majorTicksLabelVisible)
         self.majorTicksLabelNumericFormat.setObjectName("majorTicksLabelNumericFormat")
         self.gridLayout_2.addWidget(self.majorTicksLabelNumericFormat, 0, 2, 1, 2)
-        self.majorTicksLabelWave = QtGui.QComboBox(self.majorTicksLabelVisible)
+        self.majorTicksLabelWave = QWaveComboBox(self.majorTicksLabelVisible)
         self.majorTicksLabelWave.setEnabled(False)
         self.majorTicksLabelWave.setObjectName("majorTicksLabelWave")
         self.gridLayout_2.addWidget(self.majorTicksLabelWave, 1, 2, 1, 2)
@@ -503,4 +503,5 @@ class Ui_CartesianPlotAxis(object):
 
 from gui.QTextOptionsButton import QTextOptionsButton
 from gui.QColorButton import QColorButton
+from gui.QWaveComboBox import QWaveComboBox
 from gui.QStoredSettingsButton import QStoredSettingsButton

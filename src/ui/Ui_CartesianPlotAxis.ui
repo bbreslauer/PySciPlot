@@ -209,7 +209,7 @@
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QComboBox" name="majorTicksWaveValues">
+              <widget class="QWaveComboBox" name="majorTicksWaveValues">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -420,7 +420,7 @@ color: rgb(255, 255, 255);</string>
           </widget>
          </item>
          <item row="1" column="2" colspan="2">
-          <widget class="QComboBox" name="majorTicksLabelWave">
+          <widget class="QWaveComboBox" name="majorTicksLabelWave">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -830,6 +830,11 @@ s</string>
    <slots>
     <slot>showTextOptionsWidget()</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>QWaveComboBox</class>
+   <extends>QComboBox</extends>
+   <header>gui/QWaveComboBox</header>
   </customwidget>
  </customwidgets>
  <tabstops>

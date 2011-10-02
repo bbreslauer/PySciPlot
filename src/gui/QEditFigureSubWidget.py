@@ -47,14 +47,14 @@ class QEditFigureSubWidget(QWidget):
         """
 
         currentProperties = {}
-        for property in self.properties:
-            currentProperties[property] = Util.getWidgetValue(self.getChild(property))
+        for prop in self.properties:
+            currentProperties[prop] = Util.getWidgetValue(self.getChild(prop))
 
         return currentProperties
 
     def setCurrentUi(self, properties):
         """
-        Set the current UI to the pass properties.
+        Set the current UI to the passed properties.
         """
 
         for (key, value) in properties.items():

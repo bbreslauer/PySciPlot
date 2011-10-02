@@ -31,35 +31,38 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
     def __init__(self, plotOptionsWidget, *args):
         QEditFigureSubWidget.__init__(self, *args)
-
         self._plotOptionsWidget = plotOptionsWidget
 
     def initSubWidgets(self):
         # Add the various tabs to this widget
-        self.bottom = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.bottom = QCartesianPlotAxisWidget(self, 'bottom', self.getChild('tabWidget'))
         bottomAxisUi = Ui_CartesianPlotAxis()
         bottomAxisUi.setupUi(self.bottom)
         self.bottom.initSubWidgets()
+        self.bottom.connectSignals()
         self.getChild('tabWidget').addTab(self.bottom, 'Bottom Axis')
 
-        self.left = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.left = QCartesianPlotAxisWidget(self, 'left', self.getChild('tabWidget'))
         leftAxisUi = Ui_CartesianPlotAxis()
         leftAxisUi.setupUi(self.left)
         self.left.initSubWidgets()
+        self.left.connectSignals()
         self.getChild('tabWidget').addTab(self.left, 'Left Axis')
         Util.setWidgetValue(self.left.getChild('slavedTo'), 'left')
 
-        self.top = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.top = QCartesianPlotAxisWidget(self, 'top', self.getChild('tabWidget'))
         topAxisUi = Ui_CartesianPlotAxis()
         topAxisUi.setupUi(self.top)
         self.top.initSubWidgets()
+        self.top.connectSignals()
         self.getChild('tabWidget').addTab(self.top, 'Top Axis')
         Util.setWidgetValue(self.top.getChild('slaveAxisToOther'), True)
 
-        self.right = QCartesianPlotAxisWidget(self.getChild('tabWidget'))
+        self.right = QCartesianPlotAxisWidget(self, 'right', self.getChild('tabWidget'))
         rightAxisUi = Ui_CartesianPlotAxis()
         rightAxisUi.setupUi(self.right)
         self.right.initSubWidgets()
+        self.right.connectSignals()
         self.getChild('tabWidget').addTab(self.right, 'Right Axis')
         Util.setWidgetValue(self.right.getChild('slavedTo'), 'left')
         Util.setWidgetValue(self.right.getChild('slaveAxisToOther'), True)
@@ -71,6 +74,25 @@ class QCartesianPlotTypeWidget(QEditFigureSubWidget):
 
         # Some axis options will always be linked together (such as the bottom and top scale types), and so 
         # we should link them in the UI so that the user knows that they are the same.
+        self.bottom.scalePropertiesChanged.connect(self.left.changeScaleProperties)
+        self.bottom.scalePropertiesChanged.connect(self.top.changeScaleProperties)
+        self.bottom.scalePropertiesChanged.connect(self.right.changeScaleProperties)
+
+        self.left.scalePropertiesChanged.connect(self.bottom.changeScaleProperties)
+        self.left.scalePropertiesChanged.connect(self.top.changeScaleProperties)
+        self.left.scalePropertiesChanged.connect(self.right.changeScaleProperties)
+
+        self.top.scalePropertiesChanged.connect(self.bottom.changeScaleProperties)
+        self.top.scalePropertiesChanged.connect(self.left.changeScaleProperties)
+        self.top.scalePropertiesChanged.connect(self.right.changeScaleProperties)
+
+        self.right.scalePropertiesChanged.connect(self.bottom.changeScaleProperties)
+        self.right.scalePropertiesChanged.connect(self.left.changeScaleProperties)
+        self.right.scalePropertiesChanged.connect(self.top.changeScaleProperties)
+
+    def forceScalePropertiesUpdate(self, slavedTo):
+        widget = eval("self." + slavedTo)
+        widget.emitScalePropertiesChanged()
 
     def saveUi(self):
         plotTypeObject = self._plotOptionsWidget.currentPlot().plotTypeObject

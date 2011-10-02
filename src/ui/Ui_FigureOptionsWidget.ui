@@ -138,7 +138,7 @@
    <item row="1" column="2">
     <widget class="QTextOptionsButton" name="titleFont">
      <property name="text">
-      <string>Font</string>
+      <string>Text Options</string>
      </property>
     </widget>
    </item>

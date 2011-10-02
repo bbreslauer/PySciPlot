@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_CartesianPlotAxis.ui'
 #
-# Created: Tue Sep 27 01:04:57 2011
+# Created: Sat Oct  1 22:28:58 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -431,7 +431,7 @@ class Ui_CartesianPlotAxis(object):
         CartesianPlotAxis.setWindowTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.visible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Axis Visible", None, QtGui.QApplication.UnicodeUTF8))
         self.label_19.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Label", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Label Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Text Options", None, QtGui.QApplication.UnicodeUTF8))
         self.slaveAxisToOther.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Mirror other Axis", None, QtGui.QApplication.UnicodeUTF8))
         self.slavedTo.setItemText(0, QtGui.QApplication.translate("CartesianPlotAxis", "bottom", None, QtGui.QApplication.UnicodeUTF8))
         self.slavedTo.setItemText(1, QtGui.QApplication.translate("CartesianPlotAxis", "left", None, QtGui.QApplication.UnicodeUTF8))
@@ -462,7 +462,7 @@ class Ui_CartesianPlotAxis(object):
         self.majorTicksColor.setText(QtGui.QApplication.translate("CartesianPlotAxis", "(0,0,0,255)", None, QtGui.QApplication.UnicodeUTF8))
         self.majorTicksLabelNumericFormat.setText(QtGui.QApplication.translate("CartesianPlotAxis", "%.2g", None, QtGui.QApplication.UnicodeUTF8))
         self.label_32.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Color", None, QtGui.QApplication.UnicodeUTF8))
-        self.majorTicksLabelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.majorTicksLabelFont.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Text Options", None, QtGui.QApplication.UnicodeUTF8))
         self.minorTicksVisible.setTitle(QtGui.QApplication.translate("CartesianPlotAxis", "Minor Ticks", None, QtGui.QApplication.UnicodeUTF8))
         self.label_26.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Number", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("CartesianPlotAxis", "Tick Locations", None, QtGui.QApplication.UnicodeUTF8))

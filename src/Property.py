@@ -331,17 +331,14 @@ class TextOptions(Options):
     default = { 
         'name':                  String('Bitstream Vera Sans'),
         'style':                 String('normal'),
-        #'variant':               String('normal'),
-        #'stretch':               Integer(100),
         'weight':                String('normal'),
         'size':                  Integer(12),
         'color':                 Color((0,0,0,255)),
-        #'backgroundcolor':       Color((255,255,255,0)),
-        #'alpha':                 Float(1.0),
         'horizontalalignment':   String('center'),
         'verticalalignment':     String('center'),
-        #'linespacing':           Float(1.2),
         'rotation':              String('horizontal'),
+        'xoffset':               Integer(0),
+        'yoffset':               Integer(0),
     }
 
     def getPg(self):
@@ -355,6 +352,8 @@ class TextOptions(Options):
         pgTextDict = {}
         pgTextDict['horizontalalignment'] = self.get()['horizontalalignment'].getPg()
         pgTextDict['verticalalignment'] = self.get()['verticalalignment'].getPg()
+        pgTextDict['xoffset'] = self.get()['xoffset'].getPg()
+        pgTextDict['yoffset'] = self.get()['yoffset'].getPg()
         pgTextDict['rotation'] = self.get()['rotation'].getPg()
 
         return (pgFontDict, pgTextDict)

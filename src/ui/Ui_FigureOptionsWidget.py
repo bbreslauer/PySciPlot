@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_FigureOptionsWidget.ui'
 #
-# Created: Tue Sep 27 00:41:09 2011
+# Created: Sat Oct  1 22:28:58 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -160,7 +160,7 @@ class Ui_FigureOptionsWidget(object):
         self.windowTitle.setToolTip(QtGui.QApplication.translate("FigureOptionsWidget", "Window Title Text", None, QtGui.QApplication.UnicodeUTF8))
         self.label_24.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Window Title", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Figure Title", None, QtGui.QApplication.UnicodeUTF8))
-        self.titleFont.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.titleFont.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Text Options", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Background Color", None, QtGui.QApplication.UnicodeUTF8))
         self.backgroundColor.setText(QtGui.QApplication.translate("FigureOptionsWidget", "(255,255,255,255)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_20.setText(QtGui.QApplication.translate("FigureOptionsWidget", "Padding between Plots", None, QtGui.QApplication.UnicodeUTF8))

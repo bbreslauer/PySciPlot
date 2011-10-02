@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_TextOptionsWidget.ui'
 #
-# Created: Fri Sep 23 01:45:43 2011
+# Created: Sat Oct  1 22:41:12 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -117,20 +117,36 @@ class Ui_TextOptionsWidget(object):
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.verticalalignment)
         self.label_11 = QtGui.QLabel(self.groupBox_2)
         self.label_11.setObjectName("label_11")
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_11)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_11)
         self.rotation = QtGui.QComboBox(self.groupBox_2)
         self.rotation.setMinimumSize(QtCore.QSize(100, 0))
         self.rotation.setObjectName("rotation")
         self.rotation.addItem("")
         self.rotation.addItem("")
         self.rotation.addItem("")
-        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.rotation)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.rotation)
         self.rotationCustom = QtGui.QDoubleSpinBox(self.groupBox_2)
         self.rotationCustom.setEnabled(False)
         self.rotationCustom.setDecimals(1)
         self.rotationCustom.setMaximum(360.0)
         self.rotationCustom.setObjectName("rotationCustom")
-        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.rotationCustom)
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.rotationCustom)
+        self.label = QtGui.QLabel(self.groupBox_2)
+        self.label.setObjectName("label")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label)
+        self.label_3 = QtGui.QLabel(self.groupBox_2)
+        self.label_3.setObjectName("label_3")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_3)
+        self.xoffset = QtGui.QSpinBox(self.groupBox_2)
+        self.xoffset.setMinimum(-10000)
+        self.xoffset.setMaximum(10000)
+        self.xoffset.setObjectName("xoffset")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.xoffset)
+        self.yoffset = QtGui.QSpinBox(self.groupBox_2)
+        self.yoffset.setMinimum(-10000)
+        self.yoffset.setMaximum(10000)
+        self.yoffset.setObjectName("yoffset")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.yoffset)
         self.gridLayout.addWidget(self.groupBox_2, 1, 1, 1, 1)
         self.buttons = QtGui.QDialogButtonBox(TextOptionsWidget)
         self.buttons.setOrientation(QtCore.Qt.Horizontal)
@@ -196,6 +212,8 @@ class Ui_TextOptionsWidget(object):
         self.rotation.setItemText(0, QtGui.QApplication.translate("TextOptionsWidget", "horizontal", None, QtGui.QApplication.UnicodeUTF8))
         self.rotation.setItemText(1, QtGui.QApplication.translate("TextOptionsWidget", "vertical", None, QtGui.QApplication.UnicodeUTF8))
         self.rotation.setItemText(2, QtGui.QApplication.translate("TextOptionsWidget", "custom", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("TextOptionsWidget", "X Offset", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("TextOptionsWidget", "Y Offset", None, QtGui.QApplication.UnicodeUTF8))
 
 from gui.QColorButton import QColorButton
 from gui.QTextOptionsWidget import QTextOptionsWidget

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_PlotLegend.ui'
 #
-# Created: Wed Sep  7 23:34:13 2011
+# Created: Sat Oct  1 22:28:58 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,6 +15,10 @@ class Ui_PlotLegend(object):
         PlotLegend.resize(595, 462)
         self.gridLayout = QtGui.QGridLayout(PlotLegend)
         self.gridLayout.setObjectName("gridLayout")
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem1, 15, 2, 1, 1)
         self.label = QtGui.QLabel(PlotLegend)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
@@ -125,10 +129,6 @@ class Ui_PlotLegend(object):
         self.markerscale.setProperty("value", 1.0)
         self.markerscale.setObjectName("markerscale")
         self.gridLayout.addWidget(self.markerscale, 14, 2, 1, 1)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 15, 2, 1, 1)
         self.font = QTextOptionsButton(PlotLegend)
         self.font.setObjectName("font")
         self.gridLayout.addWidget(self.font, 1, 2, 1, 1)
@@ -169,7 +169,7 @@ class Ui_PlotLegend(object):
         PlotLegend.setTabOrder(self.markerscale, self.storedSettingsButton)
 
     def retranslateUi(self, PlotLegend):
-        PlotLegend.setWindowTitle(QtGui.QApplication.translate("PlotLegend", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        PlotLegend.setWindowTitle(QtGui.QApplication.translate("PlotLegend", "Legend", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("PlotLegend", "Location", None, QtGui.QApplication.UnicodeUTF8))
         self.loc.setItemText(0, QtGui.QApplication.translate("PlotLegend", "none", None, QtGui.QApplication.UnicodeUTF8))
         self.loc.setItemText(1, QtGui.QApplication.translate("PlotLegend", "best", None, QtGui.QApplication.UnicodeUTF8))
@@ -195,8 +195,8 @@ class Ui_PlotLegend(object):
         self.label_11.setText(QtGui.QApplication.translate("PlotLegend", "Border padding", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("PlotLegend", "Label line spacing", None, QtGui.QApplication.UnicodeUTF8))
         self.label_13.setText(QtGui.QApplication.translate("PlotLegend", "Marker scale", None, QtGui.QApplication.UnicodeUTF8))
-        self.font.setText(QtGui.QApplication.translate("PlotLegend", "Trace Font", None, QtGui.QApplication.UnicodeUTF8))
-        self.titleFont.setText(QtGui.QApplication.translate("PlotLegend", "Title Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.font.setText(QtGui.QApplication.translate("PlotLegend", "Trace Text Options", None, QtGui.QApplication.UnicodeUTF8))
+        self.titleFont.setText(QtGui.QApplication.translate("PlotLegend", "Title Text Options", None, QtGui.QApplication.UnicodeUTF8))
         self.storedSettingsButton.setText(QtGui.QApplication.translate("PlotLegend", "S\n"
 "t\n"
 "o\n"

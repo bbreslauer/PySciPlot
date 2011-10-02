@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_PlotOptionsWidget.ui'
 #
-# Created: Wed Sep  7 23:34:13 2011
+# Created: Sat Oct  1 22:28:58 2011
 #      by: pyside-uic 0.2.13 running on PySide 1.0.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -150,7 +150,7 @@ class Ui_PlotOptionsWidget(object):
         self.label_29.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Select Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("PlotOptionsWidget", "General Plot Options", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Plot Name", None, QtGui.QApplication.UnicodeUTF8))
-        self.nameFont.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Font", None, QtGui.QApplication.UnicodeUTF8))
+        self.nameFont.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Text Options", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Plot Background", None, QtGui.QApplication.UnicodeUTF8))
         self.backgroundColor.setText(QtGui.QApplication.translate("PlotOptionsWidget", "(255,255,255,255)", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("PlotOptionsWidget", "Plot Type", None, QtGui.QApplication.UnicodeUTF8))

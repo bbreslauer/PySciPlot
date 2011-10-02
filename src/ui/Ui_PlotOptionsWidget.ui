@@ -126,7 +126,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Font</string>
+           <string>Text Options</string>
           </property>
          </widget>
         </item>
@@ -238,19 +238,19 @@ background-color: rgb(255, 255, 255);</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QTextOptionsButton</class>
-   <extends>QPushButton</extends>
-   <header>gui/QTextOptionsButton</header>
-   <slots>
-    <slot>showTextOptionsWidget()</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
    <class>QColorButton</class>
    <extends>QPushButton</extends>
    <header>gui/QColorButton</header>
    <slots>
     <slot>createColorDialog()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTextOptionsButton</class>
+   <extends>QPushButton</extends>
+   <header>gui/QTextOptionsButton</header>
+   <slots>
+    <slot>showTextOptionsWidget()</slot>
    </slots>
   </customwidget>
   <customwidget>

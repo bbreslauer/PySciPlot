@@ -11,9 +11,35 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Legend</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="15" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="0" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -276,43 +302,17 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="15" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item row="1" column="2">
     <widget class="QTextOptionsButton" name="font">
      <property name="text">
-      <string>Trace Font</string>
+      <string>Trace Text Options</string>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
     <widget class="QTextOptionsButton" name="titleFont">
      <property name="text">
-      <string>Title Font</string>
+      <string>Title Text Options</string>
      </property>
     </widget>
    </item>
@@ -356,35 +356,6 @@ s</string>
     </widget>
    </item>
   </layout>
-  <zorder>label</zorder>
-  <zorder>loc</zorder>
-  <zorder>label_2</zorder>
-  <zorder>title</zorder>
-  <zorder>label_3</zorder>
-  <zorder>frameon</zorder>
-  <zorder>label_5</zorder>
-  <zorder>fancybox</zorder>
-  <zorder>label_4</zorder>
-  <zorder>shadow</zorder>
-  <zorder>label_6</zorder>
-  <zorder>ncol</zorder>
-  <zorder>label_7</zorder>
-  <zorder>columnspacing</zorder>
-  <zorder>label_8</zorder>
-  <zorder>borderaxespad</zorder>
-  <zorder>label_9</zorder>
-  <zorder>handletextpad</zorder>
-  <zorder>label_10</zorder>
-  <zorder>handlelength</zorder>
-  <zorder>label_11</zorder>
-  <zorder>borderpad</zorder>
-  <zorder>label_12</zorder>
-  <zorder>labelspacing</zorder>
-  <zorder>label_13</zorder>
-  <zorder>markerscale</zorder>
-  <zorder>font</zorder>
-  <zorder>titleFont</zorder>
-  <zorder>storedSettingsButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>

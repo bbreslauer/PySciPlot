@@ -35,8 +35,6 @@ class Figure(FigureObject):
     plotNum is 0-based.
     """
 
-    figureSizeUpdated = Signal()
-
     def __init__(self, windowTitle=""):
         
         Util.debug(2, "Figure.init", "Creating figure")
@@ -101,12 +99,18 @@ class Figure(FigureObject):
         plots = state[1]
 
         self.setMultiple(properties)
-        self._plots = []
         
-        for plot in plots:
-            self.plots().append(plot)
+        # clear all plots that were initially created
+        # need to use tuple so that we create a copy of the list
+        # otherwise, the list is modified while iterating, which leads to
+        # half the elements being removed
+        for plot in tuple(self.plots()):
+            self.removePlot(plot)
 
-        self.refreshPlots()
+        for plot in plots:
+            self.addPlot(plot)
+
+        self.refresh()
 
     def pgFigure(self):
         return self._figure
@@ -127,10 +131,15 @@ class Figure(FigureObject):
         plot.addFigure(self)  # Need the plot to keep the PSP figure reference
         plot.initPgPlot()  # Create the PG plot in the PSP plot
         self.pgFigure().addPlot(plot.pgPlot())  # Add the PG plot to the PG figure
-        plot.pgPlot().setPlotLocation(self.getPg('rows'), self.getPg('columns'), self.numPlots())
+        plot.pgPlot().setPlotLocation(self.getPg('rows'), self.getPg('columns'), len(self.plots()))
 
         if refresh:
             self.refreshPlots()  # Update the screen
+
+    def removePlot(self, plot):
+        self.plots().remove(plot)
+        self.pgFigure().delPlot(plot.pgPlot())
+        self.refreshPlots()
 
     def extendPlots(self, maxPlotNum=-1):
         """
@@ -168,7 +177,8 @@ class Figure(FigureObject):
         self.set('height', height)
         self.properties['width'].blockSignals(False)
         self.properties['height'].blockSignals(False)
-        self.figureSizeUpdated.emit()
+
+        self._app._loadedModules['EditFigureDialog']._figureTab.resetUiSize()
 
     #################################
     # Handlers for when a property is modified
@@ -191,10 +201,12 @@ class Figure(FigureObject):
 
     def update_rows(self):
         Util.debug(3, "Figure.update_rows", "")
+        self.extendPlots()
         self.refreshPlots()
 
     def update_columns(self):
         Util.debug(3, "Figure.update_columns", "")
+        self.extendPlots()
         self.refreshPlots()
 
     def update_width(self):
@@ -228,9 +240,6 @@ class Figure(FigureObject):
     def refreshPlots(self):
         Util.debug(3, "Figure.refreshPlots", "")
         
-        # Create any new plots that might be necessary
-        self.extendPlots()
-
         # Refresh the plots
         for plot in self.plots():
             plot.refresh()
@@ -239,7 +248,6 @@ class Figure(FigureObject):
         Util.debug(3, "Figure.redraw", "Drawing canvas")
         print 'figure redraw'
         self.pgFigure().draw()
-
 
     def refresh(self):
         self.refreshPlots()

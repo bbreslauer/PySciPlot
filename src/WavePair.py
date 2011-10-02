@@ -281,7 +281,7 @@ class Trace(WavePair):
 
     def refresh(self):
         # If this trace is not associated with a plot, then don't do anything
-        if self.plot() is None:
+        if self.plot() is None or self.plot().pgPlot() is None:
             return
 
         [x, y] = self.dataSet()

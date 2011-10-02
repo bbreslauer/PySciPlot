@@ -71,19 +71,10 @@ class CartesianPlot(FigureObject):
         self._wavePairs = []
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.plot()]), tuple([self.properties, self._wavePairs])])
+        return tuple([self.__class__, tuple([self.plot(), self.properties]), tuple([self._wavePairs])])
 
     def __setstate__(self, state):
-        properties = state[0]
-        wavePairs = state[1]
-        
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(True)
-
-        self.setMultiple(properties)
-
-        for (key, value) in properties.items():
-            self.properties[key].blockSignals(False)
+        wavePairs = state[0]
 
         for wavePair in wavePairs:
             self.addWavePair(wavePair)
@@ -284,6 +275,8 @@ class CartesianPlot(FigureObject):
 
         self.update_bottom()
         self.update_left()
+        self.update_top()
+        self.update_right()
         self.update_legend()
 
 class ScatterPlot(CartesianPlot):
@@ -376,12 +369,15 @@ class Plot(FigureObject):
         return "Name: %s" % (self.get('name'))
 
     def __reduce__(self):
-        return tuple([self.__class__, tuple([self.get('name')]), tuple([self.properties, self.plotTypeObject])])
+        return tuple([self.__class__, tuple([self.get('name')]), tuple([self.properties, self.plotTypeObject, self._figure])])
 
     def __setstate__(self, state):
         properties = state[0]
         self.plotTypeObject = state[1]
+        self._figure = state[2]
         
+        self.initPgPlot()
+
         for (key, value) in properties.items():
             self.properties[key].blockSignals(True)
 
@@ -390,7 +386,7 @@ class Plot(FigureObject):
         for (key, value) in properties.items():
             self.properties[key].blockSignals(False)
 
-        self.refresh()
+        #self.refresh()
 
     def addFigure(self, figure):
         self._figure = figure
@@ -409,19 +405,28 @@ class Plot(FigureObject):
 
     def update_name(self):
         Util.debug(3, "Plot.update_name", "")
-        self.pgPlot().setTitle(self.getPg('name'))
-        self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
-        self.pgPlot().title().draw()
+        try:
+            self.pgPlot().setTitle(self.getPg('name'))
+            self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
+            self.pgPlot().title().draw()
+        except:
+            pass
 
     def update_nameFont(self):
         Util.debug(3, "Plot.update_nameFont", "")
-        self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
-        self.pgPlot().title().draw()
+        try:
+            self.pgPlot().setTitle(self.getPg('nameFont')[1], pgfont.Font(**self.getPg('nameFont')[0]))
+            self.pgPlot().title().draw()
+        except:
+            pass
 
     def update_backgroundColor(self):
         Util.debug(3, "Plot.update_backgroundColor", "")
-        self.pgPlot().setColor(self.getPg('backgroundColor'))
-        self.redraw()
+        try:
+            self.pgPlot().setColor(self.getPg('backgroundColor'))
+            self.redraw()
+        except:
+            pass
 
     def refresh(self):
         self.update_name()

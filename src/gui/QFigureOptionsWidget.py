@@ -51,11 +51,11 @@ class QFigureOptionsWidget(QEditFigureSubWidget):
     def resetUiSize(self):
         """Set the UI to the current Figure's settings, but only for the width and height."""
 
-        size = {}
-        size['width'] = self._editFigureDialogModule.currentFigure().properties['width']
-        size['height'] = self._editFigureDialogModule.currentFigure().properties['height']
-
         try:
+            size = {}
+            size['width'] = self._editFigureDialogModule.currentFigure().properties['width']
+            size['height'] = self._editFigureDialogModule.currentFigure().properties['height']
+
             self.setCurrentUi(size)
         except:
             pass

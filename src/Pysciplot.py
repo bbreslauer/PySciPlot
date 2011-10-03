@@ -17,7 +17,6 @@
 import string, os, re, time, pickle
 
 from PySide.QtGui import QMainWindow, QApplication, QMdiSubWindow, QWidget, QDialog, QMessageBox, QAction, QFileDialog, QDialogButtonBox, QStandardItemModel, QStandardItem
-#from PySide.QtCore import Qt, QVariant, QFile
 from PySide.QtCore import Qt, QFile
 
 os.environ['QT_API'] = 'pyside'

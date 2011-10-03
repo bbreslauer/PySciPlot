@@ -52,7 +52,7 @@ def setWidgetValue(widget, value):
     if widgetType in dictionary.keys():
         return eval(dictionary[widgetType])
     else:
-        raise UnknownWidgetTypeError(widgetType)
+        raise UnknownWidgetTypeError(widgetType + ': ' + str(value))
 
     return True
 

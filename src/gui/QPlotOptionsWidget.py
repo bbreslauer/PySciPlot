@@ -117,8 +117,11 @@ class QPlotOptionsWidget(QEditFigureSubWidget):
         
         Any unknown widget types will be discarded.
         """
-        
-        self.setCurrentUi(self.currentPlot().properties)
+
+        props = {}
+        for key in self.properties:
+            props[key] = self.currentPlot().properties[key]
+        self.setCurrentUi(props)
 
         # Change the plot type widget that is shown based on the type of plot
         # that is currently selected (scatter, pie, etc)

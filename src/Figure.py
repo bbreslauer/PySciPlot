@@ -33,7 +33,11 @@ class Figure(FigureObject):
     Encapsulates all data for a figure, including all the plots within it.
 
     plotNum is 0-based.
+
+    numPlotsChanged is emitted whenever the number of rows or columns is changed.
     """
+
+    numPlotsChanged = Signal()
 
     def __init__(self, windowTitle=""):
         
@@ -48,9 +52,7 @@ class Figure(FigureObject):
                             'columns':            Property.Integer(1),
                             'width':              Property.Integer(600),
                             'height':             Property.Integer(400),
-                            'axesPadding':        Property.Integer(50),
                             'backgroundColor':    Property.Color((255,255,255,255)),
-                            'linkPlotAxes':       Property.Boolean(False),
                           }
 
         self._app = QApplication.instance().window
@@ -202,11 +204,13 @@ class Figure(FigureObject):
     def update_rows(self):
         Util.debug(3, "Figure.update_rows", "")
         self.extendPlots()
+        self.numPlotsChanged.emit()
         self.refreshPlots()
 
     def update_columns(self):
         Util.debug(3, "Figure.update_columns", "")
         self.extendPlots()
+        self.numPlotsChanged.emit()
         self.refreshPlots()
 
     def update_width(self):
@@ -217,20 +221,20 @@ class Figure(FigureObject):
 
     def update_size(self):
         self.pgFigure().setSize(self.getPg('width'), self.getPg('height'))
-
-    def update_linkPlotAxes(self):
-        Util.debug(3, "Figure.update_linkPlotAxes", "")
-        # TODO
-        #self.refreshPlots()
-    
-    def update_axesPadding(self):
-        Util.debug(3, "Figure.update_axesPadding", "")
-
-        pad = int(self.getPg('axesPadding'))
-        for plot in self.plots():
-            plot.pgPlot().setPadding(pad, pad, pad, pad)
-
-        self.refreshPlots()
+#
+#    def update_linkPlotAxes(self):
+#        Util.debug(3, "Figure.update_linkPlotAxes", "")
+#        # TODO
+#        #self.refreshPlots()
+#    
+#    def update_axesPadding(self):
+#        Util.debug(3, "Figure.update_axesPadding", "")
+#
+#        pad = int(self.getPg('axesPadding'))
+#        for plot in self.plots():
+#            plot.pgPlot().setPadding(pad, pad, pad, pad)
+#
+#        self.refreshPlots()
 
     def update_backgroundColor(self):
         Util.debug(3, "Figure.update_backgroundColor", "")

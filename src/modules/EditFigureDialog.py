@@ -58,6 +58,7 @@ class EditFigureDialog(Module):
         figureOW.setupUi(self._figureTab)
         self._figureTab.setUiObject(figureOW)
         self._figureTab.setEditFigureDialogModule(self)
+        self._figureTab.initSubWidgets()
         self._ui.tabWidget.insertTab(0, self._figureTab, "Figure")
 
         # Setup plot tab
@@ -152,6 +153,7 @@ class EditFigureDialog(Module):
         
         self._currentFigure = self._ui.figureSelector.model().getFigure(index)
         self._figureTab.resetUi()
+        self._figureTab.changePaddingModelFigure()
         self._plotTab.setFigure(self._currentFigure)
 
     # Update figure selector combo boxes

@@ -352,6 +352,10 @@ class Plot(FigureObject):
                 'nameFont':         Property.TextOptions({'size': 18, 'verticalalignment': 'baseline'}),
                 'backgroundColor':  Property.Color((255,255,255,255)),
                 'plotType':         Property.String('Scatter Plot'),
+                'topPadding':       Property.Integer(50),
+                'leftPadding':      Property.Integer(50),
+                'bottomPadding':    Property.Integer(50),
+                'rightPadding':     Property.Integer(50),
                      }
 
         FigureObject.__init__(self, properties)
@@ -428,9 +432,44 @@ class Plot(FigureObject):
         except:
             pass
 
+    def update_topPadding(self):
+        try:
+            self.pgPlot().setTopPadding(self.getPg('topPadding'))
+            self.redraw()
+        except:
+            pass
+
+    def update_bottomPadding(self):
+        try:
+            self.pgPlot().setBottomPadding(self.getPg('bottomPadding'))
+            self.redraw()
+        except:
+            pass
+
+    def update_leftPadding(self):
+        try:
+            self.pgPlot().setLeftPadding(self.getPg('leftPadding'))
+            self.redraw()
+        except:
+            pass
+
+    def update_rightPadding(self):
+        try:
+            self.pgPlot().setRightPadding(self.getPg('rightPadding'))
+            self.redraw()
+        except:
+            pass
+
+    def update_padding(self):
+        self.update_topPadding()
+        self.update_leftPadding()
+        self.update_bottomPadding()
+        self.update_rightPadding()
+
     def refresh(self):
         self.update_name()
         self.update_backgroundColor()
+        self.update_padding()
         self.plotTypeObject.refresh()
         self.redraw()
 

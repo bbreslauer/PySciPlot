@@ -41,5 +41,11 @@ class DataTableSubWindow(SubWindow):
     pass
 
 class FigureSubWindow(SubWindow):
-    pass
+
+    def __init__(self, figure=None, *args):
+        self._figure = figure
+        SubWindow.__init__(self, *args)
+
+    def figure(self):
+            return self._figure
 

@@ -64,7 +64,7 @@ class Figure(FigureObject):
         height = properties['height'].get()
         self._figure = pgf.Figure(width, height)
         self._canvas = self._figure.canvas().widget()
-        self._figureSubWindow = FigureSubWindow(self._app.ui.workspace)
+        self._figureSubWindow = FigureSubWindow(self._figure, self._app.ui.workspace)
         self._figureSubWindow.setWidget(self._canvas)
         self._figureSubWindow.resize(width+10, height+31) # resize includes the window frame, for some reason, so we need to add some pixels
         self._app.ui.workspace.addSubWindow(self._figureSubWindow)

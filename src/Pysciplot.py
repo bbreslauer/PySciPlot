@@ -340,7 +340,7 @@ class Pysciplot(QMainWindow):
         fileName = str(QFileDialog.getSaveFileName(self.ui.workspace, "Save Figure", self.projectDirectory())[0])
 
         # Save the figure to the file
-        currentWindow.widget().figure.savefig(fileName, dpi=dpi, orientation=orientation)
+        currentWindow.figure().save(fileName)
 
 
     ######################
